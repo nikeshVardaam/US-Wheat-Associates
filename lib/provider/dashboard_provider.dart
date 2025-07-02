@@ -1,0 +1,25 @@
+import 'package:flutter/cupertino.dart';
+import 'package:uswheat/dashboard_page/calculator.dart';
+import 'package:uswheat/dashboard_page/prices.dart';
+import 'package:uswheat/dashboard_page/quality.dart';
+import 'package:uswheat/dashboard_page/reports.dart';
+import 'package:uswheat/dashboard_page/watchList.dart';
+import 'package:uswheat/utils/app_strings.dart';
+
+class DashboardProvider extends ChangeNotifier {
+  String? selectedPage = AppStrings.watchlist;
+  int selectedIndex = 2;
+
+  final List<Widget> widgetOptions = const [
+    Prices(),
+    Quality(),
+    Watchlist(),
+    Reports(),
+    Calculator(),
+  ];
+
+  onItemTapped(int index) {
+    selectedIndex = index;
+    notifyListeners();
+  }
+}
