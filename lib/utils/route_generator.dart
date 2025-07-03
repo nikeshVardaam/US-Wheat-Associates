@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uswheat/auth/login.dart';
 import 'package:uswheat/dashboard.dart';
+import 'package:uswheat/quality/estimates/estimate_hard_red_winter.dart';
 import 'package:uswheat/utils/app_routes.dart';
 
 class RouteGenerator {
@@ -11,6 +12,8 @@ class RouteGenerator {
         return buildRoute(const Login(), settings: settings);
       case AppRoutes.dashboard:
         return buildRoute(const Dashboard(), settings: settings);
+      case AppRoutes.estimateHardRedWinter:
+        return buildRoute(const EstimateHardRedWinter(), settings: settings);
       default:
         return _errorRoute();
     }

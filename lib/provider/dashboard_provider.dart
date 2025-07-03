@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:uswheat/dashboard_page/calculator.dart';
 import 'package:uswheat/dashboard_page/prices.dart';
-import 'package:uswheat/dashboard_page/quality.dart';
+import 'package:uswheat/quality/quality.dart';
 import 'package:uswheat/dashboard_page/reports.dart';
 import 'package:uswheat/dashboard_page/watchList.dart';
 import 'package:uswheat/utils/app_strings.dart';

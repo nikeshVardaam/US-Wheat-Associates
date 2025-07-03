@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   shared_preferences: ^2.5.3
+  syncfusion_flutter_charts: ^29.1.38
+  flutter_svg: ^2.0.7
 
 
 
