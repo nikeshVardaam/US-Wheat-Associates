@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:uswheat/provider/dashboard_provider.dart';
+import 'package:uswheat/quality/estimates/estimate_hard_red_winter.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_routes.dart';
@@ -58,37 +61,41 @@ class _QualityState extends State<Quality> {
             width: double.infinity,
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              AppRoutes.estimateHardRedWinter,
+        Consumer<DashboardProvider>(
+          builder: (context, dp, child) {
+            return GestureDetector(
+              onTap: () {
+                dp.setChangeActivity(
+                  activity: const EstimateHardRedWinter(),
+                  pageName: AppStrings.hardRedWinter,
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                color: AppColors.c95795d.withOpacity(0.1),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        AppStrings.hardRedWinter,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.c709e58,
+                            ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        color: AppColors.c709e58,
+                        size: 14,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             );
           },
-          child: Container(
-            width: double.infinity,
-            color: AppColors.c95795d.withOpacity(0.1),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppStrings.hardRedWinter,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.c709e58,
-                        ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios_outlined,
-                    color: AppColors.c709e58,
-                    size: 14,
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
         Divider(
           thickness: 0.5,

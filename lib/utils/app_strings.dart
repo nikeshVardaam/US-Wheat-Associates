@@ -26,8 +26,14 @@ class AppStrings {
   static const oneYearAgo = "ONE YEAR AGO:";
   static const lastPrDate = "LAST PR DATE:";
   static const fwdPrice = "FWD PRICE";
+  static const account = "ACCOUNT";
+  static const pages = "Pages";
   static const classs = "CLASS";
   static const date = "DATE";
+  static const news = "News";
+  static const settings = "Settings";
+  static const search = "Search";
+  static const wheatData = "WHEAT DATA";
   static const gulfOfMexico = "Gulf of Mexico";
   static const calculator = "Calculator";
   static const subscriberConsent = "Subscriber consent";

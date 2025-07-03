@@ -59,7 +59,7 @@ class _PricesState extends State<Prices> {
               width: MediaQuery.of(context).size.width / 4,
               color: AppColors.c95795d.withOpacity(0.1),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -101,7 +101,7 @@ class _PricesState extends State<Prices> {
               width: MediaQuery.of(context).size.width / 4,
               color: AppColors.c95795d.withOpacity(0.1),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -143,7 +143,7 @@ class _PricesState extends State<Prices> {
               width: MediaQuery.of(context).size.width / 4,
               color: AppColors.c95795d.withOpacity(0.1),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
