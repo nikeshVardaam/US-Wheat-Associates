@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:uswheat/dashboard_page/calculator.dart';
-import 'package:uswheat/prices/prices.dart';
+import 'package:uswheat/dashboard_page/prices.dart';
 import 'package:uswheat/quality/quality.dart';
 import 'package:uswheat/dashboard_page/reports.dart';
 import 'package:uswheat/dashboard_page/watchList.dart';
@@ -14,7 +14,9 @@ class DashboardProvider extends ChangeNotifier {
   DashboardProvider() {
     selectActivity = const Watchlist();
     selectMenu = AppStrings.watchlist;
+    notifyListeners();
   }
+
   setChangeActivity({required Widget activity, required String pageName}) {
     selectActivity = activity;
     selectMenu = pageName;
