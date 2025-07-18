@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uswheat/provider/login_provider.dart';
+import 'package:uswheat/provider/sign_provider.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_colors.dart';
@@ -8,22 +8,20 @@ import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_text_field.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
+class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-      ),
+      appBar: AppBar(),
       backgroundColor: Colors.white,
-      body: Consumer<LoginProvider>(builder: (context, lp, child) {
+      body: Consumer<SignUpProvider>(builder: (context, sup, child) {
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -42,17 +40,47 @@ class _LoginState extends State<Login> {
                         )),
                         const SizedBox(height: 32),
                         Text(
-                          AppStrings.logInToYourAccount,
+                          AppStrings.createYourAccount,
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.c45413b),
                         ),
                         const SizedBox(height: 32),
+                        Text(
+                          AppStrings.name,
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c464646),
+                        ),
+                        const SizedBox(height: 4),
+                        AppTextField.textField(
+                          controller: sup.nameController,
+                          context,
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
+                          cursorColor: AppColors.c000000,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.cFFFFFF,
+                            contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
+                            ),
+                            counterText: "",
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
                         Text(
                           AppStrings.email,
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c464646),
                         ),
                         const SizedBox(height: 4),
                         AppTextField.textField(
-                          controller: lp.emailController,
+                          controller: sup.emailController,
                           context,
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           cursorColor: AppColors.c000000,
@@ -82,14 +110,44 @@ class _LoginState extends State<Login> {
                         ),
                         const SizedBox(height: 4),
                         AppTextField.textField(
-                          controller: lp.passwordController,
+                          controller: sup.passwordController,
                           context,
                           keyboardType: TextInputType.emailAddress,
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           cursorColor: AppColors.c000000,
                           decoration: InputDecoration(
                             filled: true,
-                            suffixIcon: const Icon(Icons.password),
+                            fillColor: AppColors.cFFFFFF,
+                            contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
+                            ),
+                            counterText: "",
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          AppStrings.confirmPassword,
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c464646),
+                        ),
+                        const SizedBox(height: 4),
+                        AppTextField.textField(
+                          controller: sup.confirmPasswordController,
+                          context,
+                          keyboardType: TextInputType.emailAddress,
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
+                          cursorColor: AppColors.c000000,
+                          decoration: InputDecoration(
+                            filled: true,
                             fillColor: AppColors.cFFFFFF,
                             contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                             border: OutlineInputBorder(
@@ -114,14 +172,10 @@ class _LoginState extends State<Login> {
                 SizedBox(
                   width: double.infinity,
                   child: GestureDetector(
-                    onTap: () async {
-                      lp.logIn(context: context);
-                      // Navigator.pushNamed(
-                      //   context,
-                      //   AppRoutes.dashboard,
-                      // );
+                    onTap: () {
+                      sup.createAccount(context: context);
                     },
-                    child: AppButtons().filledButton(true, AppStrings.logIn, context),
+                    child: AppButtons().filledButton(true, AppStrings.signUp, context),
                   ),
                 ),
                 const SizedBox(
@@ -131,7 +185,7 @@ class _LoginState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      AppStrings.dontHaveAnAccount,
+                      AppStrings.alreadyHaveAccount,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c666666),
                     ),
                     const SizedBox(
@@ -139,13 +193,12 @@ class _LoginState extends State<Login> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(
+                        Navigator.pop(
                           context,
-                          AppRoutes.signUp,
                         );
                       },
                       child: Text(
-                        AppStrings.signUp,
+                        AppStrings.logIn,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c45413b, fontWeight: FontWeight.bold),
                       ),
                     ),

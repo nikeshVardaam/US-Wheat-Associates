@@ -1,8 +1,15 @@
 class AppStrings {
-  static const logIn = "logIn";
+  static const logIn = "Login";
+  static const logInToYourAccount = "Login to your account";
+  static const createYourAccount = "Create your account";
   static const company = "Company";
+  static const name = "Name";
   static const email = "Email";
+  static const dontHaveAnAccount = "Don't have an account?";
   static const password = "Password";
+  static const confirmPassword = "Confirm Password";
+  static const alreadyHaveAccount = "Already have an account?";
+  static const signUp = "Sign Up";
   static const rememberMe = "RememberMe";
   static const fullName = "Full Name";
   static const country = "Country";
@@ -36,6 +43,8 @@ class AppStrings {
   static const wheatData = "WHEAT DATA";
   static const gulfOfMexico = "Gulf of Mexico";
   static const calculator = "Calculator";
+  static const error500 = "error500";
+  static const error503 = "error503";
   static const subscriberConsent = "Subscriber consent";
   static const iConsentToReceivingEmail = "I consent to receiving email communications. ";
   static const iConsentToHavingMySubscriber = "I consent to having my subscriber engagement tracked and analyzed.";

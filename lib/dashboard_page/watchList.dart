@@ -24,7 +24,8 @@ class _WatchlistState extends State<Watchlist> {
                 color: AppColors.cAB865A.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Column(
+              child:
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header
@@ -104,9 +105,11 @@ class _WatchlistState extends State<Watchlist> {
                             Row(
                               children: [
                                 Icon(Icons.arrow_drop_up, color: AppColors.c2a8741),
-                                Text(
-                                  "2.75 | \$280/MT",
-                                  style: TextStyle(color: AppColors.c2a8741, fontSize: 14),
+                                Expanded(
+                                  child: Text(
+                                    "2.75 | \$280/MT",
+                                    style: TextStyle(color: AppColors.c2a8741, fontSize: 14),
+                                  ),
                                 )
                               ],
                             ),
@@ -220,9 +223,11 @@ class _WatchlistState extends State<Watchlist> {
                             Row(
                               children: [
                                 Icon(Icons.arrow_drop_up, color: AppColors.c2a8741),
-                                Text(
-                                  "2.75 | \$280/MT",
-                                  style: TextStyle(color: AppColors.c2a8741, fontSize: 14),
+                                Expanded(
+                                  child: Text(
+                                    "2.75 | \$280/MT",
+                                    style: TextStyle(color: AppColors.c2a8741, fontSize: 14),
+                                  ),
                                 )
                               ],
                             ),

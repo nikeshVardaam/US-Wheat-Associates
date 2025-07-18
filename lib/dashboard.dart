@@ -97,10 +97,12 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                                 Row(
                                   children: [
-                                    AppWidgets.initial(
-                                      context,
-                                      "Meet Patel",
-                                      AppColors.c656e79,
+                                    Expanded(
+                                      child: AppWidgets.initial(
+                                        context,
+                                        "Meet Patel",
+                                        AppColors.c656e79,
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -118,6 +120,8 @@ class _DashboardState extends State<Dashboard> {
                                             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                                   color: AppColors.cFFFFFF,
                                                 ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
@@ -279,22 +283,20 @@ class _DashboardState extends State<Dashboard> {
             return dp.selectActivity;
           },
         ),
-        // bottomNavigationBar: BottomNavigationBar(
-        //   onTap: (value) {
-        //     Provider.of<DashboardProvider>(context, listen: false).onItemTapped(value);
-        //   },
-        //   type: BottomNavigationBarType.fixed,
-        //   backgroundColor: AppColors.c45413b,
-        //   selectedItemColor: AppColors.cec8d30,
-        //   unselectedItemColor: AppColors.cFFFFFF,
-        //   items: [
-        //     BottomNavigationBarItem(label: AppStrings.price, icon: const Icon(Icons.percent), backgroundColor: AppColors.c45413b),
-        //     BottomNavigationBarItem(label: AppStrings.quality, icon: const Icon(Icons.done), backgroundColor: AppColors.c45413b),
-        //     BottomNavigationBarItem(label: AppStrings.watchlist, icon: const Icon(Icons.star_border_outlined), backgroundColor: AppColors.c45413b),
-        //     BottomNavigationBarItem(label: AppStrings.reports, icon: const Icon(Icons.auto_graph_rounded), backgroundColor: AppColors.c45413b),
-        //     BottomNavigationBarItem(label: AppStrings.calculator, icon: const Icon(Icons.calculate_outlined), backgroundColor: AppColors.c45413b),
-        //   ],
-        // ),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (value) {},
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: AppColors.c45413b,
+          selectedItemColor: AppColors.cec8d30,
+          unselectedItemColor: AppColors.cFFFFFF,
+          items: [
+            BottomNavigationBarItem(label: AppStrings.price, icon: const Icon(Icons.percent), backgroundColor: AppColors.c45413b),
+            BottomNavigationBarItem(label: AppStrings.quality, icon: const Icon(Icons.done), backgroundColor: AppColors.c45413b),
+            BottomNavigationBarItem(label: AppStrings.watchlist, icon: const Icon(Icons.star_border_outlined), backgroundColor: AppColors.c45413b),
+            BottomNavigationBarItem(label: AppStrings.reports, icon: const Icon(Icons.auto_graph_rounded), backgroundColor: AppColors.c45413b),
+            BottomNavigationBarItem(label: AppStrings.calculator, icon: const Icon(Icons.calculate_outlined), backgroundColor: AppColors.c45413b),
+          ],
+        ),
       ),
     );
   }
