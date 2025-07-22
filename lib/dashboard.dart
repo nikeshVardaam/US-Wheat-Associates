@@ -97,33 +97,33 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
-                                      child: AppWidgets.initial(
-                                        context,
-                                        "Meet Patel",
-                                        AppColors.c656e79,
-                                      ),
+                                    AppWidgets.initial(
+                                      context,
+                                      "Meet Patel",
+                                      AppColors.c656e79,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Welcome",
-                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                  color: AppColors.cFFFFFF,
-                                                ),
-                                          ),
-                                          Text(
-                                            "Johnchris....@gmail.com",
-                                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                  color: AppColors.cFFFFFF,
-                                                ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Welcome",
+                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                    color: AppColors.cFFFFFF,
+                                                  ),
+                                            ),
+                                            Text(
+                                              "Meet....@gmail.com",
+                                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                                    color: AppColors.cFFFFFF,
+                                                  ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -284,17 +284,40 @@ class _DashboardState extends State<Dashboard> {
           },
         ),
         bottomNavigationBar: BottomNavigationBar(
-          onTap: (value) {},
+          currentIndex: Provider.of<DashboardProvider>(context).currentIndex,
+          onTap: (value) {
+            Provider.of<DashboardProvider>(context, listen: false).changePageFromBottomNavigation(index: value);
+          },
           type: BottomNavigationBarType.fixed,
           backgroundColor: AppColors.c45413b,
-          selectedItemColor: AppColors.cec8d30,
+          selectedItemColor: AppColors.cFFc166,
           unselectedItemColor: AppColors.cFFFFFF,
           items: [
-            BottomNavigationBarItem(label: AppStrings.price, icon: const Icon(Icons.percent), backgroundColor: AppColors.c45413b),
-            BottomNavigationBarItem(label: AppStrings.quality, icon: const Icon(Icons.done), backgroundColor: AppColors.c45413b),
-            BottomNavigationBarItem(label: AppStrings.watchlist, icon: const Icon(Icons.star_border_outlined), backgroundColor: AppColors.c45413b),
-            BottomNavigationBarItem(label: AppStrings.reports, icon: const Icon(Icons.auto_graph_rounded), backgroundColor: AppColors.c45413b),
-            BottomNavigationBarItem(label: AppStrings.calculator, icon: const Icon(Icons.calculate_outlined), backgroundColor: AppColors.c45413b),
+            BottomNavigationBarItem(
+              label: AppStrings.price,
+              icon: const Icon(Icons.percent),
+              backgroundColor: AppColors.c45413b,
+            ),
+            BottomNavigationBarItem(
+              label: AppStrings.quality,
+              icon: const Icon(Icons.done),
+              backgroundColor: AppColors.c45413b,
+            ),
+            BottomNavigationBarItem(
+              label: AppStrings.watchlist,
+              icon: const Icon(Icons.star_border_outlined),
+              backgroundColor: AppColors.c45413b,
+            ),
+            BottomNavigationBarItem(
+              label: AppStrings.reports,
+              icon: const Icon(Icons.auto_graph_rounded),
+              backgroundColor: AppColors.c45413b,
+            ),
+            BottomNavigationBarItem(
+              label: AppStrings.calculator,
+              icon: const Icon(Icons.calculate_outlined),
+              backgroundColor: AppColors.c45413b,
+            ),
           ],
         ),
       ),

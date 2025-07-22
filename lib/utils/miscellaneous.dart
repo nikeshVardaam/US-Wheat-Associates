@@ -1,6 +1,6 @@
+import 'package:intl/intl.dart';
+
 class Miscellaneous {
-
-
   static const String emailPattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
@@ -14,6 +14,16 @@ class Miscellaneous {
     } else {
       String initials = names.map((name) => name.isNotEmpty ? name[0] : '').join('');
       return initials.toUpperCase();
+    }
+  }
+
+  static String formatPrDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return "--";
+    try {
+      final parsedDate = DateTime.parse(dateStr);
+      return DateFormat('MMMM d, yyyy').format(parsedDate); // e.g. July 18, 2025
+    } catch (e) {
+      return "--";
     }
   }
 }

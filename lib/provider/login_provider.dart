@@ -23,9 +23,23 @@ class LoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  checkLogin({required BuildContext context}) async {
+    sp = await SharedPreferences.getInstance();
+    if (sp?.getString(PrefKeys.token) != null) {
+      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+    }
+  }
+
+  logout(BuildContext context) async {
+    sp = await SharedPreferences.getInstance();
+    sp?.remove(PrefKeys.token);
+
+    Navigator.pushReplacementNamed(context, AppRoutes.login);
+  }
+
   bool validation(BuildContext context) {
     RegExp regex = RegExp(Miscellaneous.emailPattern);
-    if (passwordController.text.trim().isEmpty) {
+    if (emailController.text.trim().isEmpty) {
       AppWidgets.appSnackBar(context: context, text: "Enter email Id", color: Colors.redAccent);
       return false;
     } else if (!regex.hasMatch(emailController.text.trim())) {
@@ -44,6 +58,8 @@ class LoginProvider extends ChangeNotifier {
 
   logIn({required BuildContext context}) async {
     if (validation(context)) {
+      print(validation(context));
+
       var data = {
         "email": emailController.text.trim(),
         "password": passwordController.text.trim(),
@@ -61,8 +77,7 @@ class LoginProvider extends ChangeNotifier {
         LoginModal loginModel = LoginModal.fromJson(json.decode(response.body));
         sp = await SharedPreferences.getInstance();
         await sp?.setString(PrefKeys.token, loginModel.token ?? "");
-        print(loginModel.token);
-        print("Login");
+
         Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
       }
       notifyListeners();

@@ -5,7 +5,7 @@ class GraphDataModal {
   GraphDataModal({this.cASHMT, this.pRDATE});
 
   GraphDataModal.fromJson(Map<String, dynamic> json) {
-    cASHMT = json['CASHMT'];
+    cASHMT = (json['CASHMT']as num?)?.toDouble() ;
     pRDATE = json['PRDATE'];
   }
 

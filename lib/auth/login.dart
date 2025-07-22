@@ -112,14 +112,10 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 SizedBox(
-                  width: double.infinity,
-                  child: GestureDetector(
+                  width: MediaQuery.of(context).size.width,
+                  child: InkWell(
                     onTap: () async {
                       lp.logIn(context: context);
-                      // Navigator.pushNamed(
-                      //   context,
-                      //   AppRoutes.dashboard,
-                      // );
                     },
                     child: AppButtons().filledButton(true, AppStrings.logIn, context),
                   ),

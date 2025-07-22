@@ -20,7 +20,7 @@ class GetApiServices {
     required bool loader,
   }) async {
     sp = await SharedPreferences.getInstance();
-    if (!loader) {
+    if (loader) {
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -40,7 +40,7 @@ class GetApiServices {
       );
 
       var data = json.decode(response.body);
-      if (!loader) {
+      if (loader) {
         Navigator.pop(context);
       }
       if (response.statusCode == 200 || response.statusCode == 201) {

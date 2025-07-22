@@ -11,4 +11,7 @@ class ApiEndpoint {
   static const getGraphCodesByClassAndRegion = "getGraphCodesByClassAndRegion";
   static const getGraphData = "getGraphData";
   static const getNearby = "getNearby";
+  static const getWeeklyData = "getWeeklyData";
+  static const getForwardPrices = "getForwardPrices";
+  static const getLatestPrdate = "getLatestPrdate";
 }

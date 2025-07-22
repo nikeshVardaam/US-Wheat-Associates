@@ -43,8 +43,8 @@ class AppStrings {
   static const wheatData = "WHEAT DATA";
   static const gulfOfMexico = "Gulf of Mexico";
   static const calculator = "Calculator";
-  static const error500 = "error500";
-  static const error503 = "error503";
+  static const error500 = "We are working on server, Please try again later.";
+  static const error503 = "Server is under maintenance, Please try again later.";
   static const subscriberConsent = "Subscriber consent";
   static const iConsentToReceivingEmail = "I consent to receiving email communications. ";
   static const iConsentToHavingMySubscriber = "I consent to having my subscriber engagement tracked and analyzed.";

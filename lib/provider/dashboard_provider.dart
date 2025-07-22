@@ -8,8 +8,9 @@ import 'package:uswheat/utils/app_strings.dart';
 
 class DashboardProvider extends ChangeNotifier {
   String? selectedPage = AppStrings.watchlist;
-  Widget selectActivity = Container();
-  String selectMenu = "";
+  Widget selectActivity = const Watchlist();
+  String selectMenu = AppStrings.watchlist;
+  int currentIndex = 2;
 
   DashboardProvider() {
     selectActivity = const Watchlist();
@@ -19,7 +20,29 @@ class DashboardProvider extends ChangeNotifier {
 
   setChangeActivity({required Widget activity, required String pageName}) {
     selectActivity = activity;
-    selectMenu = pageName;
+    selectMenu = AppStrings.watchlist;
+    notifyListeners();
+  }
+
+  changePageFromBottomNavigation({required int index}) {
+    currentIndex = index;
+    switch (index) {
+      case 0:
+        setChangeActivity(activity: const Prices(), pageName: AppStrings.price);
+        break;
+      case 1:
+        setChangeActivity(activity: const Quality(), pageName: AppStrings.quality);
+        break;
+      case 2:
+        setChangeActivity(activity: const Watchlist(), pageName: AppStrings.watchlist);
+        break;
+      case 3:
+        setChangeActivity(activity: const Reports(), pageName: AppStrings.reports);
+        break;
+      case 4:
+        setChangeActivity(activity: const Calculator(), pageName: AppStrings.calculator);
+        break;
+    }
     notifyListeners();
   }
 }

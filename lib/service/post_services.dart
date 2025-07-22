@@ -22,7 +22,7 @@ class PostServices {
     required bool loader,
   }) async {
     sp = await SharedPreferences.getInstance();
-    if (!loader) {
+    if (loader) {
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -44,7 +44,7 @@ class PostServices {
         },
       );
       var jsonData = json.decode(response.body);
-      if (!loader) {
+      if (loader) {
         Navigator.pop(context);
       }
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -106,30 +106,30 @@ class PostServices {
         return null;
       }
     } on TimeoutException catch (e) {
-      if (context.mounted && !loader) {
+      if (context.mounted && loader) {
         Navigator.pop(context);
         // show dialog
       }
       return null;
     } on HttpException catch (e) {
-      if (context.mounted && !loader) {
+      if (context.mounted && loader) {
         Navigator.pop(context);
       }
       return null;
     } on SocketException catch (e) {
-      if (context.mounted && !loader) {
+      if (context.mounted && loader) {
         Navigator.pop(context);
         // show dialog
       }
       return null;
     } on FormatException catch (e) {
-      if (context.mounted && !loader) {
+      if (context.mounted && loader) {
         Navigator.pop(context);
         // show dialog
       }
       return null;
     } on Exception catch (e) {
-      if (context.mounted && !loader) {
+      if (context.mounted && loader) {
         Navigator.pop(context);
         // show dialog
       }
