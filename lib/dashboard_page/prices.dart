@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:uswheat/modal/all_price_data_modal.dart';
 import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
@@ -21,7 +22,9 @@ class _PricesState extends State<Prices> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        Provider.of<PricesProvider>(context, listen: false).fetchData(context: context);
+        Provider.of<PricesProvider>(context, listen: false).fetchData(
+          context: context,
+        );
       },
     );
     super.initState();
@@ -37,7 +40,7 @@ class _PricesState extends State<Prices> {
             Container(
               color: AppColors.c95795d,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric( horizontal: 16),
                 child: Row(
                   children: [
                     Expanded(
@@ -54,17 +57,22 @@ class _PricesState extends State<Prices> {
                       children: [
                         Text(
                           AppStrings.favoritePrice,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppColors.cFFFFFF,
+                              ),
                         ),
-                        const SizedBox(
-                          width: 8,
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: Icon(
+                            pp.isInWatchlist ? Icons.star : Icons.star_border,
+                            color: Colors.amber,
+                          ),
+                          onPressed: () {
+                            pp.storeWatchList(context: context, loader: true);
+                          },
                         ),
-                        Icon(
-                          Icons.star_border_outlined,
-                          color: AppColors.cFFFFFF,
-                        )
                       ],
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -108,7 +116,7 @@ class _PricesState extends State<Prices> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    pp.selectedRegion ?? "--",
+                    pp.selectedRegion ?? "Select Region",
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: AppColors.c353d4a.withOpacity(0.7),
@@ -161,7 +169,7 @@ class _PricesState extends State<Prices> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    pp.selectedClasses ?? "--",
+                    pp.selectedClasses ?? "Select Classes",
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: AppColors.c353d4a.withOpacity(0.7),
@@ -212,34 +220,43 @@ class _PricesState extends State<Prices> {
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Text(
-                          "01-Jan-${pp.selectedYears ?? ""}",
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: pp.selectedYears?.isNotEmpty ?? false
+                      ? Row(
+                          children: [
+                            Text(
+                              "01-Jan-${pp.selectedYears ?? ""}",
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              "to",
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              "31-Dec-${pp.selectedYears ?? ""}",
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          "Select Year",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.c353d4a.withOpacity(0.7),
                               ),
                         ),
-                        const SizedBox(width: 10),
-                        Text(
-                          "to",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          "31-Dec-${pp.selectedYears ?? ""}",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
-                        ),
-                      ],
-                    )),
+                )
               ],
             ),
             Expanded(
@@ -266,9 +283,9 @@ class _PricesState extends State<Prices> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
                                 child: Text(
-                                  "Jan-${pp.selectedYears ?? "--"} / dec-${pp.selectedYears ?? "--"}",
+                                  "Jan-${pp.selectedYears ?? "--"} / Dec-${pp.selectedYears ?? "--"}",
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: AppColors.cFFFFFF,
@@ -280,7 +297,7 @@ class _PricesState extends State<Prices> {
                             coordinateUnit: CoordinateUnit.logicalPixel,
                             region: AnnotationRegion.plotArea,
                             x: MediaQuery.of(context).size.width / 4,
-                            y: MediaQuery.of(context).size.width / 2,
+                            y: MediaQuery.of(context).size.width / 4,
                           ),
                         ],
                         primaryXAxis: CategoryAxis(
@@ -295,6 +312,7 @@ class _PricesState extends State<Prices> {
                           majorTickLines: const MajorTickLines(width: 0),
                         ),
                         primaryYAxis: const NumericAxis(
+                          interval: 0.1,
                           isVisible: false,
                           majorGridLines: MajorGridLines(width: 0),
                           axisLine: AxisLine(width: 0),
@@ -335,17 +353,17 @@ class _PricesState extends State<Prices> {
                       "FOB \$/BU ",
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: AppColors.c95795d,
+                            color: AppColors.c353d4a.withOpacity(0.7),
                           ),
                     ),
                     const SizedBox(
                       width: 4,
                     ),
                     Text(
-                      pp.nearbyList.isNotEmpty ? pp.nearbyList[0].cASHBU.toString() : "--",
+                      pp.allPriceDataModal?.nearby?.cASHBU?.toString() ?? "",
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: AppColors.c95795d,
+                            color: AppColors.c353d4a.withOpacity(0.7),
                           ),
                     ),
                   ],
@@ -379,7 +397,7 @@ class _PricesState extends State<Prices> {
                     Row(
                       children: [
                         Text(
-                          "\$/BU -0.04",
+                          "\$/BU -",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.cd4582d,
@@ -389,7 +407,7 @@ class _PricesState extends State<Prices> {
                           width: 4,
                         ),
                         Text(
-                          pp.nearbyList.isNotEmpty ? pp.nearbyList[0].cASHBU.toString() : "--",
+                          pp.allPriceDataModal?.weekly?.cASHBU.toString().substring(0, 3) ?? "--",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.cd4582d,
@@ -408,7 +426,7 @@ class _PricesState extends State<Prices> {
                     Row(
                       children: [
                         Text(
-                          "\$/MT -2",
+                          "\$/MT -",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.cd4582d,
@@ -418,7 +436,7 @@ class _PricesState extends State<Prices> {
                           width: 4,
                         ),
                         Text(
-                         pp.weekData?.cASHBU.toString() ?? "--",
+                          pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 6) ?? "--",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.cd4582d,
@@ -465,7 +483,7 @@ class _PricesState extends State<Prices> {
                       width: 4,
                     ),
                     Text(
-                      pp.weekData?.cASHMT.toString() ?? "--",
+                      pp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: AppColors.c353d4a.withOpacity(0.7),
@@ -500,9 +518,7 @@ class _PricesState extends State<Prices> {
                       ),
                     ),
                     Text(
-                      Miscellaneous.formatPrDate(
-                        pp.latestPrdate?.prdate ?? "--",
-                      ),
+                      Miscellaneous.formatPrDate(pp.allPriceDataModal?.prdate ?? ""),
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: AppColors.c353d4a.withOpacity(0.7),
@@ -538,42 +554,51 @@ class _PricesState extends State<Prices> {
                     const SizedBox(
                       width: 4,
                     ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                            children: List.generate(
-                          pp.forwardPricesList.length ?? 0,
-                          (index) {
-                            var data = pp.forwardPricesList[index];
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          pp.allPriceDataModal?.forward?.isNotEmpty ?? false
+                              ? Row(
+                                  children: List.generate(
+                                    pp.allPriceDataModal?.forward?.length ?? 0,
+                                    (index) {
+                                      var data = pp.allPriceDataModal?.forward?[index];
 
-                            return SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${pp.fixedMonths[index]}:",
-                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "${pp.fixedMonths[index]}:",
+                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                                  ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              data?.cASHMT.toString().substring(0, 6) ?? '--',
+                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Text(
+                                  "--",
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                         fontWeight: FontWeight.w600,
-                                        color: AppColors.c353d4a.withOpacity(0.7),
+                                        color: AppColors.cd4582d,
                                       ),
-                                    ),
-                                    Text(
-                                      data.cASHMT.toString() ?? "--",
-                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.c353d4a.withOpacity(0.7),
-                                          ),
-                                    ),
-                                  ],
                                 ),
-                              ),
-                            );
-                          },
-                        )),
+                        ],
                       ),
                     ),
                   ],
@@ -585,4 +610,8 @@ class _PricesState extends State<Prices> {
       },
     );
   }
+}
+
+extension on AllPriceDataModal? {
+  operator [](int other) {}
 }

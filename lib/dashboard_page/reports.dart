@@ -10,10 +10,6 @@ class Reports extends StatefulWidget {
 class _ReportsState extends State<Reports> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text("Reports")
-      ],
-    );
+    return const Placeholder();
   }
 }

@@ -1,18 +1,13 @@
-class NearbyModal {
-  double? cASHMT;
-  double? cASHBU;
+class   NearbyModal {
+  final double cASHMT;
+  final double cASHBU;
 
-  NearbyModal({this.cASHMT, this.cASHBU});
+  NearbyModal({required this.cASHMT, required this.cASHBU});
 
-  NearbyModal.fromJson(Map<String, dynamic> json) {
-    cASHMT = json['CASHMT'];
-    cASHBU = json['CASHBU'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['CASHMT'] = this.cASHMT;
-    data['CASHBU'] = this.cASHBU;
-    return data;
+  factory NearbyModal.fromJson(Map<String, dynamic> json) {
+    return NearbyModal(
+      cASHMT: (json['CASHMT'] ?? 0).toDouble(),
+      cASHBU: (json['CASHBU'] ?? 0).toDouble(),
+    );
   }
 }

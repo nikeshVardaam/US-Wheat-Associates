@@ -1,8 +1,11 @@
 class AppStrings {
   static const logIn = "Login";
+  static const logout = "Logout";
   static const logInToYourAccount = "Login to your account";
+  static const areYouSureYouWantToLogout = "are You Sure You Want To Logout";
   static const createYourAccount = "Create your account";
   static const company = "Company";
+  static const cancel = "Cancel";
   static const name = "Name";
   static const email = "Email";
   static const dontHaveAnAccount = "Don't have an account?";
@@ -16,13 +19,23 @@ class AppStrings {
   static const imInterested = "I'm interested in:";
   static const harvestReports = "Harvest Reports";
   static const price = "Price";
+  static const agriConversionCalculator = "Agri Conversion Calculator";
   static const favoritePrice = "Favorite Price";
+  static const bushelsMetricTons = "Bushels = Metric Tons";
+  static const inputAndConvertValues  = "Input And Convert Values Between Bushels And Metric Tons.";
+  static const bushels  = "BUSHELS: (bu)";
+  static const equals  = "equals....";
+  static const metricTons  = "METRIC TONS: (MT)";
+  static const calculationBu  = "Calculation:\n1 bu = 0.0272 MT";
+  static const bu   = "1 bu = 0.0272 MT";
+  static const clear   = "Clear";
   static const wheatLetter = "Wheat Letter";
   static const subscribe = "Subscribe";
   static const watchlist = "Watchlist";
   static const quality = "Quality";
   static const reports = "Reports";
   static const region = "REGION";
+  static const distanceArea = "Distance & Area";
   static const hardRedWinter = "HARD RED WINTER";
   static const hardRedSpring = "HARD RED SPRING ";
   static const softRedWinter = "SOFT RED WINTER";
@@ -32,7 +45,7 @@ class AppStrings {
   static const weekChange = "WEEK CHANGE:";
   static const oneYearAgo = "ONE YEAR AGO:";
   static const lastPrDate = "LAST PR DATE:";
-  static const fwdPrice = "FWD PRICE";
+  static const fwdPrice = "FWD PRICE :";
   static const account = "ACCOUNT";
   static const pages = "Pages";
   static const classs = "CLASS";

@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/dashboard_page/calculator.dart';
 import 'package:uswheat/dashboard_page/prices.dart';
 import 'package:uswheat/quality/quality.dart';
@@ -6,11 +8,15 @@ import 'package:uswheat/dashboard_page/reports.dart';
 import 'package:uswheat/dashboard_page/watchList.dart';
 import 'package:uswheat/utils/app_strings.dart';
 
+import '../utils/app_routes.dart';
+import 'login_provider.dart';
+
 class DashboardProvider extends ChangeNotifier {
   String? selectedPage = AppStrings.watchlist;
   Widget selectActivity = const Watchlist();
   String selectMenu = AppStrings.watchlist;
   int currentIndex = 2;
+  SharedPreferences? sp;
 
   DashboardProvider() {
     selectActivity = const Watchlist();
@@ -22,6 +28,13 @@ class DashboardProvider extends ChangeNotifier {
     selectActivity = activity;
     selectMenu = AppStrings.watchlist;
     notifyListeners();
+  }
+
+  logOut(BuildContext context) async {
+    sp = await SharedPreferences.getInstance();
+    sp?.clear();
+    Provider.of<LoginProvider>(context, listen: false).cleanData();
+    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
   }
 
   changePageFromBottomNavigation({required int index}) {
@@ -40,7 +53,7 @@ class DashboardProvider extends ChangeNotifier {
         setChangeActivity(activity: const Reports(), pageName: AppStrings.reports);
         break;
       case 4:
-        setChangeActivity(activity: const Calculator(), pageName: AppStrings.calculator);
+        setChangeActivity(activity:  Calculator(), pageName: AppStrings.calculator);
         break;
     }
     notifyListeners();

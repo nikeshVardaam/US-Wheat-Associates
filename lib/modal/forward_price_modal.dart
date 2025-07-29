@@ -1,7 +1,7 @@
 class ForwardPricesModal {
-  double? cASHMT;
-  double? cASHBU;
-  int? nRBYOFFSET;
+  num? cASHMT;
+  num? cASHBU;
+  num? nRBYOFFSET;
 
   ForwardPricesModal({this.cASHMT, this.cASHBU, this.nRBYOFFSET});
 

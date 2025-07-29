@@ -107,6 +107,33 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        // Row(
+                        //   children: [
+                        //     Theme(
+                        //       data: ThemeData(),
+                        //       child: Checkbox(
+                        //         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        //         visualDensity: const VisualDensity(horizontal: -4),
+                        //         activeColor: AppColors.c5B8EDC,
+                        //         checkColor: AppColors.cFFFFFF,
+                        //         value: lp.rememberMe,
+                        //         onChanged: (val) {
+                        //           lp.setRemember();
+                        //         },
+                        //       ),
+                        //     ),
+                        //     const SizedBox(
+                        //       width: 10,
+                        //     ),
+                        //     Text(
+                        //       AppStrings.rememberMe,
+                        //       style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c3d3934),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),

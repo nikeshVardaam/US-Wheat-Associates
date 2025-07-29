@@ -6,6 +6,7 @@ import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/quality/quality.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
+import 'package:uswheat/utils/app_logout_dialog.dart' show AppLogoutDialogs;
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 
@@ -208,7 +209,7 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                             ),
                             onTap: () {
-                              dp.setChangeActivity(activity: const Reports(), pageName: AppStrings.reports);
+                              dp.setChangeActivity(activity:  const Reports(), pageName: AppStrings.reports);
                               Navigator.pop(context);
                             },
                           ),
@@ -226,7 +227,7 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                             ),
                             onTap: () {
-                              dp.setChangeActivity(activity: const Calculator(), pageName: AppStrings.calculator);
+                              dp.setChangeActivity(activity:  Calculator(), pageName: AppStrings.calculator);
                               Navigator.pop(context);
                             },
                           ),
@@ -268,6 +269,34 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                             ),
                             onTap: () {},
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AppLogoutDialogs(
+                                    onTap: () {
+                                      dp.logOut(context);
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                            child: ListTile(
+                              dense: true,
+                              leading: Icon(
+                                Icons.logout,
+                                color: AppColors.cb01c32,
+                                size: 18,
+                              ),
+                              title: Text(
+                                AppStrings.logout,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: AppColors.cb01c32,
+                                    ),
+                              ),
+                            ),
                           ),
                         ],
                       ),

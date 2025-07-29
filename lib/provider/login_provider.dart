@@ -14,6 +14,7 @@ import '../utils/pref_keys.dart';
 class LoginProvider extends ChangeNotifier {
   SharedPreferences? sp;
   bool passwordIsVisible = false;
+  bool rememberMe = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -22,6 +23,30 @@ class LoginProvider extends ChangeNotifier {
     passwordController.clear();
     notifyListeners();
   }
+
+  // getPrefData() async {
+  //   sp = await SharedPreferences.getInstance();
+  //   String loginCredential = sp?.getString(PrefKeys.loginCredential) ?? "";
+  //
+  //   if (loginCredential.isNotEmpty) {
+  //     rememberMe = true;
+  //     LoginCredential lc = LoginCredential.fromJson(json.decode(loginCredential));
+  //
+  //     companyController.text = lc.company ?? "";
+  //     emailController.text = lc.email ?? "";
+  //     passwordController.text = lc.password ?? "";
+  //   }
+  //   notifyListeners();
+  // }
+  // setRemember() {
+  //   if (rememberMe) {
+  //     rememberMe = false;
+  //     notifyListeners();
+  //   } else {
+  //     rememberMe = true;
+  //     notifyListeners();
+  //   }
+  // }
 
   checkLogin({required BuildContext context}) async {
     sp = await SharedPreferences.getInstance();

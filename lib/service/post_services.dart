@@ -68,7 +68,7 @@ class PostServices {
             color: Colors.redAccent,
           );
         } else {
-          AppWidgets.appSnackBar(context: context, text: jsonData["message"], color: Colors.redAccent);
+          AppWidgets.appSnackBar(context: context, text: jsonData["message"]?? "", color: Colors.redAccent);
         }
         return null;
       } else if (response.statusCode == 404) {

@@ -10,8 +10,8 @@ class ApiEndpoint {
   static const getYears = "getYears";
   static const getGraphCodesByClassAndRegion = "getGraphCodesByClassAndRegion";
   static const getGraphData = "getGraphData";
-  static const getNearby = "getNearby";
-  static const getWeeklyData = "getWeeklyData";
-  static const getForwardPrices = "getForwardPrices";
-  static const getLatestPrdate = "getLatestPrdate";
+  static const getAllPriceData = "getAllPriceData";
+  static const storeWatchlist = "storeWatchlist";
+  static const getWatchlist = "getWatchlist";
+  static const removeWatchlist = "removeWatchlist";
 }
