@@ -25,6 +25,7 @@ class AppStrings {
   static const inputAndConvertValues  = "Input And Convert Values Between Bushels And Metric Tons.";
   static const bushels  = "BUSHELS: (bu)";
   static const equals  = "equals....";
+  static const noData  = "No data ....";
   static const metricTons  = "METRIC TONS: (MT)";
   static const calculationBu  = "Calculation:\n1 bu = 0.0272 MT";
   static const bu   = "1 bu = 0.0272 MT";
@@ -34,6 +35,9 @@ class AppStrings {
   static const watchlist = "Watchlist";
   static const quality = "Quality";
   static const reports = "Reports";
+  static const reportsTypes = "Reports Types";
+  static const read = "Read";
+  static const view = "View";
   static const region = "REGION";
   static const distanceArea = "Distance & Area";
   static const hardRedWinter = "HARD RED WINTER";

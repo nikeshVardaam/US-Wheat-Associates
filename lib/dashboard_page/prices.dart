@@ -40,7 +40,7 @@ class _PricesState extends State<Prices> {
             Container(
               color: AppColors.c95795d,
               child: Padding(
-                padding: const EdgeInsets.symmetric( horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
                     Expanded(
@@ -68,6 +68,7 @@ class _PricesState extends State<Prices> {
                             color: Colors.amber,
                           ),
                           onPressed: () {
+                            pp.toggleWatchlistStatus();
                             pp.storeWatchList(context: context, loader: true);
                           },
                         ),
@@ -77,528 +78,553 @@ class _PricesState extends State<Prices> {
                 ),
               ),
             ),
-            Row(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width / 4,
-                  color: AppColors.c95795d.withOpacity(0.1),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: GestureDetector(
-                      onTapDown: (TapDownDetails details) {
-                        pp.showFilterDropdown(
-                          context: context,
-                          details: details,
-                          onSelect: (selectedRegion) {
-                            print("You selected: $selectedRegion");
-                          },
-                        );
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            AppStrings.region,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.c95795d,
-                                ),
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 4,
+                          color: AppColors.c95795d.withOpacity(0.1),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                            child: GestureDetector(
+                              onTapDown: (TapDownDetails details) {
+                                pp.showFilterDropdown(
+                                  context: context,
+                                  details: details,
+                                  onSelect: (selectedRegion) {
+                                    print("You selected: $selectedRegion");
+                                  },
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    AppStrings.region,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.c95795d,
+                                        ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.c95795d,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            color: AppColors.c95795d,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    pp.selectedRegion ?? "Select Region",
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.c353d4a.withOpacity(0.7),
                         ),
-                  ),
-                ),
-              ],
-            ),
-            Divider(
-              thickness: 0.5,
-              height: 1,
-              color: AppColors.cB6B6B6,
-            ),
-            Row(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width / 4,
-                  color: AppColors.c95795d.withOpacity(0.1),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: GestureDetector(
-                      onTapDown: (TapDownDetails details) {
-                        pp.showClassesDropdown(
-                          context: context,
-                          details: details,
-                          onSelect: (selectedClasses) {
-                            print("You selected: $selectedClasses");
-                          },
-                        );
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            AppStrings.classs,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            pp.selectedRegion ?? "Select Region",
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.c95795d,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
                                 ),
                           ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            color: AppColors.c95795d,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    pp.selectedClasses ?? "Select Classes",
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.c353d4a.withOpacity(0.7),
                         ),
-                  ),
-                ),
-              ],
-            ),
-            Divider(
-              thickness: 0.5,
-              height: 1,
-              color: AppColors.cB6B6B6,
-            ),
-            Row(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width / 4,
-                  color: AppColors.c95795d.withOpacity(0.1),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: GestureDetector(
-                      onTapDown: (TapDownDetails details) {
-                        pp.showYearsDropdown(
-                          context: context,
-                          details: details,
-                          onSelect: (selectedYears) {
-                            print("You selected: $selectedYears");
-                          },
-                        );
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            AppStrings.date,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      ],
+                    ),
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 4,
+                          color: AppColors.c95795d.withOpacity(0.1),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                            child: GestureDetector(
+                              onTapDown: (TapDownDetails details) {
+                                pp.showClassesDropdown(
+                                  context: context,
+                                  details: details,
+                                  onSelect: (selectedClasses) {
+                                    print("You selected: $selectedClasses");
+                                  },
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    AppStrings.classs,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.c95795d,
+                                        ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.c95795d,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            pp.selectedClasses ?? "Select Classes",
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.c95795d,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
                                 ),
                           ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            color: AppColors.c95795d,
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: pp.selectedYears?.isNotEmpty ?? false
-                      ? Row(
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 4,
+                          color: AppColors.c95795d.withOpacity(0.1),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                            child: GestureDetector(
+                              onTapDown: (TapDownDetails details) {
+                                pp.showYearsDropdown(
+                                  context: context,
+                                  details: details,
+                                  onSelect: (selectedYears) {
+                                    print("You selected: $selectedYears");
+                                  },
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    AppStrings.date,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.c95795d,
+                                        ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.c95795d,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: pp.selectedYears?.isNotEmpty ?? false
+                              ? Row(
+                                  children: [
+                                    Text(
+                                      "01-Jan-${pp.selectedYears ?? ""}",
+                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.c353d4a.withOpacity(0.7),
+                                          ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "to",
+                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.c353d4a.withOpacity(0.7),
+                                          ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "31-Dec-${pp.selectedYears ?? ""}",
+                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.c353d4a.withOpacity(0.7),
+                                          ),
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  "Select Year",
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.c353d4a.withOpacity(0.7),
+                                      ),
+                                ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height/4,
+                      child: pp.chartData.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(fontSize: 16, color: Colors.grey),
+                              ),
+                            )
+                          : Container(
+                              margin: EdgeInsets.zero,
+                              padding: EdgeInsets.zero,
+                              decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.c656e79, width: 0.5), bottom: BorderSide(color: AppColors.c656e79, width: 0.5))),
+                              child: SfCartesianChart(
+                                tooltipBehavior: TooltipBehavior(
+                                  enable: true,
+                                  activationMode: ActivationMode.singleTap,
+                                  tooltipPosition: TooltipPosition.pointer,
+                                ),
+
+                                zoomPanBehavior: ZoomPanBehavior(
+                                  enablePanning: true,
+                                  zoomMode: ZoomMode.xy,
+                                ),
+                                plotAreaBorderWidth: 0,
+                                margin: const EdgeInsets.all(0),
+                                backgroundColor: Colors.white,
+                                annotations: <CartesianChartAnnotation>[
+                                  CartesianChartAnnotation(
+                                    widget: Container(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.c3d3934,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4),
+                                        child: Text(
+                                          "Jan-${pp.selectedYears ?? "--"} / Dec-${pp.selectedYears ?? "--"}",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColors.cFFFFFF,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    coordinateUnit: CoordinateUnit.logicalPixel,
+                                    region: AnnotationRegion.plotArea,
+                                    x: MediaQuery.of(context).size.width / 4,
+                                    y: MediaQuery.of(context).size.width / 3,
+                                  ),
+                                ],
+                                primaryXAxis: CategoryAxis(
+                                  isVisible: true,
+                                  majorGridLines: MajorGridLines(
+                                    width: 0.1,
+                                    color: AppColors.cDFDEDE,
+                                  ),
+                                  axisLine: const AxisLine(width: 0),
+                                  labelStyle: const TextStyle(fontSize: 10),
+                                  tickPosition: TickPosition.inside,
+                                  majorTickLines: const MajorTickLines(width: 0),
+                                ),
+                                primaryYAxis: const NumericAxis(
+                                  interval: 10,
+
+                                  isVisible: true,
+
+                                  majorGridLines: MajorGridLines(width: 1),
+                                  axisLine: AxisLine(width: 0.1),
+                                  majorTickLines: MajorTickLines(width: 0),
+                                  minorTickLines: MinorTickLines(width: 0),
+                                  rangePadding: ChartRangePadding.round, // optional
+                                ),
+                                series: <CartesianSeries>[
+                                  LineSeries<SalesData, String>(
+                                    dataSource: pp.chartData,
+                                    xValueMapper: (SalesData data, _) => data.month,
+                                    yValueMapper: (SalesData data, _) => data.sales,
+                                    color: AppColors.c000000,
+                                    width: 0.5,
+                                    dataLabelSettings: const DataLabelSettings(isVisible: false),
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ),
+                    Container(
+                      color: AppColors.c95795d.withOpacity(0.1),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                        child: Row(
                           children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    AppStrings.nearby,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.c95795d,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             Text(
-                              "01-Jan-${pp.selectedYears ?? ""}",
+                              "FOB \$/BU ",
                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.c353d4a.withOpacity(0.7),
                                   ),
                             ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "to",
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.c353d4a.withOpacity(0.7),
-                                  ),
+                            const SizedBox(
+                              width: 4,
                             ),
-                            const SizedBox(width: 10),
                             Text(
-                              "31-Dec-${pp.selectedYears ?? ""}",
+                              pp.allPriceDataModal?.nearby?.cASHBU?.toString() ?? "",
                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.c353d4a.withOpacity(0.7),
                                   ),
                             ),
                           ],
-                        )
-                      : Text(
-                          "Select Year",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
                         ),
-                )
-              ],
-            ),
-            Expanded(
-              child: pp.chartData.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No data found',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
-                    )
-                  : Container(
-                      margin: EdgeInsets.zero,
-                      padding: EdgeInsets.zero,
-                      decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.c656e79, width: 0.5), bottom: BorderSide(color: AppColors.c656e79, width: 0.5))),
-                      child: SfCartesianChart(
-                        plotAreaBorderWidth: 0,
-                        margin: const EdgeInsets.all(0),
-                        backgroundColor: Colors.white,
-                        annotations: <CartesianChartAnnotation>[
-                          CartesianChartAnnotation(
-                            widget: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.c3d3934,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
-                                child: Text(
-                                  "Jan-${pp.selectedYears ?? "--"} / Dec-${pp.selectedYears ?? "--"}",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.cFFFFFF,
-                                    fontWeight: FontWeight.w500,
+                    ),
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
+                    Container(
+                      color: AppColors.c95795d.withOpacity(0.1),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    AppStrings.weekChange,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.c95795d,
+                                        ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
-                            coordinateUnit: CoordinateUnit.logicalPixel,
-                            region: AnnotationRegion.plotArea,
-                            x: MediaQuery.of(context).size.width / 4,
-                            y: MediaQuery.of(context).size.width / 4,
-                          ),
-                        ],
-                        primaryXAxis: CategoryAxis(
-                          isVisible: true,
-                          majorGridLines: MajorGridLines(
-                            width: 0.1,
-                            color: AppColors.cDFDEDE,
-                          ),
-                          axisLine: const AxisLine(width: 0),
-                          labelStyle: const TextStyle(fontSize: 10),
-                          tickPosition: TickPosition.inside,
-                          majorTickLines: const MajorTickLines(width: 0),
-                        ),
-                        primaryYAxis: const NumericAxis(
-                          interval: 0.1,
-                          isVisible: false,
-                          majorGridLines: MajorGridLines(width: 0),
-                          axisLine: AxisLine(width: 0),
-                        ),
-                        series: <CartesianSeries>[
-                          LineSeries<SalesData, String>(
-                            dataSource: pp.chartData,
-                            xValueMapper: (SalesData data, _) => data.month,
-                            yValueMapper: (SalesData data, _) => data.sales,
-                            color: AppColors.c000000,
-                            width: 0.5,
-                            dataLabelSettings: const DataLabelSettings(isVisible: false),
-                          ),
-                        ],
-                      ),
-                    ),
-            ),
-            Container(
-              color: AppColors.c95795d.withOpacity(0.1),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Text(
-                            AppStrings.nearby,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.c95795d,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      "FOB \$/BU ",
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.c353d4a.withOpacity(0.7),
-                          ),
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    Text(
-                      pp.allPriceDataModal?.nearby?.cASHBU?.toString() ?? "",
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.c353d4a.withOpacity(0.7),
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Divider(
-              thickness: 0.5,
-              height: 1,
-              color: AppColors.cB6B6B6,
-            ),
-            Container(
-              color: AppColors.c95795d.withOpacity(0.1),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Text(
-                            AppStrings.weekChange,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.c95795d,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "\$/BU -",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.cd4582d,
-                              ),
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Text(
-                          pp.allPriceDataModal?.weekly?.cASHBU.toString().substring(0, 3) ?? "--",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.cd4582d,
-                              ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Container(
-                        height: 16,
-                        color: AppColors.c666666,
-                        width: 0.5,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "\$/MT -",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.cd4582d,
-                              ),
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Text(
-                          pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 6) ?? "--",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.cd4582d,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Divider(
-              thickness: 0.5,
-              height: 1,
-              color: AppColors.cB6B6B6,
-            ),
-            Container(
-              color: AppColors.c95795d.withOpacity(0.1),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Text(
-                            AppStrings.oneYearAgo,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.c95795d,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      "\$/MT",
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.c353d4a.withOpacity(0.7),
-                          ),
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    Text(
-                      pp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.c353d4a.withOpacity(0.7),
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Divider(
-              thickness: 0.5,
-              height: 1,
-              color: AppColors.cB6B6B6,
-            ),
-            Container(
-              color: AppColors.c95795d.withOpacity(0.1),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Text(
-                            AppStrings.lastPrDate,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.c95795d,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      Miscellaneous.formatPrDate(pp.allPriceDataModal?.prdate ?? ""),
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.c353d4a.withOpacity(0.7),
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Divider(
-              thickness: 0.5,
-              height: 1,
-              color: AppColors.cB6B6B6,
-            ),
-            Container(
-              color: AppColors.c95795d.withOpacity(0.1),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          AppStrings.fwdPrice,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.c95795d,
-                              ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          pp.allPriceDataModal?.forward?.isNotEmpty ?? false
-                              ? Row(
-                                  children: List.generate(
-                                    pp.allPriceDataModal?.forward?.length ?? 0,
-                                    (index) {
-                                      var data = pp.allPriceDataModal?.forward?[index];
-
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "${pp.fixedMonths[index]}:",
-                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.c353d4a.withOpacity(0.7),
-                                                  ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              data?.cASHMT.toString().substring(0, 6) ?? '--',
-                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.c353d4a.withOpacity(0.7),
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
-                              : Text(
-                                  "--",
+                            Row(
+                              children: [
+                                Text(
+                                  "\$/BU -",
                                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                         fontWeight: FontWeight.w600,
                                         color: AppColors.cd4582d,
                                       ),
                                 ),
-                        ],
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  pp.allPriceDataModal?.weekly?.cASHBU.toString().substring(0, 3) ?? "--",
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.cd4582d,
+                                      ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Container(
+                                height: 16,
+                                color: AppColors.c666666,
+                                width: 0.5,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "\$/MT -",
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.cd4582d,
+                                      ),
+                                ),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 6) ?? "--",
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.cd4582d,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
+                    Container(
+                      color: AppColors.c95795d.withOpacity(0.1),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    AppStrings.oneYearAgo,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.c95795d,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              "\$/MT",
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            Text(
+                              pp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
+                    Container(
+                      color: AppColors.c95795d.withOpacity(0.1),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    AppStrings.lastPrDate,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.c95795d,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              Miscellaneous.formatPrDate(pp.allPriceDataModal?.prdate ?? ""),
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
+                    Container(
+                      color: AppColors.c95795d.withOpacity(0.1),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  AppStrings.fwdPrice,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.c95795d,
+                                      ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  pp.allPriceDataModal?.forward?.isNotEmpty ?? false
+                                      ? Row(
+                                          children: List.generate(
+                                            pp.allPriceDataModal?.forward?.length ?? 0,
+                                            (index) {
+                                              var data = pp.allPriceDataModal?.forward?[index];
+
+                                              return Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      "${pp.fixedMonths[index]}:",
+                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            fontWeight: FontWeight.w600,
+                                                            color: AppColors.c353d4a.withOpacity(0.7),
+                                                          ),
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      data?.cASHMT.toString().substring(0, 6) ?? '--',
+                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            fontWeight: FontWeight.w600,
+                                                            color: AppColors.c353d4a.withOpacity(0.7),
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        )
+                                      : Text(
+                                          "--",
+                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.cd4582d,
+                                              ),
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

@@ -30,10 +30,6 @@ class AppWidgets {
             decoration: BoxDecoration(
               color: AppColors.cFFFFFF,
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: AppColors.c464646,
-                width: 1,
-              ),
             ),
             child: const Padding(
               padding: EdgeInsets.all(8.0),

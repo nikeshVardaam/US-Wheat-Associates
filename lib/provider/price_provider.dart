@@ -35,7 +35,9 @@ class PricesProvider extends ChangeNotifier {
   WeekDataModal? weekData;
   RegionsAndClassesModal? regionsAndClasses;
   bool isFormTouched = false;
-  bool isInWatchlist = false;
+  bool _isInWatchlist = false;
+
+  bool get isInWatchlist => _isInWatchlist;
 
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -59,18 +61,16 @@ class PricesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> syncData({required BuildContext context}) async {
-    await getAllPriceData(context: context, loader: false);
-    await getGraphCodesByClassAndRegion(context: context, loader: false);
-    await graphData(context: context, loader: false);
-
-    notifyListeners();
-  }
-
   Future<void> upDateGraphData({required BuildContext context}) async {
     prdate = selectedYears;
     await getGraphCodesByClassAndRegion(context: context, loader: true);
     await graphData(context: context, loader: true);
+    await getAllPriceData(context: context, loader: false);
+  }
+
+  void toggleWatchlistStatus() {
+    _isInWatchlist = !_isInWatchlist;
+    notifyListeners();
   }
 
   storeWatchList({required BuildContext context, required bool loader}) async {
@@ -99,6 +99,7 @@ class PricesProvider extends ChangeNotifier {
     )
         .then((value) {
       if (value != null) {
+        _isInWatchlist = false;
         AppWidgets.appSnackBar(
           context: context,
           text: "Watchlist Added Successfully",
@@ -136,8 +137,6 @@ class PricesProvider extends ChangeNotifier {
           }
         }
       }
-
-      notifyListeners();
     }
   }
 
@@ -159,8 +158,6 @@ class PricesProvider extends ChangeNotifier {
       selectedYears = uniqueYears.firstWhere((year) => year == currentYear, orElse: () => uniqueYears.first).toString();
 
       prdate = selectedYears;
-
-      notifyListeners();
     }
   }
 
@@ -181,7 +178,6 @@ class PricesProvider extends ChangeNotifier {
         .then((value) {
       if (value != null) {
         allPriceDataModal = AllPriceDataModal.fromJson(json.decode(value.body));
-
         notifyListeners();
       }
     });
@@ -210,18 +206,11 @@ class PricesProvider extends ChangeNotifier {
         grphcode = body.last.toString();
       }
     }
-
-    notifyListeners();
   }
 
   Future<void> graphData({required BuildContext context, required bool loader}) async {
-    print("graphDAta");
-
     if (grphcode == null || grphcode!.isEmpty || prdate == null || prdate!.isEmpty) {
-      debugPrint("❌ graphData early return: grphcode or prdate is empty");
-
       chartData = [];
-      notifyListeners();
       return;
     }
 
@@ -231,7 +220,6 @@ class PricesProvider extends ChangeNotifier {
 
     graphList.clear();
     chartData.clear();
-    notifyListeners();
 
     var data = {
       "grphcode": grphcode ?? "",
@@ -249,7 +237,6 @@ class PricesProvider extends ChangeNotifier {
     if (response != null) {
       List<dynamic> jsonList = json.decode(response.body);
       graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
-
       final tempChartData = fixedMonths.map((month) {
         final monthEntries = graphList.where((e) {
           try {
@@ -262,10 +249,13 @@ class PricesProvider extends ChangeNotifier {
           }
         }).toList();
 
-        final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
+        final avgSales = monthEntries.isNotEmpty
+            ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length
+            : 0.0;
 
         return SalesData(month: month, sales: avgSales);
       }).toList();
+
 
       final hasValidData = tempChartData.any((e) => e.sales != 0.0);
       chartData = hasValidData ? tempChartData : [];
@@ -274,8 +264,6 @@ class PricesProvider extends ChangeNotifier {
         prdate = graphList.last.pRDATE;
         graphDate = graphList.last.pRDATE;
       }
-
-      notifyListeners();
     }
   }
 
@@ -309,7 +297,10 @@ class PricesProvider extends ChangeNotifier {
                   return ListTile(
                     title: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(region,maxLines: 4,),
+                      child: Text(
+                        region,
+                        maxLines: 4,
+                      ),
                     ),
                     onTap: () {
                       Navigator.pop(context, region);
@@ -330,9 +321,10 @@ class PricesProvider extends ChangeNotifier {
         selectedClasses = uniqueClasses.first;
       }
 
+      await upDateGraphData(context: context);
+
       notifyListeners();
       onSelect(selected);
-      upDateGraphData(context: context);
     }
   }
 
@@ -391,9 +383,9 @@ class PricesProvider extends ChangeNotifier {
 
     if (selected != null) {
       selectedClasses = selected;
+      await upDateGraphData(context: context);
       notifyListeners();
       onSelect(selected);
-      upDateGraphData(context: context);
     }
   }
 
@@ -447,9 +439,9 @@ class PricesProvider extends ChangeNotifier {
 
     if (selected != null) {
       selectedYears = selected.toString();
+      await upDateGraphData(context: context);
       notifyListeners();
       onSelect(selected);
-      upDateGraphData(context: context);
     }
   }
 }

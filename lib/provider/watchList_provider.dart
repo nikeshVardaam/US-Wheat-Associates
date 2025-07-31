@@ -9,6 +9,7 @@ import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 
+import '../modal/all_price_data_modal.dart';
 import '../modal/graph_modal.dart';
 import '../modal/sales_modal.dart';
 import '../service/delete_service.dart';
@@ -16,14 +17,16 @@ import '../service/post_services.dart';
 
 class WatchlistProvider extends ChangeNotifier {
   List<WatchlistItem>? watchlist;
-  String? selectedRegion;
-  String? selectedClasses;
+  FilterData? filterData;
   String? grphcode;
+  String? selectedRegion;
+  String? selectedClass;
   String? prdate;
   String? graphDate;
   List<GraphDataModal> graphList = [];
   List<SalesData> chartData = [];
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  AllPriceDataModal? allPriceDataModal;
 
   Future<void> fetchData({required BuildContext context}) async {
     showDialog(
@@ -32,18 +35,10 @@ class WatchlistProvider extends ChangeNotifier {
       builder: (context) => AppWidgets.loading(),
     );
 
-    await getWatchList(context: context, loader: true,);
+    await getWatchList(context: context, loader: true);
+    await getAllPriceData(context: context, loader: false);
 
     Navigator.pop(context);
-    notifyListeners();
-  }
-
-  Future<void> syncData({required BuildContext context}) async {
-    await getWatchList(context: context, loader: false);
-    await getGraphCodesByClassAndRegion(context: context, loader: false);
-    for (final item in watchlist!) {
-      await fetchChartDataForItem(context, item);
-    }
 
     notifyListeners();
   }
@@ -54,8 +49,8 @@ class WatchlistProvider extends ChangeNotifier {
         if (value != null) {
           final data = jsonDecode(value.body)['data'];
           watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
-          notifyListeners();
         }
+        notifyListeners();
       },
     );
   }
@@ -67,7 +62,7 @@ class WatchlistProvider extends ChangeNotifier {
           getWatchList(context: context, loader: false);
           AppWidgets.appSnackBar(
             context: context,
-            text: "Watchlist Deleted Successfully",
+            text: "Watchlist remove Successfully",
             color: AppColors.c2a8741,
           );
           notifyListeners();
@@ -76,10 +71,14 @@ class WatchlistProvider extends ChangeNotifier {
     );
   }
 
-  getGraphCodesByClassAndRegion({required BuildContext context, required bool loader}) async {
+  getGraphCodesByClassAndRegion({
+    required BuildContext context,
+    required bool loader,
+  }) async {
+    print("getGraphCodesByClassAndRegion");
     var data = {
-      "class": selectedClasses ?? "",
-      "region": selectedRegion ?? "",
+      "class": filterData?.classs ?? "",
+      "region": filterData?.region ?? "",
     };
 
     final value = await PostServices().post(
@@ -89,27 +88,54 @@ class WatchlistProvider extends ChangeNotifier {
       isBottomSheet: false,
       loader: loader,
     );
-
+    print(data);
     if (value != null) {
+      print(value.body);
       final body = json.decode(value.body);
 
       if (body is List && body.isNotEmpty) {
         grphcode = body.last.toString();
       }
     }
+  }
 
-    notifyListeners();
+  getAllPriceData({required BuildContext context, required bool loader}) {
+    print("getALlPrice");
+
+    var data = {
+      "grphcode": "G5XX",
+    };
+    PostServices()
+        .post(
+      endpoint: ApiEndpoint.getAllPriceData,
+      requestData: data,
+      context: context,
+      isBottomSheet: false,
+      loader: loader,
+    )
+        .then((value) {
+      if (value != null) {
+        print(value.body);
+        allPriceDataModal = AllPriceDataModal.fromJson(json.decode(value.body));
+        notifyListeners();
+      }
+    });
   }
 
   Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem item) async {
     try {
+      // ✅ Don't refetch if chart data already available
+      if (item.chartData.isNotEmpty) return;
+
       String region = item.filterdata.region;
       String wclass = item.filterdata.classs;
       String date = item.filterdata.date;
 
+      print('Fetching chart data for: $region - $wclass');
+
       final graphCodeRes = await PostServices().post(
         endpoint: ApiEndpoint.getGraphCodesByClassAndRegion,
-        requestData: {"class": wclass, "region": region},
+        requestData: {"class": item.filterdata.classs, "region": item.filterdata.region},
         context: context,
         isBottomSheet: false,
         loader: false,
@@ -157,7 +183,7 @@ class WatchlistProvider extends ChangeNotifier {
         }).toList();
 
         item.chartData = tempChartData;
-        notifyListeners();
+        print('Fetched ${tempChartData.length} points for $wclass');
       }
     } catch (e) {
       debugPrint('Error fetching chart data for item: $e');

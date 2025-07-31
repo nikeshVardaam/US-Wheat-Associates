@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
-import 'package:uswheat/quality/quality.dart';
+import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';

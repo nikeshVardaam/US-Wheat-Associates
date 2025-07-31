@@ -37,7 +37,7 @@ class GetApiServices {
           'Authorization': bearerToken,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 5));
 
       var data = json.decode(response.body);
       if (loader) {

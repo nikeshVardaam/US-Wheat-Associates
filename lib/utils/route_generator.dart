@@ -6,9 +6,11 @@ import 'package:uswheat/calculator/distance_area/meters_yards_feet.dart';
 import 'package:uswheat/calculator/distance_area/miles_kilometer.dart';
 import 'package:uswheat/calculator/weight/bushels_metric_tons.dart';
 import 'package:uswheat/dashboard.dart';
-import 'package:uswheat/quality/estimates/estimate_hard_red_winter.dart';
+import 'package:uswheat/dashboard_page/quality/estimates/estimate_hard_red_winter.dart';
+import 'package:uswheat/dashboard_page/reprts/report_detail_page.dart';
 import 'package:uswheat/utils/app_routes.dart';
 
+import '../argument/report_detail_arg.dart';
 import '../calculator/distance_area/acres_hectares_mu.dart';
 import '../calculator/weight/long_metric_ton_page.dart';
 import '../calculator/weight/metric_ton_to_kg_pound_page.dart';
@@ -16,10 +18,13 @@ import '../calculator/weight/short_ton_to_pound_page.dart';
 import '../calculator/weight/short_tons_metric_tons.dart';
 import '../calculator/distance_area/square_feet_square_meters.dart';
 import '../calculator/temperature/temperature_converter_pag.dart';
+import '../splash_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case AppRoutes.splashScreen:
+        return buildRoute(const SplashScreen(), settings: settings);
       case AppRoutes.login:
         return buildRoute(const Login(), settings: settings);
       case AppRoutes.dashboard:
@@ -44,11 +49,13 @@ class RouteGenerator {
         return buildRoute(const LongMetricTonPage(), settings: settings);
       case AppRoutes.shortTonToPoundPage:
         return buildRoute(const ShortTonToPoundPage(), settings: settings);
-        case AppRoutes.metricTonToKgPoundPage:
+      case AppRoutes.metricTonToKgPoundPage:
         return buildRoute(const MetricTonToKgPoundPage(), settings: settings);
-        case AppRoutes.temperatureConverterPage:
+      case AppRoutes.temperatureConverterPage:
         return buildRoute(const TemperatureConverterPage(), settings: settings);
-
+      case AppRoutes.reportDetailPage:
+        ReportDetailArg reportDetailArg = settings.arguments as ReportDetailArg;
+        return buildRoute(ReportDetailPage(reportDetailArg: reportDetailArg), settings: settings);
 
       default:
         return _errorRoute();
@@ -65,13 +72,16 @@ class RouteGenerator {
         body: Center(
           child: Column(
             children: [
-              Text(
-                'Seems the route you\'ve navigated to doesn\'t exist!!',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600,
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Seems the route you\'ve navigated to doesn\'t exist!!',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ],
           ),

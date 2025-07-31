@@ -5,4 +5,6 @@ class AppAssets {
   static const chart = "assets/images/chart.png";
   static const stacked = "assets/images/stacked_chart.png";
   static const map = "assets/images/map.jpg";
+  static const splash_logo = "assets/images/splash_logo.png";
+  static const pdf = "assets/images/pdf.png";
 }

@@ -17,7 +17,12 @@ class AppBoxDecoration {
 
   static BoxDecoration blueRounded() {
     return BoxDecoration(
-      color: AppColors.c666666,
+      color: AppColors.c95795d,
+      borderRadius: BorderRadius.circular(4),
+    );
+  }static BoxDecoration lightContainer() {
+    return BoxDecoration(
+      color: AppColors.cAB865A.withOpacity(0.2),
       borderRadius: BorderRadius.circular(4),
     );
   }

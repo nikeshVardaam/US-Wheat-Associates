@@ -6,6 +6,7 @@ import 'package:uswheat/provider/calculator_provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/provider/login_provider.dart';
 import 'package:uswheat/provider/price_provider.dart';
+import 'package:uswheat/provider/reports_provider.dart';
 import 'package:uswheat/provider/sign_provider.dart';
 import 'package:uswheat/provider/watchList_provider.dart';
 import 'package:uswheat/utils/app_routes.dart';
@@ -58,12 +59,13 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (context) => PricesProvider()),
           ChangeNotifierProvider(create: (context) => CalculatorProvider()),
           ChangeNotifierProvider(create: (context) => WatchlistProvider()),
+          ChangeNotifierProvider(create: (context) => ReportsProvider()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.system,
           theme: ThemeClass.lightTheme,
-          initialRoute: AppRoutes.login,
+          initialRoute: AppRoutes.splashScreen,
           onGenerateRoute: RouteGenerator.generateRoute,
         ));
   }

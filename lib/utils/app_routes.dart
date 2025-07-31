@@ -1,4 +1,5 @@
 class AppRoutes {
+  static const splashScreen = '/SplashScreen';
   static const login = '/login';
   static const dashboard = '/dashboard';
   static const estimateHardRedWinter = '/estimateHardRedWinter';
@@ -13,5 +14,6 @@ class AppRoutes {
   static const shortTonToPoundPage = '/shortTonToPoundPage';
   static const metricTonToKgPoundPage = '/metricTonToKgPoundPage';
   static const temperatureConverterPage = '/temperatureConverterPage';
+  static const reportDetailPage = '/reportDetailPage';
 
 }

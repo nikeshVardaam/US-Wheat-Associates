@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:uswheat/dashboard_page/watchList.dart';
 import 'package:uswheat/dashboard_page/prices.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
-import 'package:uswheat/quality/quality.dart';
+import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_logout_dialog.dart' show AppLogoutDialogs;
@@ -11,7 +11,7 @@ import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 
 import 'dashboard_page/calculator.dart';
-import 'dashboard_page/reports.dart';
+import 'dashboard_page/reprts/reports.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});

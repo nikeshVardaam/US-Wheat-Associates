@@ -42,7 +42,7 @@ class PostServices {
           'Authorization': bearerToken,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 5));
       var jsonData = json.decode(response.body);
       if (loader) {
         Navigator.pop(context);
