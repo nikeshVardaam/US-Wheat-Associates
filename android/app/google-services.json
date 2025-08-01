@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "802117704671",
+    "project_id": "uswheat-39289",
+    "storage_bucket": "uswheat-39289.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802117704671:android:ae477273b39032281d026a",
+        "android_client_info": {
+          "package_name": "com.app.uswheat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGkVDE68ChgSkWRt4451f1L-QaZNoebmQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
