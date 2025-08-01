@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,7 +8,9 @@ import 'package:uswheat/dashboard_page/prices.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/dashboard_page/reprts/reports.dart';
 import 'package:uswheat/dashboard_page/watchList.dart';
+import 'package:uswheat/modal/login_modal.dart';
 import 'package:uswheat/utils/app_strings.dart';
+import 'package:uswheat/utils/pref_keys.dart';
 
 import '../utils/app_routes.dart';
 import 'login_provider.dart';
@@ -17,6 +21,15 @@ class DashboardProvider extends ChangeNotifier {
   String selectMenu = AppStrings.watchlist;
   int currentIndex = 2;
   SharedPreferences? sp;
+  User? user;
+
+  getPrefData() async {
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.user);
+    if (data?.isNotEmpty ?? false) {
+      user = User.fromJson(jsonDecode(data!));
+    }
+  }
 
   DashboardProvider() {
     selectActivity = const Watchlist();
@@ -53,7 +66,7 @@ class DashboardProvider extends ChangeNotifier {
         setChangeActivity(activity: const Reports(), pageName: AppStrings.reports);
         break;
       case 4:
-        setChangeActivity(activity:  Calculator(), pageName: AppStrings.calculator);
+        setChangeActivity(activity: Calculator(), pageName: AppStrings.calculator);
         break;
     }
     notifyListeners();

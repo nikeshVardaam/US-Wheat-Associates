@@ -102,6 +102,7 @@ class LoginProvider extends ChangeNotifier {
         LoginModal loginModel = LoginModal.fromJson(json.decode(response.body));
         sp = await SharedPreferences.getInstance();
         await sp?.setString(PrefKeys.token, loginModel.token ?? "");
+        await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
 
         Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
       }

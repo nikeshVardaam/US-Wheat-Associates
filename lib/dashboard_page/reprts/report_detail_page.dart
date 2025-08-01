@@ -16,10 +16,16 @@ class ReportDetailPage extends StatefulWidget {
 }
 
 class _ReportDetailPageState extends State<ReportDetailPage> {
+  final PdfViewerController _pdfViewerController = PdfViewerController();
+
+  @override
+  void dispose() {
+    _pdfViewerController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("PDF URL: ${widget.reportDetailArg.pdfUrl}");
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.reportDetailArg.title),
@@ -27,19 +33,18 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: widget.reportDetailArg.pdfUrl.isNotEmpty
-            ? SfPdfViewer.network(widget.reportDetailArg.pdfUrl)
+            ? SfPdfViewer.network(
+                widget.reportDetailArg.pdfUrl,
+                controller: _pdfViewerController,
+              )
             : Center(
-          child: Text(
-            AppStrings.noData,
-            style: Theme
-                .of(context)
-                .textTheme
-                .labelLarge
-                ?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
+                child: Text(
+                  AppStrings.noData,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ),
       ),
     );
   }
