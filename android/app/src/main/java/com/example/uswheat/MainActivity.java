@@ -1,4 +1,4 @@
-package com.example.uswheat;
+package com.app.uswheat;
 
 import io.flutter.embedding.android.FlutterActivity;
 
