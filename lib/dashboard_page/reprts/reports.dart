@@ -35,14 +35,6 @@ class _ReportsState extends State<Reports> {
     });
   }
 
-  void _onFilterChanged(BuildContext context) {
-    final rp = Provider.of<ReportsProvider>(context, listen: false);
-    if (rp.selectedReportType != null && rp.selectedYear != null && rp.selectedCategory != null) {
-      rp.resetPagination();
-      rp.getReports(context: context);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,103 +42,173 @@ class _ReportsState extends State<Reports> {
         builder: (context, rp, child) {
           return Column(
             children: [
-              Container(
-                decoration: BoxDecoration(color: AppColors.cEFEEED),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                  child: Column(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
                       Container(
-                        decoration: AppBoxDecoration.greyBorder(context),
-                        child: DropdownButton<String>(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          isExpanded: true,
-                          hint: const Text("Select Report Type"),
-                          underline: Container(),
-                          value: rp.reportTypes.any((e) => e['value'] == rp.selectedReportType) ? rp.selectedReportType : null,
-                          items: rp.reportTypes.map((type) {
-                            return DropdownMenuItem(
-                              value: type['value'],
-                              child: Text(type['name']!, style: Theme.of(context).textTheme.labelLarge),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              rp.selectedReportType = value;
-                              _onFilterChanged(context);
-                            });
-                          },
+                        width: MediaQuery.of(context).size.width / 4,
+                        color: AppColors.c95795d.withOpacity(0.1),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                          child: GestureDetector(
+                            onTapDown: (TapDownDetails details) {
+                              rp.showFilterDropdown(
+                                context: context,
+                                details: details,
+                                onSelect: (reportType) {
+                                  rp.selectedReportType = reportType;
+                                  rp.resetPagination();
+                                  rp.getReports(context: context);
+                                  print("You selected: $reportType");
+                                },
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  AppStrings.reports,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.c95795d,
+                                      ),
+                                ),
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.c95795d,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: AppBoxDecoration.greyBorder(context),
-                                  child: DropdownButton<String>(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                                    isExpanded: true,
-                                    underline: Container(),
-                                    hint: const Text("Select Year"),
-                                    value: rp.years.contains(rp.selectedYear) ? rp.selectedYear : null,
-                                    items: rp.years.map((year) {
-                                      return DropdownMenuItem(
-                                        value: year,
-                                        child: Text(year, style: Theme.of(context).textTheme.labelLarge),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        rp.selectedYear = value;
-                                        _onFilterChanged(context);
-                                      });
-                                    },
-                                  ),
-                                ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          rp.selectedReportType ?? "Select Report Type",
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.c353d4a.withOpacity(0.7),
                               ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: AppBoxDecoration.greyBorder(context),
-                                  child: DropdownButton<String>(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                                    isExpanded: true,
-                                    underline: Container(),
-                                    hint: Text(
-                                      "Select Category",
-                                      style: Theme.of(context).textTheme.labelSmall?.copyWith(),
-                                    ),
-                                    value: rp.languages.contains(rp.selectedCategory) ? rp.selectedCategory : null,
-                                    items: rp.languages.toSet().map((lang) {
-                                      return DropdownMenuItem(
-                                        value: lang,
-                                        child: Text(
-                                          lang,
-                                          style: Theme.of(context).textTheme.labelLarge,
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        rp.selectedCategory = value;
-                                        _onFilterChanged(context);
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  Divider(
+                    thickness: 0.5,
+                    height: 1,
+                    color: AppColors.cB6B6B6,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width / 4,
+                        color: AppColors.c95795d.withOpacity(0.1),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                          child: GestureDetector(
+                            onTapDown: (TapDownDetails details) {
+                              rp.showFilterYearDropdown(
+                                context: context,
+                                details: details,
+                                onSelect: (yearType) {
+                                  rp.selectedYear = yearType;
+                                  rp.resetPagination();
+                                  rp.getReports(context: context);
+                                  print("You selected: $yearType");
+                                },
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  AppStrings.year,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.c95795d,
+                                      ),
+                                ),
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.c95795d,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          rp.selectedYear ?? "Select Report Type",
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.c353d4a.withOpacity(0.7),
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    thickness: 0.5,
+                    height: 1,
+                    color: AppColors.cB6B6B6,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width / 4,
+                        color: AppColors.c95795d.withOpacity(0.1),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                          child: GestureDetector(
+                            onTapDown: (TapDownDetails details) {
+                              rp.showLanguageDropdown(
+                                context: context,
+                                details: details,
+                                onSelect: (languageType) {
+                                  rp.selectedCategory = languageType;
+                                  rp.resetPagination();
+                                  rp.getReports(context: context);
+                                  print("You selected: $languageType");
+                                },
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  AppStrings.category,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.c95795d,
+                                      ),
+                                ),
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.c95795d,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          rp.selectedCategory ?? "Select Report Type",
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.c353d4a.withOpacity(0.7),
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               Expanded(
                 child: SingleChildScrollView(

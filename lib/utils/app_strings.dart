@@ -1,5 +1,8 @@
 class AppStrings {
   static const logIn = "Login";
+  static const taxonomy = "Taxonomy";
+  static const year = "Year";
+  static const category = "Category";
   static const logout = "Logout";
   static const logInToYourAccount = "Login to your account";
   static const areYouSureYouWantToLogout = "are You Sure You Want To Logout";

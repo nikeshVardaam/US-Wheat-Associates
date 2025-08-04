@@ -20,14 +20,13 @@ class Prices extends StatefulWidget {
 class _PricesState extends State<Prices> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        Provider.of<PricesProvider>(context, listen: false).fetchData(
-          context: context,
-        );
-      },
-    );
     super.initState();
+    Future.delayed(Duration.zero, () {
+      final pp = Provider.of<PricesProvider>(context, listen: false);
+      if (!pp.loader) {
+        pp.fetchData(context: context);
+      }
+    });
   }
 
   @override
@@ -201,6 +200,7 @@ class _PricesState extends State<Prices> {
                                 context: context,
                                 details: details,
                                 onSelect: (selectedYears) {
+                                  pp.setYear(selectedYears.toString());
                                   print("You selected: $selectedYears");
                                 },
                               );
@@ -267,7 +267,7 @@ class _PricesState extends State<Prices> {
                   SingleChildScrollView(
                     physics: const NeverScrollableScrollPhysics(),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.width / 3,
+                      height: MediaQuery.of(context).size.width / 2,
                       child: pp.chartData.isEmpty
                           ? const Center(
                               child: Text(
@@ -388,7 +388,7 @@ class _PricesState extends State<Prices> {
                             width: 4,
                           ),
                           Text(
-                            pp.allPriceDataModal?.nearby?.cASHBU?.toString() ?? "",
+                            pp.allPriceDataModal?.nearby?.cASHBU.toString().substring(0, 3) ?? "--",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.c353d4a.withOpacity(0.7),
@@ -641,8 +641,4 @@ class _PricesState extends State<Prices> {
       },
     );
   }
-}
-
-extension on AllPriceDataModal? {
-  operator [](int other) {}
 }

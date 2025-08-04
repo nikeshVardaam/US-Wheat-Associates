@@ -16,7 +16,7 @@ import '../service/delete_service.dart';
 import '../service/post_services.dart';
 
 class WatchlistProvider extends ChangeNotifier {
-  List<WatchlistItem>? watchlist;
+  List<WatchlistItem> watchlist = [];
   FilterData? filterData;
   String? grphcode;
   String? selectedRegion;
@@ -27,8 +27,24 @@ class WatchlistProvider extends ChangeNotifier {
   List<SalesData> chartData = [];
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   AllPriceDataModal? allPriceDataModal;
+  bool isChartLoading = false;
+
+  final Map<String, bool> _chartLoadingMap = {};
+
+  final Map<String, List<SalesData>> _localChartCache = {};
+
+  bool isChartLoadingForItem(String itemId) {
+    return _chartLoadingMap[itemId] ?? false;
+  }
+
+  void setChartLoadingForItem(String itemId, bool isLoading) {
+    _chartLoadingMap[itemId] = isLoading;
+    notifyListeners();
+  }
 
   Future<void> fetchData({required BuildContext context}) async {
+    watchlist.clear();
+    notifyListeners();
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -36,10 +52,8 @@ class WatchlistProvider extends ChangeNotifier {
     );
 
     await getWatchList(context: context, loader: true);
-    await getAllPriceData(context: context, loader: false);
 
     Navigator.pop(context);
-
     notifyListeners();
   }
 
@@ -49,26 +63,16 @@ class WatchlistProvider extends ChangeNotifier {
         if (value != null) {
           final data = jsonDecode(value.body)['data'];
           watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
-        }
-        notifyListeners();
-      },
-    );
-  }
-
-  deleteWatchList({required BuildContext context, required String id}) {
-    DeleteService().delete(endpoint: ApiEndpoint.removeWatchlist, context: context, id: id).then(
-      (value) {
-        if (value != null) {
-          getWatchList(context: context, loader: false);
-          AppWidgets.appSnackBar(
-            context: context,
-            text: "Watchlist remove Successfully",
-            color: AppColors.c2a8741,
-          );
           notifyListeners();
         }
       },
     );
+  }
+
+  void deleteWatchList({required BuildContext context, required String id}) {
+    DeleteService().delete(endpoint: ApiEndpoint.removeWatchlist, context: context, id: id).then((value) {
+      getWatchList(context: context, loader: false);
+    });
   }
 
   getGraphCodesByClassAndRegion({
@@ -88,7 +92,6 @@ class WatchlistProvider extends ChangeNotifier {
       isBottomSheet: false,
       loader: loader,
     );
-    print(data);
     if (value != null) {
       print(value.body);
       final body = json.decode(value.body);
@@ -124,18 +127,27 @@ class WatchlistProvider extends ChangeNotifier {
 
   Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem item) async {
     try {
-      // ✅ Don't refetch if chart data already available
       if (item.chartData.isNotEmpty) return;
 
       String region = item.filterdata.region;
       String wclass = item.filterdata.classs;
       String date = item.filterdata.date;
 
-      print('Fetching chart data for: $region - $wclass');
+      if (date.length == 4) date = "$date-01-01";
 
+      final String cacheKey = "$region|$wclass|$date";
+
+      // ✅ Check if already cached
+      if (_localChartCache.containsKey(cacheKey)) {
+        print("✅ Using cached chart data for $cacheKey");
+        item.chartData = _localChartCache[cacheKey]!;
+        return;
+      }
+
+      // 🔁 Fetch graph code
       final graphCodeRes = await PostServices().post(
         endpoint: ApiEndpoint.getGraphCodesByClassAndRegion,
-        requestData: {"class": item.filterdata.classs, "region": item.filterdata.region},
+        requestData: {"class": wclass, "region": region},
         context: context,
         isBottomSheet: false,
         loader: false,
@@ -151,8 +163,7 @@ class WatchlistProvider extends ChangeNotifier {
 
       if (grphcode == null) return;
 
-      if (date.length == 4) date = "$date-01-01";
-
+      // 🔁 Fetch graph data
       final graphRes = await PostServices().post(
         endpoint: ApiEndpoint.getGraphData,
         requestData: {"grphcode": grphcode, "prdate": date},
@@ -183,10 +194,14 @@ class WatchlistProvider extends ChangeNotifier {
         }).toList();
 
         item.chartData = tempChartData;
-        print('Fetched ${tempChartData.length} points for $wclass');
+
+        // ✅ Save to local cache
+        _localChartCache[cacheKey] = tempChartData;
+
+        print('📊 Fetched ${tempChartData.length} points for $cacheKey');
       }
     } catch (e) {
-      debugPrint('Error fetching chart data for item: $e');
+      debugPrint('❌ Error fetching chart data for item: $e');
     }
   }
 }

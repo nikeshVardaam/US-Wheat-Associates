@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import '../modal/repots_modal.dart';
 
 class ReportsProvider extends ChangeNotifier {
-  // Report types list
   final List<Map<String, String>> reportTypes = [
     {'name': 'Commercial Sales Report', 'value': 'commercial-sales'},
     {'name': 'Crop Quality Report', 'value': 'crop-quality'},
@@ -40,37 +39,21 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateFiltersAndFetch({
-    required String reportType,
-    required String year,
-    required String category,
-    required BuildContext context,
-  }) {
-    selectedReportType = reportType;
-    selectedYear = year;
-    selectedCategory = category;
-    resetPagination();
-    getReports(context: context);
-  }
+
 
   String getTaxonomy() {
     switch (selectedReportType) {
-      case 'commercial-sales':
-        return 'commercial-sales-category';
-      case 'crop-quality':
-        return 'crop-quality-category';
-      case 'harvest-report':
-        return 'harvest-report-category';
-      case 'price-report':
-        return 'price-report-category';
-      case 'spanish-report':
-        return 'spanish-report-category';
-      case 'supply-and-demand':
-        return 'supply-and-demand-category';
-      default:
-        return '';
+
+      case 'commercial-sales': return 'commercial-sales-category';
+      case 'crop-quality': return 'crop-quality-category';
+      case 'harvest-report': return 'harvest-report-category';
+      case 'price-report': return 'price-report-category';
+      case 'spanish-report': return 'spanish-report-category';
+      case 'supply-and-demand': return 'supply-and-demand-category';
+      default: return '';
     }
   }
+
 
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
@@ -79,10 +62,11 @@ class ReportsProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final url = "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage"
+    final url = "https://uswheat.org/wp-json/uswheat/v1/reports"
+        "?per_page=20&page=$currentPage"
         "&year=$selectedYear&category=$selectedCategory"
         "&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
-    print(url);
+
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -105,4 +89,147 @@ class ReportsProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<void> showFilterDropdown({
+    required BuildContext context,
+    required TapDownDetails details,
+    required Function(String selectedReportType) onSelect,
+  }) async {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromRect(
+        details.globalPosition & const Size(0, 0),
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        PopupMenuItem<String>(
+          enabled: false,
+          padding: EdgeInsets.zero,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height / 4,
+            width: MediaQuery.of(context).size.width / 2,
+            child: Scrollbar(
+              child: ListView.builder(
+                itemCount: reportTypes.length,
+                itemBuilder: (context, index) {
+                  final reportType = reportTypes[index];
+                  return ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(reportType['name'] ?? ''),
+                    ),
+                    onTap: () => Navigator.pop(context, reportType['value']),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+
+    if (selected != null) {
+      selectedReportType = selected;
+      onSelect(selected);
+      notifyListeners();
+    }
+  }
+
+  Future<void> showFilterYearDropdown({
+    required BuildContext context,
+    required TapDownDetails details,
+    required Function(String selectedYear) onSelect,
+  }) async {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromRect(
+        details.globalPosition & const Size(0, 0),
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        PopupMenuItem<String>(
+          enabled: false,
+          padding: EdgeInsets.zero,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height / 4,
+            width: MediaQuery.of(context).size.width / 2,
+            child: Scrollbar(
+              child: ListView.builder(
+                itemCount: years.length,
+                itemBuilder: (context, index) {
+                  final year = years[index];
+                  return ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(year),
+                    ),
+                    onTap: () => Navigator.pop(context, year),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+
+    if (selected != null) {
+      selectedYear = selected;
+      onSelect(selected);
+      notifyListeners();
+    }
+  }
+
+  Future<void> showLanguageDropdown({
+    required BuildContext context,
+    required TapDownDetails details,
+    required Function(String selectedLang) onSelect,
+  }) async {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromRect(
+        details.globalPosition & const Size(0, 0),
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        PopupMenuItem<String>(
+          enabled: false,
+          padding: EdgeInsets.zero,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height / 8,
+            width: MediaQuery.of(context).size.width / 2,
+            child: Scrollbar(
+              child: ListView.builder(
+                itemCount: languages.length,
+                itemBuilder: (context, index) {
+                  final lang = languages[index];
+                  return ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(lang),
+                    ),
+                    onTap: () => Navigator.pop(context, lang),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+
+    if (selected != null) {
+      selectedCategory = selected;
+      onSelect(selected);
+      notifyListeners();
+    }
+  }
+
+
 }

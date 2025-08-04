@@ -31,12 +31,11 @@ class _WatchlistState extends State<Watchlist> {
         physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: wp.watchlist?.isNotEmpty ?? true
-              ? Column(
+          child: Column(
                   children: List.generate(
-                  wp.watchlist?.length ?? 0,
+                  wp.watchlist.length ?? 0,
                   (index) {
-                    var data = wp.watchlist?[index];
+                    var data = wp.watchlist[index];
                     return Column(
                       children: [
                         Container(
@@ -64,7 +63,7 @@ class _WatchlistState extends State<Watchlist> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        wp.deleteWatchList(context: context, id: data?.id ?? "");
+                                        wp.deleteWatchList(context: context, id: data.id ?? "");
                                       },
                                       child: Icon(Icons.star, color: AppColors.cFFFFFF, size: 18),
                                     ),
@@ -83,7 +82,8 @@ class _WatchlistState extends State<Watchlist> {
                                         margin: EdgeInsets.zero,
                                         padding: EdgeInsets.zero,
                                         decoration: const BoxDecoration(),
-                                        child: FutureBuilder(
+                                        child:
+                                        FutureBuilder(
                                           future: wp.fetchChartDataForItem(context, data!),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -91,7 +91,7 @@ class _WatchlistState extends State<Watchlist> {
                                                 child: Padding(
                                                   padding: EdgeInsets.all(8.0),
                                                   child: CupertinoActivityIndicator(
-                                                    color: Colors.grey,
+                                                    color: Colors.black,
                                                   ),
                                                 ),
                                               );
@@ -187,37 +187,7 @@ class _WatchlistState extends State<Watchlist> {
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
-                                          Row(
-                                            children: [
-                                              Icon(Icons.arrow_drop_up, color: AppColors.c2a8741),
-                                              Text(
-                                                wp.allPriceDataModal?.nearby?.cASHBU.toString().substring(0, 3) ?? "--",
-                                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                      fontWeight: FontWeight.w600,
-                                                      color: AppColors.c2a8741,
-                                                    ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                child: Container(
-                                                  height: 12,
-                                                  width: 1,
-                                                  color: AppColors.c464646,
-                                                ),
-                                              ),
-                                              Text(
-                                                wp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
-                                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                      fontWeight: FontWeight.w600,
-                                                      color: AppColors.c2a8741,
-                                                    ),
-                                              ),
-                                              Text(
-                                                "/MT",
-                                                style: TextStyle(color: AppColors.c2a8741, fontSize: 14),
-                                              )
-                                            ],
-                                          ),
+
                                           // const SizedBox(height: 8),
                                           // Padding(
                                           //   padding: const EdgeInsets.only(bottom: 16),
@@ -251,19 +221,14 @@ class _WatchlistState extends State<Watchlist> {
                     );
                   },
                 ))
-              : Center(
-                  child: Text('No data found',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: AppColors.c656e79,
-                          )),
-                ),
+
         ),
       );
     });
   }
 }
 // Container(
-//   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+//   padding: const EdgeInsets.symmetric(horizontal: 8, vz ertical: 4),
 //   decoration: BoxDecoration(
 //     color: AppColors.c45413b,
 //     borderRadius: BorderRadius.circular(12),
