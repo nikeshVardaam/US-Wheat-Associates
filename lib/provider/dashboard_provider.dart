@@ -23,6 +23,12 @@ class DashboardProvider extends ChangeNotifier {
   SharedPreferences? sp;
   User? user;
 
+  DashboardProvider() {
+    selectActivity = const Watchlist();
+    selectMenu = AppStrings.watchlist;
+    notifyListeners();
+  }
+
   getPrefData() async {
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.user);
@@ -31,23 +37,11 @@ class DashboardProvider extends ChangeNotifier {
     }
   }
 
-  DashboardProvider() {
-    selectActivity = const Watchlist();
-    selectMenu = AppStrings.watchlist;
-    notifyListeners();
-  }
-
   setChangeActivity({required Widget activity, required String pageName}) {
     selectActivity = activity;
-    selectMenu = AppStrings.watchlist;
+    selectMenu = pageName;
+    currentIndex = _getIndexFromPageName(pageName);
     notifyListeners();
-  }
-
-  logOut(BuildContext context) async {
-    sp = await SharedPreferences.getInstance();
-    sp?.clear();
-    Provider.of<LoginProvider>(context, listen: false).cleanData();
-    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
   }
 
   changePageFromBottomNavigation({required int index}) {
@@ -69,6 +63,29 @@ class DashboardProvider extends ChangeNotifier {
         setChangeActivity(activity: Calculator(), pageName: AppStrings.calculator);
         break;
     }
-    notifyListeners();
+  }
+
+  logOut(BuildContext context) async {
+    sp = await SharedPreferences.getInstance();
+    sp?.clear();
+    Provider.of<LoginProvider>(context, listen: false).cleanData();
+    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
+  }
+
+  int _getIndexFromPageName(String pageName) {
+    switch (pageName) {
+      case AppStrings.price:
+        return 0;
+      case AppStrings.quality:
+        return 1;
+      case AppStrings.watchlist:
+        return 2;
+      case AppStrings.reports:
+        return 3;
+      case AppStrings.calculator:
+        return 4;
+      default:
+        return 0;
+    }
   }
 }

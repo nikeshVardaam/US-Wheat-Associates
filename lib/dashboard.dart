@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/dashboard_page/watchList.dart';
 import 'package:uswheat/dashboard_page/prices.dart';
@@ -41,7 +42,7 @@ class _DashboardState extends State<Dashboard> {
         canPop: false,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.c45413b,
+            backgroundColor: AppColors.c3d3934,
             centerTitle: true,
             iconTheme: IconThemeData(color: AppColors.cFFFFFF),
             bottom: const PreferredSize(
@@ -52,15 +53,10 @@ class _DashboardState extends State<Dashboard> {
               AppAssets.darkLogo,
               scale: 5,
             ),
-            actions: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Icon(Icons.notifications_none_outlined),
-              )
-            ],
+
           ),
           drawer: SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 1.8,
             child: Drawer(
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
@@ -81,9 +77,7 @@ class _DashboardState extends State<Dashboard> {
                                 children: [
                                   Text(
                                     AppStrings.account,
-                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                          color: AppColors.cFFFFFF,
-                                        ),
+                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
                                   ),
                                   const SizedBox(
                                     height: 16,
@@ -134,22 +128,23 @@ class _DashboardState extends State<Dashboard> {
                               padding: const EdgeInsets.only(left: 16),
                               child: Text(
                                 AppStrings.pages,
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                      color: AppColors.cFFFFFF,
-                                    ),
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
                               ),
                             ),
                             ListTile(
                               dense: true,
-                              leading: Icon(
-                                Icons.star_border_outlined,
-                                color: AppColors.cFFFFFF,
-                                size: 18,
+                              leading: SvgPicture.asset(
+                                AppAssets.star,
+                                height: 18,
+                                colorFilter: ColorFilter.mode(
+                                  dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                               title: Text(
                                 AppStrings.watchlist,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: AppColors.cFFFFFF,
+                                      color: dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
@@ -159,15 +154,18 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             ListTile(
                               dense: true,
-                              leading: Icon(
-                                Icons.percent_rounded,
-                                color: AppColors.cFFFFFF,
-                                size: 18,
+                              leading: SvgPicture.asset(
+                                AppAssets.percentage,
+                                height: 18,
+                                colorFilter: ColorFilter.mode(
+                                  dp.currentIndex == 0 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                               title: Text(
                                 AppStrings.price,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: AppColors.cFFFFFF,
+                                      color: dp.currentIndex == 0 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
@@ -177,15 +175,18 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             ListTile(
                               dense: true,
-                              leading: Icon(
-                                Icons.done_outlined,
-                                color: AppColors.cFFFFFF,
-                                size: 18,
+                              leading: SvgPicture.asset(
+                                AppAssets.done,
+                                height: 18,
+                                colorFilter: ColorFilter.mode(
+                                  dp.currentIndex == 1 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                               title: Text(
                                 AppStrings.quality,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: AppColors.cFFFFFF,
+                                      color: dp.currentIndex == 1 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
@@ -195,15 +196,18 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             ListTile(
                               dense: true,
-                              leading: Icon(
-                                Icons.auto_graph_rounded,
-                                color: AppColors.cFFFFFF,
-                                size: 18,
+                              leading: SvgPicture.asset(
+                                AppAssets.chartPie,
+                                height: 20,
+                                colorFilter: ColorFilter.mode(
+                                  dp.currentIndex == 3 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                               title: Text(
                                 AppStrings.reports,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: AppColors.cFFFFFF,
+                                      color: dp.currentIndex == 3 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
@@ -213,65 +217,24 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             ListTile(
                               dense: true,
-                              leading: Icon(
-                                Icons.calculate_outlined,
-                                color: AppColors.cFFFFFF,
-                                size: 18,
+                              leading: SvgPicture.asset(
+                                AppAssets.equal,
+                                height: 20,
+                                colorFilter: ColorFilter.mode(
+                                  dp.currentIndex == 4 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                               title: Text(
                                 AppStrings.calculator,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: AppColors.cFFFFFF,
+                                      color: dp.currentIndex == 4 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
-                                dp.setChangeActivity(activity: Calculator(), pageName: AppStrings.calculator);
+                                dp.setChangeActivity(activity: const Calculator(), pageName: AppStrings.calculator);
                                 Navigator.pop(context);
                               },
-                            ),
-                            ListTile(
-                              dense: true,
-                              leading: Icon(
-                                Icons.newspaper_rounded,
-                                color: AppColors.cFFFFFF,
-                                size: 18,
-                              ),
-                              title: Text(
-                                AppStrings.news,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: AppColors.cFFFFFF,
-                                    ),
-                              ),
-                              onTap: () {},
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16, top: 16),
-                              child: Text(
-                                AppStrings.settings,
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                      color: AppColors.cFFFFFF,
-                                    ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                AppWidgets.appSnackBar(context: context, text: "Under Development.", color: AppColors.cd4582d);
-                              },
-                              child: ListTile(
-                                dense: true,
-                                leading: Icon(
-                                  Icons.settings,
-                                  color: AppColors.cFFFFFF,
-                                  size: 18,
-                                ),
-                                title: Text(
-                                  AppStrings.settings,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: AppColors.cFFFFFF,
-                                      ),
-                                ),
-                                onTap: () {},
-                              ),
                             ),
                             GestureDetector(
                               onTap: () {
@@ -288,15 +251,15 @@ class _DashboardState extends State<Dashboard> {
                               },
                               child: ListTile(
                                 dense: true,
-                                leading: Icon(
-                                  Icons.logout,
-                                  color: AppColors.cb01c32,
-                                  size: 18,
+                                leading: SvgPicture.asset(
+                                  AppAssets.logout,
+                                  height: 18,
+                                  color: Colors.red,
                                 ),
                                 title: Text(
                                   AppStrings.logout,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: AppColors.cb01c32,
+                                        color: Colors.red,
                                       ),
                                 ),
                               ),
@@ -315,42 +278,76 @@ class _DashboardState extends State<Dashboard> {
               return dp.selectActivity;
             },
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: Provider.of<DashboardProvider>(context).currentIndex,
-            onTap: (value) {
-              Provider.of<DashboardProvider>(context, listen: false).changePageFromBottomNavigation(index: value);
+          bottomNavigationBar: Consumer<DashboardProvider>(
+            builder: (context, dp, _) {
+              return BottomNavigationBar(
+                currentIndex: dp.currentIndex,
+                onTap: (value) {
+                  dp.changePageFromBottomNavigation(index: value);
+                },
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: AppColors.c3d3934,
+                selectedItemColor: AppColors.cFFc166,
+                unselectedItemColor: AppColors.cFFFFFF,
+                items: [
+                  BottomNavigationBarItem(
+                    label: AppStrings.price,
+                    icon: SvgPicture.asset(
+                      AppAssets.percentage,
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                        dp.currentIndex == 0 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    label: AppStrings.quality,
+                    icon: SvgPicture.asset(
+                      AppAssets.done,
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                        dp.currentIndex == 1 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    label: AppStrings.watchlist,
+                    icon: SvgPicture.asset(
+                      AppAssets.star,
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                        dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    label: AppStrings.reports,
+                    icon: SvgPicture.asset(
+                      AppAssets.chartPie,
+                      height: 23,
+                      colorFilter: ColorFilter.mode(
+                        dp.currentIndex == 3 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    label: AppStrings.calculator,
+                    icon: SvgPicture.asset(
+                      AppAssets.equal,
+                      height: 23,
+                      colorFilter: ColorFilter.mode(
+                        dp.currentIndex == 4 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ],
+              );
             },
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: AppColors.c45413b,
-            selectedItemColor: AppColors.cFFc166,
-            unselectedItemColor: AppColors.cFFFFFF,
-            items: [
-              BottomNavigationBarItem(
-                label: AppStrings.price,
-                icon: const Icon(Icons.percent),
-                backgroundColor: AppColors.c45413b,
-              ),
-              BottomNavigationBarItem(
-                label: AppStrings.quality,
-                icon: const Icon(Icons.done),
-                backgroundColor: AppColors.c45413b,
-              ),
-              BottomNavigationBarItem(
-                label: AppStrings.watchlist,
-                icon: const Icon(Icons.star_border_outlined),
-                backgroundColor: AppColors.c45413b,
-              ),
-              BottomNavigationBarItem(
-                label: AppStrings.reports,
-                icon: const Icon(Icons.auto_graph_rounded),
-                backgroundColor: AppColors.c45413b,
-              ),
-              BottomNavigationBarItem(
-                label: AppStrings.calculator,
-                icon: const Icon(Icons.calculate_outlined),
-                backgroundColor: AppColors.c45413b,
-              ),
-            ],
           ),
         ),
       ),

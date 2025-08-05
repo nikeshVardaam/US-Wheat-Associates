@@ -23,7 +23,14 @@ class LoginProvider extends ChangeNotifier {
     passwordController.clear();
     notifyListeners();
   }
-
+  setPasswordVisibility() {
+    if (passwordIsVisible) {
+      passwordIsVisible = false;
+    } else {
+      passwordIsVisible = true;
+    }
+    notifyListeners();
+  }
   // getPrefData() async {
   //   sp = await SharedPreferences.getInstance();
   //   String loginCredential = sp?.getString(PrefKeys.loginCredential) ?? "";

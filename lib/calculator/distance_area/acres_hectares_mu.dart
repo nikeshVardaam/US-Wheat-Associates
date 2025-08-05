@@ -140,7 +140,7 @@ class AcresHectaresMu extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          "Calculation:\n1 acre = 0.404686 ha\n1 acre = 15.99 mu",
+                          "Calculation:\n1 acre = 0.404686 ha\n1 acre = 6.07 mu",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             color: AppColors.c000000,
                           ),

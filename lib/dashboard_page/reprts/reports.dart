@@ -42,173 +42,181 @@ class _ReportsState extends State<Reports> {
         builder: (context, rp, child) {
           return Column(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 4,
-                        color: AppColors.c95795d.withOpacity(0.1),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                          child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              rp.showFilterDropdown(
-                                context: context,
-                                details: details,
-                                onSelect: (reportType) {
-                                  rp.selectedReportType = reportType;
-                                  rp.resetPagination();
-                                  rp.getReports(context: context);
-                                  print("You selected: $reportType");
-                                },
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  AppStrings.reports,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.c95795d,
-                                      ),
-                                ),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: AppColors.c95795d,
-                                ),
-                              ],
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 4,
+                          color: AppColors.c95795d.withOpacity(0.1),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                            child: GestureDetector(
+                              onTapDown: (TapDownDetails details) {
+                                rp.showFilterDropdown(
+                                  context: context,
+                                  details: details,
+                                  onSelect: (reportType) {
+                                    rp.selectedReportType = reportType;
+                                    rp.resetPagination();
+                                    rp.getReports(context: context);
+                                    print("You selected: $reportType");
+                                  },
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    AppStrings.reports,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.cab865a,
+                                        ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.cab865a,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          rp.selectedReportType ?? "Select Report Type",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            rp.selectedReportType ?? "Select Report Type",
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    thickness: 0.5,
-                    height: 1,
-                    color: AppColors.cB6B6B6,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 4,
-                        color: AppColors.c95795d.withOpacity(0.1),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                          child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              rp.showFilterYearDropdown(
-                                context: context,
-                                details: details,
-                                onSelect: (yearType) {
-                                  rp.selectedYear = yearType;
-                                  rp.resetPagination();
-                                  rp.getReports(context: context);
-                                  print("You selected: $yearType");
-                                },
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  AppStrings.year,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.c95795d,
-                                      ),
-                                ),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: AppColors.c95795d,
-                                ),
-                              ],
+                      ],
+                    ),
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 4,
+                          color: AppColors.c95795d.withOpacity(0.1),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                            child: GestureDetector(
+                              onTapDown: (TapDownDetails details) {
+                                rp.showFilterYearDropdown(
+                                  context: context,
+                                  details: details,
+                                  onSelect: (yearType) {
+                                    rp.selectedYear = yearType;
+                                    rp.resetPagination();
+                                    rp.getReports(context: context);
+                                    print("You selected: $yearType");
+                                  },
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    AppStrings.year,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.cab865a,
+                                        ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.cab865a,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          rp.selectedYear ?? "Select Report Type",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            rp.selectedYear ?? "Select Report Type",
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    thickness: 0.5,
-                    height: 1,
-                    color: AppColors.cB6B6B6,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 4,
-                        color: AppColors.c95795d.withOpacity(0.1),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                          child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              rp.showLanguageDropdown(
-                                context: context,
-                                details: details,
-                                onSelect: (languageType) {
-                                  rp.selectedCategory = languageType;
-                                  rp.resetPagination();
-                                  rp.getReports(context: context);
-                                  print("You selected: $languageType");
-                                },
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  AppStrings.category,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.c95795d,
-                                      ),
-                                ),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: AppColors.c95795d,
-                                ),
-                              ],
+                      ],
+                    ),
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 4,
+                          color: AppColors.c95795d.withOpacity(0.1),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                            child: GestureDetector(
+                              onTapDown: (TapDownDetails details) {
+                                rp.showLanguageDropdown(
+                                  context: context,
+                                  details: details,
+                                  onSelect: (languageType) {
+                                    rp.selectedCategory = languageType;
+                                    rp.resetPagination();
+                                    rp.getReports(context: context);
+                                    print("You selected: $languageType");
+                                  },
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    AppStrings.category,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.cab865a,
+                                        ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.cab865a,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          rp.selectedCategory ?? "Select Report Type",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            rp.selectedCategory ?? "Select Report Type",
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                    Divider(
+                      thickness: 1,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child: SingleChildScrollView(

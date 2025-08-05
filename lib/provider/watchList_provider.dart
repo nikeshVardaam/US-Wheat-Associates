@@ -6,9 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:uswheat/modal/watchlist_modal.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
-import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_widgets.dart';
-
 import '../modal/all_price_data_modal.dart';
 import '../modal/graph_modal.dart';
 import '../modal/sales_modal.dart';
@@ -19,8 +17,7 @@ class WatchlistProvider extends ChangeNotifier {
   List<WatchlistItem> watchlist = [];
   FilterData? filterData;
   String? grphcode;
-  String? selectedRegion;
-  String? selectedClass;
+
   String? prdate;
   String? graphDate;
   List<GraphDataModal> graphList = [];
@@ -75,55 +72,6 @@ class WatchlistProvider extends ChangeNotifier {
     });
   }
 
-  getGraphCodesByClassAndRegion({
-    required BuildContext context,
-    required bool loader,
-  }) async {
-    print("getGraphCodesByClassAndRegion");
-    var data = {
-      "class": filterData?.classs ?? "",
-      "region": filterData?.region ?? "",
-    };
-
-    final value = await PostServices().post(
-      endpoint: ApiEndpoint.getGraphCodesByClassAndRegion,
-      requestData: data,
-      context: context,
-      isBottomSheet: false,
-      loader: loader,
-    );
-    if (value != null) {
-      print(value.body);
-      final body = json.decode(value.body);
-
-      if (body is List && body.isNotEmpty) {
-        grphcode = body.last.toString();
-      }
-    }
-  }
-
-  getAllPriceData({required BuildContext context, required bool loader}) {
-    print("getALlPrice");
-
-    var data = {
-      "grphcode": "G5XX",
-    };
-    PostServices()
-        .post(
-      endpoint: ApiEndpoint.getAllPriceData,
-      requestData: data,
-      context: context,
-      isBottomSheet: false,
-      loader: loader,
-    )
-        .then((value) {
-      if (value != null) {
-        print(value.body);
-        allPriceDataModal = AllPriceDataModal.fromJson(json.decode(value.body));
-        notifyListeners();
-      }
-    });
-  }
 
   Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem item) async {
     try {
@@ -137,14 +85,12 @@ class WatchlistProvider extends ChangeNotifier {
 
       final String cacheKey = "$region|$wclass|$date";
 
-      // ✅ Check if already cached
       if (_localChartCache.containsKey(cacheKey)) {
         print("✅ Using cached chart data for $cacheKey");
         item.chartData = _localChartCache[cacheKey]!;
         return;
       }
 
-      // 🔁 Fetch graph code
       final graphCodeRes = await PostServices().post(
         endpoint: ApiEndpoint.getGraphCodesByClassAndRegion,
         requestData: {"class": wclass, "region": region},
@@ -153,17 +99,17 @@ class WatchlistProvider extends ChangeNotifier {
         loader: false,
       );
 
-      String? grphcode;
       if (graphCodeRes != null) {
         final body = json.decode(graphCodeRes.body);
         if (body is List && body.isNotEmpty) {
           grphcode = body.last.toString();
+          print("📌 Found grphcode: $grphcode for $region | $wclass");
         }
       }
 
       if (grphcode == null) return;
 
-      // 🔁 Fetch graph data
+
       final graphRes = await PostServices().post(
         endpoint: ApiEndpoint.getGraphData,
         requestData: {"grphcode": grphcode, "prdate": date},
@@ -195,7 +141,6 @@ class WatchlistProvider extends ChangeNotifier {
 
         item.chartData = tempChartData;
 
-        // ✅ Save to local cache
         _localChartCache[cacheKey] = tempChartData;
 
         print('📊 Fetched ${tempChartData.length} points for $cacheKey');

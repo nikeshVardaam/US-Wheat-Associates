@@ -39,8 +39,8 @@ class _QualityState extends State<Quality> {
                 Row(
                   children: [
                     Text(
-                      AppStrings.favoritePrice,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+                      AppStrings.favoritePrices,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(
                       width: 8,

@@ -134,7 +134,7 @@ class Calculator extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
-                  "Weight",
+                  "WEIGHT",
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
@@ -208,7 +208,7 @@ class Calculator extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "BRITISH TONS (LONG TON)= METRIC TONS",
+                          "BRITISH TONS (LONG TON) = METRIC TONS",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                         ),
                         Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -275,7 +275,7 @@ class Calculator extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
-                  "Temperature",
+                  "TEMPERATURE",
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),

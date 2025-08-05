@@ -41,6 +41,9 @@ class ShortMetricTonPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("SHORT TONS (US)", style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -66,7 +69,9 @@ class ShortMetricTonPage extends StatelessWidget {
                           fontStyle: FontStyle.italic,
                         )),
                 const SizedBox(height: 8),
-                Text("METRIC TONS (TONNES)", style: Theme.of(context).textTheme.bodySmall),
+                Text("METRIC TONS (TONNES)", style: Theme.of(context).textTheme.bodySmall),  const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(

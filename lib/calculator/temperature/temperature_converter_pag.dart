@@ -38,18 +38,25 @@ class TemperatureConverterPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Fahrenheit to Celsius
-                Text("FAHRENHEIT (°F)", style: Theme.of(context).textTheme.bodySmall),
+                Text("FAHRENHEIT (°F)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(
                       child: AppTextField.textField(
                         context,
                         controller: cp.fahrenheitController,
-                        onChanged: (val) => cp.convertFahrenheitToCelsius(val),keyboardType: TextInputType.number,
+                        onChanged: (val) => cp.convertFahrenheitToCelsius(val),
+                        keyboardType: TextInputType.number,
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.fahrenheitController.text));
                       },
@@ -63,7 +70,9 @@ class TemperatureConverterPage extends StatelessWidget {
                           fontStyle: FontStyle.italic,
                         )),
                 const SizedBox(height: 8),
-                Text("CELSIUS (°C)", style: Theme.of(context).textTheme.bodySmall),
+                Text("CELSIUS (°C)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -74,7 +83,11 @@ class TemperatureConverterPage extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.celsiusFromFahrenheitController.text));
                       },
@@ -84,49 +97,6 @@ class TemperatureConverterPage extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // Celsius to Fahrenheit
-                Text("CELSIUS (°C)", style: Theme.of(context).textTheme.bodySmall),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.celsiusController,
-                        onChanged: (val) => cp.convertCelsiusToFahrenheit(val),keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.celsiusController.text));
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(AppStrings.equals,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.c656e79,
-                          fontStyle: FontStyle.italic,
-                        )),
-                const SizedBox(height: 8),
-                Text("FAHRENHEIT (°F)", style: Theme.of(context).textTheme.bodySmall),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.fahrenheitFromCelsiusController,
-                        readOnly: true,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.fahrenheitFromCelsiusController.text));
-                      },
-                    ),
-                  ],
-                ),
 
                 const SizedBox(height: 20),
                 Container(
@@ -147,7 +117,11 @@ class TemperatureConverterPage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(const ClipboardData(
                             text: "°F to °C = (°F - 32) × 5/9\n°C to °F = (°C × 9/5) + 32",
