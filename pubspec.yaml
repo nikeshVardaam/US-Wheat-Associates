@@ -94,21 +94,19 @@ flutter:
   fonts:
     - family: Roboto
       fonts:
-        - asset: assets/fonts/Roboto-Thin.ttf
+        - asset: assets/fonts/proximanova-thin.otf
           weight: 100
-        - asset: assets/fonts/Roboto-ExtraLight.ttf
-          weight: 200
-        - asset: assets/fonts/Roboto-Light.ttf
+        - asset: assets/fonts/proximanova-light.otf
           weight: 300
-        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/proximanova-regular.otf
           weight: 400
-        - asset: assets/fonts/Roboto-Medium.ttf
+        - asset: assets/fonts/proximanova-medium.otf
           weight: 500
-        - asset: assets/fonts/Roboto-SemiBold.ttf
+        - asset: assets/fonts/proximanova-semibold.otf
           weight: 600
-        - asset: assets/fonts/Roboto-Bold.ttf
+        - asset: assets/fonts/proximanovaexcn-bold.otf
           weight: 700
-        - asset: assets/fonts/Roboto-ExtraBold.ttf
+        - asset: assets/fonts/proximanova-extrabold.otf
           weight: 800
         - asset: assets/fonts/Roboto-Black.ttf
           weight: 900

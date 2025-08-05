@@ -23,7 +23,14 @@ class LoginProvider extends ChangeNotifier {
     passwordController.clear();
     notifyListeners();
   }
-
+  setPasswordVisibility() {
+    if (passwordIsVisible) {
+      passwordIsVisible = false;
+    } else {
+      passwordIsVisible = true;
+    }
+    notifyListeners();
+  }
   // getPrefData() async {
   //   sp = await SharedPreferences.getInstance();
   //   String loginCredential = sp?.getString(PrefKeys.loginCredential) ?? "";
@@ -102,6 +109,7 @@ class LoginProvider extends ChangeNotifier {
         LoginModal loginModel = LoginModal.fromJson(json.decode(response.body));
         sp = await SharedPreferences.getInstance();
         await sp?.setString(PrefKeys.token, loginModel.token ?? "");
+        await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
 
         Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
       }

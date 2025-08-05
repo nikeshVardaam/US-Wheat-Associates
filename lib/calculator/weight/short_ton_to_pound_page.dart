@@ -39,7 +39,9 @@ class ShortTonToPoundPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("SHORT TONS (US)", style: Theme.of(context).textTheme.bodySmall),
+                Text("SHORT TONS (US)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -64,7 +66,9 @@ class ShortTonToPoundPage extends StatelessWidget {
                       fontStyle: FontStyle.italic,
                     )),
                 const SizedBox(height: 8),
-                Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),
+                Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(

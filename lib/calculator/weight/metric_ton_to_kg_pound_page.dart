@@ -45,7 +45,9 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("METRIC TONS", style: Theme.of(context).textTheme.bodySmall),
+                Text("METRIC TONS", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -70,7 +72,9 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                           fontStyle: FontStyle.italic,
                         )),
                 const SizedBox(height: 8),
-                Text("KILOGRAMS (kg)", style: Theme.of(context).textTheme.bodySmall),
+                Text("KILOGRAMS (kg)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -89,7 +93,9 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),
+                Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(

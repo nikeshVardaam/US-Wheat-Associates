@@ -39,7 +39,9 @@ class LongMetricTonPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("BRITISH TONS (LONG)", style: Theme.of(context).textTheme.bodySmall),
+                Text("BRITISH TONS (LONG)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -64,7 +66,9 @@ class LongMetricTonPage extends StatelessWidget {
                       fontStyle: FontStyle.italic,
                     )),
                 const SizedBox(height: 8),
-                Text("METRIC TONS (TONNES)", style: Theme.of(context).textTheme.bodySmall),
+                Text("METRIC TONS (TONNES)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  height: 6,
+                ),
                 Row(
                   children: [
                     Expanded(

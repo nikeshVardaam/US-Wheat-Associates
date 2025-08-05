@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/modal/all_price_data_modal.dart';
 import 'package:uswheat/modal/latest_prdate_modal.dart';
 import 'package:uswheat/modal/nearby_modal.dart';
@@ -19,29 +20,67 @@ class PricesProvider extends ChangeNotifier {
   List<String> uniqueRegion = [];
   List<String> uniqueClasses = [];
   List<num> uniqueYears = [];
+
   String? selectedRegion;
   String? selectedClasses;
   String? grphcode;
   String? prdate;
   String? graphDate;
   String? selectedYears;
+
   AllPriceDataModal? allPriceDataModal;
   List<AllPriceDataModal> allPriceDataList = [];
   List<GraphDataModal> graphList = [];
   List<NearbyModal> nearbyList = [];
   List<SalesData> chartData = [];
   List<ForwardPricesModal> forwardPricesList = [];
+
   LatestPrdateModal? latestPrdate;
   WeekDataModal? weekData;
   RegionsAndClassesModal? regionsAndClasses;
-  bool isFormTouched = false;
-  bool _isInWatchlist = false;
 
+  bool loader = false;
+  bool isDataFetched = false;
+  bool _isInWatchlist = false;
   bool get isInWatchlist => _isInWatchlist;
 
-  final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  final List<String> fixedMonths = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  String get graphCacheKey =>
+      'graph_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
+  String get allPriceDataCacheKey =>
+      'allPriceData_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
+
+  void setRegion(String region) {
+    selectedRegion = region;
+    notifyListeners();
+    saveFiltersLocally();
+  }
+
+  void setClass(String classValue) {
+    selectedClasses = classValue;
+    notifyListeners();
+    saveFiltersLocally();
+  }
+
+  void setYear(String value) {
+    selectedYears = value;
+    notifyListeners();
+  }
 
   Future<void> fetchData({required BuildContext context}) async {
+    await loadFiltersLocally();
+
+    final prefs = await SharedPreferences.getInstance();
+    final hasCachedGraph = prefs.getString(graphCacheKey)?.isNotEmpty ?? false;
+
+    if (hasCachedGraph && graphList.isNotEmpty && allPriceDataModal != null) {
+      return;
+    }
+
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -50,22 +89,129 @@ class PricesProvider extends ChangeNotifier {
 
     await getRegionsAndClasses(context: context, loader: false);
     await getYears(context: context, loader: false);
-
-    prdate = selectedYears;
-
     await getGraphCodesByClassAndRegion(context: context, loader: false);
     await graphData(context: context, loader: false);
     await getAllPriceData(context: context, loader: false);
+
+    await saveFiltersLocally();
 
     Navigator.pop(context);
     notifyListeners();
   }
 
+
+  Future<void> saveFiltersLocally() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("selectedRegion", selectedRegion ?? "");
+    await prefs.setString("selectedClass", selectedClasses ?? "");
+    await prefs.setString("selectedYear", selectedYears ?? "");
+
+    // Save graph data
+    final graphJson = jsonEncode(graphList.map((e) => e.toJson()).toList());
+    await prefs.setString(graphCacheKey, graphJson);
+
+    // Save all price data
+    if (allPriceDataModal != null) {
+      await prefs.setString(allPriceDataCacheKey, jsonEncode(allPriceDataModal!.toJson()));
+    }
+  }
+
+  Future<void> loadFiltersLocally() async {
+    final sp = await SharedPreferences.getInstance();
+    selectedRegion = sp.getString("selectedRegion") ?? "";
+    selectedClasses = sp.getString("selectedClass") ?? "";
+    selectedYears = sp.getString("selectedYear") ?? "";
+    loader = sp.getBool("isDataFetched") ?? false;
+
+    final graphString = sp.getString(graphCacheKey);
+    if (graphString != null && graphString.isNotEmpty) {
+      try {
+        List<dynamic> jsonList = json.decode(graphString);
+        graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
+        _generateChartDataFromGraphList();
+      } catch (e) {
+        debugPrint("❌ Error decoding cached graphList: $e");
+      }
+    }
+
+  }
+
+  void _generateChartDataFromGraphList() {
+    final tempChartData = fixedMonths.map((month) {
+      final entries = graphList.where((e) {
+        try {
+          final date = DateTime.parse(e.pRDATE ?? '');
+          return DateFormat('MMM').format(date) == month;
+        } catch (_) {
+          return false;
+        }
+      }).toList();
+
+      final avg = entries.isNotEmpty
+          ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length
+          : 0.0;
+
+      return SalesData(month: month, sales: avg);
+    }).toList();
+
+    chartData = tempChartData.any((e) => e.sales != 0.0) ? tempChartData : [];
+  }
+
   Future<void> upDateGraphData({required BuildContext context}) async {
-    prdate = selectedYears;
-    await getGraphCodesByClassAndRegion(context: context, loader: true);
-    await graphData(context: context, loader: true);
-    await getAllPriceData(context: context, loader: false);
+    final sp = await SharedPreferences.getInstance();
+
+    graphList.clear();
+    chartData.clear();
+    allPriceDataModal = null;
+    notifyListeners();
+
+
+
+    // Load from cache if available
+    final cachedGraph = sp.getString(graphCacheKey);
+    if (cachedGraph != null && cachedGraph.isNotEmpty) {
+      try {
+        List<dynamic> jsonList = json.decode(cachedGraph);
+        graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
+        _generateChartDataFromGraphList();
+
+      } catch (e) {
+        debugPrint("❌ Error loading graphList from cache: $e");
+      }
+    }
+
+    final cachedAllPrice = sp.getString(allPriceDataCacheKey);
+    if (cachedAllPrice != null && cachedAllPrice.isNotEmpty) {
+      try {
+        allPriceDataModal = AllPriceDataModal.fromJson(json.decode(cachedAllPrice));
+
+      } catch (e) {
+        debugPrint("❌ Error loading allPriceData from cache: $e");
+      }
+    }
+
+    if (graphList.isEmpty || allPriceDataModal == null) {
+
+
+      prdate = selectedYears;
+
+      await getGraphCodesByClassAndRegion(context: context, loader: true);
+      await graphData(context: context, loader: true);
+      await getAllPriceData(context: context, loader: false);
+
+      await saveFiltersLocally();
+    }
+
+    notifyListeners();
+  }
+
+
+  void updateFilter({String? region, String? className, String? year}) {
+    selectedRegion = region;
+    selectedClasses = className;
+    selectedYears = year;
+    loader = false;
+    notifyListeners();
   }
 
   void toggleWatchlistStatus() {
@@ -73,45 +219,50 @@ class PricesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  storeWatchList({required BuildContext context, required bool loader}) async {
+  Future<void> storeWatchList({
+    required BuildContext context,
+    required bool loader,
+  }) async {
     if (selectedRegion == null || selectedClasses == null || graphList.isEmpty) {
       AppWidgets.appSnackBar(
         context: context,
         text: "Please select all fields",
         color: AppColors.c2a8741,
       );
+      return;
     }
-    var fullDate = selectedYears != null && selectedYears!.length == 4 ? "${selectedYears!}-01-01" : selectedYears ?? "";
-    var data = {
+
+    final fullDate = selectedYears != null && selectedYears!.length == 4
+        ? "${selectedYears!}-01-01"
+        : selectedYears ?? "";
+
+    final data = {
       "filterdata": {
         "region": selectedRegion ?? "",
         "class": selectedClasses ?? "",
-        "date": fullDate ?? "",
+        "date": fullDate,
       }
     };
-    PostServices()
-        .post(
+
+    final response = await PostServices().post(
       endpoint: ApiEndpoint.storeWatchlist,
       requestData: data,
       context: context,
       isBottomSheet: false,
       loader: loader,
-    )
-        .then((value) {
-      if (value != null) {
-        _isInWatchlist = false;
-        AppWidgets.appSnackBar(
-          context: context,
-          text: "Watchlist Added Successfully",
-          color: AppColors.c2a8741,
-        );
-      }
-    });
+    );
+
+    if (response != null) {
+      _isInWatchlist = false;
+      AppWidgets.appSnackBar(
+        context: context,
+        text: "Watchlist Added Successfully",
+        color: AppColors.c2a8741,
+      );
+    }
   }
 
-  getRegionsAndClasses({required BuildContext context, required bool loader}) async {
-    print("getRegionsAndClasses");
-
+  Future<void> getRegionsAndClasses({required BuildContext context, required bool loader}) async {
     final response = await GetApiServices().get(
       endpoint: ApiEndpoint.getRegionsAndClasses,
       context: context,
@@ -120,29 +271,18 @@ class PricesProvider extends ChangeNotifier {
 
     if (response != null) {
       regionsAndClasses = RegionsAndClassesModal.fromJson(json.decode(response.body));
-
       uniqueRegion = regionsAndClasses?.toJson().keys.toList() ?? [];
-      uniqueClasses = [];
-
       if (uniqueRegion.isNotEmpty) {
         selectedRegion = uniqueRegion.first;
-
         uniqueClasses = regionsAndClasses?.toJson()[selectedRegion]?.cast<String>() ?? [];
-
         if (uniqueClasses.isNotEmpty) {
           selectedClasses = uniqueClasses.first;
-
-          if (grphcode != null && grphcode!.isNotEmpty) {
-            await getAllPriceData(context: context, loader: false);
-          }
         }
       }
     }
   }
 
   Future<void> getYears({required BuildContext context, required bool loader}) async {
-    print("getYeears");
-
     final response = await GetApiServices().get(
       endpoint: ApiEndpoint.getYears,
       context: context,
@@ -152,41 +292,20 @@ class PricesProvider extends ChangeNotifier {
     if (response != null) {
       uniqueYears = List<num>.from(json.decode(response.body));
       uniqueYears.sort((a, b) => b.compareTo(a));
-
       final currentYear = DateTime.now().year;
-
-      selectedYears = uniqueYears.firstWhere((year) => year == currentYear, orElse: () => uniqueYears.first).toString();
-
+      selectedYears = uniqueYears.firstWhere(
+            (year) => year == currentYear,
+        orElse: () => uniqueYears.first,
+      ).toString();
       prdate = selectedYears;
     }
   }
 
-  getAllPriceData({required BuildContext context, required bool loader}) {
-    print("getALlPrice");
-
-    var data = {
-      "grphcode": grphcode ?? "",
-    };
-    PostServices()
-        .post(
-      endpoint: ApiEndpoint.getAllPriceData,
-      requestData: data,
-      context: context,
-      isBottomSheet: false,
-      loader: loader,
-    )
-        .then((value) {
-      if (value != null) {
-        allPriceDataModal = AllPriceDataModal.fromJson(json.decode(value.body));
-        notifyListeners();
-      }
-    });
-  }
-
-  getGraphCodesByClassAndRegion({required BuildContext context, required bool loader}) async {
-    print("getGraphCodesByClassAndRegion");
-
-    var data = {
+  Future<void> getGraphCodesByClassAndRegion({
+    required BuildContext context,
+    required bool loader,
+  }) async {
+    final data = {
       "class": selectedClasses ?? "",
       "region": selectedRegion ?? "",
     };
@@ -201,30 +320,20 @@ class PricesProvider extends ChangeNotifier {
 
     if (value != null) {
       final body = json.decode(value.body);
-
       if (body is List && body.isNotEmpty) {
         grphcode = body.last.toString();
       }
     }
   }
 
-  Future<void> graphData({required BuildContext context, required bool loader}) async {
-    if (grphcode == null || grphcode!.isEmpty || prdate == null || prdate!.isEmpty) {
-      chartData = [];
-      return;
-    }
+  Future<void> graphData({
+    required BuildContext context,
+    required bool loader,
+  }) async {
+    if ((grphcode ?? "").isEmpty || (prdate ?? "").isEmpty) return;
 
-    if (prdate!.length == 4) {
-      prdate = "$prdate-01-01";
-    }
-
-    graphList.clear();
-    chartData.clear();
-
-    var data = {
-      "grphcode": grphcode ?? "",
-      "prdate": prdate ?? "",
-    };
+    final date = prdate!.length == 4 ? "$prdate-01-01" : prdate!;
+    final data = { "grphcode": grphcode!, "prdate": date };
 
     final response = await PostServices().post(
       endpoint: ApiEndpoint.getGraphData,
@@ -235,35 +344,34 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (response != null) {
-      List<dynamic> jsonList = json.decode(response.body);
-      graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
-      final tempChartData = fixedMonths.map((month) {
-        final monthEntries = graphList.where((e) {
-          try {
-            final dateString = e.pRDATE;
-            if (dateString == null || dateString.isEmpty) return false;
-            final date = DateTime.parse(dateString);
-            return DateFormat('MMM').format(date) == month;
-          } catch (_) {
-            return false;
-          }
-        }).toList();
-
-        final avgSales = monthEntries.isNotEmpty
-            ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length
-            : 0.0;
-
-        return SalesData(month: month, sales: avgSales);
-      }).toList();
-
-
-      final hasValidData = tempChartData.any((e) => e.sales != 0.0);
-      chartData = hasValidData ? tempChartData : [];
+      final list = json.decode(response.body) as List;
+      graphList = list.map((e) => GraphDataModal.fromJson(e)).toList();
+      _generateChartDataFromGraphList();
 
       if (graphList.isNotEmpty) {
-        prdate = graphList.last.pRDATE;
         graphDate = graphList.last.pRDATE;
       }
+    }
+  }
+
+  Future<void> getAllPriceData({
+    required BuildContext context,
+    required bool loader,
+  }) async {
+    final response = await PostServices().post(
+      endpoint: ApiEndpoint.getAllPriceData,
+      requestData: { "grphcode": grphcode ?? "" },
+      context: context,
+      isBottomSheet: false,
+      loader: loader,
+    );
+
+    if (response != null) {
+      final body = json.decode(response.body);
+      allPriceDataModal = AllPriceDataModal.fromJson(
+        body is Map ? body : (body is List && body.isNotEmpty ? body.first : {}),
+      );
+      notifyListeners();
     }
   }
 

@@ -12,12 +12,23 @@ class SignUpProvider extends ChangeNotifier {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  bool passwordIsVisible = false;
+  bool confirmPasswordIsVisible = false;
 
   void cleanData() {
     nameController.clear();
     emailController.clear();
     passwordController.clear();
     confirmPasswordController.clear();
+    notifyListeners();
+  }
+  void setPasswordVisibility() {
+    passwordIsVisible = !passwordIsVisible;
+    notifyListeners();
+  }
+
+  void setConfirmPasswordVisibility() {
+    confirmPasswordIsVisible = !confirmPasswordIsVisible;
     notifyListeners();
   }
 

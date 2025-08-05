@@ -172,28 +172,23 @@ class CalculatorProvider extends ChangeNotifier {
   final TextEditingController fahrenheitController = TextEditingController();
   final TextEditingController celsiusFromFahrenheitController = TextEditingController();
 
-  final TextEditingController celsiusController = TextEditingController();
-  final TextEditingController fahrenheitFromCelsiusController = TextEditingController();
 
   void convertFahrenheitToCelsius(String val) {
-    double f = double.tryParse(val) ?? 0;
-    double c = (f - 32) * 5 / 9;
-    celsiusFromFahrenheitController.text = c.toStringAsFixed(2);
+    if (val.isEmpty) {
+      celsiusFromFahrenheitController.clear();
+    } else {
+      double f = double.tryParse(val) ?? 0;
+      double c = (f - 32) * 5 / 9;
+      celsiusFromFahrenheitController.text = c.toStringAsFixed(2);
+    }
     notifyListeners();
   }
 
-  void convertCelsiusToFahrenheit(String val) {
-    double c = double.tryParse(val) ?? 0;
-    double f = (c * 9 / 5) + 32;
-    fahrenheitFromCelsiusController.text = f.toStringAsFixed(2);
-    notifyListeners();
-  }
 
   void clearTemperatureFields() {
     fahrenheitController.clear();
     celsiusFromFahrenheitController.clear();
-    celsiusController.clear();
-    fahrenheitFromCelsiusController.clear();
+
     notifyListeners();
   }
 

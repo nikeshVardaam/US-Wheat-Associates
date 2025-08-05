@@ -21,28 +21,28 @@ class AppWidgets {
       );
   }
   static Widget loading() {
-    return Dialog(
+    return const Dialog(
       backgroundColor: Colors.transparent,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CupertinoActivityIndicator(
-                color: Colors.grey,
-              ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CupertinoActivityIndicator(
+              color: Colors.black,
             ),
           ),
         ],
       ),
     );
   }
-
+  static Widget divider(BuildContext context) {
+    return Container(
+      color: AppColors.c464646, // G
+      height: 0.5,
+      width: MediaQuery.of(context).size.width,
+    );
+  }
   static appSnackBar({required BuildContext context, required String text, required Color color}) {
 
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uswheat/auth/login.dart';
 import 'package:uswheat/provider/calculator_provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/provider/login_provider.dart';
@@ -45,7 +46,7 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.system,
           theme: ThemeClass.lightTheme,
-          initialRoute: AppRoutes.splashScreen,
+          home: const Login(),
           onGenerateRoute: RouteGenerator.generateRoute,
         ));
   }

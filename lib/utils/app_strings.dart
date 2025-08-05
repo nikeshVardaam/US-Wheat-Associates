@@ -1,7 +1,10 @@
 class AppStrings {
   static const logIn = "Login";
+  static const taxonomy = "Taxonomy";
+  static const year = "Year";
+  static const category = "Category";
   static const logout = "Logout";
-  static const logInToYourAccount = "Login to your account";
+  static const signInToYourAccount = "Sign in to your account";
   static const areYouSureYouWantToLogout = "are You Sure You Want To Logout";
   static const createYourAccount = "Create your account";
   static const company = "Company";
@@ -13,14 +16,17 @@ class AppStrings {
   static const confirmPassword = "Confirm Password";
   static const alreadyHaveAccount = "Already have an account?";
   static const signUp = "Sign Up";
+  static const signIn = "Sign in";
   static const rememberMe = "RememberMe";
   static const fullName = "Full Name";
   static const country = "Country";
   static const imInterested = "I'm interested in:";
   static const harvestReports = "Harvest Reports";
   static const price = "Price";
+  static const pricess = "PRICES";
   static const agriConversionCalculator = "Agri Conversion Calculator";
   static const favoritePrice = "Favorite Price";
+  static const favoritePrices = "FAVORITE PRICE";
   static const bushelsMetricTons = "Bushels = Metric Tons";
   static const inputAndConvertValues  = "Input And Convert Values Between Bushels And Metric Tons.";
   static const bushels  = "BUSHELS: (bu)";
@@ -39,7 +45,7 @@ class AppStrings {
   static const read = "Read";
   static const view = "View";
   static const region = "REGION";
-  static const distanceArea = "Distance & Area";
+  static const distanceArea = "DISTANCE & AREA";
   static const hardRedWinter = "HARD RED WINTER";
   static const hardRedSpring = "HARD RED SPRING ";
   static const softRedWinter = "SOFT RED WINTER";
@@ -49,13 +55,13 @@ class AppStrings {
   static const weekChange = "WEEK CHANGE:";
   static const oneYearAgo = "ONE YEAR AGO:";
   static const lastPrDate = "LAST PR DATE:";
-  static const fwdPrice = "FWD PRICE :";
+  static const fwdPrice = "FWD PRICE";
   static const account = "ACCOUNT";
-  static const pages = "Pages";
+  static const pages = "PAGES";
   static const classs = "CLASS";
   static const date = "DATE";
   static const news = "News";
-  static const settings = "Settings";
+  static const settings = "SETTINGS";
   static const search = "Search";
   static const wheatData = "WHEAT DATA";
   static const gulfOfMexico = "Gulf of Mexico";
