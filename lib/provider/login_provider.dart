@@ -23,6 +23,7 @@ class LoginProvider extends ChangeNotifier {
     passwordController.clear();
     notifyListeners();
   }
+
   setPasswordVisibility() {
     if (passwordIsVisible) {
       passwordIsVisible = false;
@@ -31,6 +32,7 @@ class LoginProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
   // getPrefData() async {
   //   sp = await SharedPreferences.getInstance();
   //   String loginCredential = sp?.getString(PrefKeys.loginCredential) ?? "";
@@ -97,22 +99,27 @@ class LoginProvider extends ChangeNotifier {
         "password": passwordController.text.trim(),
       };
 
-      var response = await PostServices().post(
+      await PostServices()
+          .post(
         endpoint: ApiEndpoint.login,
         requestData: data,
         context: context,
         isBottomSheet: false,
         loader: true,
+      )
+          .then(
+        (value) async {
+          if (value != null) {
+            LoginModal loginModel = LoginModal.fromJson(json.decode(value.body));
+            sp = await SharedPreferences.getInstance();
+            await sp?.setString(PrefKeys.token, loginModel.token ?? "");
+            await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
+
+            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+          }
+        },
       );
 
-      if (response != null) {
-        LoginModal loginModel = LoginModal.fromJson(json.decode(response.body));
-        sp = await SharedPreferences.getInstance();
-        await sp?.setString(PrefKeys.token, loginModel.token ?? "");
-        await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
-
-        Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
-      }
       notifyListeners();
     }
   }

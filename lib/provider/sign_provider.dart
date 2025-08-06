@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 
+import '../modal/login_modal.dart';
 import '../utils/app_routes.dart';
 import '../utils/app_widgets.dart';
 import '../utils/miscellaneous.dart';
+import '../utils/pref_keys.dart';
 
 class SignUpProvider extends ChangeNotifier {
   TextEditingController emailController = TextEditingController();
@@ -14,6 +19,7 @@ class SignUpProvider extends ChangeNotifier {
   TextEditingController confirmPasswordController = TextEditingController();
   bool passwordIsVisible = false;
   bool confirmPasswordIsVisible = false;
+  SharedPreferences? sp;
 
   void cleanData() {
     nameController.clear();
@@ -22,6 +28,7 @@ class SignUpProvider extends ChangeNotifier {
     confirmPasswordController.clear();
     notifyListeners();
   }
+
   void setPasswordVisibility() {
     passwordIsVisible = !passwordIsVisible;
     notifyListeners();
@@ -56,24 +63,28 @@ class SignUpProvider extends ChangeNotifier {
   createAccount({required BuildContext context}) {
     if (validation(context)) {
       var data = {
-        "name": emailController.text.trim(),
+        "name": nameController.text.trim(),
         "email": emailController.text.trim(),
         "password": passwordController.text.trim(),
       };
       PostServices()
           .post(
-            endpoint: ApiEndpoint.signUp,
-            requestData: data,
-            context: context,
-            isBottomSheet: false,
-            loader: false,
-          )
-          .then(
-            (value) {},
-          );
-      cleanData();
-      Navigator.pushNamed(context, AppRoutes.dashboard);
-      notifyListeners();
+        endpoint: ApiEndpoint.signUp,
+        requestData: data,
+        context: context,
+        isBottomSheet: false,
+        loader: false,
+      )
+          .then((value) async {
+        if (value != null) {
+          LoginModal loginModel = LoginModal.fromJson(json.decode(value.body));
+          sp = await SharedPreferences.getInstance();
+          await sp?.setString(PrefKeys.token, loginModel.token ?? "");
+          await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
+
+          Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+        }
+      });
     }
   }
 }

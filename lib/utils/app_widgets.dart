@@ -29,7 +29,7 @@ class AppWidgets {
           Padding(
             padding: EdgeInsets.all(8.0),
             child: CupertinoActivityIndicator(
-              color: Colors.black,
+              color: Colors.grey,
             ),
           ),
         ],

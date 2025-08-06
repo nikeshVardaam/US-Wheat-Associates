@@ -8,6 +8,7 @@ import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/provider/reports_provider.dart';
 import 'package:uswheat/provider/sign_provider.dart';
 import 'package:uswheat/provider/watchList_provider.dart';
+import 'package:uswheat/splash_screen.dart';
 import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/route_generator.dart';
 import 'package:uswheat/utils/themes.dart';
@@ -46,7 +47,7 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.system,
           theme: ThemeClass.lightTheme,
-          home: const Login(),
+          home: const SplashScreen(),
           onGenerateRoute: RouteGenerator.generateRoute,
         ));
   }
