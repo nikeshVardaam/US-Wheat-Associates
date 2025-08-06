@@ -17,17 +17,12 @@ import 'login_provider.dart';
 
 class DashboardProvider extends ChangeNotifier {
   String? selectedPage = AppStrings.watchlist;
-  Widget selectActivity = const Watchlist();
-  String selectMenu = AppStrings.watchlist;
-  int currentIndex = 2;
+  Widget selectActivity = const Prices();
+  String selectMenu = AppStrings.pricess;
+  int currentIndex = 0;
   SharedPreferences? sp;
   User? user;
 
-  DashboardProvider() {
-    selectActivity = const Watchlist();
-    selectMenu = AppStrings.watchlist;
-    notifyListeners();
-  }
 
   getPrefData() async {
     sp = await SharedPreferences.getInstance();
