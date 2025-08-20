@@ -18,8 +18,8 @@ class MetersYardsFeet extends StatelessWidget {
         title: Text(
           "Meters = Yards = Feet",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: AppColors.cFFFFFF,
-          ),
+                color: AppColors.cFFFFFF,
+              ),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -29,8 +29,8 @@ class MetersYardsFeet extends StatelessWidget {
             child: Text(
               "Input and convert values from Meters to Yards and Feet.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.cFFFFFF,
-              ),
+                    color: AppColors.cFFFFFF,
+                  ),
             ),
           ),
         ),
@@ -54,11 +54,15 @@ class MetersYardsFeet extends StatelessWidget {
                         context,
                         controller: cp.meterController,
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
-                        onChanged: (val) => cp.convertMeterToYardFeet(val),
+                        onChanged: (val) => cp.convertFromMeter(val),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.meterController.text));
                       },
@@ -70,9 +74,9 @@ class MetersYardsFeet extends StatelessWidget {
 
                 Text(AppStrings.equals,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.c656e79,
-                      fontStyle: FontStyle.italic,
-                    )),
+                          color: AppColors.c656e79,
+                          fontStyle: FontStyle.italic,
+                        )),
 
                 // Yards Output
                 Padding(
@@ -85,11 +89,15 @@ class MetersYardsFeet extends StatelessWidget {
                       child: AppTextField.textField(
                         context,
                         controller: cp.yardController,
-                        readOnly: true,
+                        onChanged: (val) => cp.convertFromYard(val),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.yardController.text));
                       },
@@ -109,11 +117,15 @@ class MetersYardsFeet extends StatelessWidget {
                       child: AppTextField.textField(
                         context,
                         controller: cp.feetController,
-                        readOnly: true,
+                        onChanged: (val) => cp.convertFromFeet(val),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.feetController.text));
                       },
@@ -137,12 +149,16 @@ class MetersYardsFeet extends StatelessWidget {
                         child: Text(
                           "Calculation:\n1 m = 1.09361 yd\n1 m = 3.28084 ft",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppColors.c000000,
-                          ),
+                                color: AppColors.c000000,
+                              ),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(const ClipboardData(
                             text: "1 m = 1.09361 yd\n1 m = 3.28084 ft",

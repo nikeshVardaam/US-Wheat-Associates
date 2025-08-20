@@ -8,8 +8,6 @@ import 'package:uswheat/utils/app_text_field.dart';
 import '../../provider/calculator_provider.dart';
 import '../../utils/app_colors.dart';
 
-
-
 class MilesKilometer extends StatelessWidget {
   const MilesKilometer({super.key});
 
@@ -21,8 +19,8 @@ class MilesKilometer extends StatelessWidget {
         title: Text(
           "Miles = Kilometers",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: AppColors.cFFFFFF,
-          ),
+                color: AppColors.cFFFFFF,
+              ),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -32,8 +30,8 @@ class MilesKilometer extends StatelessWidget {
             child: Text(
               "Input and convert values between Miles and Kilometers.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.cFFFFFF,
-              ),
+                    color: AppColors.cFFFFFF,
+                  ),
             ),
           ),
         ),
@@ -50,8 +48,8 @@ class MilesKilometer extends StatelessWidget {
                 child: Text(
                   "MILES (mi)",
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.c000000,
-                  ),
+                        color: AppColors.c000000,
+                      ),
                 ),
               ),
 
@@ -62,13 +60,17 @@ class MilesKilometer extends StatelessWidget {
                     child: AppTextField.textField(
                       context,
                       controller: cp.milesController,
-                      onChanged: (val) => cp.convertToKilometers(val),
+                      onChanged: (val) => cp.convertFromMiles(val),
                       readOnly: false,
                       keyboardType: TextInputType.number,
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                    icon: Icon(
+                      Icons.copy,
+                      color: AppColors.c656e79,
+                      size: 18,
+                    ),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: cp.milesController.text));
                     },
@@ -82,9 +84,9 @@ class MilesKilometer extends StatelessWidget {
               Text(
                 AppStrings.equals,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.c656e79,
-                  fontStyle: FontStyle.italic,
-                ),
+                      color: AppColors.c656e79,
+                      fontStyle: FontStyle.italic,
+                    ),
               ),
 
               // Label for Kilometers
@@ -93,8 +95,8 @@ class MilesKilometer extends StatelessWidget {
                 child: Text(
                   "KILOMETERS (km)",
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.c000000,
-                  ),
+                        color: AppColors.c000000,
+                      ),
                 ),
               ),
 
@@ -105,13 +107,16 @@ class MilesKilometer extends StatelessWidget {
                     child: AppTextField.textField(
                       context,
                       controller: cp.kilometerController,
-                      onChanged: (_) {},
-                      readOnly: true,
+                      onChanged: (val) => cp.convertFromKilometers(val),
                       keyboardType: TextInputType.number,
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                    icon: Icon(
+                      Icons.copy,
+                      color: AppColors.c656e79,
+                      size: 18,
+                    ),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: cp.kilometerController.text));
                     },
@@ -135,12 +140,16 @@ class MilesKilometer extends StatelessWidget {
                       child: Text(
                         "Calculation:\n1 Mile = 1.60934 Kilometers",
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: AppColors.c000000,
-                        ),
+                              color: AppColors.c000000,
+                            ),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(const ClipboardData(text: "1 Mile = 1.60934 Kilometers"));
                       },

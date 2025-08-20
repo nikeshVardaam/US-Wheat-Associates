@@ -27,6 +27,7 @@ class AppStrings {
   static const agriConversionCalculator = "Agri Conversion Calculator";
   static const favoritePrice = "Favorite Price";
   static const favoritePrices = "FAVORITE PRICE";
+  static const addToWatchlist = "ADD TO WATCHLIST";
   static const bushelsMetricTons = "Bushels = Metric Tons";
   static const inputAndConvertValues  = "Input And Convert Values Between Bushels And Metric Tons.";
   static const bushels  = "BUSHELS: (bu)";

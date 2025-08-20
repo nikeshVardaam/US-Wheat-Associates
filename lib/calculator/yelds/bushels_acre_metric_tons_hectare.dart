@@ -9,21 +9,21 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_text_field.dart';
 
-class MetricTonToKgPoundPage extends StatefulWidget {
-  const MetricTonToKgPoundPage({super.key});
+class BuAcreMtHectare extends StatefulWidget {
+  const BuAcreMtHectare({super.key});
 
   @override
-  State<MetricTonToKgPoundPage> createState() => _MetricTonToKgPoundPageState();
+  State<BuAcreMtHectare> createState() => _BuAcreMtHectareState();
 }
 
-class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
+class _BuAcreMtHectareState extends State<BuAcreMtHectare> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
-          "Metric Ton = Kg = Pounds",
+          "Bushels/Acre  =  Metric Tons/Hectare",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
@@ -32,7 +32,7 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Convert Metric Tons to Kilograms and Pounds.",
+              "Convert Bushels per Acre to Metric Tons per Hectare.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
@@ -45,93 +45,61 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("METRIC TONS", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(
-                  height: 6,
-                ),
+                // Bushels per Acre input
+                Text("BUSHELS PER ACRE (Bu/ac)", style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     Expanded(
                       child: AppTextField.textField(
                         context,
-                        controller: cp.metricTonInputController,
-                        onChanged: (val) => cp.convertFromMetricTon(val),
+                        controller: cp.buAcreController,
+                        onChanged: (val) => cp.convertBuAcreToMtHectare(val),
                         keyboardType: TextInputType.number,
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: AppColors.c656e79,
-                        size: 18,
-                      ),
+                      icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.metricTonInputController.text));
+                        Clipboard.setData(ClipboardData(text: cp.buAcreController.text));
                       },
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 12),
                 Text(AppStrings.equals,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.c656e79,
-                          fontStyle: FontStyle.italic,
-                        )),
+                      color: AppColors.c656e79,
+                      fontStyle: FontStyle.italic,
+                    )),
                 const SizedBox(height: 8),
-                Text("KILOGRAMS (kg)", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(
-                  height: 6,
-                ),
+
+                // Metric Tons per Hectare output
+                Text("METRIC TONS PER HECTARE (MT/ha)", style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     Expanded(
                       child: AppTextField.textField(
                         context,
-                        controller: cp.kgOutputController,
+                        controller: cp.mtHectareController,
+                        onChanged: (val) => cp.convertMtHectareToBuAcre(val),
                         keyboardType: TextInputType.number,
-                        onChanged: (val) => cp.convertFromKg(val),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: AppColors.c656e79,
-                        size: 18,
-                      ),
+                      icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.kgOutputController.text));
+                        Clipboard.setData(ClipboardData(text: cp.mtHectareController.text));
                       },
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(
-                  height: 6,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.poundOutputController,
-                        keyboardType: TextInputType.number,
-                        onChanged: (val) => cp.convertFromPound(val),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: AppColors.c656e79,
-                        size: 18,
-                      ),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.poundOutputController.text));
-                      },
-                    ),
-                  ],
-                ),
+
                 const SizedBox(height: 20),
+
+                // Formula box
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -144,33 +112,29 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                       Expanded(
                         child: Text(
                           "Calculation:\n"
-                          "1 metric ton = 1000 kilograms\n"
-                          "1 kilogram = 2.20462262 pounds\n"
-                          "→ 1 metric ton = 2204.62262 pounds",
+                              "1 Bu/ac ≈ 0.06725 MT/ha\n"
+                              "1 MT/ha ≈ 14.87 Bu/ac",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(
-                          Icons.copy,
-                          color: AppColors.c656e79,
-                          size: 18,
-                        ),
+                        icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                         onPressed: () {
                           Clipboard.setData(const ClipboardData(
-                            text: "1 metric ton = 1000 kilograms\n1 kilogram = 2.20462262 pounds\n1 metric ton = 2204.62262 pounds",
+                            text: "1 Bu/ac = 0.06725 MT/ha\n1 MT/ha = 14.87 Bu/ac",
                           ));
                         },
                       ),
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 Row(
                   children: [
                     GestureDetector(
                       onTap: () {
-                        cp.clearMetricTonKgPound();
+                        cp.clearBuAcreMtHectare();
                       },
                       child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
                     ),

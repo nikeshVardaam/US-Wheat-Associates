@@ -47,7 +47,7 @@ class TemperatureConverterPage extends StatelessWidget {
                       child: AppTextField.textField(
                         context,
                         controller: cp.fahrenheitController,
-                        onChanged: (val) => cp.convertFahrenheitToCelsius(val),
+                        onChanged: (val) => cp.convertFromFahrenheit(val),
                         keyboardType: TextInputType.number,
                       ),
                     ),
@@ -79,7 +79,8 @@ class TemperatureConverterPage extends StatelessWidget {
                       child: AppTextField.textField(
                         context,
                         controller: cp.celsiusFromFahrenheitController,
-                        readOnly: true,
+                        onChanged: (val) => cp.convertFromCelsius(val),
+
                       ),
                     ),
                     IconButton(

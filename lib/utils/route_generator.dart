@@ -12,12 +12,15 @@ import 'package:uswheat/utils/app_routes.dart';
 
 import '../argument/report_detail_arg.dart';
 import '../calculator/distance_area/acres_hectares_mu.dart';
+import '../calculator/protein/wheat_protein.dart';
 import '../calculator/weight/long_metric_ton_page.dart';
 import '../calculator/weight/metric_ton_to_kg_pound_page.dart';
+import '../calculator/weight/metric_tons_cwt.dart';
 import '../calculator/weight/short_ton_to_pound_page.dart';
 import '../calculator/weight/short_tons_metric_tons.dart';
 import '../calculator/distance_area/square_feet_square_meters.dart';
 import '../calculator/temperature/temperature_converter_pag.dart';
+import '../calculator/yelds/bushels_acre_metric_tons_hectare.dart';
 import '../splash_screen.dart';
 
 class RouteGenerator {
@@ -51,8 +54,14 @@ class RouteGenerator {
         return buildRoute(const ShortTonToPoundPage(), settings: settings);
       case AppRoutes.metricTonToKgPoundPage:
         return buildRoute(const MetricTonToKgPoundPage(), settings: settings);
+      case AppRoutes.metricTonsCwt:
+        return buildRoute(const MetricTonsCwt(), settings: settings);
+      case AppRoutes.buAcreMtHectare:
+        return buildRoute(const BuAcreMtHectare(), settings: settings);
       case AppRoutes.temperatureConverterPage:
         return buildRoute(const TemperatureConverterPage(), settings: settings);
+      case AppRoutes.wheatProtein:
+        return buildRoute(const WheatProtein (), settings: settings);
       case AppRoutes.reportDetailPage:
         ReportDetailArg reportDetailArg = settings.arguments as ReportDetailArg;
         return buildRoute(ReportDetailPage(reportDetailArg: reportDetailArg), settings: settings);

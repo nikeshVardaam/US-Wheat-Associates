@@ -62,8 +62,8 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                     child: AppTextField.textField(
                       context,
                       controller: cp.sqFeetController,
-                      onChanged: (val) => cp.convertToSqMeter(val),
-                      readOnly: false,
+                      onChanged: (val) => cp.convertFromSqFeet(val),
+
                       keyboardType: TextInputType.number,
                     ),
                   ),
@@ -104,8 +104,7 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                     child: AppTextField.textField(
                       context,
                       controller: cp.sqMeterController,
-                      onChanged: (_) {},
-                      readOnly: true,
+                      onChanged: (val) => cp.convertFromSqMeter(val),
                       keyboardType: TextInputType.number,
                     ),
                   ),

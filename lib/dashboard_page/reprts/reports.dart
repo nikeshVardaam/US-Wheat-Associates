@@ -70,12 +70,14 @@ class _ReportsState extends State<Reports> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    AppStrings.reports,
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.cab865a,
-                                        ),
+                                  Flexible(
+                                    child: Text(
+                                      AppStrings.reports,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.cab865a,
+                                          ),
+                                    ),
                                   ),
                                   Icon(
                                     Icons.keyboard_arrow_down,
@@ -109,7 +111,7 @@ class _ReportsState extends State<Reports> {
                           width: MediaQuery.of(context).size.width / 4,
                           color: AppColors.c95795d.withOpacity(0.1),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                             child: GestureDetector(
                               onTapDown: (TapDownDetails details) {
                                 rp.showFilterYearDropdown(
@@ -126,12 +128,14 @@ class _ReportsState extends State<Reports> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    AppStrings.year,
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.cab865a,
-                                        ),
+                                  Flexible(
+                                    child: Text(
+                                      AppStrings.year,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.cab865a,
+                                      ),
+                                    ),
                                   ),
                                   Icon(
                                     Icons.keyboard_arrow_down,
@@ -182,12 +186,16 @@ class _ReportsState extends State<Reports> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    AppStrings.category,
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.cab865a,
-                                        ),
+                                  Flexible(
+                                    child: Text(
+                                      AppStrings.category,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.cab865a,
+                                          ),
+                                    maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                   Icon(
                                     Icons.keyboard_arrow_down,

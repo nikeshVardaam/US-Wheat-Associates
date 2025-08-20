@@ -9,21 +9,21 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_text_field.dart';
 
-class MetricTonToKgPoundPage extends StatefulWidget {
-  const MetricTonToKgPoundPage({super.key});
+class MetricTonsCwt extends StatefulWidget {
+  const MetricTonsCwt({super.key});
 
   @override
-  State<MetricTonToKgPoundPage> createState() => _MetricTonToKgPoundPageState();
+  State<MetricTonsCwt> createState() => _MetricTonsCwtState();
 }
 
-class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
+class _MetricTonsCwtState extends State<MetricTonsCwt> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
-          "Metric Ton = Kg = Pounds",
+          "Metric Ton = Hundred Weight (CWT)",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
@@ -32,7 +32,7 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Convert Metric Tons to Kilograms and Pounds.",
+              "Convert Metric Tons to Hundred Weight (CWT) and vice versa.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
@@ -45,93 +45,61 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Metric Ton input
                 Text("METRIC TONS", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(
-                  height: 6,
-                ),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     Expanded(
                       child: AppTextField.textField(
                         context,
-                        controller: cp.metricTonInputController,
-                        onChanged: (val) => cp.convertFromMetricTon(val),
+                        controller: cp.metricController, // ✅ correct one
+                        onChanged: (val) => cp.convertMetricTonToCwt(val),
                         keyboardType: TextInputType.number,
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: AppColors.c656e79,
-                        size: 18,
-                      ),
+                      icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.metricTonInputController.text));
+                        Clipboard.setData(ClipboardData(text: cp.metricController.text));
                       },
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 12),
                 Text(AppStrings.equals,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.c656e79,
-                          fontStyle: FontStyle.italic,
-                        )),
+                      color: AppColors.c656e79,
+                      fontStyle: FontStyle.italic,
+                    )),
                 const SizedBox(height: 8),
-                Text("KILOGRAMS (kg)", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(
-                  height: 6,
-                ),
+
+                // CWT input
+                Text("HUNDREDWEIGHT (CWT)", style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     Expanded(
                       child: AppTextField.textField(
                         context,
-                        controller: cp.kgOutputController,
+                        controller: cp.cwtInputController,
+                        onChanged: (val) => cp.convertCwtToMetricTon(val),
                         keyboardType: TextInputType.number,
-                        onChanged: (val) => cp.convertFromKg(val),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: AppColors.c656e79,
-                        size: 18,
-                      ),
+                      icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.kgOutputController.text));
+                        Clipboard.setData(ClipboardData(text: cp.cwtInputController.text));
                       },
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(
-                  height: 6,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.poundOutputController,
-                        keyboardType: TextInputType.number,
-                        onChanged: (val) => cp.convertFromPound(val),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: AppColors.c656e79,
-                        size: 18,
-                      ),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.poundOutputController.text));
-                      },
-                    ),
-                  ],
-                ),
+
                 const SizedBox(height: 20),
+
+                // Formula box
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -144,33 +112,29 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                       Expanded(
                         child: Text(
                           "Calculation:\n"
-                          "1 metric ton = 1000 kilograms\n"
-                          "1 kilogram = 2.20462262 pounds\n"
-                          "→ 1 metric ton = 2204.62262 pounds",
+                              "→ 1 metric ton = 22.046 CWT\n"
+                              "→ 1 CWT = 0.045359 metric ton",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(
-                          Icons.copy,
-                          color: AppColors.c656e79,
-                          size: 18,
-                        ),
+                        icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                         onPressed: () {
                           Clipboard.setData(const ClipboardData(
-                            text: "1 metric ton = 1000 kilograms\n1 kilogram = 2.20462262 pounds\n1 metric ton = 2204.62262 pounds",
+                            text: "1 metric ton = 2204.62262 pounds\n1 CWT = 100 pounds\n1 metric ton = 22.046 CWT\n1 CWT = 0.045359 metric ton",
                           ));
                         },
                       ),
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 Row(
                   children: [
                     GestureDetector(
                       onTap: () {
-                        cp.clearMetricTonKgPound();
+                        cp.clearMetricTonCwt();
                       },
                       child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
                     ),

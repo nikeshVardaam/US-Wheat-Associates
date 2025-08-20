@@ -129,17 +129,17 @@ class _EstimateHardRedWinterState extends State<EstimateHardRedWinter> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("61.4", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("59.8", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                   Padding(
                       padding: const EdgeInsets.all(12),
                       child: Text(
-                        "61.4",
+                        "61.0",
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7)),
                       )),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("61.4", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("60.9", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                 ],
               ),
@@ -151,15 +151,15 @@ class _EstimateHardRedWinterState extends State<EstimateHardRedWinter> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("80.7", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("78.7", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("80.7", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("80.2", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("80.7", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("80.0", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                 ],
               ),
@@ -171,15 +171,15 @@ class _EstimateHardRedWinterState extends State<EstimateHardRedWinter> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("10.7", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("11.5", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("10.7", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("10.2", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("10.7", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("11.1", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                 ],
               ),
@@ -191,15 +191,15 @@ class _EstimateHardRedWinterState extends State<EstimateHardRedWinter> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("13.5", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("12.7", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("13.5", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("13.0", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Text("13.5", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                    child: Text("11.6", style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                   ),
                 ],
               ),

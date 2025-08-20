@@ -57,7 +57,7 @@ class BushelsMetricTons extends StatelessWidget {
                     child: AppTextField.textField(
                       context,
                       controller: cp.bushelController,
-                      onChanged: (val) => cp.convertToMT(val),
+                      onChanged: (val) => cp.convertBushelToMT(val),
                       readOnly: false,
                       keyboardType: TextInputType.number,
 
@@ -95,8 +95,7 @@ class BushelsMetricTons extends StatelessWidget {
                     child: AppTextField.textField(
                       context,
                       controller: cp.metricTonController,
-                      onChanged: (val) => cp.convertToMT(val),
-                      readOnly: true,
+                      onChanged: (val) => cp.convertMTToBushel(val),
                       keyboardType: TextInputType.number,
                     ),
                   ),

@@ -18,8 +18,8 @@ class AcresHectaresMu extends StatelessWidget {
         title: Text(
           "Acres = Hectares = Mu",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: AppColors.cFFFFFF,
-          ),
+                color: AppColors.cFFFFFF,
+              ),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -29,8 +29,8 @@ class AcresHectaresMu extends StatelessWidget {
             child: Text(
               "Input and convert values from Acres to Hectares and Mu.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.cFFFFFF,
-              ),
+                    color: AppColors.cFFFFFF,
+                  ),
             ),
           ),
         ),
@@ -47,8 +47,8 @@ class AcresHectaresMu extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text("ACRES",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.c000000,
-                      )),
+                            color: AppColors.c000000,
+                          )),
                 ),
                 Row(
                   children: [
@@ -56,12 +56,16 @@ class AcresHectaresMu extends StatelessWidget {
                       child: AppTextField.textField(
                         context,
                         controller: cp.acreController,
-                        onChanged: (val) => cp.convertAcresToHectaresMu(val),
+                        onChanged: (val) => cp.convertFromAcre(val),
                         keyboardType: TextInputType.number,
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.acreController.text));
                       },
@@ -72,17 +76,17 @@ class AcresHectaresMu extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(AppStrings.equals,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.c656e79,
-                      fontStyle: FontStyle.italic,
-                    )),
+                          color: AppColors.c656e79,
+                          fontStyle: FontStyle.italic,
+                        )),
 
                 // Hectares
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text("HECTARES",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.c000000,
-                      )),
+                            color: AppColors.c000000,
+                          )),
                 ),
                 Row(
                   children: [
@@ -90,11 +94,15 @@ class AcresHectaresMu extends StatelessWidget {
                       child: AppTextField.textField(
                         context,
                         controller: cp.hectareController,
-                        readOnly: true,
+                        onChanged: (val) => cp.convertFromHectare(val),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.hectareController.text));
                       },
@@ -107,8 +115,8 @@ class AcresHectaresMu extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text("MU",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.c000000,
-                      )),
+                            color: AppColors.c000000,
+                          )),
                 ),
                 Row(
                   children: [
@@ -116,11 +124,15 @@ class AcresHectaresMu extends StatelessWidget {
                       child: AppTextField.textField(
                         context,
                         controller: cp.muController,
-                        readOnly: true,
+                        onChanged: (val) => cp.convertFromMu(val),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.muController.text));
                       },
@@ -142,12 +154,16 @@ class AcresHectaresMu extends StatelessWidget {
                         child: Text(
                           "Calculation:\n1 acre = 0.404686 ha\n1 acre = 6.07 mu",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppColors.c000000,
-                          ),
+                                color: AppColors.c000000,
+                              ),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(const ClipboardData(
                             text: "1 acre = 0.404686 ha\n1 acre = 15.99 mu",

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -9,21 +8,21 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_text_field.dart';
 
-class MetricTonToKgPoundPage extends StatefulWidget {
-  const MetricTonToKgPoundPage({super.key});
+class WheatProtein extends StatefulWidget {
+  const WheatProtein({super.key});
 
   @override
-  State<MetricTonToKgPoundPage> createState() => _MetricTonToKgPoundPageState();
+  State<WheatProtein> createState() => _WheatProteinState();
 }
 
-class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
+class _WheatProteinState extends State<WheatProtein> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
-          "Metric Ton = Kg = Pounds",
+          "Wheat Protein (MB = DB)",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
@@ -32,7 +31,7 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Convert Metric Tons to Kilograms and Pounds.",
+              "Convert Moisture Basis (MB) to Dry Basis (DB) and vice versa.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
@@ -45,93 +44,61 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("METRIC TONS", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(
-                  height: 6,
-                ),
+                // MB input
+                Text("MOISTURE BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     Expanded(
                       child: AppTextField.textField(
                         context,
-                        controller: cp.metricTonInputController,
-                        onChanged: (val) => cp.convertFromMetricTon(val),
+                        controller: cp.mbController,
+                        onChanged: (val) => cp.convertMbToDb(val),
                         keyboardType: TextInputType.number,
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: AppColors.c656e79,
-                        size: 18,
-                      ),
+                      icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.metricTonInputController.text));
+                        Clipboard.setData(ClipboardData(text: cp.mbController.text));
                       },
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 12),
                 Text(AppStrings.equals,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.c656e79,
-                          fontStyle: FontStyle.italic,
-                        )),
+                      color: AppColors.c656e79,
+                      fontStyle: FontStyle.italic,
+                    )),
                 const SizedBox(height: 8),
-                Text("KILOGRAMS (kg)", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(
-                  height: 6,
-                ),
+
+                // DB input
+                Text("DRY BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     Expanded(
                       child: AppTextField.textField(
                         context,
-                        controller: cp.kgOutputController,
+                        controller: cp.dbController,
+                        onChanged: (val) => cp.convertDbToMb(val),
                         keyboardType: TextInputType.number,
-                        onChanged: (val) => cp.convertFromKg(val),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: AppColors.c656e79,
-                        size: 18,
-                      ),
+                      icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.kgOutputController.text));
+                        Clipboard.setData(ClipboardData(text: cp.dbController.text));
                       },
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(
-                  height: 6,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.poundOutputController,
-                        keyboardType: TextInputType.number,
-                        onChanged: (val) => cp.convertFromPound(val),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: AppColors.c656e79,
-                        size: 18,
-                      ),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.poundOutputController.text));
-                      },
-                    ),
-                  ],
-                ),
+
                 const SizedBox(height: 20),
+
+                // Formula box
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -144,33 +111,29 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                       Expanded(
                         child: Text(
                           "Calculation:\n"
-                          "1 metric ton = 1000 kilograms\n"
-                          "1 kilogram = 2.20462262 pounds\n"
-                          "→ 1 metric ton = 2204.62262 pounds",
+                              "→ DB = MB ÷ 0.88\n"
+                              "→ MB = DB × 0.88",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(
-                          Icons.copy,
-                          color: AppColors.c656e79,
-                          size: 18,
-                        ),
+                        icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                         onPressed: () {
                           Clipboard.setData(const ClipboardData(
-                            text: "1 metric ton = 1000 kilograms\n1 kilogram = 2.20462262 pounds\n1 metric ton = 2204.62262 pounds",
+                            text: "DB = MB ÷ 0.88\nMB = DB × 0.88",
                           ));
                         },
                       ),
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 Row(
                   children: [
                     GestureDetector(
                       onTap: () {
-                        cp.clearMetricTonKgPound();
+                        cp.clearProtein();
                       },
                       child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
                     ),
