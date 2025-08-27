@@ -9,13 +9,16 @@ import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import '../modal/all_price_data_modal.dart';
 import '../modal/graph_modal.dart';
+import '../modal/quality_report_modal.dart';
 import '../modal/sales_modal.dart';
 import '../service/delete_service.dart';
 import '../service/post_services.dart';
+import '../utils/app_colors.dart';
 
 class WatchlistProvider extends ChangeNotifier {
   List<WatchlistItem> watchlist = [];
   FilterData? filterData;
+  WheatData? wheatData;
   String? grphcode;
 
   String? prdate;
@@ -25,7 +28,10 @@ class WatchlistProvider extends ChangeNotifier {
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   AllPriceDataModal? allPriceDataModal;
   bool isChartLoading = false;
-
+  bool _isInWatchlist = false;
+  WheatData? current;
+  WheatData? lastYear;
+  WheatData? fiveYearsAgo;
   final Map<String, bool> _chartLoadingMap = {};
 
   final Map<String, List<SalesData>> _localChartCache = {};
@@ -34,9 +40,38 @@ class WatchlistProvider extends ChangeNotifier {
     return _chartLoadingMap[itemId] ?? false;
   }
 
+  Future<WheatData?> fetchQualityReport({
+    required BuildContext context,
+    required String wheatClass,
+    required String date,
+  }) async {
+    if (date.isEmpty) return null;
+
+    final data = {"class": wheatClass, "date": date};
+
+    final response = await PostServices().post(
+      endpoint: ApiEndpoint.qualityReport,
+      requestData: data,
+      context: context,
+      isBottomSheet: false,
+      loader: false, // loader false, taaki har fetch pe UI blink na ho
+    );
+
+    if (response != null) {
+      final decoded = json.decode(response.body);
+      if (decoded['data'] != null) {
+        var currentList = decoded['data']['current'] as List<dynamic>?;
+
+        final current = (currentList != null && currentList.isNotEmpty) ? WheatData.fromJson(currentList[0]) : null;
+
+        return current;
+      }
+    }
+    return null;
+  }
+
   void setChartLoadingForItem(String itemId, bool isLoading) {
     _chartLoadingMap[itemId] = isLoading;
-    notifyListeners();
   }
 
   Future<void> fetchData({required BuildContext context}) async {
@@ -54,16 +89,32 @@ class WatchlistProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getWatchList({required BuildContext context, required bool loader}) {
-    GetApiServices().get(endpoint: ApiEndpoint.getWatchlist, context: context, loader: loader).then(
-      (value) {
-        if (value != null) {
-          final data = jsonDecode(value.body)['data'];
-          watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
-          notifyListeners();
-        }
-      },
+  getWatchList({required BuildContext context, required bool loader}) async {
+    final response = await GetApiServices().get(
+      endpoint: ApiEndpoint.getWatchlist,
+      context: context,
+      loader: false,
     );
+
+    if (response != null) {
+      final data = jsonDecode(response.body)['data'];
+      watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
+      notifyListeners();
+
+      for (var item in watchlist) {
+        if (item.type == 'quality') {
+          fetchQualityReport(
+            context: context,
+            wheatClass: item.filterdata.classs,
+            date: item.filterdata.date,
+          ).then((currentData) {
+            item.wheatData = currentData;
+            notifyListeners();
+
+          });
+        }
+      }
+    }
   }
 
   void deleteWatchList({required BuildContext context, required String id}) {
@@ -71,7 +122,6 @@ class WatchlistProvider extends ChangeNotifier {
       getWatchList(context: context, loader: false);
     });
   }
-
 
   Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem item) async {
     try {
@@ -86,7 +136,6 @@ class WatchlistProvider extends ChangeNotifier {
       final String cacheKey = "$region|$wclass|$date";
 
       if (_localChartCache.containsKey(cacheKey)) {
-        print("✅ Using cached chart data for $cacheKey");
         item.chartData = _localChartCache[cacheKey]!;
         return;
       }
@@ -103,12 +152,10 @@ class WatchlistProvider extends ChangeNotifier {
         final body = json.decode(graphCodeRes.body);
         if (body is List && body.isNotEmpty) {
           grphcode = body.last.toString();
-          print("📌 Found grphcode: $grphcode for $region | $wclass");
         }
       }
 
       if (grphcode == null) return;
-
 
       final graphRes = await PostServices().post(
         endpoint: ApiEndpoint.getGraphData,
@@ -142,8 +189,6 @@ class WatchlistProvider extends ChangeNotifier {
         item.chartData = tempChartData;
 
         _localChartCache[cacheKey] = tempChartData;
-
-        print('📊 Fetched ${tempChartData.length} points for $cacheKey');
       }
     } catch (e) {
       debugPrint('❌ Error fetching chart data for item: $e');

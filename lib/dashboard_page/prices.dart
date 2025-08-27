@@ -461,7 +461,7 @@ class _PricesState extends State<Prices> {
                           Row(
                             children: [
                               Text(
-                                "\$/BU -",
+                                pp.allPriceDataModal?.weekly?.cASHBU.toString().substring(0, 3) ?? "--",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w800,
                                       color: AppColors.cd63a3a,
@@ -471,7 +471,7 @@ class _PricesState extends State<Prices> {
                                 width: 4,
                               ),
                               Text(
-                                pp.allPriceDataModal?.weekly?.cASHBU.toString().substring(0, 3) ?? "--",
+                                "FOB \$/BU ",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w800,
                                       color: AppColors.cd63a3a,
@@ -483,8 +483,8 @@ class _PricesState extends State<Prices> {
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Container(
                               height: 16,
-                              color: AppColors.c666666,
-                              width: 0.5,
+                              color: AppColors.c353d4a.withOpacity(0.7),
+                              width: 2,
                             ),
                           ),
                           Row(

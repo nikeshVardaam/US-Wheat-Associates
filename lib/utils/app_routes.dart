@@ -18,5 +18,6 @@ class AppRoutes {
   static const wheatProtein = '/wheatProtein';
   static const temperatureConverterPage = '/temperatureConverterPage';
   static const reportDetailPage = '/reportDetailPage';
+  static const wheatPage = '/wheatPage';
 
 }

@@ -6,10 +6,8 @@ import 'package:uswheat/calculator/distance_area/meters_yards_feet.dart';
 import 'package:uswheat/calculator/distance_area/miles_kilometer.dart';
 import 'package:uswheat/calculator/weight/bushels_metric_tons.dart';
 import 'package:uswheat/dashboard.dart';
-import 'package:uswheat/dashboard_page/quality/estimates/estimate_hard_red_winter.dart';
 import 'package:uswheat/dashboard_page/reprts/report_detail_page.dart';
 import 'package:uswheat/utils/app_routes.dart';
-
 import '../argument/report_detail_arg.dart';
 import '../calculator/distance_area/acres_hectares_mu.dart';
 import '../calculator/protein/wheat_protein.dart';
@@ -32,8 +30,6 @@ class RouteGenerator {
         return buildRoute(const Login(), settings: settings);
       case AppRoutes.dashboard:
         return buildRoute(const Dashboard(), settings: settings);
-      case AppRoutes.estimateHardRedWinter:
-        return buildRoute(const EstimateHardRedWinter(), settings: settings);
       case AppRoutes.signUp:
         return buildRoute(const SignUp(), settings: settings);
       case AppRoutes.bushelsMetricTons:
@@ -61,7 +57,7 @@ class RouteGenerator {
       case AppRoutes.temperatureConverterPage:
         return buildRoute(const TemperatureConverterPage(), settings: settings);
       case AppRoutes.wheatProtein:
-        return buildRoute(const WheatProtein (), settings: settings);
+        return buildRoute(const WheatProtein(), settings: settings);
       case AppRoutes.reportDetailPage:
         ReportDetailArg reportDetailArg = settings.arguments as ReportDetailArg;
         return buildRoute(ReportDetailPage(reportDetailArg: reportDetailArg), settings: settings);

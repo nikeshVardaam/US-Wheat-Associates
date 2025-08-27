@@ -42,17 +42,14 @@ class PricesProvider extends ChangeNotifier {
   bool loader = false;
   bool isDataFetched = false;
   bool _isInWatchlist = false;
+
   bool get isInWatchlist => _isInWatchlist;
 
-  final List<String> fixedMonths = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-  ];
+  final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  String get graphCacheKey =>
-      'graph_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
-  String get allPriceDataCacheKey =>
-      'allPriceData_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
+  String get graphCacheKey => 'graph_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
+
+  String get allPriceDataCacheKey => 'allPriceData_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
 
   void setRegion(String region) {
     selectedRegion = region;
@@ -99,7 +96,6 @@ class PricesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> saveFiltersLocally() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("selectedRegion", selectedRegion ?? "");
@@ -133,7 +129,6 @@ class PricesProvider extends ChangeNotifier {
         debugPrint("❌ Error decoding cached graphList: $e");
       }
     }
-
   }
 
   void _generateChartDataFromGraphList() {
@@ -147,9 +142,7 @@ class PricesProvider extends ChangeNotifier {
         }
       }).toList();
 
-      final avg = entries.isNotEmpty
-          ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length
-          : 0.0;
+      final avg = entries.isNotEmpty ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length : 0.0;
 
       return SalesData(month: month, sales: avg);
     }).toList();
@@ -165,8 +158,6 @@ class PricesProvider extends ChangeNotifier {
     allPriceDataModal = null;
     notifyListeners();
 
-
-
     // Load from cache if available
     final cachedGraph = sp.getString(graphCacheKey);
     if (cachedGraph != null && cachedGraph.isNotEmpty) {
@@ -174,7 +165,6 @@ class PricesProvider extends ChangeNotifier {
         List<dynamic> jsonList = json.decode(cachedGraph);
         graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
         _generateChartDataFromGraphList();
-
       } catch (e) {
         debugPrint("❌ Error loading graphList from cache: $e");
       }
@@ -184,15 +174,12 @@ class PricesProvider extends ChangeNotifier {
     if (cachedAllPrice != null && cachedAllPrice.isNotEmpty) {
       try {
         allPriceDataModal = AllPriceDataModal.fromJson(json.decode(cachedAllPrice));
-
       } catch (e) {
         debugPrint("❌ Error loading allPriceData from cache: $e");
       }
     }
 
     if (graphList.isEmpty || allPriceDataModal == null) {
-
-
       prdate = selectedYears;
 
       await getGraphCodesByClassAndRegion(context: context, loader: true);
@@ -204,7 +191,6 @@ class PricesProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-
 
   void updateFilter({String? region, String? className, String? year}) {
     selectedRegion = region;
@@ -232,11 +218,10 @@ class PricesProvider extends ChangeNotifier {
       return;
     }
 
-    final fullDate = selectedYears != null && selectedYears!.length == 4
-        ? "${selectedYears!}-01-01"
-        : selectedYears ?? "";
+    final fullDate = selectedYears != null && selectedYears!.length == 4 ? "${selectedYears!}-01-01" : selectedYears ?? "";
 
     final data = {
+      "type": "price",
       "filterdata": {
         "region": selectedRegion ?? "",
         "class": selectedClasses ?? "",
@@ -293,10 +278,12 @@ class PricesProvider extends ChangeNotifier {
       uniqueYears = List<num>.from(json.decode(response.body));
       uniqueYears.sort((a, b) => b.compareTo(a));
       final currentYear = DateTime.now().year;
-      selectedYears = uniqueYears.firstWhere(
+      selectedYears = uniqueYears
+          .firstWhere(
             (year) => year == currentYear,
-        orElse: () => uniqueYears.first,
-      ).toString();
+            orElse: () => uniqueYears.first,
+          )
+          .toString();
       prdate = selectedYears;
     }
   }
@@ -333,7 +320,7 @@ class PricesProvider extends ChangeNotifier {
     if ((grphcode ?? "").isEmpty || (prdate ?? "").isEmpty) return;
 
     final date = prdate!.length == 4 ? "$prdate-01-01" : prdate!;
-    final data = { "grphcode": grphcode!, "prdate": date };
+    final data = {"grphcode": grphcode!, "prdate": date};
 
     final response = await PostServices().post(
       endpoint: ApiEndpoint.getGraphData,
@@ -360,7 +347,7 @@ class PricesProvider extends ChangeNotifier {
   }) async {
     final response = await PostServices().post(
       endpoint: ApiEndpoint.getAllPriceData,
-      requestData: { "grphcode": grphcode ?? "" },
+      requestData: {"grphcode": grphcode ?? ""},
       context: context,
       isBottomSheet: false,
       loader: loader,

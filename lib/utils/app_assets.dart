@@ -13,4 +13,11 @@ class AppAssets {
   static const equal = "assets/images/equal.svg";
   static const chartPie = "assets/images/chart_pie.svg";
   static const logout = "assets/images/logout.svg";
+  static const wheatProduction = "assets/images/wheat_production.jpg";
+  static const softRedWinter = "assets/images/soft_red_winter.jpg";
+  static const softWhite= "assets/images/soft_white.jpg";
+  static const northernDurum = "assets/images/northern_durum.jpg";
+  static const hardRedSpring = "assets/images/hard_red_spring.jpg";
+  static const hardRedWinter = "assets/images/hard_red_winter.jpg";
+
 }

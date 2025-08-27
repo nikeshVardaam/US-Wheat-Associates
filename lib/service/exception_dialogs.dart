@@ -39,29 +39,24 @@ class ExceptionDialogs {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.warning_amber_rounded,
-                            color: AppColors.cFFFFFF,
+                          Icon(Icons.warning_amber_rounded, color: AppColors.cFFFFFF),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              message,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+                            ),
                           ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            message,
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
-                          ),
-                          Spacer(),
                           GestureDetector(
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: Icon(
-                              Icons.close,
-                              color: AppColors.cFFFFFF,
-                            ),
+                            child: Icon(Icons.close, color: AppColors.cFFFFFF),
                           ),
                         ],
-                      ),
+                      )
                     ],
                   ),
                 ),

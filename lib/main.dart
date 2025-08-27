@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:uswheat/auth/login.dart';
 import 'package:uswheat/provider/calculator_provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
+import 'package:uswheat/provider/estimates/wheat_page_provider.dart';
 import 'package:uswheat/provider/login_provider.dart';
 import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/provider/reports_provider.dart';
@@ -42,6 +43,7 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (context) => CalculatorProvider()),
           ChangeNotifierProvider(create: (context) => WatchlistProvider()),
           ChangeNotifierProvider(create: (context) => ReportsProvider()),
+          ChangeNotifierProvider(create: (context) => WheatPageProvider()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
