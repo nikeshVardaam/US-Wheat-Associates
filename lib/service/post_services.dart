@@ -91,7 +91,7 @@ class PostServices {
         Navigator.pop(context);
         ExceptionDialogs.networkDialog(
           context: context,
-          message: e.message ?? "",
+          message:  "Request timed out. Please check your internet and try again.",
           onPressed: () {},
         );
         // show dialog

@@ -39,107 +39,116 @@ class _WheatProteinState extends State<WheatProtein> {
       ),
       body: Consumer<CalculatorProvider>(
         builder: (context, cp, child) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // MB input
-                Text("MOISTURE BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.mbController,
-                        onChanged: (val) => cp.convertMbToDb(val),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.mbController.text));
-                      },
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 12),
-                Text(AppStrings.equals,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.c656e79,
-                      fontStyle: FontStyle.italic,
-                    )),
-                const SizedBox(height: 8),
-
-                // DB input
-                Text("DRY BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.dbController,
-                        onChanged: (val) => cp.convertDbToMb(val),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.dbController.text));
-                      },
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // Formula box
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.cEFEEED.withOpacity(0.6),
-                    border: Border.all(color: Colors.white38),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Row(
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // MB input
+                  Text("MOISTURE BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 6),
+                  Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          "Calculation:\n"
-                              "→ DB = MB ÷ 0.88\n"
-                              "→ MB = DB × 0.88",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
+                        child: AppTextField.textField(
+                          context,
+                          controller: cp.mbController,
+                          onChanged: (val) => cp.convertMbToDb(val),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          ],
                         ),
                       ),
                       IconButton(
                         icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                         onPressed: () {
-                          Clipboard.setData(const ClipboardData(
-                            text: "DB = MB ÷ 0.88\nMB = DB × 0.88",
-                          ));
+                          Clipboard.setData(ClipboardData(text: cp.mbController.text));
                         },
                       ),
                     ],
                   ),
-                ),
-
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        cp.clearProtein();
-                      },
-                      child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
+            
+                  const SizedBox(height: 12),
+                  Text(AppStrings.equals,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: AppColors.c656e79,
+                        fontStyle: FontStyle.italic,
+                      )),
+                  const SizedBox(height: 8),
+            
+                  // DB input
+                  Text("DRY BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppTextField.textField(
+                          context,
+                          controller: cp.dbController,
+                          onChanged: (val) => cp.convertDbToMb(val),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: cp.dbController.text));
+                        },
+                      ),
+                    ],
+                  ),
+            
+                  const SizedBox(height: 20),
+            
+                  // Formula box
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.cEFEEED.withOpacity(0.6),
+                      border: Border.all(color: Colors.white38),
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                  ],
-                ),
-              ],
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Calculation:\n"
+                                "→ DB = MB ÷ 0.88\n"
+                                "→ MB = DB × 0.88",
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
+                          onPressed: () {
+                            Clipboard.setData(const ClipboardData(
+                              text: "DB = MB ÷ 0.88\nMB = DB × 0.88",
+                            ));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+            
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          cp.clearProtein();
+                        },
+                        child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         },

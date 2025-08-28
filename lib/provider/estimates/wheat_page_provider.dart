@@ -194,18 +194,21 @@ class WheatPageProvider extends ChangeNotifier {
                 ),
               ),
               // Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(onTap: () => Navigator.pop(context), child: AppButtons().filledButton(true, AppStrings.cancel, context)),
-                  GestureDetector(
-                      onTap: () {
-                        updateFinalDate();
-                        getQualityReport(context: context, wheatClass: wheatClass);
-                        Navigator.pop(context);
-                      },
-                      child: AppButtons().filledButton(true, AppStrings.confirm, context)),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(onTap: () => Navigator.pop(context), child: AppButtons().filledButton(true, AppStrings.cancel, context)),
+                    GestureDetector(
+                        onTap: () {
+                          updateFinalDate();
+                          getQualityReport(context: context, wheatClass: wheatClass);
+                          Navigator.pop(context);
+                        },
+                        child: AppButtons().filledButton(true, AppStrings.confirm, context)),
+                  ],
+                ),
               ),
             ],
           )),

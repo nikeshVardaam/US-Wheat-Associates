@@ -11,7 +11,7 @@ class AppButtons {
         //border: Border.all(color: isEnable ? AppColors().blue : AppColors().greyExtraLight.withOpacity(0.4), width: 1),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 9),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         child: Center(
           child: Text(
             text,

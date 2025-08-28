@@ -14,25 +14,27 @@ class CalculatorProvider extends ChangeNotifier {
 
   // From Miles → Kilometers
   void convertFromMiles(String value) {
-    double miles = double.tryParse(value) ?? 0;
-
-    double km = miles * mileToKm;
-    kilometerController.text = km.toStringAsFixed(4);
-
+    if (value.isEmpty) {
+      kilometerController.clear(); // agar user delete kare
+    } else {
+      double miles = double.tryParse(value) ?? 0;
+      double km = miles * mileToKm;
+      kilometerController.text = km.toStringAsFixed(4);
+    }
     notifyListeners();
   }
 
-  // From Kilometers → Miles
   void convertFromKilometers(String value) {
-    double km = double.tryParse(value) ?? 0;
-
-    double miles = km * kmToMile;
-    milesController.text = miles.toStringAsFixed(4);
-
+    if (value.isEmpty) {
+      milesController.clear(); // agar user delete kare
+    } else {
+      double km = double.tryParse(value) ?? 0;
+      double miles = km * kmToMile;
+      milesController.text = miles.toStringAsFixed(4);
+    }
     notifyListeners();
   }
 
-  // Clear All
   void clearMilesKilometer() {
     milesController.clear();
     kilometerController.clear();
@@ -48,25 +50,29 @@ class CalculatorProvider extends ChangeNotifier {
 
   // From Square Feet → Square Meter
   void convertFromSqFeet(String value) {
-    double sqft = double.tryParse(value) ?? 0;
-
-    double sqm = sqft * sqftToSqm;
-    sqMeterController.text = sqm.toStringAsFixed(4);
-
+    if (value.isEmpty) {
+      sqMeterController.clear(); // agar user delete kare
+    } else {
+      double sqft = double.tryParse(value) ?? 0;
+      double sqm = sqft * sqftToSqm;
+      sqMeterController.text = sqm.toStringAsFixed(4);
+    }
     notifyListeners();
   }
 
-  // From Square Meter → Square Feet
+// From Square Meter → Square Feet
   void convertFromSqMeter(String value) {
-    double sqm = double.tryParse(value) ?? 0;
-
-    double sqft = sqm * sqmToSqft;
-    sqFeetController.text = sqft.toStringAsFixed(4);
-
+    if (value.isEmpty) {
+      sqFeetController.clear(); // agar user delete kare
+    } else {
+      double sqm = double.tryParse(value) ?? 0;
+      double sqft = sqm * sqmToSqft;
+      sqFeetController.text = sqft.toStringAsFixed(4);
+    }
     notifyListeners();
   }
 
-  // Clear All
+// Clear All
   void clearSqFeetSqMeter() {
     sqFeetController.clear();
     sqMeterController.clear();
@@ -83,40 +89,47 @@ class CalculatorProvider extends ChangeNotifier {
 
   // From Meter
   void convertFromMeter(String value) {
-    double meter = double.tryParse(value) ?? 0;
-
-    double yard = meter * meterToYard;
-    double feet = meter * meterToFeet;
-
-    yardController.text = yard.toStringAsFixed(4);
-    feetController.text = feet.toStringAsFixed(4);
-
+    if (value.isEmpty) {
+      yardController.clear();
+      feetController.clear();
+    } else {
+      double meter = double.tryParse(value) ?? 0;
+      double yard = meter * meterToYard;
+      double feet = meter * meterToFeet;
+      yardController.text = yard.toStringAsFixed(4);
+      feetController.text = feet.toStringAsFixed(4);
+    }
     notifyListeners();
   }
 
   // From Yard
   void convertFromYard(String value) {
-    double yard = double.tryParse(value) ?? 0;
-
-    double meter = yard / meterToYard;
-    double feet = meter * meterToFeet;
-
-    meterController.text = meter.toStringAsFixed(4);
-    feetController.text = feet.toStringAsFixed(4);
+    if (value.isEmpty) {
+      meterController.clear();
+      feetController.clear();
+    } else {
+      double yard = double.tryParse(value) ?? 0;
+      double meter = yard / meterToYard;
+      double feet = meter * meterToFeet;
+      meterController.text = meter.toStringAsFixed(4);
+      feetController.text = feet.toStringAsFixed(4);
+    }
 
     notifyListeners();
   }
 
   // From Feet
   void convertFromFeet(String value) {
-    double feet = double.tryParse(value) ?? 0;
-
-    double meter = feet / meterToFeet;
-    double yard = meter * meterToYard;
-
-    meterController.text = meter.toStringAsFixed(4);
-    yardController.text = yard.toStringAsFixed(4);
-
+    if (value.isEmpty) {
+      meterController.clear();
+      yardController.clear();
+    } else {
+      double feet = double.tryParse(value) ?? 0;
+      double meter = feet / meterToFeet;
+      double yard = meter * meterToYard;
+      meterController.text = meter.toStringAsFixed(4);
+      yardController.text = yard.toStringAsFixed(4);
+    }
     notifyListeners();
   }
 
@@ -137,51 +150,62 @@ class CalculatorProvider extends ChangeNotifier {
   static const double acreToMu = 6.0702846336;
 
   // Conversion from Acre
+  // From Acre → Hectare & Mu
   void convertFromAcre(String val) {
-    double acre = double.tryParse(val) ?? 0;
+    if (val.isEmpty) {
+      hectareController.clear();
+      muController.clear();
+    } else {
+      double acre = double.tryParse(val) ?? 0;
+      double hectare = acre * acreToHectare;
+      double mu = acre * acreToMu;
 
-    double hectare = acre * acreToHectare;
-    double mu = acre * acreToMu;
-
-    hectareController.text = hectare.toStringAsFixed(4);
-    muController.text = mu.toStringAsFixed(2);
-
+      hectareController.text = hectare.toStringAsFixed(4);
+      muController.text = mu.toStringAsFixed(2);
+    }
     notifyListeners();
   }
 
-  // Conversion from Hectare
+// From Hectare → Acre & Mu
   void convertFromHectare(String val) {
-    double hectare = double.tryParse(val) ?? 0;
+    if (val.isEmpty) {
+      acreController.clear();
+      muController.clear();
+    } else {
+      double hectare = double.tryParse(val) ?? 0;
+      double acre = hectare / acreToHectare;
+      double mu = acre * acreToMu;
 
-    double acre = hectare / acreToHectare;
-    double mu = acre * acreToMu;
-
-    acreController.text = acre.toStringAsFixed(4);
-    muController.text = mu.toStringAsFixed(2);
-
+      acreController.text = acre.toStringAsFixed(4);
+      muController.text = mu.toStringAsFixed(2);
+    }
     notifyListeners();
   }
 
-  // Conversion from Mu
+// From Mu → Acre & Hectare
   void convertFromMu(String val) {
-    double mu = double.tryParse(val) ?? 0;
+    if (val.isEmpty) {
+      acreController.clear();
+      hectareController.clear();
+    } else {
+      double mu = double.tryParse(val) ?? 0;
+      double acre = mu / acreToMu;
+      double hectare = acre * acreToHectare;
 
-    double acre = mu / acreToMu;
-    double hectare = acre * acreToHectare;
-
-    acreController.text = acre.toStringAsFixed(4);
-    hectareController.text = hectare.toStringAsFixed(4);
-
+      acreController.text = acre.toStringAsFixed(4);
+      hectareController.text = hectare.toStringAsFixed(4);
+    }
     notifyListeners();
   }
 
-  // Clear All
+// Clear All
   void clearAcresHectaresMu() {
     acreController.clear();
     hectareController.clear();
     muController.clear();
     notifyListeners();
   }
+
 
   //weight
   //bushels=metric tons
@@ -192,25 +216,34 @@ class CalculatorProvider extends ChangeNotifier {
     if (_isUpdating) return;
     _isUpdating = true;
 
-    double bushel = double.tryParse(value) ?? 0;
-    double mt = bushel * 0.0272;
-    metricTonController.text = mt.toStringAsFixed(4);
+    if (value.isEmpty) {
+      metricTonController.clear();
+    } else {
+      double bushel = double.tryParse(value) ?? 0;
+      double mt = bushel * 0.0272;
+      metricTonController.text = mt.toStringAsFixed(4);
+    }
 
     _isUpdating = false;
   }
 
+// From Metric Ton → Bushel
   void convertMTToBushel(String value) {
     if (_isUpdating) return;
     _isUpdating = true;
 
-    double mt = double.tryParse(value) ?? 0;
-    double bushel = mt / 0.0272;
-    bushelController.text = bushel.toStringAsFixed(2);
+    if (value.isEmpty) {
+      bushelController.clear();
+    } else {
+      double mt = double.tryParse(value) ?? 0;
+      double bushel = mt / 0.0272;
+      bushelController.text = bushel.toStringAsFixed(2);
+    }
 
     _isUpdating = false;
   }
 
-  /// Clear fields
+// Clear all fields
   void clearFields() {
     bushelController.clear();
     metricTonController.clear();
@@ -276,39 +309,55 @@ class CalculatorProvider extends ChangeNotifier {
   final TextEditingController poundOutputController = TextEditingController();
 
   /// Convert from Metric Ton input
+  // From Metric Ton → KG & Pound
   void convertFromMetricTon(String val) {
-    double mt = double.tryParse(val) ?? 0;
-    double kg = mt * 1000;
-    double pounds = kg * 2.20462262;
+    if (val.isEmpty) {
+      kgOutputController.clear();
+      poundOutputController.clear();
+    } else {
+      double mt = double.tryParse(val) ?? 0;
+      double kg = mt * 1000;
+      double pounds = kg * 2.20462262;
 
-    kgOutputController.text = kg.toStringAsFixed(2);
-    poundOutputController.text = pounds.toStringAsFixed(2);
+      kgOutputController.text = kg.toStringAsFixed(2);
+      poundOutputController.text = pounds.toStringAsFixed(2);
+    }
     notifyListeners();
   }
 
-  /// Convert from KG input
+// From KG → Metric Ton & Pound
   void convertFromKg(String val) {
-    double kg = double.tryParse(val) ?? 0;
-    double mt = kg / 1000;
-    double pounds = kg * 2.20462262;
+    if (val.isEmpty) {
+      metricTonInputController.clear();
+      poundOutputController.clear();
+    } else {
+      double kg = double.tryParse(val) ?? 0;
+      double mt = kg / 1000;
+      double pounds = kg * 2.20462262;
 
-    metricTonInputController.text = mt.toStringAsFixed(4);
-    poundOutputController.text = pounds.toStringAsFixed(2);
+      metricTonInputController.text = mt.toStringAsFixed(4);
+      poundOutputController.text = pounds.toStringAsFixed(2);
+    }
     notifyListeners();
   }
 
-  /// Convert from Pound input
+// From Pound → Metric Ton & KG
   void convertFromPound(String val) {
-    double pounds = double.tryParse(val) ?? 0;
-    double kg = pounds / 2.20462262;
-    double mt = kg / 1000;
+    if (val.isEmpty) {
+      metricTonInputController.clear();
+      kgOutputController.clear();
+    } else {
+      double pounds = double.tryParse(val) ?? 0;
+      double kg = pounds / 2.20462262;
+      double mt = kg / 1000;
 
-    kgOutputController.text = kg.toStringAsFixed(2);
-    metricTonInputController.text = mt.toStringAsFixed(4);
+      metricTonInputController.text = mt.toStringAsFixed(4);
+      kgOutputController.text = kg.toStringAsFixed(2);
+    }
     notifyListeners();
   }
 
-  /// Clear all
+// Clear all fields
   void clearMetricTonKgPound() {
     metricTonInputController.clear();
     kgOutputController.clear();
@@ -316,32 +365,36 @@ class CalculatorProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
   //metricTons=cwt
   final TextEditingController metricController = TextEditingController();
   final TextEditingController cwtInputController = TextEditingController();
 
+  // From Metric Ton → CWT
   void convertMetricTonToCwt(String val) {
     if (val.isEmpty) {
       cwtInputController.clear();
-      return;
+    } else {
+      double mt = double.tryParse(val) ?? 0;
+      double cwt = (mt * 2204.62262) / 100;
+      cwtInputController.text = cwt.toStringAsFixed(4);
     }
-    double mt = double.tryParse(val) ?? 0;
-    double cwt = (mt * 2204.62262) / 100;
-    cwtInputController.text = cwt.toStringAsFixed(4);
     notifyListeners();
   }
 
+// From CWT → Metric Ton
   void convertCwtToMetricTon(String val) {
     if (val.isEmpty) {
       metricController.clear();
-      return;
+    } else {
+      double cwt = double.tryParse(val) ?? 0;
+      double mt = (cwt * 100) / 2204.62262;
+      metricController.text = mt.toStringAsFixed(6);
     }
-    double cwt = double.tryParse(val) ?? 0;
-    double mt = (cwt * 100) / 2204.62262;
-    metricController.text = mt.toStringAsFixed(6);
     notifyListeners();
   }
 
+// Clear all fields
   void clearMetricTonCwt() {
     metricController.clear();
     cwtInputController.clear();
@@ -352,33 +405,37 @@ class CalculatorProvider extends ChangeNotifier {
   TextEditingController buAcreController = TextEditingController();
   TextEditingController mtHectareController = TextEditingController();
 
+  // From Bushel/Acre → Metric Ton/Hectare
   void convertBuAcreToMtHectare(String val) {
     if (val.isEmpty) {
       mtHectareController.clear();
-      return;
+    } else {
+      double buAcre = double.tryParse(val) ?? 0;
+      double mtHectare = buAcre * 0.0673; // conversion factor
+      mtHectareController.text = mtHectare.toStringAsFixed(4);
     }
-    double buAcre = double.tryParse(val) ?? 0;
-    double mtHectare = buAcre * 0.0673; // conversion factor
-    mtHectareController.text = mtHectare.toStringAsFixed(4);
     notifyListeners();
   }
 
+// From Metric Ton/Hectare → Bushel/Acre
   void convertMtHectareToBuAcre(String val) {
     if (val.isEmpty) {
       buAcreController.clear();
-      return;
+    } else {
+      double mtHectare = double.tryParse(val) ?? 0;
+      double buAcre = mtHectare / 0.0673; // reverse conversion
+      buAcreController.text = buAcre.toStringAsFixed(4);
     }
-    double mtHectare = double.tryParse(val) ?? 0;
-    double buAcre = mtHectare / 0.0673; // reverse conversion
-    buAcreController.text = buAcre.toStringAsFixed(4);
     notifyListeners();
   }
 
+// Clear all fields
   void clearBuAcreMtHectare() {
     buAcreController.clear();
     mtHectareController.clear();
     notifyListeners();
   }
+
 
 //protein
 

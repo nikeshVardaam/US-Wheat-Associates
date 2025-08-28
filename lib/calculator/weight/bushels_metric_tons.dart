@@ -37,95 +37,37 @@ class BushelsMetricTons extends StatelessWidget {
         ),
       ),
       body: Consumer<CalculatorProvider>(builder: (context, cp, child) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  AppStrings.bushels,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.c000000,
-                      ),
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: AppTextField.textField(
-                      context,
-                      controller: cp.bushelController,
-                      onChanged: (val) => cp.convertBushelToMT(val),
-                      readOnly: false,
-                      keyboardType: TextInputType.number,
+        return SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
 
-                    ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    AppStrings.bushels,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.c000000,
+                        ),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.copy,
-                      color: AppColors.c656e79,
-                      size: 18,
-                    ),
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: cp.bushelController.text));
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                AppStrings.equals,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.c656e79, fontStyle: FontStyle.italic),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  AppStrings.metricTons,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.c000000,
-                      ),
                 ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: AppTextField.textField(
-                      context,
-                      controller: cp.metricTonController,
-                      onChanged: (val) => cp.convertMTToBushel(val),
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.copy,
-                      color: AppColors.c656e79,
-                      size: 18,
-                    ),
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: cp.metricTonController.text));
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.cEFEEED.withOpacity(0.6),
-                  border: Border.all(color: Colors.white38),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Row(
+                Row(
                   children: [
                     Expanded(
-                        child: Text(AppStrings.calculationBu,
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  color: AppColors.c000000,
-                                ))),
+                      child: AppTextField.textField(
+                        context,
+                        controller: cp.bushelController,
+                        onChanged: (val) => cp.convertBushelToMT(val),
+                        readOnly: false,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                        ],
+                      ),
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.copy,
@@ -133,23 +75,90 @@ class BushelsMetricTons extends StatelessWidget {
                         size: 18,
                       ),
                       onPressed: () {
-                        Clipboard.setData(const ClipboardData(text: AppStrings.bu));
+                        Clipboard.setData(ClipboardData(text: cp.bushelController.text));
                       },
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        cp.clearFields();
+                const SizedBox(height: 12),
+                Text(
+                  AppStrings.equals,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.c656e79, fontStyle: FontStyle.italic),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    AppStrings.metricTons,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.c000000,
+                        ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppTextField.textField(
+                        context,
+                        controller: cp.metricTonController,
+                        onChanged: (val) => cp.convertMTToBushel(val),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: cp.metricTonController.text));
                       },
-                      child: AppButtons().outLineMiniButton(false, AppStrings.clear, context)),
-                ],
-              ),
-            ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.cEFEEED.withOpacity(0.6),
+                    border: Border.all(color: Colors.white38),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Text(AppStrings.calculationBu,
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    color: AppColors.c000000,
+                                  ))),
+                      IconButton(
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
+                        onPressed: () {
+                          Clipboard.setData(const ClipboardData(text: AppStrings.bu));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          cp.clearFields();
+                        },
+                        child: AppButtons().outLineMiniButton(false, AppStrings.clear, context)),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       }),

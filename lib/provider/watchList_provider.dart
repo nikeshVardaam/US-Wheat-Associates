@@ -7,38 +7,21 @@ import 'package:uswheat/modal/watchlist_modal.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_widgets.dart';
-import '../modal/all_price_data_modal.dart';
 import '../modal/graph_modal.dart';
-import '../modal/quality_report_modal.dart';
 import '../modal/sales_modal.dart';
 import '../service/delete_service.dart';
 import '../service/post_services.dart';
-import '../utils/app_colors.dart';
 
 class WatchlistProvider extends ChangeNotifier {
   List<WatchlistItem> watchlist = [];
-  FilterData? filterData;
-  WheatData? wheatData;
   String? grphcode;
 
-  String? prdate;
-  String? graphDate;
-  List<GraphDataModal> graphList = [];
-  List<SalesData> chartData = [];
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  AllPriceDataModal? allPriceDataModal;
-  bool isChartLoading = false;
-  bool _isInWatchlist = false;
-  WheatData? current;
-  WheatData? lastYear;
-  WheatData? fiveYearsAgo;
   final Map<String, bool> _chartLoadingMap = {};
 
   final Map<String, List<SalesData>> _localChartCache = {};
 
-  bool isChartLoadingForItem(String itemId) {
-    return _chartLoadingMap[itemId] ?? false;
-  }
+
 
   Future<WheatData?> fetchQualityReport({
     required BuildContext context,
@@ -54,7 +37,7 @@ class WatchlistProvider extends ChangeNotifier {
       requestData: data,
       context: context,
       isBottomSheet: false,
-      loader: false, // loader false, taaki har fetch pe UI blink na ho
+      loader: false,
     );
 
     if (response != null) {
@@ -99,23 +82,26 @@ class WatchlistProvider extends ChangeNotifier {
     if (response != null) {
       final data = jsonDecode(response.body)['data'];
       watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
-      notifyListeners();
 
+      List<Future> futures = [];
       for (var item in watchlist) {
         if (item.type == 'quality') {
-          fetchQualityReport(
+          futures.add(fetchQualityReport(
             context: context,
             wheatClass: item.filterdata.classs,
             date: item.filterdata.date,
           ).then((currentData) {
             item.wheatData = currentData;
-            notifyListeners();
-
-          });
+          }));
         }
       }
+
+      await Future.wait(futures);
+
+      notifyListeners();
     }
   }
+
 
   void deleteWatchList({required BuildContext context, required String id}) {
     DeleteService().delete(endpoint: ApiEndpoint.removeWatchlist, context: context, id: id).then((value) {

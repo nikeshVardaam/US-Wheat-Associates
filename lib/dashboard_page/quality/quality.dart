@@ -15,54 +15,21 @@ class Quality extends StatefulWidget {
 }
 
 class _QualityState extends State<Quality> {
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          color: AppColors.c656e79,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Text(
-                        AppStrings.quality,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      AppStrings.favoritePrices,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Icon(
-                      Icons.star_border_outlined,
-                      color: AppColors.cFFFFFF,
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
         Expanded(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                Image.asset(
-                  AppAssets.wheatProduction,
-                  fit: BoxFit.contain,
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Image.asset(
+                    AppAssets.wheatProduction,
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 Consumer<DashboardProvider>(
                   builder: (context, dp, child) {
@@ -71,7 +38,7 @@ class _QualityState extends State<Quality> {
                         dp.setChangeActivity(
                           activity: WheatPages(
                             title: AppStrings.hardRedWinter,
-                            appBarColor: AppColors.c709e58,
+                            appBarColor: AppColors.c2a8741,
                             imageAsset: AppAssets.hardRedWinter,
                             selectedClass: 'HRW',
                           ),
@@ -90,12 +57,12 @@ class _QualityState extends State<Quality> {
                                 AppStrings.hardRedWinter,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.c709e58,
+                                      color: AppColors.c2a8741,
                                     ),
                               ),
                               Icon(
                                 Icons.arrow_forward_ios_outlined,
-                                color: AppColors.c709e58,
+                                color: AppColors.c2a8741,
                                 size: 14,
                               ),
                             ],

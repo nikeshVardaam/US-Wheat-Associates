@@ -55,7 +55,7 @@ class _WheatPagesState extends State<WheatPages> {
                                 },
                                 child: Icon(
                                   Icons.arrow_back_ios_new,
-                                  size: 12,
+                                  size: 16,
                                   color: AppColors.cFFFFFF,
                                 ),
                               );

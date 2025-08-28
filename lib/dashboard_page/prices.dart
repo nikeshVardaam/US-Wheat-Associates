@@ -212,9 +212,12 @@ class _PricesState extends State<Prices> {
                                         color: AppColors.cab865a,
                                       ),
                                 ),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: AppColors.cab865a,
+                                GestureDetector(
+
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.cab865a,
+                                  ),
                                 ),
                               ],
                             ),
