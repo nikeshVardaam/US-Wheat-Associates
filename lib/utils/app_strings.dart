@@ -86,4 +86,18 @@ class AppStrings {
   static const subscriberConsent = "Subscriber consent";
   static const iConsentToReceivingEmail = "I consent to receiving email communications. ";
   static const iConsentToHavingMySubscriber = "I consent to having my subscriber engagement tracked and analyzed.";
+  static const milesKilometer = "MILES = KILOMETERS";
+  static const squareFeetSquareMeters = "SQUARE FEET = SQUARE METERS";
+  static const metersYardsFeet = "METERS = YARDS = FEET";
+  static const acresHectaresMu = "ACRES = HECTARES = MU";
+  static const weight = "WEIGHT";
+  static const bushelsMetric = "BUSHELS = METRIC TONS";
+  static const metricTonToKgPound = "METRIC TONS = KILOGRAMS = POUNDS";
+  static const metricTonsCwt = "METRIC TONS = CWT";
+  static const yield = "YIELD";
+  static const buAcreMtHectare = "BUSHELS ACRE = METRIC TONS HECTARE";
+  static const protein = "PROTEIN";
+  static const temperature = "TEMPERATURE";
+  static const fahrenheitCelsius =  "FEHRENHEIT = CELSIUS";
+
 }

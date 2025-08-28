@@ -103,11 +103,21 @@ class WatchlistProvider extends ChangeNotifier {
   }
 
 
-  void deleteWatchList({required BuildContext context, required String id}) {
-    DeleteService().delete(endpoint: ApiEndpoint.removeWatchlist, context: context, id: id).then((value) {
-      getWatchList(context: context, loader: false);
-    });
+  void deleteWatchList({required BuildContext context, required String id}) async {
+    final index = watchlist.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      watchlist.removeAt(index);
+      notifyListeners();
+    }
+
+    try {
+      await DeleteService().delete(endpoint: ApiEndpoint.removeWatchlist, context: context, id: id);
+    } catch (e) {
+      debugPrint('Delete failed: $e');
+
+    }
   }
+
 
   Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem item) async {
     try {

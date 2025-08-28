@@ -40,7 +40,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "MILES = KILOMETERS",
+                        AppStrings.milesKilometer,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -67,7 +67,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "SQUARE FEET = SQUARE METERS",
+                        AppStrings.squareFeetSquareMeters,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -94,7 +94,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "METERS = YARDS = FEET",
+                        AppStrings.metersYardsFeet,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -121,7 +121,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "ACRES = HECTARES = MU",
+                        AppStrings.acresHectaresMu,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -135,7 +135,7 @@ class Calculator extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
-                "WEIGHT",
+                AppStrings.weight,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
@@ -155,7 +155,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "BUSHELS = METRIC TONS",
+                        AppStrings.bushelsMetric,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -264,7 +264,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "METRIC TONS = KILOGRAMS = POUNDS",
+                        AppStrings.metricTonToKgPound,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -291,7 +291,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "METRIC TONS = CWT",
+                        AppStrings.metricTonsCwt,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -304,7 +304,7 @@ class Calculator extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
-                "YIELD",
+                AppStrings.yield,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
@@ -324,7 +324,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "BUSHELS ACRE = METRIC TONS HECTARE",
+                        AppStrings.buAcreMtHectare,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -337,7 +337,7 @@ class Calculator extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
-                "PROTEIN",
+                AppStrings.protein,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
@@ -357,7 +357,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "PROTEIN ",
+                        AppStrings.protein,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -370,7 +370,7 @@ class Calculator extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
-                "TEMPERATURE",
+                AppStrings.temperature,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
@@ -390,7 +390,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "FEHRENHEIT = CELSIUS ",
+                        AppStrings.fahrenheitCelsius,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
