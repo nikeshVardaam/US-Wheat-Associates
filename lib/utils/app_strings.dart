@@ -99,5 +99,7 @@ class AppStrings {
   static const protein = "PROTEIN";
   static const temperature = "TEMPERATURE";
   static const fahrenheitCelsius =  "FEHRENHEIT = CELSIUS";
+  static const watchlistAddedSuccessfully =  "Watchlist Added Successfully";
+  static const pleaseSelectDateBeforeAddingToWatchlist =  "Please select a date before adding to watchlist";
 
 }

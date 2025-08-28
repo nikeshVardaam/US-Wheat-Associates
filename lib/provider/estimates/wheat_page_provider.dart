@@ -8,7 +8,6 @@ import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_strings.dart';
 
-import '../../modal/quality_report_modal.dart';
 import '../../modal/watchlist_modal.dart';
 import '../../service/get_api_services.dart';
 import '../../utils/app_widgets.dart';
@@ -83,8 +82,14 @@ class WheatPageProvider extends ChangeNotifier {
     required BuildContext context,
     required String wheatClass,
   }) {
-    if (prdate == null || prdate!.isEmpty) return;
-
+    if (prdate == null || prdate!.isEmpty) {
+      AppWidgets.appSnackBar(
+        context: context,
+        text: AppStrings.pleaseSelectDateBeforeAddingToWatchlist,
+        color: AppColors.cd63a3a,
+      );
+      return;
+    }
     var data = {
       "type": "quality",
       "filterdata": {"class": wheatClass, "date": prdate}
@@ -103,7 +108,7 @@ class WheatPageProvider extends ChangeNotifier {
         _isInWatchlist = true;
         AppWidgets.appSnackBar(
           context: context,
-          text: "Watchlist Added Successfully",
+          text: AppStrings.watchlistAddedSuccessfully,
           color: AppColors.c2a8741,
         );
       }
