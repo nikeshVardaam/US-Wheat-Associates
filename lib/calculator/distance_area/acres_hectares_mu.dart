@@ -27,7 +27,7 @@ class AcresHectaresMu extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Input and convert values from Acres to Hectares and Mu.",
+              "Input and convert values from Acres to Hectares and MU.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColors.cFFFFFF,
                   ),
@@ -100,6 +100,7 @@ class AcresHectaresMu extends StatelessWidget {
                           context,
                           controller: cp.hectareController,
                           onChanged: (val) => cp.convertFromHectare(val),
+                          keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
                           ],
@@ -133,6 +134,7 @@ class AcresHectaresMu extends StatelessWidget {
                           context,
                           controller: cp.muController,
                           onChanged: (val) => cp.convertFromMu(val),
+                          keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
                           ],
@@ -163,7 +165,7 @@ class AcresHectaresMu extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            "Calculation:\n1 acre = 0.404686 ha\n1 acre = 6.07 mu",
+                            "Calculation:\n1 acre = 0.404686 ha\n1 acre = 6.07 MU",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   color: AppColors.c000000,
                                 ),
@@ -177,7 +179,7 @@ class AcresHectaresMu extends StatelessWidget {
                           ),
                           onPressed: () {
                             Clipboard.setData(const ClipboardData(
-                              text: "1 acre = 0.404686 ha\n1 acre = 15.99 mu",
+                              text: "1 acre = 0.404686 ha\n1 acre = 15.99 MU",
                             ));
                           },
                         ),

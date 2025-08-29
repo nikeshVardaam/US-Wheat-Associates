@@ -14,6 +14,7 @@ import '../modal/forward_price_modal.dart';
 import '../modal/graph_modal.dart';
 import '../modal/regions_and_classes_modal.dart';
 import '../modal/sales_modal.dart';
+import '../modal/watch_list_state.dart';
 import '../utils/app_widgets.dart';
 
 class PricesProvider extends ChangeNotifier {
@@ -42,8 +43,6 @@ class PricesProvider extends ChangeNotifier {
   bool loader = false;
   bool isDataFetched = false;
   bool _isInWatchlist = false;
-
-  bool get isInWatchlist => _isInWatchlist;
 
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -200,12 +199,13 @@ class PricesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleWatchlistStatus() {
-    _isInWatchlist = !_isInWatchlist;
-    notifyListeners();
+  bool isInWatchlist(String region, String wheatClass, String? date) {
+    if (date == null) return false;
+    String key = "$region|$wheatClass|$date";
+    return WatchlistState.watchlistKeys.contains(key);
   }
 
-  Future<void> storeWatchList({
+  Future<bool> storeWatchList({
     required BuildContext context,
     required bool loader,
   }) async {
@@ -215,7 +215,7 @@ class PricesProvider extends ChangeNotifier {
         text: "Please select all fields",
         color: AppColors.c2a8741,
       );
-      return;
+      return false;
     }
 
     final fullDate = selectedYears != null && selectedYears!.length == 4 ? "${selectedYears!}-01-01" : selectedYears ?? "";
@@ -238,13 +238,23 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (response != null) {
-      _isInWatchlist = false;
-      AppWidgets.appSnackBar(
-        context: context,
-        text: "Watchlist Added Successfully",
-        color: AppColors.c2a8741,
-      );
+      final body = json.decode(response.body);
+      final added = body['isInWatchlist'] ?? true;
+
+      if (added) {
+        WatchlistState.watchlistKeys.add("$selectedRegion|$selectedClasses|$selectedYears");
+        notifyListeners();
+
+        AppWidgets.appSnackBar(
+          context: context,
+          text: "Watchlist Added Successfully",
+          color: AppColors.c2a8741,
+        );
+        return true;
+      }
     }
+
+    return false;
   }
 
   Future<void> getRegionsAndClasses({required BuildContext context, required bool loader}) async {
@@ -382,7 +392,7 @@ class PricesProvider extends ChangeNotifier {
           enabled: false,
           padding: EdgeInsets.zero,
           child: SizedBox(
-            height: MediaQuery.of(context).size.height / 4,
+            height: MediaQuery.of(context).size.height / 6,
             width: MediaQuery.of(context).size.width / 2,
             child: Scrollbar(
               child: ListView.builder(
@@ -517,7 +527,6 @@ class PricesProvider extends ChangeNotifier {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         year.toString(),
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                       ),
                     ),
                     onTap: () {

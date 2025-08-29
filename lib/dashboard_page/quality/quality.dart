@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/dashboard_page/quality/estimates/wheat_pages.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
@@ -24,12 +25,58 @@ class _QualityState extends State<Quality> {
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
+                Container(
+                  color: AppColors.c656e79,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Consumer<DashboardProvider>(
+                                builder: (context, dp, child) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      dp.setChangeActivity(
+                                        activity: const Quality(),
+                                        pageName: AppStrings.quality,
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_back_ios_new,
+                                      size: 14,
+                                      color: AppColors.cFFFFFF,
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              Text(
+                                AppStrings.qua,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SvgPicture.asset(AppAssets.star,color:Colors.transparent,height: 18,)
+                      ],
+                    ),
+                  ),
+                ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: MediaQuery.of(context).size.height / 2.3,
                   child: Image.asset(
                     AppAssets.wheatProduction,
                     fit: BoxFit.contain,
                   ),
+                ),
+                Divider(
+                  thickness: 0.5,
+                  height: 1,
+                  color: AppColors.cB6B6B6,
                 ),
                 Consumer<DashboardProvider>(
                   builder: (context, dp, child) {
@@ -246,6 +293,11 @@ class _QualityState extends State<Quality> {
                     ),
                   );
                 }),
+                Divider(
+                  thickness: 0.5,
+                  height: 1,
+                  color: AppColors.cB6B6B6,
+                ),
               ],
             ),
           ),

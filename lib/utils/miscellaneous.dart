@@ -21,7 +21,7 @@ class Miscellaneous {
     if (dateStr == null || dateStr.isEmpty) return "--";
     try {
       final parsedDate = DateTime.parse(dateStr);
-      return DateFormat('MMMM d, yyyy').format(parsedDate); // e.g. July 18, 2025
+      return DateFormat('MMMM d, yyyy').format(parsedDate).toUpperCase(); // e.g. July 18, 2025
     } catch (e) {
       return "--";
     }

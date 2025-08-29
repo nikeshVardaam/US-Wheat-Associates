@@ -10,6 +10,7 @@ class AppAssets {
   static const percentage = "assets/images/percentage.svg";
   static const done = "assets/images/done.svg";
   static const star = "assets/images/star.svg";
+  static const fillStar = "assets/images/fill_star.svg";
   static const equal = "assets/images/equal.svg";
   static const chartPie = "assets/images/chart_pie.svg";
   static const logout = "assets/images/logout.svg";

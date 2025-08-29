@@ -158,7 +158,7 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                             "Calculation:\n"
                             "1 metric ton = 1000 kilograms\n"
                             "1 kilogram = 2.20462262 pounds\n"
-                            "→ 1 metric ton = 2204.62262 pounds",
+                            "1 metric ton = 2204.62262 pounds",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           ),
                         ),

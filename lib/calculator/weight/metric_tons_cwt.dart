@@ -121,8 +121,8 @@ class _MetricTonsCwtState extends State<MetricTonsCwt> {
                         Expanded(
                           child: Text(
                             "Calculation:\n"
-                                "→ 1 metric ton = 22.046 CWT\n"
-                                "→ 1 CWT = 0.045359 metric ton",
+                                "1 metric ton = 22.046 CWT\n"
+                                "1 CWT = 0.045359 metric ton",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           ),
                         ),

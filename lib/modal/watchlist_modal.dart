@@ -1,4 +1,3 @@
-import 'package:uswheat/modal/quality_report_modal.dart';
 import 'package:uswheat/modal/sales_modal.dart';
 
 class WatchlistModel {

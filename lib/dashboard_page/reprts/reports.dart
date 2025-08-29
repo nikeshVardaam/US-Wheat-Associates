@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/argument/report_detail_arg.dart';
-import 'package:uswheat/dashboard_page/reprts/report_detail_page.dart';
 import 'package:uswheat/provider/reports_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_box_decoration.dart';
 import 'package:uswheat/utils/app_colors.dart';

@@ -28,7 +28,7 @@ class SquareFeetToSquareMeter extends StatelessWidget {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(30),
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(bottom: 8.0,left: 16),
             child: Text(
               "Input and convert values between Square Feet and Square Meters.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(

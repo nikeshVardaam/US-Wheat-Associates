@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
@@ -76,11 +78,10 @@ class _WatchlistState extends State<Watchlist> {
                                         ),
                                       ),
                                       GestureDetector(
-                                        onTap: () {
-                                          wp.deleteWatchList(context: context, id: data.id ?? "");
-                                        },
-                                        child: Icon(Icons.star, color: AppColors.cFFFFFF, size: 18),
-                                      ),
+                                          onTap: () {
+                                            wp.deleteWatchList(context: context, id: data.id ?? "", wheatClass: data.filterdata.classs, date: data.filterdata.date);
+                                          },
+                                          child: SvgPicture.asset(AppAssets.fillStar, height: 18, color: AppColors.cFFFFFF)),
                                     ],
                                   ),
                                 ),
@@ -131,12 +132,12 @@ class _WatchlistState extends State<Watchlist> {
                                                             color: AppColors.cab865a.withOpacity(0.6),
                                                           ),
                                                           axisLine: const AxisLine(width: 0),
-                                                          interval: 0.8,
+                                                          interval: 1,
                                                           labelStyle: Theme.of(context).textTheme.labelSmall,
-                                                          tickPosition: TickPosition.outside,
+                                                          tickPosition: TickPosition.inside,
                                                           labelPlacement: LabelPlacement.betweenTicks,
                                                           // ← important
-                                                          edgeLabelPlacement: EdgeLabelPlacement.none,
+                                                          edgeLabelPlacement: EdgeLabelPlacement.shift,
                                                           // ← prevents clipping
                                                           majorTickLines: const MajorTickLines(width: 0),
                                                         ),
@@ -166,76 +167,73 @@ class _WatchlistState extends State<Watchlist> {
                                     const SizedBox(width: 16),
                                     Expanded(
                                       flex: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(data.filterdata.region ?? "",
-                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cab865a, fontWeight: FontWeight.w900)),
-                                              ],
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(data.filterdata.region ?? "",
+                                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cab865a, fontWeight: FontWeight.w900)),
+                                            ],
+                                          ),
+                                          Text(
+                                            "(${data.filterdata.classs ?? ""})",
+                                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                                  color: AppColors.c656e79,
+                                                ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          // Row(
+                                          //   children: [
+                                          //     Icon(Icons.arrow_drop_up, color: AppColors.c2a8741),
+                                          //     Text(
+                                          //       wp.allPriceDataModal?.nearby?.cASHBU.toString().substring(0, 3) ?? "--",
+                                          //       style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                          //         fontWeight: FontWeight.w600,
+                                          //         color: AppColors.c2a8741,
+                                          //       ),
+                                          //     ),
+                                          //     Padding(
+                                          //       padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                          //       child: Container(
+                                          //         height: 12,
+                                          //         width: 1,
+                                          //         color: AppColors.c464646,
+                                          //       ),
+                                          //     ),
+                                          //     Text(
+                                          //       wp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
+                                          //       style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                          //         fontWeight: FontWeight.w600,
+                                          //         color: AppColors.c2a8741,
+                                          //       ),
+                                          //     ),
+                                          //     Text(
+                                          //       "/MT",
+                                          //       style: TextStyle(color: AppColors.c2a8741, fontSize: 14),
+                                          //     )
+                                          //   ],
+                                          // ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.c45413b,
+                                              borderRadius: BorderRadius.circular(12),
                                             ),
-                                            Text(
-                                              "(${data.filterdata.classs ?? ""})",
-                                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                    color: AppColors.c656e79,
+                                            child: Text(
+                                              Miscellaneous.formatPrDate(data.filterdata.date ?? " "),
+                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                    color: AppColors.cFFFFFF,
                                                   ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            const SizedBox(
-                                              height: 16,
-                                            ),
-                                            // Row(
-                                            //   children: [
-                                            //     Icon(Icons.arrow_drop_up, color: AppColors.c2a8741),
-                                            //     Text(
-                                            //       wp.allPriceDataModal?.nearby?.cASHBU.toString().substring(0, 3) ?? "--",
-                                            //       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                            //         fontWeight: FontWeight.w600,
-                                            //         color: AppColors.c2a8741,
-                                            //       ),
-                                            //     ),
-                                            //     Padding(
-                                            //       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                            //       child: Container(
-                                            //         height: 12,
-                                            //         width: 1,
-                                            //         color: AppColors.c464646,
-                                            //       ),
-                                            //     ),
-                                            //     Text(
-                                            //       wp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
-                                            //       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                            //         fontWeight: FontWeight.w600,
-                                            //         color: AppColors.c2a8741,
-                                            //       ),
-                                            //     ),
-                                            //     Text(
-                                            //       "/MT",
-                                            //       style: TextStyle(color: AppColors.c2a8741, fontSize: 14),
-                                            //     )
-                                            //   ],
-                                            // ),
-                                            Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.c45413b,
-                                                borderRadius: BorderRadius.circular(12),
-                                              ),
-                                              child: Text(
-                                                Miscellaneous.formatPrDate(data.filterdata.date ?? " "),
-                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                      color: AppColors.cFFFFFF,
-                                                    ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -259,8 +257,6 @@ class _WatchlistState extends State<Watchlist> {
                     (index) {
                       var data = wp.watchlist[index];
                       if (data.type == "quality") {
-                        // final wheat = data.; // local reference
-
                         return Column(
                           children: [
                             Container(
@@ -268,130 +264,160 @@ class _WatchlistState extends State<Watchlist> {
                                 color: AppColors.cAB865A.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(16),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Header
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.c2a8741,
-                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                AppStrings.wheatAssociates,
-                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                                child: Container(
-                                                  height: 12,
-                                                  width: 2,
-                                                  color: AppColors.cFFFFFF,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 40.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Header
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.c2a8741,
+                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  AppStrings.wheatAssociates,
+                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
                                                 ),
-                                              ),
-                                              Text(
-                                                data.filterdata.region ?? "",
-                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
-                                              ),
-                                              Text(
-                                                data.filterdata.classs ?? "",
-                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
-                                              ),
-                                            ],
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                  child: Container(
+                                                    height: 12,
+                                                    width: 2,
+                                                    color: AppColors.cFFFFFF,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  data.filterdata.region ?? "",
+                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+                                                ),
+                                                Text(
+                                                  data.filterdata.classs ?? "",
+                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            wp.deleteWatchList(context: context, id: data.id ?? "");
-                                          },
-                                          child: Icon(Icons.star, color: AppColors.cFFFFFF, size: 18),
-                                        ),
-                                      ],
+                                          GestureDetector(
+                                              onTap: () {
+                                                wp.deleteWatchList(context: context, id: data.id ?? "", wheatClass: data.filterdata.classs, date: data.filterdata.date);
+                                              },
+                                              child: SvgPicture.asset(
+                                                AppAssets.fillStar,
+                                                height: 18,
+                                                color: AppColors.cFFFFFF,
+                                              )),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          height: 16,
-                                        ),
-                                        Text(
-                                          AppStrings.data,
-                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Row(
-                                            children: [
-                                              // Moisture
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(AppStrings.testWtbbu, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c464646)),
-                                                  const SizedBox(height: 4),
-                                                  Text(data.wheatData?.testWtlbbu ?? "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900)),
-                                                ],
-                                              ),
-                                              const SizedBox(width: 16),
-                                              // Prot12%mb
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(AppStrings.testWtkghl, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c464646)),
-                                                  const SizedBox(height: 4),
-                                                  Text(data.wheatData?.testWtkghl ?? "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900)),
-                                                ],
-                                              ),
-                                              const SizedBox(width: 16),
-                                              // DryBasisProt%
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(AppStrings.moisture, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c464646)),
-                                                  const SizedBox(height: 4),
-                                                  Text(data.wheatData?.moisture ?? "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900)),
-                                                ],
-                                              ),
-                                              const SizedBox(width: 16),
-                                              // DryBasisProt%
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c464646)),
-                                                  const SizedBox(height: 4),
-                                                  Text(data.wheatData?.prot12Mb ?? "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900)),
-                                                ],
-                                              ),
-                                              const SizedBox(width: 16),
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c464646)),
-                                                  const SizedBox(height: 4),
-                                                  Text(data.wheatData?.dryBasisProt ?? "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900)),
-                                                ],
-                                              ),
-                                            ],
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            AppStrings.data,
+                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900),
                                           ),
-                                        ),
-                                      ],
+                                          const SizedBox(height: 8),
+                                          SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                // Moisture
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(AppStrings.testWtbbu, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      (data.wheatData?.testWtlbbu != null && data.wheatData!.testWtlbbu!.isNotEmpty) ? "${data.wheatData!.testWtlbbu}" : "--",
+                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            color: AppColors.c2a8741,
+                                                            fontWeight: FontWeight.w900,
+                                                          ),
+                                                    )
+                                                  ],
+                                                ),
+                                                const SizedBox(width: 16),
+                                                // Prot12%mb
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(AppStrings.testWtkghl, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      (data.wheatData?.testWtkghl != null && data.wheatData!.testWtkghl!.isNotEmpty) ? "${data.wheatData!.testWtkghl} " : "--",
+                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            color: AppColors.c2a8741,
+                                                            fontWeight: FontWeight.w900,
+                                                          ),
+                                                    )
+                                                  ],
+                                                ),
+                                                const SizedBox(width: 16),
+                                                // DryBasisProt%
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(AppStrings.moisture, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      (data.wheatData?.moisture != null && data.wheatData!.moisture!.isNotEmpty) ? "${data.wheatData!.moisture}%" : "--",
+                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            color: AppColors.c2a8741,
+                                                            fontWeight: FontWeight.w900,
+                                                          ),
+                                                    )
+                                                  ],
+                                                ),
+                                                const SizedBox(width: 16),
+                                                // DryBasisProt%
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      (data.wheatData?.prot12Mb != null && data.wheatData!.prot12Mb!.isNotEmpty) ? "${data.wheatData!.prot12Mb}%" : "--",
+                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            color: AppColors.c2a8741,
+                                                            fontWeight: FontWeight.w900,
+                                                          ),
+                                                    )
+                                                  ],
+                                                ),
+                                                const SizedBox(width: 16),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      (data.wheatData?.dryBasisProt != null && data.wheatData!.dryBasisProt!.isNotEmpty)
+                                                          ? "${data.wheatData!.dryBasisProt}%"
+                                                          : "--",
+                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            color: AppColors.c2a8741,
+                                                            fontWeight: FontWeight.w900,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(height: 16),

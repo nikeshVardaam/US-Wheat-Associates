@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/provider/estimates/wheat_page_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
+import '../../../utils/app_assets.dart';
 import '../../../utils/app_box_decoration.dart';
 
 class WheatPages extends StatefulWidget {
@@ -38,7 +41,7 @@ class _WheatPagesState extends State<WheatPages> {
             Container(
               color: widget.appBarColor,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                 child: Row(
                   children: [
                     Expanded(
@@ -55,7 +58,7 @@ class _WheatPagesState extends State<WheatPages> {
                                 },
                                 child: Icon(
                                   Icons.arrow_back_ios_new,
-                                  size: 16,
+                                  size: 14,
                                   color: AppColors.cFFFFFF,
                                 ),
                               );
@@ -66,31 +69,36 @@ class _WheatPagesState extends State<WheatPages> {
                           ),
                           Text(
                             widget.title,
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        wpp.addWatchList(context: context, wheatClass: widget.selectedClass);
-                      },
+                      onTap: wpp.isInWatchlist(widget.selectedClass, wpp.prdate)
+                          ? null // disable tap if already added
+                          : () {
+                              wpp.addWatchList(context: context, wheatClass: widget.selectedClass);
+                            },
                       child: Row(
                         children: [
                           Text(
                             AppStrings.addToWatchlist,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w600),
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                  color: AppColors.cFFFFFF,
+                                  fontWeight: FontWeight.w500,
+                                ),
                           ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Icon(
-                            Icons.star_border_outlined,
+                          const SizedBox(width: 8),
+                          SvgPicture.asset(
+                            wpp.isInWatchlist(widget.selectedClass, wpp.prdate) ? AppAssets.fillStar : AppAssets.star,
                             color: AppColors.cFFFFFF,
-                          )
+                            width: 18,
+                            height: 18,
+                          ),
                         ],
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -101,7 +109,9 @@ class _WheatPagesState extends State<WheatPages> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   GestureDetector(
-                    onTap: () => wpp.showYearPicker(context, wheatClass: widget.selectedClass),
+                    onTap: () {
+                      wpp.showYearPicker(context, wheatClass: widget.selectedClass);
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: AppBoxDecoration.blue(),
@@ -114,7 +124,7 @@ class _WheatPagesState extends State<WheatPages> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            "Year: ${wpp.finalDate ?? 'Select Year'}",
+                            wpp.finalDate != null ? DateFormat('dd-MMM-yyyy').format(DateTime.parse(wpp.finalDate!)) : 'Select Date',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color: AppColors.c464646,
                                 ),
@@ -148,23 +158,24 @@ class _WheatPagesState extends State<WheatPages> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.wheatData, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c353d4a.withOpacity(0.7), fontWeight: FontWeight.w700)),
+                        child: Text(AppStrings.wheatData,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c353d4a.withOpacity(0.7), fontWeight: FontWeight.w900)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
-                        child:
-                            Text(AppStrings.currentAverage, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                        child: Text(AppStrings.currentAverage,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7))),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
                         child: Text(AppStrings.finalAverage,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7))),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
                         child: Text(
                           AppStrings.yearAverage,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7)),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7)),
                         ),
                       )
                     ],
@@ -175,7 +186,7 @@ class _WheatPagesState extends State<WheatPages> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.lbBu, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c95795d)),
+                        child: Text(AppStrings.lbBu, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
@@ -199,7 +210,7 @@ class _WheatPagesState extends State<WheatPages> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.kgHl, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c95795d)),
+                        child: Text(AppStrings.kgHl, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
@@ -222,7 +233,7 @@ class _WheatPagesState extends State<WheatPages> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.moisture, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c95795d)),
+                        child: Text(AppStrings.moisture, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
@@ -245,7 +256,7 @@ class _WheatPagesState extends State<WheatPages> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c95795d)),
+                        child: Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
@@ -268,7 +279,7 @@ class _WheatPagesState extends State<WheatPages> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c95795d)),
+                        child: Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),

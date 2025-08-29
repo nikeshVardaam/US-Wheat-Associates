@@ -86,6 +86,7 @@ class TemperatureConverterPage extends StatelessWidget {
                           context,
                           controller: cp.celsiusFromFahrenheitController,
                           onChanged: (val) => cp.convertFromCelsius(val),
+                          keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
                           ],

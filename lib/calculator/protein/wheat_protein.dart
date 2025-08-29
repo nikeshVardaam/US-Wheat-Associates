@@ -119,8 +119,8 @@ class _WheatProteinState extends State<WheatProtein> {
                         Expanded(
                           child: Text(
                             "Calculation:\n"
-                                "→ DB = MB ÷ 0.88\n"
-                                "→ MB = DB × 0.88",
+                                "DB = MB ÷ 0.88\n"
+                                "MB = DB × 0.88",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           ),
                         ),

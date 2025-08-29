@@ -7,7 +7,7 @@ import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_strings.dart';
-
+import '../../modal/watch_list_state.dart';
 import '../../modal/watchlist_modal.dart';
 import '../../service/get_api_services.dart';
 import '../../utils/app_widgets.dart';
@@ -26,6 +26,7 @@ class WheatPageProvider extends ChangeNotifier {
   bool isLoading = false;
   bool _isPickerOpen = false;
   bool _isInWatchlist = false;
+  final Set<String> _watchlistKeys = {};
 
   Future<void> getYears({required BuildContext context, required bool loader}) async {
     final response = await GetApiServices().get(
@@ -41,6 +42,12 @@ class WheatPageProvider extends ChangeNotifier {
       updateFinalDate();
       notifyListeners();
     }
+  }
+
+  bool isInWatchlist(String wheatClass, String? date) {
+    if (date == null) return false;
+    String key = "$wheatClass|$date";
+    return WatchlistState.watchlistKeys.contains(key);
   }
 
   void getQualityReport({required BuildContext context, required String wheatClass}) async {
@@ -78,10 +85,7 @@ class WheatPageProvider extends ChangeNotifier {
     }
   }
 
-  addWatchList({
-    required BuildContext context,
-    required String wheatClass,
-  }) {
+  void addWatchList({required BuildContext context, required String wheatClass}) {
     if (prdate == null || prdate!.isEmpty) {
       AppWidgets.appSnackBar(
         context: context,
@@ -90,6 +94,14 @@ class WheatPageProvider extends ChangeNotifier {
       );
       return;
     }
+
+    String key = "$wheatClass|$prdate";
+
+    // ✅ Duplicate check (just return, no message)
+    if (WatchlistState.watchlistKeys.contains(key)) {
+      return;
+    }
+
     var data = {
       "type": "quality",
       "filterdata": {"class": wheatClass, "date": prdate}
@@ -105,12 +117,13 @@ class WheatPageProvider extends ChangeNotifier {
     )
         .then((value) {
       if (value != null) {
-        _isInWatchlist = true;
+        WatchlistState.watchlistKeys.add(key);
         AppWidgets.appSnackBar(
           context: context,
           text: AppStrings.watchlistAddedSuccessfully,
           color: AppColors.c2a8741,
         );
+        notifyListeners();
       }
     });
   }
@@ -127,12 +140,18 @@ class WheatPageProvider extends ChangeNotifier {
 
   void showYearPicker(BuildContext context, {required String wheatClass}) {
     if (_isPickerOpen) return;
+    _isPickerOpen = true;
+
     if (uniqueYears.isEmpty) {
       getYears(context: context, loader: false).then((_) {
-        _openPicker(context, wheatClass);
+        Future.delayed(Duration(milliseconds: 100), () {
+          _openPicker(context, wheatClass);
+        });
       });
     } else {
-      _openPicker(context, wheatClass);
+      Future.delayed(Duration(milliseconds: 100), () {
+        _openPicker(context, wheatClass);
+      });
     }
   }
 

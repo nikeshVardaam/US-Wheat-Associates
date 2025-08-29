@@ -6,9 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:uswheat/modal/watchlist_modal.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
+import 'package:uswheat/utils/app_colors.dart';
+import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import '../modal/graph_modal.dart';
 import '../modal/sales_modal.dart';
+import '../modal/watch_list_state.dart';
 import '../service/delete_service.dart';
 import '../service/post_services.dart';
 
@@ -20,8 +23,6 @@ class WatchlistProvider extends ChangeNotifier {
   final Map<String, bool> _chartLoadingMap = {};
 
   final Map<String, List<SalesData>> _localChartCache = {};
-
-
 
   Future<WheatData?> fetchQualityReport({
     required BuildContext context,
@@ -102,22 +103,40 @@ class WatchlistProvider extends ChangeNotifier {
     }
   }
 
-
-  void deleteWatchList({required BuildContext context, required String id}) async {
+  void deleteWatchList({
+    required BuildContext context,
+    required String id,
+    required String wheatClass,
+    required String date,
+  }) async {
     final index = watchlist.indexWhere((item) => item.id == id);
     if (index != -1) {
       watchlist.removeAt(index);
       notifyListeners();
     }
 
-    try {
-      await DeleteService().delete(endpoint: ApiEndpoint.removeWatchlist, context: context, id: id);
-    } catch (e) {
-      debugPrint('Delete failed: $e');
+    String key = "$wheatClass|$date";
+    WatchlistState.watchlistKeys.remove(key);
 
+    try {
+      await DeleteService().delete(
+        endpoint: ApiEndpoint.removeWatchlist,
+        context: context,
+        id: id,
+      );
+      AppWidgets.appSnackBar(
+        context: context,
+        text: AppStrings.removedFromWatchlist,
+        color: AppColors.c2a8741,
+      );
+    } catch (e) {
+      AppWidgets.appSnackBar(
+        context: context,
+        text: AppStrings.failedToRemove,
+        color: AppColors.cd63a3a,
+      );
     }
   }
-
 
   Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem item) async {
     try {

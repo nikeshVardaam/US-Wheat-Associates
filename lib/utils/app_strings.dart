@@ -23,7 +23,7 @@ class AppStrings {
   static const country = "Country";
   static const imInterested = "I'm interested in:";
   static const harvestReports = "Harvest Reports";
-  static const price = "Price";
+  static const price = "Prices";
   static const pricess = "PRICES";
   static const agriConversionCalculator = "Agri Conversion Calculator";
   static const favoritePrice = "Favorite Price";
@@ -42,6 +42,7 @@ class AppStrings {
   static const subscribe = "Subscribe";
   static const watchlist = "Watchlist";
   static const quality = "Quality";
+  static const qua = "QUALITY";
   static const reports = "Reports";
   static const reportsTypes = "Reports Types";
   static const read = "Read";
@@ -70,7 +71,7 @@ class AppStrings {
   static const testWtkghl = "testWtkghl";
   static const testWtbbu = "testWtbbu";
   static const moisture = "Moisture";
-  static const prot12 = "Prot12%mb";
+  static const prot12 = "Protmb";
   static const dryBasisProt = "DryBasisProt";
   static const date = "DATE";
   static const data = "Wheat Data";
@@ -98,8 +99,14 @@ class AppStrings {
   static const buAcreMtHectare = "BUSHELS ACRE = METRIC TONS HECTARE";
   static const protein = "PROTEIN";
   static const temperature = "TEMPERATURE";
-  static const fahrenheitCelsius =  "FEHRENHEIT = CELSIUS";
+  static const removedFromWatchlist = "Removed from watchlist";
+  static const failedToRemove = "Failed to remove";
+  static const fahrenheitCelsius =  "FAHRENHEIT = CELSIUS";
+  static const alreadyAddedToWatchlist =  "This date is already in your watchlist.";
   static const watchlistAddedSuccessfully =  "Watchlist Added Successfully";
   static const pleaseSelectDateBeforeAddingToWatchlist =  "Please select a date before adding to watchlist";
+
+
+
 
 }
