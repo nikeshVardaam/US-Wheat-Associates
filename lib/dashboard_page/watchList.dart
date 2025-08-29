@@ -246,189 +246,176 @@ class _WatchlistState extends State<Watchlist> {
                           ),
                         ],
                       );
+                    } else if (data.type == "quality") {
+                      return Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.cAB865A.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 40.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Header
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.c2a8741,
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                AppStrings.wheatAssociates,
+                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                child: Container(
+                                                  height: 12,
+                                                  width: 2,
+                                                  color: AppColors.cFFFFFF,
+                                                ),
+                                              ),
+                                              Text(
+                                                data.filterdata.region ?? "",
+                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+                                              ),
+                                              Text(
+                                                data.filterdata.classs ?? "",
+                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                            onTap: () {
+                                              wp.deleteWatchList(context: context, id: data.id ?? "", wheatClass: data.filterdata.classs, date: data.filterdata.date);
+                                            },
+                                            child: SvgPicture.asset(
+                                              AppAssets.fillStar,
+                                              height: 18,
+                                              color: AppColors.cFFFFFF,
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          AppStrings.data,
+                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: [
+                                              // Moisture
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(AppStrings.testWtbbu, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    (data.wheatData?.testWtlbbu != null && data.wheatData!.testWtlbbu!.isNotEmpty) ? "${data.wheatData!.testWtlbbu}" : "--",
+                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                          color: AppColors.c2a8741,
+                                                          fontWeight: FontWeight.w900,
+                                                        ),
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(width: 16),
+                                              // Prot12%mb
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(AppStrings.testWtkghl, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    (data.wheatData?.testWtkghl != null && data.wheatData!.testWtkghl!.isNotEmpty) ? "${data.wheatData!.testWtkghl} " : "--",
+                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                          color: AppColors.c2a8741,
+                                                          fontWeight: FontWeight.w900,
+                                                        ),
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(width: 16),
+                                              // DryBasisProt%
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(AppStrings.moisture, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    (data.wheatData?.moisture != null && data.wheatData!.moisture!.isNotEmpty) ? "${data.wheatData!.moisture}%" : "--",
+                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                          color: AppColors.c2a8741,
+                                                          fontWeight: FontWeight.w900,
+                                                        ),
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(width: 16),
+                                              // DryBasisProt%
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    (data.wheatData?.prot12Mb != null && data.wheatData!.prot12Mb!.isNotEmpty) ? "${data.wheatData!.prot12Mb}%" : "--",
+                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                          color: AppColors.c2a8741,
+                                                          fontWeight: FontWeight.w900,
+                                                        ),
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(width: 16),
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    (data.wheatData?.dryBasisProt != null && data.wheatData!.dryBasisProt!.isNotEmpty) ? "${data.wheatData!.dryBasisProt}%" : "--",
+                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                          color: AppColors.c2a8741,
+                                                          fontWeight: FontWeight.w900,
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      );
                     } else {
                       return const SizedBox.shrink();
                     }
                   },
                 )),
-                Column(
-                  children: List.generate(
-                    wp.watchlist.length,
-                    (index) {
-                      var data = wp.watchlist[index];
-                      if (data.type == "quality") {
-                        return Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.cAB865A.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 40.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Header
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.c2a8741,
-                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  AppStrings.wheatAssociates,
-                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                                  child: Container(
-                                                    height: 12,
-                                                    width: 2,
-                                                    color: AppColors.cFFFFFF,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  data.filterdata.region ?? "",
-                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
-                                                ),
-                                                Text(
-                                                  data.filterdata.classs ?? "",
-                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                              onTap: () {
-                                                wp.deleteWatchList(context: context, id: data.id ?? "", wheatClass: data.filterdata.classs, date: data.filterdata.date);
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppAssets.fillStar,
-                                                height: 18,
-                                                color: AppColors.cFFFFFF,
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            AppStrings.data,
-                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Row(
-                                              children: [
-                                                // Moisture
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(AppStrings.testWtbbu, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
-                                                    const SizedBox(height: 4),
-                                                    Text(
-                                                      (data.wheatData?.testWtlbbu != null && data.wheatData!.testWtlbbu!.isNotEmpty) ? "${data.wheatData!.testWtlbbu}" : "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
-                                                            fontWeight: FontWeight.w900,
-                                                          ),
-                                                    )
-                                                  ],
-                                                ),
-                                                const SizedBox(width: 16),
-                                                // Prot12%mb
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(AppStrings.testWtkghl, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
-                                                    const SizedBox(height: 4),
-                                                    Text(
-                                                      (data.wheatData?.testWtkghl != null && data.wheatData!.testWtkghl!.isNotEmpty) ? "${data.wheatData!.testWtkghl} " : "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
-                                                            fontWeight: FontWeight.w900,
-                                                          ),
-                                                    )
-                                                  ],
-                                                ),
-                                                const SizedBox(width: 16),
-                                                // DryBasisProt%
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(AppStrings.moisture, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
-                                                    const SizedBox(height: 4),
-                                                    Text(
-                                                      (data.wheatData?.moisture != null && data.wheatData!.moisture!.isNotEmpty) ? "${data.wheatData!.moisture}%" : "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
-                                                            fontWeight: FontWeight.w900,
-                                                          ),
-                                                    )
-                                                  ],
-                                                ),
-                                                const SizedBox(width: 16),
-                                                // DryBasisProt%
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
-                                                    const SizedBox(height: 4),
-                                                    Text(
-                                                      (data.wheatData?.prot12Mb != null && data.wheatData!.prot12Mb!.isNotEmpty) ? "${data.wheatData!.prot12Mb}%" : "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
-                                                            fontWeight: FontWeight.w900,
-                                                          ),
-                                                    )
-                                                  ],
-                                                ),
-                                                const SizedBox(width: 16),
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
-                                                    const SizedBox(height: 4),
-                                                    Text(
-                                                      (data.wheatData?.dryBasisProt != null && data.wheatData!.dryBasisProt!.isNotEmpty)
-                                                          ? "${data.wheatData!.dryBasisProt}%"
-                                                          : "--",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
-                                                            fontWeight: FontWeight.w900,
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
-                )
               ],
             )),
       );
