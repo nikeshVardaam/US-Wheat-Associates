@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:uswheat/utils/app_colors.dart';
 
 class ThemeClass {
-  Color lightPrimaryColor = const Color(0xffffffff);
+  static Color lightPrimaryColor = const Color(0xffffffff);
   Color darkPrimaryColor = const Color(0xff1f2836);
 
   static ThemeData lightTheme = ThemeData(
-    primaryColor: _themeClass.lightPrimaryColor,
+    primaryColor: ThemeClass.lightPrimaryColor,
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.cFFFFFF,
@@ -75,9 +75,15 @@ class ThemeClass {
         color: Colors.black,
       ),
     ),
-    scaffoldBackgroundColor: _themeClass.lightPrimaryColor,
+    scaffoldBackgroundColor: ThemeClass.lightPrimaryColor,
     colorScheme: const ColorScheme.light().copyWith(
-      primary: _themeClass.lightPrimaryColor,
+      primary: ThemeClass.lightPrimaryColor,
+    ),
+    appBarTheme: AppBarTheme(
+      elevation: 0,
+      backgroundColor: lightPrimaryColor,
+      surfaceTintColor: Colors.transparent,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
     ),
   );
 }
