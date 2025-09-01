@@ -53,7 +53,6 @@ class _DashboardState extends State<Dashboard> {
               AppAssets.darkLogo,
               scale: 5,
             ),
-
           ),
           drawer: SizedBox(
             width: MediaQuery.of(context).size.width / 1.8,
