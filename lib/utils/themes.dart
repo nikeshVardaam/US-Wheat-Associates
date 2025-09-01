@@ -5,6 +5,7 @@ import 'package:uswheat/utils/app_colors.dart';
 class ThemeClass {
   static Color lightPrimaryColor = const Color(0xffffffff);
   Color darkPrimaryColor = const Color(0xff1f2836);
+  static Color appBarColor = const Color(0xFF3D3934);
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeClass.lightPrimaryColor,
@@ -83,7 +84,11 @@ class ThemeClass {
       elevation: 0,
       backgroundColor: lightPrimaryColor,
       surfaceTintColor: Colors.transparent,
-      systemOverlayStyle: SystemUiOverlayStyle.light,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: appBarColor,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
     ),
   );
 }

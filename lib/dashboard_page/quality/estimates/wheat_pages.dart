@@ -103,202 +103,225 @@ class _WheatPagesState extends State<WheatPages> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      wpp.showYearPicker(context, wheatClass: widget.selectedClass);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: AppBoxDecoration.blue(),
+
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Icon(
-                            Icons.calendar_month_outlined,
-                            color: AppColors.c464646,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            wpp.finalDate != null ? DateFormat('dd-MMM-yyyy').format(DateTime.parse(wpp.finalDate!)) : 'Select Date',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: AppColors.c464646,
-                                ),
+                          GestureDetector(
+                            onTap: () {
+                              wpp.showYearPicker(context, wheatClass: widget.selectedClass);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: AppBoxDecoration.blue(),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_month_outlined,
+                                    color: AppColors.c464646,
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    wpp.finalDate != null ? DateFormat('dd-MMM-yyyy').format(DateTime.parse(wpp.finalDate!)) : 'Select Date',
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: AppColors.c464646,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Image.asset(widget.imageAsset),
-            ),
-            Container(
-              color: AppColors.c95795d.withOpacity(0.1),
-              child: Table(
-                border: TableBorder.symmetric(
-                  inside: BorderSide(width: 0.5, color: AppColors.cB6B6B6),
-                  outside: BorderSide(width: 0.5, color: AppColors.cB6B6B6),
-                ),
-                columnWidths: const {
-                  0: FixedColumnWidth(140),
-                  1: FlexColumnWidth(),
-                  2: FlexColumnWidth(),
-                  3: FlexColumnWidth(),
-                },
-                children: [
-                  // Header row
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.wheatData,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c353d4a.withOpacity(0.7), fontWeight: FontWeight.w900)),
+                    InteractiveViewer(
+                      panEnabled: true,
+                      scaleEnabled: true,
+                      minScale: 1.0,
+                      maxScale: 5.0,
+                      child: Image.asset(
+                        widget.imageAsset,
+                        fit: BoxFit.contain,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.currentAverage,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.finalAverage,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(
-                          AppStrings.yearAverage,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7)),
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 12,
+                    ),
+                    Container(
+                      color: AppColors.c95795d.withOpacity(0.1),
+                      child: SingleChildScrollView(
+                        child: Table(
+                          border: TableBorder.symmetric(
+                            inside: BorderSide(width: 0.5, color: AppColors.cB6B6B6),
+                            outside: BorderSide(width: 0.5, color: AppColors.cB6B6B6),
+                          ),
+                          columnWidths: const {
+                            0: FixedColumnWidth(140),
+                            1: FlexColumnWidth(),
+                            2: FlexColumnWidth(),
+                            3: FlexColumnWidth(),
+                          },
+                          children: [
+                            // Header row
+                            TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(AppStrings.wheatData,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c353d4a.withOpacity(0.7), fontWeight: FontWeight.w900)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(AppStrings.currentAverage,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(AppStrings.finalAverage,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(
+                                    AppStrings.yearAverage,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7)),
+                                  ),
+                                )
+                              ],
+                            ),
 
-                  // Manually written data rows
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.lbBu, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                            // Manually written data rows
+                            TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(AppStrings.lbBu, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.current?.testWtlbbu ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Text(
+                                      wpp.lastYear?.testWtlbbu ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7)),
+                                    )),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.fiveYearsAgo?.testWtlbbu ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(AppStrings.kgHl, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.current?.testWtkghl ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.lastYear?.testWtkghl ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.fiveYearsAgo?.testWtkghl ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(AppStrings.moisture, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.current?.moisture ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.lastYear?.moisture ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.fiveYearsAgo?.moisture ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.current?.prot12Mb ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.lastYear?.moisture ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.fiveYearsAgo?.moisture ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child:
+                                      Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.current?.dryBasisProt ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.lastYear?.dryBasisProt ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(wpp.fiveYearsAgo?.dryBasisProt ?? "--",
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.current?.testWtlbbu ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Text(
-                            wpp.lastYear?.testWtlbbu ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7)),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.fiveYearsAgo?.testWtlbbu ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.kgHl, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.current?.testWtkghl ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.lastYear?.testWtkghl ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.fiveYearsAgo?.testWtkghl ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.moisture, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.current?.moisture ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.lastYear?.moisture ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.fiveYearsAgo?.moisture ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.current?.prot12Mb ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.lastYear?.moisture ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.fiveYearsAgo?.moisture ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.current?.dryBasisProt ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.lastYear?.dryBasisProt ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(wpp.fiveYearsAgo?.dryBasisProt ?? "--",
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             )
           ],

@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/dashboard_page/quality/estimates/wheat_pages.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
+
+import '../../utils/app_box_decoration.dart';
 
 class Quality extends StatefulWidget {
   const Quality({super.key});
@@ -20,58 +23,101 @@ class _QualityState extends State<Quality> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Container(
+          color: AppColors.c656e79,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Consumer<DashboardProvider>(
+                        builder: (context, dp, child) {
+                          return GestureDetector(
+                            onTap: () {
+                              dp.setChangeActivity(
+                                activity: const Quality(),
+                                pageName: AppStrings.quality,
+                              );
+                            },
+                            child: Icon(
+                              Icons.arrow_back_ios_new,
+                              size: 14,
+                              color: AppColors.cFFFFFF,
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      Text(
+                        AppStrings.qua,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                      ),
+                    ],
+                  ),
+                ),
+                SvgPicture.asset(
+                  AppAssets.star,
+                  color: Colors.transparent,
+                  height: 18,
+                )
+              ],
+            ),
+          ),
+        ),
         Expanded(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                Container(
-                  color: AppColors.c656e79,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // wpp.showYearPicker(context, wheatClass: widget.selectedClass);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(color: Colors.transparent),
                           child: Row(
                             children: [
-                              Consumer<DashboardProvider>(
-                                builder: (context, dp, child) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      dp.setChangeActivity(
-                                        activity: const Quality(),
-                                        pageName: AppStrings.quality,
-                                      );
-                                    },
-                                    child: Icon(
-                                      Icons.arrow_back_ios_new,
-                                      size: 14,
-                                      color: AppColors.cFFFFFF,
-                                    ),
-                                  );
-                                },
+                              const Icon(
+                                Icons.calendar_month_outlined,
+                                color: Colors.transparent,
+                                size: 16,
                               ),
-                              const SizedBox(
-                                width: 16,
-                              ),
+                              const SizedBox(width: 8),
                               Text(
-                                AppStrings.qua,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                                "",
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: AppColors.c464646,
+                                    ),
                               ),
                             ],
                           ),
                         ),
-                        SvgPicture.asset(AppAssets.star,color:Colors.transparent,height: 18,)
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 2.3,
+                InteractiveViewer(
+                  panEnabled: true,
+                  scaleEnabled: true,
+                  minScale: 1.0,
+                  maxScale: 5.0,
                   child: Image.asset(
                     AppAssets.wheatProduction,
                     fit: BoxFit.contain,
                   ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 12,
                 ),
                 Divider(
                   thickness: 0.5,
