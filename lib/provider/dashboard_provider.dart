@@ -27,9 +27,20 @@ class DashboardProvider extends ChangeNotifier {
   getPrefData() async {
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.user);
-    if (data?.isNotEmpty ?? false) {
-      user = User.fromJson(jsonDecode(data!));
+      if (data?.isNotEmpty ?? false) {
+        user = User.fromJson(jsonDecode(data!));
     }
+  }
+  void navigateToScreen({
+    required BuildContext context,
+    required Widget screen,
+    required String pageName,
+  }) {
+    final dp = Provider.of<DashboardProvider>(context, listen: false);
+    dp.setChangeActivity(
+      activity: screen,
+      pageName: pageName,
+    );
   }
 
   setChangeActivity({required Widget activity, required String pageName}) {

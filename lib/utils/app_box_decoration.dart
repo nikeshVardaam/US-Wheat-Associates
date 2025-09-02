@@ -20,6 +20,11 @@ class AppBoxDecoration {
       color: AppColors.cab865a,
       borderRadius: BorderRadius.circular(4),
     );
+  }static BoxDecoration blue() {
+    return BoxDecoration(
+      color: AppColors.cDFDEDE,
+      borderRadius: BorderRadius.circular(4),
+    );
   }
 
   static BoxDecoration lightContainer() {

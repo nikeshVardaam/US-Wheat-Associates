@@ -13,7 +13,11 @@ class AppRoutes {
   static const longMetricTonPage = '/longMetricTonPage';
   static const shortTonToPoundPage = '/shortTonToPoundPage';
   static const metricTonToKgPoundPage = '/metricTonToKgPoundPage';
+  static const buAcreMtHectare = '/buAcreMtHectare';
+  static const metricTonsCwt = '/metricTonsCwt';
+  static const wheatProtein = '/wheatProtein';
   static const temperatureConverterPage = '/temperatureConverterPage';
   static const reportDetailPage = '/reportDetailPage';
+  static const wheatPage = '/wheatPage';
 
 }

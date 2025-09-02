@@ -1,24 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart' show Consumer;
-import 'package:uswheat/provider/calculator_provider.dart' show CalculatorProvider;
+import 'package:provider/provider.dart';
 
+import '../../provider/calculator_provider.dart';
 import '../../utils/app_buttons.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_text_field.dart';
 
-class ShortMetricTonPage extends StatelessWidget {
-  const ShortMetricTonPage({super.key});
+class MetricTonsCwt extends StatefulWidget {
+  const MetricTonsCwt({super.key});
 
+  @override
+  State<MetricTonsCwt> createState() => _MetricTonsCwtState();
+}
+
+class _MetricTonsCwtState extends State<MetricTonsCwt> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
-          "Short Tons = Metric Tons",
+          "Metric Ton = Hundred Weight (CWT)",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
@@ -27,7 +32,7 @@ class ShortMetricTonPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Convert Short Tons (US) to Metric Tons (Tonnes).",
+              "Convert Metric Tons to Hundred Weight (CWT) and vice versa.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
@@ -43,62 +48,67 @@ class ShortMetricTonPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("SHORT TONS (US)", style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(
-                    height: 6,
-                  ),
+                  // Metric Ton input
+                  Text("METRIC TONS", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
                       Expanded(
                         child: AppTextField.textField(
                           context,
-                          controller: cp.shortTonController,
-                          onChanged: (val) => cp.convertShortToMetricTon(val),keyboardType: TextInputType.number,
+                          controller: cp.metricController, // ✅ correct one
+                          onChanged: (val) => cp.convertMetricTonToCwt(val),
+                          keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
                           ],
                         ),
                       ),
-
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: cp.shortTonController.text));
+                          Clipboard.setData(ClipboardData(text: cp.metricController.text));
                         },
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 12),
                   Text(AppStrings.equals,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: AppColors.c656e79,
-                            fontStyle: FontStyle.italic,
-                          )),
+                        color: AppColors.c656e79,
+                        fontStyle: FontStyle.italic,
+                      )),
                   const SizedBox(height: 8),
-                  Text("METRIC TONS (TONNES)", style: Theme.of(context).textTheme.bodySmall),  const SizedBox(
-                    height: 6,
-                  ),
+
+                  // CWT input
+                  Text("HUNDREDWEIGHT (CWT)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
                       Expanded(
                         child: AppTextField.textField(
                           context,
-                          controller: cp.metric_TonController,
-                          readOnly: true,
+                          controller: cp.cwtInputController,
+                          onChanged: (val) => cp.convertCwtToMetricTon(val),
+                          keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
                           ],
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: cp.metric_TonController.text));
+                          Clipboard.setData(ClipboardData(text: cp.cwtInputController.text));
                         },
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 20),
+
+                  // Formula box
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -110,26 +120,31 @@ class ShortMetricTonPage extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            "Calculation:\n1 short ton = 0.90718474 metric tons",
+                            "Calculation:\n"
+                                "1 metric ton = 22.046 CWT\n"
+                                "1 CWT = 0.045359 metric ton",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           ),
                         ),
                         IconButton(
-                          icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                          icon: Icon(Icons.copy, color: AppColors.c656e79, size: 18),
                           onPressed: () {
                             Clipboard.setData(const ClipboardData(
-                              text: "1 short ton = 0.90718474 metric tons\n1 metric ton = 1.10231131 short tons",
+                              text: "1 metric ton = 2204.62262 pounds\n1 CWT = 100 pounds\n1 metric ton = 22.046 CWT\n1 CWT = 0.045359 metric ton",
                             ));
                           },
                         ),
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 20),
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => cp.clearShortMetricTons(),
+                        onTap: () {
+                          cp.clearMetricTonCwt();
+                        },
                         child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
                       ),
                     ],

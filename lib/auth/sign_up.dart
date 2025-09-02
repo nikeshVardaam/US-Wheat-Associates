@@ -4,7 +4,6 @@ import 'package:uswheat/provider/sign_provider.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_colors.dart';
-import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_text_field.dart';
 

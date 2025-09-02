@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uswheat/auth/login.dart';
 import 'package:uswheat/provider/calculator_provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
+import 'package:uswheat/provider/estimates/wheat_page_provider.dart';
 import 'package:uswheat/provider/login_provider.dart';
 import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/provider/reports_provider.dart';
 import 'package:uswheat/provider/sign_provider.dart';
 import 'package:uswheat/provider/watchList_provider.dart';
 import 'package:uswheat/splash_screen.dart';
-import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/route_generator.dart';
 import 'package:uswheat/utils/themes.dart';
 
@@ -42,6 +41,7 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (context) => CalculatorProvider()),
           ChangeNotifierProvider(create: (context) => WatchlistProvider()),
           ChangeNotifierProvider(create: (context) => ReportsProvider()),
+          ChangeNotifierProvider(create: (context) => WheatPageProvider()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

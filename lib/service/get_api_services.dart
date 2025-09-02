@@ -30,6 +30,8 @@ class GetApiServices {
     }
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
+    print("Bearer Token: $bearerToken");
+    print(url);
     try {
       final response = await http.get(
         Uri.parse(url),
