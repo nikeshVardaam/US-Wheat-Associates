@@ -48,7 +48,7 @@ class _ReportsState extends State<Reports> {
                     Row(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width / 4,
+                          width: MediaQuery.of(context).size.width / 3.6,
                           color: AppColors.c95795d.withOpacity(0.1),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -70,9 +70,9 @@ class _ReportsState extends State<Reports> {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      AppStrings.reports,
+                                      AppStrings.rep,
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                            fontWeight: FontWeight.w600,
+                                            fontWeight: FontWeight.w700,
                                             color: AppColors.cab865a,
                                           ),
                                     ),
@@ -89,7 +89,7 @@ class _ReportsState extends State<Reports> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            rp.selectedReportType ?? "Select Report Type",
+                            rp.selectedReportType != null ? rp.selectedReportType![0].toUpperCase() + rp.selectedReportType!.substring(1) : "Select Report Type",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.c353d4a.withOpacity(0.7),
@@ -106,7 +106,7 @@ class _ReportsState extends State<Reports> {
                     Row(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width / 4,
+                          width: MediaQuery.of(context).size.width / 3.6,
                           color: AppColors.c95795d.withOpacity(0.1),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -128,11 +128,11 @@ class _ReportsState extends State<Reports> {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      AppStrings.year,
+                                      AppStrings.ye,
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.cab865a,
-                                      ),
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColors.cab865a,
+                                          ),
                                     ),
                                   ),
                                   Icon(
@@ -164,7 +164,7 @@ class _ReportsState extends State<Reports> {
                     Row(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width / 4,
+                          width: MediaQuery.of(context).size.width / 3.6,
                           color: AppColors.c95795d.withOpacity(0.1),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -186,12 +186,12 @@ class _ReportsState extends State<Reports> {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      AppStrings.category,
+                                      AppStrings.cat,
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                            fontWeight: FontWeight.w600,
+                                            fontWeight: FontWeight.w700,
                                             color: AppColors.cab865a,
                                           ),
-                                    maxLines: 1,
+                                      maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -207,7 +207,7 @@ class _ReportsState extends State<Reports> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            rp.selectedCategory ?? "Select Report Type",
+                            rp.selectedCategory != null ? rp.selectedCategory![0].toUpperCase() + rp.selectedCategory!.substring(1) : "Select Report Type",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.c353d4a.withOpacity(0.7),
@@ -217,7 +217,7 @@ class _ReportsState extends State<Reports> {
                       ],
                     ),
                     Divider(
-                      thickness: 1,
+                      thickness: 0.5,
                       height: 1,
                       color: AppColors.cB6B6B6,
                     ),
@@ -228,7 +228,9 @@ class _ReportsState extends State<Reports> {
                 child: SingleChildScrollView(
                   controller: scrollController,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                    ),
                     child: rp.reports.isEmpty && !rp.isLoading
                         ? Padding(
                             padding: const EdgeInsets.only(top: 100),

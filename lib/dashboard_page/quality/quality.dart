@@ -106,15 +106,9 @@ class _QualityState extends State<Quality> {
                     ],
                   ),
                 ),
-                InteractiveViewer(
-                  panEnabled: true,
-                  scaleEnabled: true,
-                  minScale: 1.0,
-                  maxScale: 5.0,
-                  child: Image.asset(
+                Image.asset(
                     AppAssets.wheatProduction,
                     fit: BoxFit.contain,
-                  ),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 12,

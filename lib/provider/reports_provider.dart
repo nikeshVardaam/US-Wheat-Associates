@@ -212,7 +212,7 @@ class ReportsProvider extends ChangeNotifier {
                   return ListTile(
                     title: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(lang),
+                      child: Text(lang[0].toUpperCase() + lang.substring(1)),
                     ),
                     onTap: () => Navigator.pop(context, lang),
                   );

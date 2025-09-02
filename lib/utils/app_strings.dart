@@ -2,7 +2,9 @@ class AppStrings {
   static const logIn = "Login";
   static const taxonomy = "Taxonomy";
   static const year = "Year";
+  static const ye = "YEAR";
   static const category = "Category";
+  static const cat = "CATEGORY";
   static const logout = "Logout";
   static const signInToYourAccount = "Sign in to your account";
   static const areYouSureYouWantToLogout = "are You Sure You Want To Logout";
@@ -44,6 +46,7 @@ class AppStrings {
   static const quality = "Quality";
   static const qua = "QUALITY";
   static const reports = "Reports";
+  static const rep = "REPORTS";
   static const reportsTypes = "Reports Types";
   static const read = "Read";
   static const view = "View";

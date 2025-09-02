@@ -155,89 +155,91 @@ class WheatPageProvider extends ChangeNotifier {
     }
   }
 
-  void _openPicker(BuildContext context, String wheatClass) {
-    _isPickerOpen = true;
-    int initialYearIndex = uniqueYears.indexOf(int.tryParse(selectedYears ?? '') ?? uniqueYears.first);
+    void _openPicker(BuildContext context, String wheatClass) {
+      _isPickerOpen = true;
+      int initialYearIndex = uniqueYears.indexOf(int.tryParse(selectedYears ?? '') ?? uniqueYears.first);
 
-    showCupertinoModalPopup(
-      context: context,
-      builder: (_) => Container(
-          height: MediaQuery.of(context).size.height / 3,
-          color: AppColors.cFFFFFF,
-          child: Column(
-            children: [
-              // Pickers
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 4,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CupertinoPicker(
-                        scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
-                        itemExtent: 40,
-                        onSelectedItemChanged: (index) {
-                          selectedYears = uniqueYears[index].toString();
-                          updateFinalDate();
-                          notifyListeners();
-                        },
-                        children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
-                      ),
-                    ),
-                    Expanded(
-                      child: CupertinoPicker(
-                        scrollController: FixedExtentScrollController(initialItem: selectedMonth - 1),
-                        itemExtent: 40,
-                        onSelectedItemChanged: (index) {
-                          selectedMonth = index + 1;
-                          updateFinalDate();
-                          notifyListeners();
-                        },
-                        children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
-                      ),
-                    ),
-                    Expanded(
-                      child: Consumer<WheatPageProvider>(
-                        builder: (_, provider, __) {
-                          int year = int.tryParse(provider.selectedYears ?? '') ?? DateTime.now().year;
-                          int daysInMonth = DateTime(year, provider.selectedMonth + 1, 0).day;
-
-                          return CupertinoPicker(
-                            scrollController: FixedExtentScrollController(initialItem: provider.selectedDay - 1),
+      showCupertinoModalPopup(
+        context: context,
+        builder: (_) => SafeArea(
+          child: Container(
+              height: MediaQuery.of(context).size.height / 2.5,
+              color: AppColors.cFFFFFF,
+              child: Column(
+                children: [
+                  // Pickers
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CupertinoPicker(
+                            scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
                             itemExtent: 40,
                             onSelectedItemChanged: (index) {
-                              provider.selectedDay = index + 1;
-                              provider.updateFinalDate();
-                              provider.notifyListeners();
+                              selectedYears = uniqueYears[index].toString();
+                              updateFinalDate();
+                              notifyListeners();
                             },
-                            children: List.generate(daysInMonth, (i) => Center(child: Text((i + 1).toString()))),
-                          );
-                        },
-                      ),
+                            children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
+                          ),
+                        ),
+                        Expanded(
+                          child: CupertinoPicker(
+                            scrollController: FixedExtentScrollController(initialItem: selectedMonth - 1),
+                            itemExtent: 40,
+                            onSelectedItemChanged: (index) {
+                              selectedMonth = index + 1;
+                              updateFinalDate();
+                              notifyListeners();
+                            },
+                            children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
+                          ),
+                        ),
+                        Expanded(
+                          child: Consumer<WheatPageProvider>(
+                            builder: (_, provider, __) {
+                              int year = int.tryParse(provider.selectedYears ?? '') ?? DateTime.now().year;
+                              int daysInMonth = DateTime(year, provider.selectedMonth + 1, 0).day;
+
+                              return CupertinoPicker(
+                                scrollController: FixedExtentScrollController(initialItem: provider.selectedDay - 1),
+                                itemExtent: 40,
+                                onSelectedItemChanged: (index) {
+                                  provider.selectedDay = index + 1;
+                                  provider.updateFinalDate();
+                                  provider.notifyListeners();
+                                },
+                                children: List.generate(daysInMonth, (i) => Center(child: Text((i + 1).toString()))),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              // Buttons
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(onTap: () => Navigator.pop(context), child: AppButtons().filledButton(true, AppStrings.cancel, context)),
-                    GestureDetector(
-                        onTap: () {
-                          updateFinalDate();
-                          getQualityReport(context: context, wheatClass: wheatClass);
-                          Navigator.pop(context);
-                        },
-                        child: AppButtons().filledButton(true, AppStrings.confirm, context)),
-                  ],
-                ),
-              ),
-            ],
-          )),
-    ).whenComplete(() {
-      _isPickerOpen = false;
-    });
+                  ),
+                  // Buttons
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8,left: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(onTap: () => Navigator.pop(context), child: AppButtons().filledButton(true, AppStrings.cancel, context)),
+                        GestureDetector(
+                            onTap: () {
+                              updateFinalDate();
+                              getQualityReport(context: context, wheatClass: wheatClass);
+                              Navigator.pop(context);
+                            },
+                            child: AppButtons().filledButton(true, AppStrings.confirm, context)),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+        ),
+      ).whenComplete(() {
+        _isPickerOpen = false;
+      });
+    }
   }
-}

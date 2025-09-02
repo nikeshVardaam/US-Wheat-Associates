@@ -142,16 +142,10 @@ class _WheatPagesState extends State<WheatPages> {
                         ],
                       ),
                     ),
-                    InteractiveViewer(
-                      panEnabled: true,
-                      scaleEnabled: true,
-                      minScale: 1.0,
-                      maxScale: 5.0,
-                      child: Image.asset(
+                    Image.asset(
                         widget.imageAsset,
                         fit: BoxFit.contain,
                       ),
-                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 12,
                     ),
