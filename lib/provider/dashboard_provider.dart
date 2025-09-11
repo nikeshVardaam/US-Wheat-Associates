@@ -23,14 +23,14 @@ class DashboardProvider extends ChangeNotifier {
   SharedPreferences? sp;
   User? user;
 
-
   getPrefData() async {
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.user);
-      if (data?.isNotEmpty ?? false) {
-        user = User.fromJson(jsonDecode(data!));
+    if (data?.isNotEmpty ?? false) {
+      user = User.fromJson(jsonDecode(data!));
     }
   }
+
   void navigateToScreen({
     required BuildContext context,
     required Widget screen,
@@ -43,10 +43,12 @@ class DashboardProvider extends ChangeNotifier {
     );
   }
 
-  setChangeActivity({required Widget activity, required String pageName}) {
+  setChangeActivity({required Widget activity, required String pageName, bool isBottomTab = false}) {
     selectActivity = activity;
     selectMenu = pageName;
-    currentIndex = _getIndexFromPageName(pageName);
+    if (isBottomTab) {
+      currentIndex = _getIndexFromPageName(pageName);
+    }
     notifyListeners();
   }
 
@@ -54,19 +56,19 @@ class DashboardProvider extends ChangeNotifier {
     currentIndex = index;
     switch (index) {
       case 0:
-        setChangeActivity(activity: const Prices(), pageName: AppStrings.price);
+        setChangeActivity(activity: const Prices(), pageName: AppStrings.price, isBottomTab: true);
         break;
       case 1:
-        setChangeActivity(activity: const Quality(), pageName: AppStrings.quality);
+        setChangeActivity(activity: const Quality(), pageName: AppStrings.quality, isBottomTab: true);
         break;
       case 2:
-        setChangeActivity(activity: const Watchlist(), pageName: AppStrings.watchlist);
+        setChangeActivity(activity: const Watchlist(), pageName: AppStrings.watchlist, isBottomTab: true);
         break;
       case 3:
-        setChangeActivity(activity: const Reports(), pageName: AppStrings.reports);
+        setChangeActivity(activity: const Reports(), pageName: AppStrings.reports, isBottomTab: true);
         break;
       case 4:
-        setChangeActivity(activity: Calculator(), pageName: AppStrings.calculator);
+        setChangeActivity(activity: const Calculator(), pageName: AppStrings.calculator, isBottomTab: true);
         break;
     }
   }

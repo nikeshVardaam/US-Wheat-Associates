@@ -3,17 +3,21 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:uswheat/modal/watchlist_modal.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
+import '../dashboard_page/quality/estimates/wheat_pages.dart';
 import '../modal/graph_modal.dart';
 import '../modal/sales_modal.dart';
 import '../modal/watch_list_state.dart';
 import '../service/delete_service.dart';
 import '../service/post_services.dart';
+import '../utils/app_assets.dart';
+import 'dashboard_provider.dart';
 
 class WatchlistProvider extends ChangeNotifier {
   List<WatchlistItem> watchlist = [];
@@ -23,6 +27,70 @@ class WatchlistProvider extends ChangeNotifier {
   final Map<String, bool> _chartLoadingMap = {};
 
   final Map<String, List<SalesData>> _localChartCache = {};
+
+  navigateToQualityReport({
+    required BuildContext context,
+    required String dateTime,
+    required String wheatClass,
+  }) {
+    switch (wheatClass) {
+      case "HRW":
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
+          activity: WheatPages(
+            date: dateTime,
+            title: AppStrings.hardRedWinter,
+            appBarColor: AppColors.c2a8741,
+            imageAsset: AppAssets.hardRedWinter,
+            selectedClass: 'HRW',
+          ),
+          pageName: AppStrings.hardRedWinter,
+        );
+      case "SRW":
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
+          activity: WheatPages(
+            date: dateTime,
+            title: AppStrings.softRedWinter,
+            appBarColor: AppColors.c603c16,
+            imageAsset: AppAssets.softRedWinter,
+            selectedClass: 'SRW',
+          ),
+          pageName: AppStrings.hardRedWinter,
+        );
+      case "SW":
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
+          activity: WheatPages(
+            date: dateTime,
+            title: AppStrings.softWhite,
+            appBarColor: AppColors.c007aa6,
+            imageAsset: AppAssets.softWhite,
+            selectedClass: 'SW',
+          ),
+          pageName: AppStrings.hardRedWinter,
+        );
+      case "HRS":
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
+          activity: WheatPages(
+            date: dateTime,
+            title: AppStrings.hardRedSpring,
+            appBarColor: AppColors.cb86a29,
+            imageAsset: AppAssets.hardRedSpring,
+            selectedClass: 'HRS',
+          ),
+          pageName: AppStrings.hardRedWinter,
+        );
+      case "durum":
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
+          activity: WheatPages(
+            date: dateTime,
+            title: AppStrings.northernDurum,
+            appBarColor: AppColors.cb01c32,
+            imageAsset: AppAssets.northernDurum,
+            selectedClass: "Durum",
+          ),
+          pageName: AppStrings.hardRedWinter,
+        );
+    }
+  }
 
   Future<WheatData?> fetchQualityReport({
     required BuildContext context,

@@ -110,7 +110,7 @@ class Calculator extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(
                   context,
-                  AppRoutes.acresHectaresMu,
+                  AppRoutes.acresHectares,
                 );
               },
               child: Container(
@@ -121,7 +121,7 @@ class Calculator extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        AppStrings.acresHectaresMu,
+                        AppStrings.acresHectares,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
@@ -164,88 +164,6 @@ class Calculator extends StatelessWidget {
                 ),
               ),
             ),
-
-            // const SizedBox(
-            //   height: 10,
-            // ),
-            // GestureDetector(
-            //   onTap: () {
-            //     Navigator.pushNamed(
-            //       context,
-            //       AppRoutes.shortMetricTonPage,
-            //     );
-            //   },
-            //   child: Container(
-            //     decoration: AppBoxDecoration.blueRounded(),
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(12.0),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text(
-            //             "SHORT TONS = METRIC TONS",
-            //             style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
-            //           ),
-            //           Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // const SizedBox(
-            //   height: 10,
-            // ),
-            // GestureDetector(
-            //   onTap: () {
-            //     Navigator.pushNamed(
-            //       context,
-            //       AppRoutes.longMetricTonPage,
-            //     );
-            //   },
-            //   child: Container(
-            //     decoration: AppBoxDecoration.blueRounded(),
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(12.0),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text(
-            //             "BRITISH TONS (LONG TON) = METRIC TONS",
-            //             style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
-            //           ),
-            //           Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // const SizedBox(
-            //   height: 10,
-            // ),
-            // GestureDetector(
-            //   onTap: () {
-            //     Navigator.pushNamed(
-            //       context,
-            //       AppRoutes.shortTonToPoundPage,
-            //     );
-            //   },
-            //   child: Container(
-            //     decoration: AppBoxDecoration.blueRounded(),
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(12.0),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text(
-            //             "AMERICAN TONS (SHORT TON) = POUNDS",
-            //             style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
-            //           ),
-            //           Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
             const SizedBox(
               height: 10,
             ),

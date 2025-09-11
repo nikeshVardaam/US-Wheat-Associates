@@ -22,16 +22,16 @@ class _WheatProteinState extends State<WheatProtein> {
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
-          "Wheat Protein (MB = DB)",
+          "Moisture Basis = Dry Basis",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(30),
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(left: 12,bottom: 8.0),
             child: Text(
-              "Convert Moisture Basis (MB) to Dry Basis (DB) and vice versa.",
+              "Convert protein level from a 12% moisture basis to dry basis and vice vers",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
@@ -47,7 +47,7 @@ class _WheatProteinState extends State<WheatProtein> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // MB input
-                  Text("MOISTURE BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
+                  Text("Protein on a 12% moisture basis (%)", style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 6),
                   Row(
                     children: [
@@ -80,7 +80,7 @@ class _WheatProteinState extends State<WheatProtein> {
                   const SizedBox(height: 8),
             
                   // DB input
-                  Text("DRY BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
+                  Text("Protein on a dry moisture basis (%)", style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 6),
                   Row(
                     children: [

@@ -93,13 +93,13 @@ class AppStrings {
   static const milesKilometer = "MILES = KILOMETERS";
   static const squareFeetSquareMeters = "SQUARE FEET = SQUARE METERS";
   static const metersYardsFeet = "METERS = YARDS = FEET";
-  static const acresHectaresMu = "ACRES = HECTARES = MU";
+  static const acresHectares = "ACRES = HECTARES ";
   static const weight = "WEIGHT";
   static const bushelsMetric = "BUSHELS = METRIC TONS";
   static const metricTonToKgPound = "METRIC TONS = KILOGRAMS = POUNDS";
   static const metricTonsCwt = "METRIC TONS = CWT";
   static const yield = "YIELD";
-  static const buAcreMtHectare = "BUSHELS ACRE = METRIC TONS HECTARE";
+  static const buAcreMtHectare = "BUSHELS/ACRE / MT/HECTARE";
   static const protein = "PROTEIN";
   static const temperature = "TEMPERATURE";
   static const removedFromWatchlist = "Removed from watchlist";
