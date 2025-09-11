@@ -68,8 +68,8 @@ class _PricesState extends State<Prices> {
                             GestureDetector(
                               onTap: (pp.selectedRegion != null && pp.selectedClasses != null && pp.selectedYears != null)
                                   ? () async {
-                                await pp.storeWatchList(context: context, loader: true);
-                              }
+                                      await pp.storeWatchList(context: context, loader: true);
+                                    }
                                   : null,
                               child: SvgPicture.asset(
                                 pp.isInWatchlist(
@@ -116,9 +116,9 @@ class _PricesState extends State<Prices> {
                                 Text(
                                   AppStrings.region,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.cab865a,
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.cab865a,
+                                      ),
                                 ),
                                 Icon(
                                   Icons.keyboard_arrow_down,
@@ -134,9 +134,9 @@ class _PricesState extends State<Prices> {
                         child: Text(
                           pp.selectedRegion ?? "Select Region",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.c353d4a.withOpacity(0.7),
-                          ),
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.c353d4a.withOpacity(0.7),
+                              ),
                         ),
                       ),
                     ],
@@ -169,9 +169,9 @@ class _PricesState extends State<Prices> {
                                 Text(
                                   AppStrings.classs,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.cab865a,
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.cab865a,
+                                      ),
                                 ),
                                 Icon(
                                   Icons.keyboard_arrow_down,
@@ -187,9 +187,9 @@ class _PricesState extends State<Prices> {
                         child: Text(
                           pp.selectedClasses ?? "Select Classes",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.c353d4a.withOpacity(0.7),
-                          ),
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.c353d4a.withOpacity(0.7),
+                              ),
                         ),
                       ),
                     ],
@@ -223,9 +223,9 @@ class _PricesState extends State<Prices> {
                                 Text(
                                   AppStrings.date,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.cab865a,
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.cab865a,
+                                      ),
                                 ),
                                 GestureDetector(
                                   child: Icon(
@@ -238,41 +238,53 @@ class _PricesState extends State<Prices> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: pp.selectedYears?.isNotEmpty ?? false
-                            ? Row(
-                          children: [
-                            Text(
-                              "01-JAN-${pp.selectedYears ?? ""}",
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "TO",
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "31-DEC-${pp.selectedYears ?? ""}",
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
-                            ),
-                          ],
-                        )
-                            : Text(
-                          "Select Year",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.c353d4a.withOpacity(0.7),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: pp.selectedYears?.isNotEmpty ?? false
+                                ? SingleChildScrollView(
+                                    physics: BouncingScrollPhysics(),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "01-JAN-${pp.selectedYears ?? ""}",
+                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                color: AppColors.c353d4a.withOpacity(0.7),
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "TO",
+                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                color: AppColors.c353d4a.withOpacity(0.7),
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "31-DEC-${pp.selectedYears ?? ""}",
+                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                color: AppColors.c353d4a.withOpacity(0.7),
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Text(
+                                    "Select Year",
+                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                          fontWeight: FontWeight.w900,
+                                          color: AppColors.c353d4a.withOpacity(0.7),
+                                        ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                           ),
                         ),
                       )
@@ -284,125 +296,124 @@ class _PricesState extends State<Prices> {
                       height: MediaQuery.of(context).size.width / 2,
                       child: pp.chartData.isEmpty
                           ? const Center(
-                        child: Text(
-                          'No data found',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                      )
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(fontSize: 16, color: Colors.grey),
+                              ),
+                            )
                           : Container(
-                        height: 1,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              width: 0.4,
-                              color: AppColors.cB6B6B6,
-                            ),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
-                          child: SfCartesianChart(
-                            borderColor: Colors.white,
-                            tooltipBehavior: TooltipBehavior(
-                              enable: true,
-                              activationMode: ActivationMode.singleTap,
-                              tooltipPosition: TooltipPosition.pointer,
-                            ),
-                            zoomPanBehavior: ZoomPanBehavior(
-                              enablePanning: true,
-                              zoomMode: ZoomMode.xy,
-                            ),
-                            plotAreaBorderWidth: 0,
-                            margin: const EdgeInsets.all(0),
-                            backgroundColor: Colors.white,
-                            annotations: <CartesianChartAnnotation>[
-                              CartesianChartAnnotation(
-                                widget: Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.c3d3934,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4),
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width / 2.8,
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            "JAN${pp.selectedYears ?? "--"}",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: AppColors.cFFFFFF,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                            child: Text(
-                                              "/",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: AppColors.cFFFFFF,
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: '', // ensure standard slash
-                                              ),
-                                            ),
-                                          ),
-
-                                          Text(
-                                            "DEC${pp.selectedYears ?? "--"}",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: AppColors.cFFFFFF,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                              height: 1,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(
+                                    width: 0.4,
+                                    color: AppColors.cB6B6B6,
                                   ),
                                 ),
-                                coordinateUnit: CoordinateUnit.logicalPixel,
-                                region: AnnotationRegion.plotArea,
-                                x: MediaQuery.of(context).size.width / 3,
-                                y: MediaQuery.of(context).size.width / 3,
                               ),
-                            ],
-                            primaryXAxis: CategoryAxis(
-                              isVisible: true,
-                              majorGridLines: MajorGridLines(
-                                width: 0.1,
-                                color: AppColors.cab865a.withOpacity(0.6),
-                              ),
-                              axisLine: const AxisLine(width: 0),
-                              labelStyle: const TextStyle(fontSize: 10),
-                              tickPosition: TickPosition.inside,
-                              majorTickLines: const MajorTickLines(width: 0),
-                            ),
-                            primaryYAxis: const NumericAxis(
-                              interval: 10,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
+                                child: SfCartesianChart(
+                                  borderColor: Colors.white,
+                                  tooltipBehavior: TooltipBehavior(
+                                    enable: true,
+                                    activationMode: ActivationMode.singleTap,
+                                    tooltipPosition: TooltipPosition.pointer,
+                                  ),
+                                  zoomPanBehavior: ZoomPanBehavior(
+                                    enablePanning: true,
+                                    zoomMode: ZoomMode.xy,
+                                  ),
+                                  plotAreaBorderWidth: 0,
+                                  margin: const EdgeInsets.all(0),
+                                  backgroundColor: Colors.white,
+                                  annotations: <CartesianChartAnnotation>[
+                                    CartesianChartAnnotation(
+                                      widget: Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColors.c3d3934,
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width / 2.8,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "JAN${pp.selectedYears ?? "--"}",
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: AppColors.cFFFFFF,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                  child: Text(
+                                                    "/",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: AppColors.cFFFFFF,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: '', // ensure standard slash
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "DEC${pp.selectedYears ?? "--"}",
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: AppColors.cFFFFFF,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      coordinateUnit: CoordinateUnit.logicalPixel,
+                                      region: AnnotationRegion.plotArea,
+                                      x: MediaQuery.of(context).size.width / 3,
+                                      y: MediaQuery.of(context).size.width / 3,
+                                    ),
+                                  ],
+                                  primaryXAxis: CategoryAxis(
+                                    isVisible: true,
+                                    majorGridLines: MajorGridLines(
+                                      width: 0.1,
+                                      color: AppColors.cab865a.withOpacity(0.6),
+                                    ),
+                                    axisLine: const AxisLine(width: 0),
+                                    labelStyle: const TextStyle(fontSize: 10),
+                                    tickPosition: TickPosition.inside,
+                                    majorTickLines: const MajorTickLines(width: 0),
+                                  ),
+                                  primaryYAxis: const NumericAxis(
+                                    interval: 10,
 
-                              isVisible: true,
+                                    isVisible: true,
 
-                              majorGridLines: MajorGridLines(width: 1),
-                              axisLine: AxisLine(width: 0.1),
-                              majorTickLines: MajorTickLines(width: 0),
-                              minorTickLines: MinorTickLines(width: 0),
-                              rangePadding: ChartRangePadding.round, // optional
-                            ),
-                            series: <CartesianSeries>[
-                              LineSeries<SalesData, String>(
-                                dataSource: pp.chartData,
-                                xValueMapper: (SalesData data, _) => data.month,
-                                yValueMapper: (SalesData data, _) => data.sales,
-                                color: AppColors.c000000,
-                                width: 0.5,
-                                dataLabelSettings: const DataLabelSettings(isVisible: false),
+                                    majorGridLines: MajorGridLines(width: 1),
+                                    axisLine: AxisLine(width: 0.1),
+                                    majorTickLines: MajorTickLines(width: 0),
+                                    minorTickLines: MinorTickLines(width: 0),
+                                    rangePadding: ChartRangePadding.round, // optional
+                                  ),
+                                  series: <CartesianSeries>[
+                                    LineSeries<SalesData, String>(
+                                      dataSource: pp.chartData,
+                                      xValueMapper: (SalesData data, _) => data.month,
+                                      yValueMapper: (SalesData data, _) => data.sales,
+                                      color: AppColors.c000000,
+                                      width: 0.5,
+                                      dataLabelSettings: const DataLabelSettings(isVisible: false),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
+                            ),
                     ),
                   ),
                   Divider(
@@ -422,9 +433,9 @@ class _PricesState extends State<Prices> {
                                 Text(
                                   AppStrings.nearby,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.cab865a,
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.cab865a,
+                                      ),
                                 ),
                               ],
                             ),
@@ -432,9 +443,9 @@ class _PricesState extends State<Prices> {
                           Text(
                             pp.allPriceDataModal?.nearby?.cASHBU.toString().substring(0, 3) ?? "--",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.c353d4a.withOpacity(0.7),
-                            ),
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                ),
                           ),
                           const SizedBox(
                             width: 4,
@@ -442,9 +453,9 @@ class _PricesState extends State<Prices> {
                           Text(
                             "FOB \$/BU ",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.c353d4a.withOpacity(0.7),
-                            ),
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -459,9 +470,9 @@ class _PricesState extends State<Prices> {
                               Text(
                                 "\$/MT -",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                ),
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.c353d4a.withOpacity(0.7),
+                                    ),
                               ),
                               const SizedBox(
                                 width: 4,
@@ -469,9 +480,9 @@ class _PricesState extends State<Prices> {
                               Text(
                                 pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 6) ?? "--",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                ),
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.c353d4a.withOpacity(0.7),
+                                    ),
                               ),
                             ],
                           ),
@@ -496,9 +507,9 @@ class _PricesState extends State<Prices> {
                                 Text(
                                   AppStrings.weekChange,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.cab865a,
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.cab865a,
+                                      ),
                                 ),
                               ],
                             ),
@@ -508,9 +519,9 @@ class _PricesState extends State<Prices> {
                               Text(
                                 pp.allPriceDataModal?.weekly?.cASHBU.toString().substring(0, 3) ?? "--",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.cd63a3a,
-                                ),
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.cd63a3a,
+                                    ),
                               ),
                               const SizedBox(
                                 width: 4,
@@ -518,9 +529,9 @@ class _PricesState extends State<Prices> {
                               Text(
                                 "FOB \$/BU ",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.cd63a3a,
-                                ),
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.cd63a3a,
+                                    ),
                               ),
                             ],
                           ),
@@ -537,9 +548,9 @@ class _PricesState extends State<Prices> {
                               Text(
                                 "\$/MT -",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.cd63a3a,
-                                ),
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.cd63a3a,
+                                    ),
                               ),
                               const SizedBox(
                                 width: 4,
@@ -547,9 +558,9 @@ class _PricesState extends State<Prices> {
                               Text(
                                 pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 6) ?? "--",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.cd63a3a,
-                                ),
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.cd63a3a,
+                                    ),
                               ),
                             ],
                           ),
@@ -574,9 +585,9 @@ class _PricesState extends State<Prices> {
                                 Text(
                                   AppStrings.oneYearAgo,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.cab865a,
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.cab865a,
+                                      ),
                                 ),
                               ],
                             ),
@@ -584,9 +595,9 @@ class _PricesState extends State<Prices> {
                           Text(
                             "\$/MT",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.c353d4a.withOpacity(0.7),
-                            ),
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                ),
                           ),
                           const SizedBox(
                             width: 4,
@@ -594,9 +605,9 @@ class _PricesState extends State<Prices> {
                           Text(
                             pp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.c353d4a.withOpacity(0.7),
-                            ),
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                ),
                           ),
                         ],
                       ),
@@ -619,9 +630,9 @@ class _PricesState extends State<Prices> {
                                 Text(
                                   AppStrings.lastPrDate,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.cab865a,
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.cab865a,
+                                      ),
                                 ),
                               ],
                             ),
@@ -629,9 +640,9 @@ class _PricesState extends State<Prices> {
                           Text(
                             Miscellaneous.formatPrDate(pp.allPriceDataModal?.prdate ?? ""),
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.c353d4a.withOpacity(0.7),
-                            ),
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                ),
                           ),
                         ],
                       ),
@@ -654,9 +665,9 @@ class _PricesState extends State<Prices> {
                               Text(
                                 AppStrings.fwdPrice,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.cab865a,
-                                ),
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.cab865a,
+                                    ),
                               ),
                             ],
                           ),
@@ -671,46 +682,46 @@ class _PricesState extends State<Prices> {
                                 children: [
                                   pp.allPriceDataModal?.forward?.isNotEmpty ?? false
                                       ? Row(
-                                    children: List.generate(
-                                      pp.allPriceDataModal?.forward?.length ?? 0,
-                                          (index) {
-                                        var data = pp.allPriceDataModal?.forward?[index];
+                                          children: List.generate(
+                                            pp.allPriceDataModal?.forward?.length ?? 0,
+                                            (index) {
+                                              var data = pp.allPriceDataModal?.forward?[index];
 
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "${pp.fixedMonths[index]}:",
-                                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                  fontWeight: FontWeight.w900,
-                                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                              return Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      "${pp.fixedMonths[index]}:",
+                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            fontWeight: FontWeight.w900,
+                                                            color: AppColors.c353d4a.withOpacity(0.7),
+                                                          ),
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      data?.cASHMT.toString().substring(0, 6) ?? '--',
+                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            fontWeight: FontWeight.w900,
+                                                            color: AppColors.c353d4a.withOpacity(0.7),
+                                                          ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                data?.cASHMT.toString().substring(0, 6) ?? '--',
-                                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                  fontWeight: FontWeight.w900,
-                                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                                ),
-                                              ),
-                                            ],
+                                              );
+                                            },
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  )
+                                        )
                                       : Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                                    child: Text(
-                                      "--",
-                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                        fontWeight: FontWeight.w900,
-                                        color: AppColors.cd4582d,
-                                      ),
-                                    ),
-                                  ),
+                                          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                                          child: Text(
+                                            "--",
+                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                  fontWeight: FontWeight.w900,
+                                                  color: AppColors.cd4582d,
+                                                ),
+                                          ),
+                                        ),
                                 ],
                               ),
                             ),

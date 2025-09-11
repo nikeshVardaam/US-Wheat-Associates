@@ -29,7 +29,7 @@ class _WheatPagesState extends State<WheatPages> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        Provider.of<WheatPageProvider>(context, listen: false).updateFinalDate(prDate: widget.date, context: context, wClass: widget.selectedClass);
+        Provider.of<WheatPageProvider>(context, listen: false).init(prDate: widget.date, context: context, wClass: widget.selectedClass);
       },
     );
     super.initState();
@@ -118,7 +118,7 @@ class _WheatPagesState extends State<WheatPages> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              wpp.showYearPicker(context, wheatClass: widget.selectedClass);
+                              wpp.openPicker(context: context, wheatClass: widget.selectedClass);
                             },
                             child: Container(
                               padding: const EdgeInsets.all(4),
@@ -131,12 +131,19 @@ class _WheatPagesState extends State<WheatPages> {
                                     size: 16,
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(
-                                    wpp.finalDate != null ? DateFormat('dd-MMM-yyyy').format(DateTime.parse(wpp.finalDate!)) : 'Select Date',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: AppColors.c464646,
+                                  (wpp.finalDate?.isNotEmpty ?? false)
+                                      ? Text(
+                                          DateFormat('dd-MMM-yyyy').format(DateTime.parse(wpp.finalDate ?? "")),
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: AppColors.c464646,
+                                              ),
+                                        )
+                                      : Text(
+                                          'Select Date',
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: AppColors.c464646,
+                                              ),
                                         ),
-                                  ),
                                 ],
                               ),
                             ),

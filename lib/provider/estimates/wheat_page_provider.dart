@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,16 +8,13 @@ import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_strings.dart';
+import 'package:uswheat/utils/miscellaneous.dart';
 import '../../modal/watch_list_state.dart';
 import '../../modal/watchlist_modal.dart';
 import '../../service/get_api_services.dart';
 import '../../utils/app_widgets.dart';
 
 class WheatPageProvider extends ChangeNotifier {
-  List<num> uniqueYears = [];
-  String? selectedYears;
-  int selectedMonth = DateTime.now().month;
-  int selectedDay = DateTime.now().day;
   String? finalDate;
   String? prdate;
   WheatData? current;
@@ -26,7 +24,8 @@ class WheatPageProvider extends ChangeNotifier {
   bool isLoading = false;
   bool _isPickerOpen = false;
 
-  Future<void> getYears({required BuildContext context, required bool loader}) async {
+  Future<List<num>> getYears({required BuildContext context, required bool loader}) async {
+    List<num> uniqueYears = [];
     final response = await GetApiServices().get(
       endpoint: ApiEndpoint.getYears,
       context: context,
@@ -36,10 +35,10 @@ class WheatPageProvider extends ChangeNotifier {
     if (response != null) {
       uniqueYears = List<num>.from(json.decode(response.body));
       uniqueYears.sort((a, b) => b.compareTo(a));
-      selectedYears = uniqueYears.contains(DateTime.now().year) ? DateTime.now().year.toString() : uniqueYears.first.toString();
-      //updateFinalDate(prDate: "", context: context, wClass: wheatClass);
       notifyListeners();
     }
+
+    return uniqueYears;
   }
 
   bool isInWatchlist(String wheatClass, String? date) {
@@ -48,34 +47,38 @@ class WheatPageProvider extends ChangeNotifier {
     return WatchlistState.watchlistKeys.contains(key);
   }
 
-  void getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
+  Future<void> getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
     var data = {"class": wheatClass, "date": date ?? ""};
 
-    final response = await PostServices().post(
+    await PostServices()
+        .post(
       endpoint: ApiEndpoint.qualityReport,
       requestData: data,
       context: context,
       isBottomSheet: false,
       loader: true,
+    )
+        .then(
+      (value) {
+        if (value != null) {
+          final decoded = json.decode(value.body);
+
+          if (decoded['data'] != null) {
+            var currentList = decoded['data']['current'] as List<dynamic>?;
+            var lastYearList = decoded['data']['last_year'] as List<dynamic>?;
+            var fiveYearsList = decoded['data']['five_years_ago'] as List<dynamic>?;
+
+            current = (currentList != null && currentList.isNotEmpty) ? WheatData.fromJson(currentList[0]) : null;
+
+            lastYear = (lastYearList != null && lastYearList.isNotEmpty) ? WheatData.fromJson(lastYearList[0]) : null;
+
+            fiveYearsAgo = (fiveYearsList != null && fiveYearsList.isNotEmpty) ? WheatData.fromJson(fiveYearsList[0]) : null;
+
+            notifyListeners();
+          }
+        }
+      },
     );
-
-    if (response != null) {
-      final decoded = json.decode(response.body);
-
-      if (decoded['data'] != null) {
-        var currentList = decoded['data']['current'] as List<dynamic>?;
-        var lastYearList = decoded['data']['last_year'] as List<dynamic>?;
-        var fiveYearsList = decoded['data']['five_years_ago'] as List<dynamic>?;
-
-        current = (currentList != null && currentList.isNotEmpty) ? WheatData.fromJson(currentList[0]) : null;
-
-        lastYear = (lastYearList != null && lastYearList.isNotEmpty) ? WheatData.fromJson(lastYearList[0]) : null;
-
-        fiveYearsAgo = (fiveYearsList != null && fiveYearsList.isNotEmpty) ? WheatData.fromJson(fiveYearsList[0]) : null;
-
-        notifyListeners();
-      }
-    }
   }
 
   void addWatchList({required BuildContext context, required String wheatClass}) {
@@ -123,59 +126,38 @@ class WheatPageProvider extends ChangeNotifier {
     });
   }
 
-  void updateFinalDate({required String prDate, required BuildContext context, required String wClass}) {
+  Future<void> init({required String prDate, required BuildContext context, required String wClass}) async {
     finalDate = "";
     if (prDate.isNotEmpty) {
-      getQualityReport(context: context, wheatClass: wClass, date: prDate);
-    } else {
+      await getQualityReport(context: context, wheatClass: wClass, date: prDate);
+    }
+  }
 
-      if(selectedYears != null){
-        final year = int.parse(selectedYears!);
-        int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
-        if (selectedDay > daysInMonth) selectedDay = daysInMonth;
-        finalDate = "$year-${selectedMonth.toString().padLeft(2, "0")}-${selectedDay.toString().padLeft(2, "0")}";
-        prdate = finalDate;
+  Future<void> openPicker({required BuildContext context, required String wheatClass}) async {
+    _isPickerOpen = true;
 
-        getQualityReport(context: context, wheatClass: wClass, date: finalDate ?? "");
+    List<num> uniqueYears = [];
+    int initialYearIndex = 0;
+    int daysInMonth = 0;
+    int selectedMonth = DateTime.now().month;
+    int selectedDay = DateTime.now().day;
+    int selectedYears = DateTime.now().year;
+
+    await getYears(context: context, loader: true).then((value) {
+      if (value.isNotEmpty) {
+        uniqueYears.addAll(value);
+        daysInMonth = DateTime(int.parse(value.first.toString()), selectedMonth + 1, 0).day;
       }
-
-
-    }
-  }
-
-  void showYearPicker(BuildContext context, {required String wheatClass}) {
-    if (_isPickerOpen) return;
-    _isPickerOpen = true;
-
-    if (uniqueYears.isEmpty) {
-      getYears(context: context, loader: false).then((_) {
-        Future.delayed(Duration(milliseconds: 100), () {
-          _openPicker(context, wheatClass);
-        });
-      });
-    } else {
-      Future.delayed(Duration(milliseconds: 100), () {
-        _openPicker(context, wheatClass);
-      });
-    }
-  }
-
-  void _openPicker(BuildContext context, String wheatClass) {
-    _isPickerOpen = true;
-    int initialYearIndex = uniqueYears.indexOf(int.tryParse(selectedYears ?? '') ?? uniqueYears.first);
-
-    int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
-    int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
+    });
 
     showCupertinoModalPopup(
       context: context,
       builder: (_) => SafeArea(
         child: Container(
-            height: MediaQuery.of(context).size.height / 2.5,
             color: AppColors.cFFFFFF,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // Pickers
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 4,
                   child: Row(
@@ -185,7 +167,7 @@ class WheatPageProvider extends ChangeNotifier {
                           scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
                           itemExtent: 40,
                           onSelectedItemChanged: (index) {
-                            selectedYears = uniqueYears[index].toString();
+                            selectedYears = int.parse(uniqueYears[index].toString() ?? "0");
                           },
                           children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
                         ),
@@ -196,7 +178,6 @@ class WheatPageProvider extends ChangeNotifier {
                           itemExtent: 40,
                           onSelectedItemChanged: (index) {
                             selectedMonth = index + 1;
-
                           },
                           children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
                         ),
@@ -216,16 +197,21 @@ class WheatPageProvider extends ChangeNotifier {
                 ),
                 // Buttons
                 Padding(
-                  padding: const EdgeInsets.only(right: 8, left: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(onTap: () => Navigator.pop(context), child: AppButtons().filledButton(true, AppStrings.cancel, context)),
                       GestureDetector(
-                          onTap: () {
-                            updateFinalDate(prDate: "", context: context, wClass: wheatClass);
-                            getQualityReport(context: context, wheatClass: wheatClass, date: prdate ?? "");
-                            Navigator.pop(context);
+                          onTap: () async {
+                            DateTime selectedDate = DateTime(selectedYears, selectedMonth, selectedDay);
+                            finalDate = Miscellaneous.dateConverterToYYYYMMDD(selectedDate.toString());
+
+                            await getQualityReport(context: context, wheatClass: wheatClass, date: Miscellaneous.dateConverterToYYYYMMDD(selectedDate.toString())).then(
+                              (value) {
+                                Navigator.pop(context);
+                              },
+                            );
                           },
                           child: AppButtons().filledButton(true, AppStrings.confirm, context)),
                     ],

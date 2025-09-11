@@ -17,6 +17,34 @@ class Miscellaneous {
     }
   }
 
+  static String dateConverterToYYYYMMDD(String date) {
+    if (date.isEmpty) {
+      return "";
+    } else {
+      // Possible formats API might return
+      List<String> formats = [
+        "MM/dd/yyyy",
+        "dd/MM/yyyy",
+        "yyyy-MM-dd",
+        "dd-MM-yyyy",
+        "MM-dd-yyyy",
+        "yyyy/MM/dd",
+      ];
+
+      for (String format in formats) {
+        try {
+          DateTime parsedDate = DateFormat(format).parseStrict(date);
+          return DateFormat("yyyy-MM-dd").format(parsedDate);
+        } catch (e) {
+          // Ignore and try next format
+        }
+      }
+
+      DateTime dateTime = DateTime.parse(date);
+      return DateFormat('yyyy-MM-dd').format(dateTime);
+    }
+  }
+
   static String formatPrDate(String? dateStr) {
     if (dateStr == null || dateStr.isEmpty) return "--";
     try {
