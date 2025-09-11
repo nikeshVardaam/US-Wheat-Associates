@@ -7,8 +7,8 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_text_field.dart';
 
-class AcresHectaresMu extends StatelessWidget {
-  const AcresHectaresMu({super.key});
+class AcresHectares extends StatelessWidget {
+  const AcresHectares({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class AcresHectaresMu extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
-          "Acres = Hectares = Mu",
+          "Acres = Hectares ",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: AppColors.cFFFFFF,
               ),
@@ -27,7 +27,7 @@ class AcresHectaresMu extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Input and convert values from Acres to Hectares and MU.",
+              "Input and convert values from Acres to Hectares ",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColors.cFFFFFF,
                   ),
@@ -120,38 +120,38 @@ class AcresHectaresMu extends StatelessWidget {
                   ),
 
                   // Mu
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text("MU",
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppColors.c000000,
-                            )),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: AppTextField.textField(
-                          context,
-                          controller: cp.muController,
-                          onChanged: (val) => cp.convertFromMu(val),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.copy,
-                          color: AppColors.c656e79,
-                          size: 18,
-                        ),
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(text: cp.muController.text));
-                        },
-                      ),
-                    ],
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  //   child: Text("MU",
+                  //       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  //             color: AppColors.c000000,
+                  //           )),
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: AppTextField.textField(
+                  //         context,
+                  //         controller: cp.muController,
+                  //         onChanged: (val) => cp.convertFromMu(val),
+                  //         keyboardType: TextInputType.number,
+                  //         inputFormatters: [
+                  //           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     IconButton(
+                  //       icon: Icon(
+                  //         Icons.copy,
+                  //         color: AppColors.c656e79,
+                  //         size: 18,
+                  //       ),
+                  //       onPressed: () {
+                  //         Clipboard.setData(ClipboardData(text: cp.muController.text));
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
 
                   const SizedBox(height: 20),
                   Container(
@@ -165,7 +165,7 @@ class AcresHectaresMu extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            "Calculation:\n1 acre = 0.404686 ha\n1 acre = 6.07 MU",
+                            "Calculation:\n1 acre = 0.404686 ",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   color: AppColors.c000000,
                                 ),
@@ -179,7 +179,7 @@ class AcresHectaresMu extends StatelessWidget {
                           ),
                           onPressed: () {
                             Clipboard.setData(const ClipboardData(
-                              text: "1 acre = 0.404686 ha\n1 acre = 15.99 MU",
+                              text: "1 acre = 0.404686 ",
                             ));
                           },
                         ),

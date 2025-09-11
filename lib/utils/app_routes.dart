@@ -8,7 +8,7 @@ class AppRoutes {
   static const milesKilometer = '/milesKilometer';
   static const squareFeetToSquareMeter = '/squareFeetToSquareMeter';
   static const metersYardsFeet = '/metersYardsFeet';
-  static const acresHectaresMu = '/acresHectaresMu';
+  static const acresHectares = '/acresHectares';
   static const shortMetricTonPage = '/shortMetricTonPage';
   static const longMetricTonPage = '/longMetricTonPage';
   static const shortTonToPoundPage = '/shortTonToPoundPage';

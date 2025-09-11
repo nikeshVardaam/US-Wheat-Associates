@@ -16,8 +16,9 @@ class WheatPages extends StatefulWidget {
   final Color appBarColor;
   final String imageAsset;
   final String selectedClass;
+  final String date;
 
-  const WheatPages({super.key, required this.title, required this.appBarColor, required this.imageAsset, required this.selectedClass});
+  const WheatPages({super.key, required this.title, required this.appBarColor, required this.date, required this.imageAsset, required this.selectedClass});
 
   @override
   State<WheatPages> createState() => _WheatPagesState();
@@ -26,10 +27,12 @@ class WheatPages extends StatefulWidget {
 class _WheatPagesState extends State<WheatPages> {
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        Provider.of<WheatPageProvider>(context, listen: false).updateFinalDate(prDate: widget.date, context: context, wClass: widget.selectedClass);
+      },
+    );
     super.initState();
-    final wpp = Provider.of<WheatPageProvider>(context, listen: false);
-    wpp.updateFinalDate();
-    wpp.getQualityReport(context: context, wheatClass: widget.selectedClass);
   }
 
   @override
@@ -76,7 +79,7 @@ class _WheatPagesState extends State<WheatPages> {
                     ),
                     GestureDetector(
                       onTap: wpp.isInWatchlist(widget.selectedClass, wpp.prdate)
-                          ? null // disable tap if already added
+                          ? null
                           : () {
                               wpp.addWatchList(context: context, wheatClass: widget.selectedClass);
                             },
@@ -103,7 +106,6 @@ class _WheatPagesState extends State<WheatPages> {
                 ),
               ),
             ),
-
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -142,15 +144,9 @@ class _WheatPagesState extends State<WheatPages> {
                         ],
                       ),
                     ),
-                    InteractiveViewer(
-                      panEnabled: true,
-                      scaleEnabled: true,
-                      minScale: 1.0,
-                      maxScale: 5.0,
-                      child: Image.asset(
-                        widget.imageAsset,
-                        fit: BoxFit.contain,
-                      ),
+                    Image.asset(
+                      widget.imageAsset,
+                      fit: BoxFit.contain,
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 12,

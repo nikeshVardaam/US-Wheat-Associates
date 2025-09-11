@@ -40,8 +40,8 @@ class RouteGenerator {
         return buildRoute(const SquareFeetToSquareMeter(), settings: settings);
       case AppRoutes.metersYardsFeet:
         return buildRoute(const MetersYardsFeet(), settings: settings);
-      case AppRoutes.acresHectaresMu:
-        return buildRoute(const AcresHectaresMu(), settings: settings);
+      case AppRoutes.acresHectares:
+        return buildRoute(const AcresHectares(), settings: settings);
       case AppRoutes.shortMetricTonPage:
         return buildRoute(const ShortMetricTonPage(), settings: settings);
       case AppRoutes.longMetricTonPage:

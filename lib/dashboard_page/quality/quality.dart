@@ -106,15 +106,9 @@ class _QualityState extends State<Quality> {
                     ],
                   ),
                 ),
-                InteractiveViewer(
-                  panEnabled: true,
-                  scaleEnabled: true,
-                  minScale: 1.0,
-                  maxScale: 5.0,
-                  child: Image.asset(
-                    AppAssets.wheatProduction,
-                    fit: BoxFit.contain,
-                  ),
+                Image.asset(
+                  AppAssets.wheatProduction,
+                  fit: BoxFit.contain,
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 12,
@@ -130,6 +124,7 @@ class _QualityState extends State<Quality> {
                       onTap: () {
                         dp.setChangeActivity(
                           activity: WheatPages(
+                            date: "",
                             title: AppStrings.hardRedWinter,
                             appBarColor: AppColors.c2a8741,
                             imageAsset: AppAssets.hardRedWinter,
@@ -175,6 +170,7 @@ class _QualityState extends State<Quality> {
                       onTap: () {
                         dp.setChangeActivity(
                           activity: WheatPages(
+                            date: "",
                             title: AppStrings.softRedWinter,
                             appBarColor: AppColors.c603c16,
                             imageAsset: AppAssets.softRedWinter,
@@ -218,6 +214,7 @@ class _QualityState extends State<Quality> {
                     onTap: () {
                       dp.setChangeActivity(
                         activity: WheatPages(
+                          date: "",
                           title: AppStrings.softWhite,
                           appBarColor: AppColors.c007aa6,
                           imageAsset: AppAssets.softWhite,
@@ -262,6 +259,7 @@ class _QualityState extends State<Quality> {
                       onTap: () {
                         dp.setChangeActivity(
                           activity: WheatPages(
+                            date: "",
                             title: AppStrings.hardRedSpring,
                             appBarColor: AppColors.cb86a29,
                             imageAsset: AppAssets.hardRedSpring,
@@ -305,6 +303,7 @@ class _QualityState extends State<Quality> {
                     onTap: () {
                       dp.setChangeActivity(
                         activity: WheatPages(
+                          date: "",
                           title: AppStrings.northernDurum,
                           appBarColor: AppColors.cb01c32,
                           imageAsset: AppAssets.northernDurum,

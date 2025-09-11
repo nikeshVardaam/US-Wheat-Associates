@@ -15,7 +15,7 @@ class ReportsProvider extends ChangeNotifier {
 
   final List<String> years = List.generate(DateTime.now().year - 2015 + 1, (index) => (2015 + index).toString());
 
-  final List<String> languages = ['english', 'chinese'];
+  final List<String> languages = ['english'];
 
   String? selectedReportType = "commercial-sales";
   String? selectedYear = DateTime.now().year.toString();
@@ -202,7 +202,7 @@ class ReportsProvider extends ChangeNotifier {
           enabled: false,
           padding: EdgeInsets.zero,
           child: SizedBox(
-            height: MediaQuery.of(context).size.height / 8,
+            height: MediaQuery.of(context).size.height / 14,
             width: MediaQuery.of(context).size.width / 2,
             child: Scrollbar(
               child: ListView.builder(
@@ -212,7 +212,7 @@ class ReportsProvider extends ChangeNotifier {
                   return ListTile(
                     title: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(lang),
+                      child: Text(lang[0].toUpperCase() + lang.substring(1)),
                     ),
                     onTap: () => Navigator.pop(context, lang),
                   );
