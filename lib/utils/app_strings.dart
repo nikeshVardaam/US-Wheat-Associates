@@ -99,7 +99,7 @@ class AppStrings {
   static const metricTonToKgPound = "METRIC TONS = KILOGRAMS = POUNDS";
   static const metricTonsCwt = "METRIC TONS = CWT";
   static const yield = "YIELD";
-  static const buAcreMtHectare = "BUSHELS/ACRE / MT/HECTARE";
+  static const buAcreMtHectare = "BUSHELS/ACRE  =  MT/HECTARE";
   static const protein = "PROTEIN";
   static const temperature = "TEMPERATURE";
   static const removedFromWatchlist = "Removed from watchlist";

@@ -375,7 +375,7 @@ class _PricesState extends State<Prices> {
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4),
                                           child: SizedBox(
-                                            width: MediaQuery.of(context).size.width / 3,
+                                            width: MediaQuery.of(context).size.width / 2.8,
                                             child: Row(
                                               children: [
                                                 Text(
