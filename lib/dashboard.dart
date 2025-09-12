@@ -168,7 +168,7 @@ class _DashboardState extends State<Dashboard> {
                                     ),
                               ),
                               onTap: () {
-                                dp.setChangeActivity(activity: const Prices(), pageName: AppStrings.price);
+                                dp.setChangeActivity(activity: const Prices(region: '', classs: '',year: '',), pageName: AppStrings.price);
                                 Navigator.pop(context);
                               },
                             ),

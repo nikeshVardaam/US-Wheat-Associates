@@ -26,6 +26,12 @@ class WheatPageProvider extends ChangeNotifier {
   bool isLoading = false;
   bool _isPickerOpen = false;
 
+  void clearData() {
+    current = null;
+    lastYear = null;
+    fiveYearsAgo = null;
+  }
+
   Future<void> getYears({required BuildContext context, required bool loader}) async {
     final response = await GetApiServices().get(
       endpoint: ApiEndpoint.getYears,
@@ -124,12 +130,13 @@ class WheatPageProvider extends ChangeNotifier {
   }
 
   void updateFinalDate({required String prDate, required BuildContext context, required String wClass}) {
-    finalDate = "";
+    clearData();
     if (prDate.isNotEmpty) {
+      finalDate = prDate;
+      prDate = prDate;
       getQualityReport(context: context, wheatClass: wClass, date: prDate);
     } else {
-
-      if(selectedYears != null){
+      if (selectedYears != null) {
         final year = int.parse(selectedYears!);
         int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
         if (selectedDay > daysInMonth) selectedDay = daysInMonth;
@@ -137,9 +144,11 @@ class WheatPageProvider extends ChangeNotifier {
         prdate = finalDate;
 
         getQualityReport(context: context, wheatClass: wClass, date: finalDate ?? "");
+      } else {
+        finalDate = "";
+        prdate = "";
       }
-
-
+      notifyListeners();
     }
   }
 
@@ -196,7 +205,6 @@ class WheatPageProvider extends ChangeNotifier {
                           itemExtent: 40,
                           onSelectedItemChanged: (index) {
                             selectedMonth = index + 1;
-
                           },
                           children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
                         ),

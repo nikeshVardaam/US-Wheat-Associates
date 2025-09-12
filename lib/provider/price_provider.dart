@@ -21,6 +21,7 @@ class PricesProvider extends ChangeNotifier {
   List<String> uniqueRegion = [];
   List<String> uniqueClasses = [];
   List<num> uniqueYears = [];
+  bool _isGraphUpdating = false;
 
   String? selectedRegion;
   String? selectedClasses;
@@ -50,24 +51,33 @@ class PricesProvider extends ChangeNotifier {
 
   String get allPriceDataCacheKey => 'allPriceData_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
 
-  void setRegion(String region) {
+  void setRegion(BuildContext context, String? region) {
+    if (region == null || region.isEmpty) return;
     selectedRegion = region;
-    notifyListeners();
+    upDateGraphData(context);
     saveFiltersLocally();
   }
 
-  void setClass(String classValue) {
-    selectedClasses = classValue;
-    notifyListeners();
+  void setClass(BuildContext context, String? classs) {
+    if (classs == null || classs.isEmpty) return;
+    selectedClasses = classs;
+    upDateGraphData(context);
     saveFiltersLocally();
   }
 
-  void setYear(String value) {
-    selectedYears = value;
-    notifyListeners();
+  void setYear(BuildContext context, String? year) {
+    if (year == null || year.isEmpty) return;
+    selectedYears = year;
+    upDateGraphData(context);
+    saveFiltersLocally();
   }
 
-  Future<void> fetchData({required BuildContext context}) async {
+  Future<void> fetchData({
+    required BuildContext context,
+    required String classs,
+    required String region,
+    required String year,
+  }) async {
     await loadFiltersLocally();
 
     final prefs = await SharedPreferences.getInstance();
@@ -149,45 +159,21 @@ class PricesProvider extends ChangeNotifier {
     chartData = tempChartData.any((e) => e.sales != 0.0) ? tempChartData : [];
   }
 
-  Future<void> upDateGraphData({required BuildContext context}) async {
+  Future<void> upDateGraphData(BuildContext context) async {
+    if (_isGraphUpdating) return;
+    _isGraphUpdating = true;
+
     final sp = await SharedPreferences.getInstance();
+    int apiCount = 0;
 
-    graphList.clear();
-    chartData.clear();
-    allPriceDataModal = null;
-    notifyListeners();
+    await getGraphCodesByClassAndRegion(context: context, loader: true);
 
-    // Load from cache if available
-    final cachedGraph = sp.getString(graphCacheKey);
-    if (cachedGraph != null && cachedGraph.isNotEmpty) {
-      try {
-        List<dynamic> jsonList = json.decode(cachedGraph);
-        graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
-        _generateChartDataFromGraphList();
-      } catch (e) {
-        debugPrint("❌ Error loading graphList from cache: $e");
-      }
-    }
+    apiCount++;
+    await graphData(context: context, loader: true);
+    await getAllPriceData(context: context, loader: false);
 
-    final cachedAllPrice = sp.getString(allPriceDataCacheKey);
-    if (cachedAllPrice != null && cachedAllPrice.isNotEmpty) {
-      try {
-        allPriceDataModal = AllPriceDataModal.fromJson(json.decode(cachedAllPrice));
-      } catch (e) {
-        debugPrint("❌ Error loading allPriceData from cache: $e");
-      }
-    }
-
-    if (graphList.isEmpty || allPriceDataModal == null) {
-      prdate = selectedYears;
-
-      await getGraphCodesByClassAndRegion(context: context, loader: true);
-      await graphData(context: context, loader: true);
-      await getAllPriceData(context: context, loader: false);
-
-      await saveFiltersLocally();
-    }
-
+    await saveFiltersLocally();
+    _isGraphUpdating = false;
     notifyListeners();
   }
 
@@ -316,6 +302,7 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (value != null) {
+      print(value);
       final body = json.decode(value.body);
       if (body is List && body.isNotEmpty) {
         grphcode = body.last.toString();
@@ -426,8 +413,7 @@ class PricesProvider extends ChangeNotifier {
         selectedClasses = uniqueClasses.first;
       }
 
-      await upDateGraphData(context: context);
-
+      await upDateGraphData(context);
       notifyListeners();
       onSelect(selected);
     }
@@ -488,7 +474,7 @@ class PricesProvider extends ChangeNotifier {
 
     if (selected != null) {
       selectedClasses = selected;
-      await upDateGraphData(context: context);
+      await upDateGraphData(context);
       notifyListeners();
       onSelect(selected);
     }
@@ -543,7 +529,7 @@ class PricesProvider extends ChangeNotifier {
 
     if (selected != null) {
       selectedYears = selected.toString();
-      await upDateGraphData(context: context);
+      await upDateGraphData(context);
       notifyListeners();
       onSelect(selected);
     }

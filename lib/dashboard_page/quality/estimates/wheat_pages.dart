@@ -132,7 +132,9 @@ class _WheatPagesState extends State<WheatPages> {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    wpp.finalDate != null ? DateFormat('dd-MMM-yyyy').format(DateTime.parse(wpp.finalDate!)) : 'Select Date',
+                                    (wpp.finalDate != null && wpp.finalDate!.isNotEmpty)
+                                        ? DateFormat('dd-MMM-yyyy').format(DateTime.tryParse(wpp.finalDate!) ?? DateTime.now())
+                                        : 'Select Date',
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                           color: AppColors.c464646,
                                         ),

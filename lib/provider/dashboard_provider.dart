@@ -17,7 +17,7 @@ import 'login_provider.dart';
 
 class DashboardProvider extends ChangeNotifier {
   String? selectedPage = AppStrings.watchlist;
-  Widget selectActivity = const Prices();
+  Widget selectActivity = const Prices(region: '', classs: '', year: '',);
   String selectMenu = AppStrings.pricess;
   int currentIndex = 0;
   SharedPreferences? sp;
@@ -43,20 +43,29 @@ class DashboardProvider extends ChangeNotifier {
     );
   }
 
-  setChangeActivity({required Widget activity, required String pageName, bool isBottomTab = false}) {
+  setChangeActivity({
+    required Widget activity,
+    required String pageName,
+    bool isBottomTab = false
+
+  }) {
     selectActivity = activity;
     selectMenu = pageName;
-    if (isBottomTab) {
-      currentIndex = _getIndexFromPageName(pageName);
-    }
+
+    // pageName ke hisaab se currentIndex set karo
+    currentIndex = _getIndexFromPageName(pageName);
+
     notifyListeners();
   }
+
+
+
 
   changePageFromBottomNavigation({required int index}) {
     currentIndex = index;
     switch (index) {
       case 0:
-        setChangeActivity(activity: const Prices(), pageName: AppStrings.price, isBottomTab: true);
+        setChangeActivity(activity: const Prices(region: '', classs: '',year: '',), pageName: AppStrings.price, isBottomTab: true);
         break;
       case 1:
         setChangeActivity(activity: const Quality(), pageName: AppStrings.quality, isBottomTab: true);

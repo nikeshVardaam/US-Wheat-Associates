@@ -130,7 +130,7 @@ class _QualityState extends State<Quality> {
                             imageAsset: AppAssets.hardRedWinter,
                             selectedClass: 'HRW',
                           ),
-                          pageName: AppStrings.hardRedWinter,
+                          pageName: AppStrings.quality,
                         );
                       },
                       child: Container(
@@ -176,7 +176,7 @@ class _QualityState extends State<Quality> {
                             imageAsset: AppAssets.softRedWinter,
                             selectedClass: 'SRW',
                           ),
-                          pageName: AppStrings.softRedWinter,
+                          pageName: AppStrings.quality,
                         );
                       },
                       child: Container(
@@ -220,7 +220,7 @@ class _QualityState extends State<Quality> {
                           imageAsset: AppAssets.softWhite,
                           selectedClass: 'SW',
                         ),
-                        pageName: AppStrings.softWhite,
+                        pageName: AppStrings.quality,
                       );
                     },
                     child: Container(
@@ -265,7 +265,7 @@ class _QualityState extends State<Quality> {
                             imageAsset: AppAssets.hardRedSpring,
                             selectedClass: 'HRS',
                           ),
-                          pageName: AppStrings.hardRedSpring,
+                          pageName: AppStrings.quality,
                         );
                       },
                       child: Container(
@@ -309,7 +309,7 @@ class _QualityState extends State<Quality> {
                           imageAsset: AppAssets.northernDurum,
                           selectedClass: "Durum",
                         ),
-                        pageName: AppStrings.northernDurum,
+                        pageName: AppStrings.quality,
                       );
                     },
                     child: Container(

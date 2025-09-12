@@ -56,13 +56,15 @@ class WatchlistItem {
 
 class FilterData {
   final String region;
-  final String classs; // 'class' is reserved in Dart, renamed to 'classs'
+  final String classs;
   final String date;
+  final String year;
 
   FilterData({
     required this.region,
     required this.classs,
     required this.date,
+    required this.year,
   });
 
   factory FilterData.fromJson(Map<String, dynamic> json) {
@@ -70,6 +72,7 @@ class FilterData {
       region: json['region'] ?? '',
       classs: json['class'] ?? '',
       date: json['date'] ?? '',
+      year: json['year'] ?? '',
     );
   }
 }

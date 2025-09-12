@@ -26,9 +26,20 @@ class Miscellaneous {
       return "--";
     }
   }
- static String capitalize(String text) {
+
+  static String getYear(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return "--";
+
+    try {
+      final parsedDate = dateStr.length == 4 ? DateTime.parse("$dateStr-01-01") : DateTime.parse(dateStr);
+      return DateFormat("yyyy").format(parsedDate).toUpperCase();
+    } catch (e) {
+      return "--";
+    }
+  }
+
+  static String capitalize(String text) {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1);
   }
-
 }
