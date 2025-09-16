@@ -55,7 +55,10 @@ class WheatPageProvider extends ChangeNotifier {
   }
 
   void getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
-    var data = {"class": wheatClass, "date": date ?? ""};
+    var data = {
+      "class": wheatClass,
+      "date": date ?? "",
+    };
 
     final response = await PostServices().post(
       endpoint: ApiEndpoint.qualityReport,
@@ -84,7 +87,7 @@ class WheatPageProvider extends ChangeNotifier {
     }
   }
 
-  void addWatchList({required BuildContext context, required String wheatClass}) {
+  void addWatchList({required BuildContext context, required String wheatClass, required String color}) {
     if (prdate == null || prdate!.isEmpty) {
       AppWidgets.appSnackBar(
         context: context,
@@ -105,6 +108,7 @@ class WheatPageProvider extends ChangeNotifier {
       "filterdata": {
         "class": wheatClass,
         "date": prdate,
+        "color": color,
       }
     };
 
@@ -114,7 +118,7 @@ class WheatPageProvider extends ChangeNotifier {
       requestData: data,
       context: context,
       isBottomSheet: false,
-      loader: false,
+      loader: true,
     )
         .then((value) {
       if (value != null) {

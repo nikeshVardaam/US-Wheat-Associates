@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,8 @@ import '../modal/graph_modal.dart';
 import '../modal/regions_and_classes_modal.dart';
 import '../modal/sales_modal.dart';
 import '../modal/watch_list_state.dart';
+import '../utils/app_buttons.dart';
+import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 
 class PricesProvider extends ChangeNotifier {
@@ -44,12 +47,27 @@ class PricesProvider extends ChangeNotifier {
   bool loader = false;
   bool isDataFetched = false;
   bool _isInWatchlist = false;
+  bool _isPickerOpen = false;
+  int selectedMonth = DateTime.now().month;
+  int selectedDay = DateTime.now().day;
 
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   String get graphCacheKey => 'graph_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
 
   String get allPriceDataCacheKey => 'allPriceData_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
+
+  String get nextYearFullDate {
+    final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+    final date = DateTime(year + 1, selectedMonth, selectedDay);
+    return DateFormat('dd-MMM-yyyy').format(date).toUpperCase();
+  }
+
+  String get selectedFullDate {
+    final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+    final date = DateTime(year, selectedMonth, selectedDay);
+    return DateFormat('dd-MMM-yyyy').format(date).toUpperCase();
+  }
 
   void setRegion(BuildContext context, String? region) {
     if (region == null || region.isEmpty) return;
@@ -212,6 +230,7 @@ class PricesProvider extends ChangeNotifier {
         "region": selectedRegion ?? "",
         "class": selectedClasses ?? "",
         "date": fullDate,
+        "color": "ffab865a",
       }
     };
 
@@ -284,6 +303,136 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
+  void showYearPicker(BuildContext context, {required String wheatClass}) {
+    if (_isPickerOpen) return;
+    _isPickerOpen = true;
+
+    if (uniqueYears.isEmpty) {
+      getYears(context: context, loader: false).then((_) {
+        Future.delayed(Duration(milliseconds: 100), () {
+          _openPicker(context, wheatClass);
+        });
+      });
+    } else {
+      Future.delayed(Duration(milliseconds: 100), () {
+        _openPicker(context, wheatClass);
+      });
+    }
+  }
+
+  void _openPicker(BuildContext context, String wheatClass) {
+    _isPickerOpen = true;
+    int initialYearIndex = uniqueYears.indexOf(int.tryParse(selectedYears ?? '') ?? uniqueYears.first);
+
+    int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+    int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
+
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height / 2.5,
+          color: AppColors.cFFFFFF,
+          child: Column(
+            children: [
+              // Pickers
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 4,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CupertinoPicker(
+                        scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
+                        itemExtent: 40,
+                        onSelectedItemChanged: (index) {
+                          selectedYears = uniqueYears[index].toString();
+                        },
+                        children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
+                      ),
+                    ),
+                    Expanded(
+                      child: CupertinoPicker(
+                        scrollController: FixedExtentScrollController(initialItem: selectedMonth - 1),
+                        itemExtent: 40,
+                        onSelectedItemChanged: (index) {
+                          selectedMonth = index + 1;
+                        },
+                        children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
+                      ),
+                    ),
+                    Expanded(
+                      child: CupertinoPicker(
+                        scrollController: FixedExtentScrollController(initialItem: selectedDay - 1),
+                        itemExtent: 40,
+                        onSelectedItemChanged: (index) {
+                          selectedDay = index + 1;
+                        },
+                        children: List.generate(daysInMonth, (i) => Center(child: Text((i + 1).toString()))),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Buttons
+              Padding(
+                padding: const EdgeInsets.only(right: 8, left: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: AppButtons().filledButton(true, AppStrings.cancel, context),
+                    ),
+                    // inside _openPicker -> Confirm button
+                    GestureDetector(
+                      onTap: () async {
+                        // 1) build selected Date
+                        final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+                        final DateTime selectedDate = DateTime(year, selectedMonth, selectedDay);
+
+                        // 2) build 1-year window: startDate .. endDate (inclusive)
+                        final DateTime endDate = selectedDate;
+                        final DateTime startDate = DateTime(selectedDate.year - 1, selectedDate.month, selectedDate.day);
+
+                        // 3) set prdate used by your API (format YYYY-MM-DD)
+                        prdate = DateFormat('yyyy-MM-dd').format(selectedDate);
+
+                        // 4) (OPTIONAL) fetch fresh data from API for this prdate
+                        // If you want fresh data from server, uncomment the next line:
+                        await upDateGraphData(context); // this populates graphList from API based on current prdate
+
+                        // 5) Filter graphList locally to include only dates within startDate..endDate.
+                        final filteredList = graphList.where((e) {
+                          final DateTime? dt = DateTime.tryParse(e.pRDATE ?? ''); // <-- use existing String field
+                          if (dt == null) return false;
+                          // inclusive check: startDate <= dt <= endDate
+                          return !dt.isBefore(startDate) && !dt.isAfter(endDate);
+                        }).toList();
+
+                        // 6) apply filtered list & regenerate chart data
+                        graphList = filteredList;
+                        _generateChartDataFromGraphList();
+
+                        // 7) refresh UI
+                        notifyListeners();
+
+                        // 8) close picker
+                        Navigator.pop(context);
+                      },
+                      child: AppButtons().filledButton(true, AppStrings.confirm, context),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).whenComplete(() {
+      _isPickerOpen = false;
+    });
+  }
+
   Future<void> getGraphCodesByClassAndRegion({
     required BuildContext context,
     required bool loader,
@@ -328,6 +477,7 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (response != null) {
+      print(response.body);
       final list = json.decode(response.body) as List;
       graphList = list.map((e) => GraphDataModal.fromJson(e)).toList();
       _generateChartDataFromGraphList();
@@ -534,4 +684,26 @@ class PricesProvider extends ChangeNotifier {
       onSelect(selected);
     }
   }
+
+// void updateFinalDate({required String prDate, required BuildContext context, required String wClass}) {
+//   if (prDate.isNotEmpty) {
+//     finalDate = prDate;
+//     prDate = prDate;
+//     getQualityReport(context: context, wheatClass: wClass, date: prDate);
+//   } else {
+//     if (selectedYears != null) {
+//       final year = int.parse(selectedYears!);
+//       int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
+//       if (selectedDay > daysInMonth) selectedDay = daysInMonth;
+//       finalDate = "$year-${selectedMonth.toString().padLeft(2, "0")}-${selectedDay.toString().padLeft(2, "0")}";
+//       prdate = finalDate;
+//
+//       getQualityReport(context: context, wheatClass: wClass, date: finalDate ?? "");
+//     } else {
+//       finalDate = "";
+//       prdate = "";
+//     }
+//     notifyListeners();
+//   }
+// }
 }

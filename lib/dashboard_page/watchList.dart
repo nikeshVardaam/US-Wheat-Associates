@@ -259,6 +259,7 @@ class _WatchlistState extends State<Watchlist> {
                         ],
                       );
                     } else if (data.type == "quality") {
+                      Color c = Color(int.parse(data.filterdata.color, radix: 16));
                       return Column(
                         children: [
                           GestureDetector(
@@ -278,7 +279,7 @@ class _WatchlistState extends State<Watchlist> {
                                     // Header
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: AppColors.c2a8741,
+                                        color: c,
                                         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                                       ),
                                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -329,7 +330,7 @@ class _WatchlistState extends State<Watchlist> {
                                         children: [
                                           Text(
                                             AppStrings.data,
-                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c2a8741, fontWeight: FontWeight.w900),
+                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: c, fontWeight: FontWeight.w900),
                                           ),
                                           const SizedBox(height: 8),
                                           SingleChildScrollView(
@@ -345,7 +346,7 @@ class _WatchlistState extends State<Watchlist> {
                                                     Text(
                                                       (data.wheatData?.testWtlbbu != null && data.wheatData!.testWtlbbu!.isNotEmpty) ? "${data.wheatData!.testWtlbbu}" : "--",
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
+                                                            color: c,
                                                             fontWeight: FontWeight.w900,
                                                           ),
                                                     )
@@ -361,7 +362,7 @@ class _WatchlistState extends State<Watchlist> {
                                                     Text(
                                                       (data.wheatData?.testWtkghl != null && data.wheatData!.testWtkghl!.isNotEmpty) ? "${data.wheatData!.testWtkghl} " : "--",
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
+                                                            color:c,
                                                             fontWeight: FontWeight.w900,
                                                           ),
                                                     )
@@ -377,7 +378,7 @@ class _WatchlistState extends State<Watchlist> {
                                                     Text(
                                                       (data.wheatData?.moisture != null && data.wheatData!.moisture!.isNotEmpty) ? "${data.wheatData!.moisture}%" : "--",
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
+                                                            color:c,
                                                             fontWeight: FontWeight.w900,
                                                           ),
                                                     )
@@ -393,7 +394,7 @@ class _WatchlistState extends State<Watchlist> {
                                                     Text(
                                                       (data.wheatData?.prot12Mb != null && data.wheatData!.prot12Mb!.isNotEmpty) ? "${data.wheatData!.prot12Mb}%" : "--",
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
+                                                            color:c,
                                                             fontWeight: FontWeight.w900,
                                                           ),
                                                     )
@@ -410,7 +411,7 @@ class _WatchlistState extends State<Watchlist> {
                                                           ? "${data.wheatData!.dryBasisProt}%"
                                                           : "--",
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.c2a8741,
+                                                            color:c,
                                                             fontWeight: FontWeight.w900,
                                                           ),
                                                     ),

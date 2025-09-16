@@ -59,12 +59,14 @@ class FilterData {
   final String classs;
   final String date;
   final String year;
+  final String color;
 
   FilterData({
     required this.region,
     required this.classs,
     required this.date,
     required this.year,
+    required this.color,
   });
 
   factory FilterData.fromJson(Map<String, dynamic> json) {
@@ -73,6 +75,7 @@ class FilterData {
       classs: json['class'] ?? '',
       date: json['date'] ?? '',
       year: json['year'] ?? '',
+      color: json['color'] ?? '',
     );
   }
 }

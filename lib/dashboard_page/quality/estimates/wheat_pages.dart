@@ -81,7 +81,11 @@ class _WheatPagesState extends State<WheatPages> {
                       onTap: wpp.isInWatchlist(widget.selectedClass, wpp.prdate)
                           ? null
                           : () {
-                              wpp.addWatchList(context: context, wheatClass: widget.selectedClass);
+                              String hexCode = '${widget.appBarColor.alpha.toRadixString(16).padLeft(2, '0')}' // alpha
+                                  '${widget.appBarColor.red.toRadixString(16).padLeft(2, '0')}' // red
+                                  '${widget.appBarColor.green.toRadixString(16).padLeft(2, '0')}' // green
+                                  '${widget.appBarColor.blue.toRadixString(16).padLeft(2, '0')}'; // blue
+                              wpp.addWatchList(context: context, wheatClass: widget.selectedClass, color: hexCode);
                             },
                       child: Row(
                         children: [
