@@ -15,7 +15,9 @@ class AppRoutes {
   static const metricTonToKgPoundPage = '/metricTonToKgPoundPage';
   static const buAcreMtHectare = '/buAcreMtHectare';
   static const metricTonsCwt = '/metricTonsCwt';
+  static const commonWheat = '/commonWheat';
   static const wheatProtein = '/wheatProtein';
+  static const flourProtein = '/FlourProtein';
   static const temperatureConverterPage = '/temperatureConverterPage';
   static const reportDetailPage = '/reportDetailPage';
   static const wheatPage = '/wheatPage';

@@ -3,13 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:uswheat/dashboard_page/quality/estimates/wheat_pages.dart';
-import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
-import 'package:uswheat/utils/miscellaneous.dart';
-
 import '../modal/sales_modal.dart';
 import '../provider/watchList_provider.dart';
 
@@ -205,7 +201,7 @@ class _WatchlistState extends State<Watchlist> {
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                               child: Text(
-                                               data.filterdata.formattedDate ?? " ",
+                                                data.filterdata.formattedDate ?? " ",
                                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                       color: AppColors.cFFFFFF,
                                                     ),
@@ -342,7 +338,7 @@ class _WatchlistState extends State<Watchlist> {
                                                 Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(AppStrings.moisture, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                    Text(AppStrings.moist, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
                                                     const SizedBox(height: 4),
                                                     Text(
                                                       (data.wheatData?.moisture != null && data.wheatData!.moisture!.isNotEmpty) ? "${data.wheatData!.moisture}%" : "--",
@@ -373,7 +369,7 @@ class _WatchlistState extends State<Watchlist> {
                                                 Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
+                                                    Text(AppStrings.proDb, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c737373)),
                                                     const SizedBox(height: 4),
                                                     Text(
                                                       (data.wheatData?.dryBasisProt != null && data.wheatData!.dryBasisProt!.isNotEmpty)

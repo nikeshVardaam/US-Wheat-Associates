@@ -1,19 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/modal/all_price_data_modal.dart';
-import 'package:uswheat/modal/latest_prdate_modal.dart';
-import 'package:uswheat/modal/nearby_modal.dart';
-import 'package:uswheat/modal/week_data_modal.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_colors.dart';
-
-import '../modal/forward_price_modal.dart';
 import '../modal/graph_modal.dart';
 import '../modal/regions_and_classes_modal.dart';
 import '../modal/sales_modal.dart';
@@ -709,26 +703,4 @@ class PricesProvider extends ChangeNotifier {
       onSelect(selected);
     }
   }
-
-// void updateFinalDate({required String prDate, required BuildContext context, required String wClass}) {
-//   if (prDate.isNotEmpty) {
-//     finalDate = prDate;
-//     prDate = prDate;
-//     getQualityReport(context: context, wheatClass: wClass, date: prDate);
-//   } else {
-//     if (selectedYears != null) {
-//       final year = int.parse(selectedYears!);
-//       int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
-//       if (selectedDay > daysInMonth) selectedDay = daysInMonth;
-//       finalDate = "$year-${selectedMonth.toString().padLeft(2, "0")}-${selectedDay.toString().padLeft(2, "0")}";
-//       prdate = finalDate;
-//
-//       getQualityReport(context: context, wheatClass: wClass, date: finalDate ?? "");
-//     } else {
-//       finalDate = "";
-//       prdate = "";
-//     }
-//     notifyListeners();
-//   }
-// }
 }

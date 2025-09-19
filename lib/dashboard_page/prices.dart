@@ -7,9 +7,7 @@ import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
-
 import '../modal/sales_modal.dart';
-import '../modal/watch_list_state.dart';
 import '../utils/app_assets.dart';
 
 class Prices extends StatefulWidget {

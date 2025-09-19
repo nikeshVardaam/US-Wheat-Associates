@@ -81,10 +81,10 @@ class _WheatPagesState extends State<WheatPages> {
                       onTap: wpp.isInWatchlist(widget.selectedClass, wpp.prdate)
                           ? null
                           : () {
-                              String hexCode = '${widget.appBarColor.alpha.toRadixString(16).padLeft(2, '0')}' // alpha
-                                  '${widget.appBarColor.red.toRadixString(16).padLeft(2, '0')}' // red
-                                  '${widget.appBarColor.green.toRadixString(16).padLeft(2, '0')}' // green
-                                  '${widget.appBarColor.blue.toRadixString(16).padLeft(2, '0')}'; // blue
+                              String hexCode = '${widget.appBarColor.alpha.toRadixString(16).padLeft(2, '0')}'
+                                  '${widget.appBarColor.red.toRadixString(16).padLeft(2, '0')}'
+                                  '${widget.appBarColor.green.toRadixString(16).padLeft(2, '0')}'
+                                  '${widget.appBarColor.blue.toRadixString(16).padLeft(2, '0')}';
                               wpp.addWatchList(context: context, wheatClass: widget.selectedClass, color: hexCode);
                             },
                       child: Row(
@@ -154,8 +154,8 @@ class _WheatPagesState extends State<WheatPages> {
                       widget.imageAsset,
                       fit: BoxFit.contain,
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 12,
+                    const SizedBox(
+                      height: 16,
                     ),
                     Container(
                       color: AppColors.c95795d.withOpacity(0.1),
@@ -199,8 +199,6 @@ class _WheatPagesState extends State<WheatPages> {
                                 )
                               ],
                             ),
-
-                            // Manually written data rows
                             TableRow(
                               children: [
                                 Padding(
@@ -275,7 +273,7 @@ class _WheatPagesState extends State<WheatPages> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                                  child: Text(AppStrings.proteinMb, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
@@ -298,8 +296,8 @@ class _WheatPagesState extends State<WheatPages> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child:
-                                      Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                                  child: Text(AppStrings.proteinDryBasis,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),

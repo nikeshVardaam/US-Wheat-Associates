@@ -29,9 +29,9 @@ class _WheatProteinState extends State<WheatProtein> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(30),
           child: Padding(
-            padding: const EdgeInsets.only(left: 12,bottom: 8.0),
+            padding: const EdgeInsets.only(left: 12, bottom: 8.0),
             child: Text(
-              "Convert protein level from a 12% moisture basis to dry basis and vice vers",
+              "Convert protein level from a  moisture basis to dry basis and vice vers",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
@@ -47,7 +47,7 @@ class _WheatProteinState extends State<WheatProtein> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // MB input
-                  Text("Protein on a 12% moisture basis (%)", style: Theme.of(context).textTheme.bodySmall),
+                  Text("PROTEIN ON A MOISTURE BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 6),
                   Row(
                     children: [
@@ -70,17 +70,17 @@ class _WheatProteinState extends State<WheatProtein> {
                       ),
                     ],
                   ),
-            
+
                   const SizedBox(height: 12),
                   Text(AppStrings.equals,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.c656e79,
-                        fontStyle: FontStyle.italic,
-                      )),
+                            color: AppColors.c656e79,
+                            fontStyle: FontStyle.italic,
+                          )),
                   const SizedBox(height: 8),
-            
+
                   // DB input
-                  Text("Protein on a dry moisture basis (%)", style: Theme.of(context).textTheme.bodySmall),
+                  Text("PROTEIN ON A DRY MOISTURE BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 6),
                   Row(
                     children: [
@@ -103,9 +103,9 @@ class _WheatProteinState extends State<WheatProtein> {
                       ),
                     ],
                   ),
-            
+
                   const SizedBox(height: 20),
-            
+
                   // Formula box
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -119,8 +119,8 @@ class _WheatProteinState extends State<WheatProtein> {
                         Expanded(
                           child: Text(
                             "Calculation:\n"
-                                "DB = MB ÷ 0.88\n"
-                                "MB = DB × 0.88",
+                            "DB = MB ÷ 0.88\n"
+                            "MB = DB × 0.88",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           ),
                         ),
@@ -135,7 +135,7 @@ class _WheatProteinState extends State<WheatProtein> {
                       ],
                     ),
                   ),
-            
+
                   const SizedBox(height: 20),
                   Row(
                     children: [

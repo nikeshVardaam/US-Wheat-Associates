@@ -41,7 +41,7 @@ class _ReportsState extends State<Reports> {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
+                padding: const EdgeInsets.only(bottom: 0.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -61,7 +61,6 @@ class _ReportsState extends State<Reports> {
                                     rp.selectedReportType = reportType;
                                     rp.resetPagination();
                                     rp.getReports(context: context);
-                                    print("You selected: $reportType");
                                   },
                                 );
                               },
@@ -119,7 +118,6 @@ class _ReportsState extends State<Reports> {
                                     rp.selectedYear = yearType;
                                     rp.resetPagination();
                                     rp.getReports(context: context);
-                                    print("You selected: $yearType");
                                   },
                                 );
                               },
@@ -177,7 +175,6 @@ class _ReportsState extends State<Reports> {
                                     rp.selectedCategory = languageType;
                                     rp.resetPagination();
                                     rp.getReports(context: context);
-                                    print("You selected: $languageType");
                                   },
                                 );
                               },
@@ -223,6 +220,33 @@ class _ReportsState extends State<Reports> {
                     ),
                   ],
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Transform.scale(
+                    scale: 0.6,
+                    child: Switch(
+                      value: rp.isRecentMode,
+                      onChanged: (value) {
+                        rp.toggleRecentMode(value);
+                        rp.getReports(context: context);
+                      },
+                      activeColor: AppColors.c5B8EDC,
+                      inactiveThumbColor: AppColors.cab865a.withOpacity(0.6),
+                    ),
+                  ),
+                  Text(
+                    rp.isRecentMode ? "Recent Reports" : "Filtered Reports",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.c353d4a,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 4,
               ),
               Expanded(
                 child: SingleChildScrollView(

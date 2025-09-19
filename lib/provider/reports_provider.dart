@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../modal/repots_modal.dart';
 
 class ReportsProvider extends ChangeNotifier {
+  bool isRecentMode = false;
   final List<Map<String, String>> reportTypes = [
     {'name': 'Commercial Sales Report', 'value': 'commercial-sales'},
     {'name': 'Crop Quality Report', 'value': 'crop-quality'},
@@ -39,36 +40,58 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  void toggleRecentMode(bool value) {
+    isRecentMode = value;
+    resetPagination();
+    notifyListeners();
+  }
 
   String getTaxonomy() {
     switch (selectedReportType) {
-
-      case 'commercial-sales': return 'commercial-sales-category';
-      case 'crop-quality': return 'crop-quality-category';
-      case 'harvest-report': return 'harvest-report-category';
-      case 'price-report': return 'price-report-category';
-      case 'spanish-report': return 'spanish-report-category';
-      case 'supply-and-demand': return 'supply-and-demand-category';
-      default: return '';
+      case 'commercial-sales':
+        return 'commercial-sales-category';
+      case 'crop-quality':
+        return 'crop-quality-category';
+      case 'harvest-report':
+        return 'harvest-report-category';
+      case 'price-report':
+        return 'price-report-category';
+      case 'spanish-report':
+        return 'spanish-report-category';
+      case 'supply-and-demand':
+        return 'supply-and-demand-category';
+      default:
+        return '';
     }
   }
 
-
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
-    if (selectedReportType == null || selectedYear == null || selectedCategory == null) return;
 
     _isLoading = true;
     notifyListeners();
 
-    final url = "https://uswheat.org/wp-json/uswheat/v1/reports"
-        "?per_page=20&page=$currentPage"
-        "&year=$selectedYear&category=$selectedCategory"
-        "&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
-
     try {
+      String url;
+      if (isRecentMode) {
+        url = "https://uswheat.org/wp-json/uswheat/v1/reports"
+            "?per_page=20&page=$currentPage"
+            "&report_type=all";
+      } else {
+        if (selectedReportType == null || selectedYear == null || selectedCategory == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
+
+        url = "https://uswheat.org/wp-json/uswheat/v1/reports"
+            "?per_page=20&page=$currentPage"
+            "&year=$selectedYear&category=$selectedCategory"
+            "&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
+      }
+
       final response = await http.get(Uri.parse(url));
+
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
         final List<dynamic> data = decoded['data'] ?? [];
@@ -76,6 +99,7 @@ class ReportsProvider extends ChangeNotifier {
         if (data.isEmpty) {
           hasMoreData = false;
         } else {
+          if (currentPage == 1) _reports.clear();
           currentPage++;
           _reports.addAll(data.map((e) => ReportModel.fromJson(e)).toList());
         }
@@ -230,6 +254,4 @@ class ReportsProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-
 }
