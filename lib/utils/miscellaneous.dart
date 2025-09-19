@@ -54,7 +54,21 @@ class Miscellaneous {
       return "--";
     }
   }
+  static String formatDateCustom(
+      String? dateStr, {
+        String format = 'yyyyMMdd', // default format
+        bool toUpperCase = true,    // convert to uppercase if needed
+      }) {
+    if (dateStr == null || dateStr.isEmpty) return "--";
 
+    try {
+      final parsedDate = DateTime.parse(dateStr);
+      String formatted = DateFormat(format).format(parsedDate);
+      return toUpperCase ? formatted.toUpperCase() : formatted;
+    } catch (e) {
+      return "--";
+    }
+  }
   static String getYear(String? dateStr) {
     if (dateStr == null || dateStr.isEmpty) return "--";
 

@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:uswheat/modal/sales_modal.dart';
 
 class WatchlistModel {
@@ -77,6 +78,15 @@ class FilterData {
       year: json['year'] ?? '',
       color: json['color'] ?? '',
     );
+  }
+  String get formattedDate {
+    try {
+      if (date.isEmpty) return '';
+      final dt = DateTime.parse(date);
+      return DateFormat('dd-MMM-yyyy').format(dt).toUpperCase();
+    } catch (_) {
+      return date; // fallback
+    }
   }
 }
 

@@ -60,7 +60,7 @@ class SignUpProvider extends ChangeNotifier {
     return true;
   }
 
-  createAccount({required BuildContext context}) {
+  createAccount({required BuildContext context,}) {
     if (validation(context)) {
       var data = {
         "name": nameController.text.trim(),
@@ -73,7 +73,7 @@ class SignUpProvider extends ChangeNotifier {
         requestData: data,
         context: context,
         isBottomSheet: false,
-        loader: false,
+        loader: true,
       )
           .then((value) async {
         if (value != null) {

@@ -6,6 +6,7 @@ import 'package:uswheat/utils/app_colors.dart';
 class AppTextField {
   static TextFormField textField(BuildContext context,
       {String hintText = "",
+      TextStyle? hintStyle,
       Icon? icon,
       TextEditingController? controller,
       Key? key,
@@ -139,8 +140,13 @@ class AppTextField {
             labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.c353d4a.withOpacity(0.7),
                 ),
+            hintText: hintText,
+            hintStyle: hintStyle ??
+                TextStyle(
+                  color: AppColors.cDFDEDE,
+                  fontSize: 12
+                ),
             suffixIcon: icon,
-            // only used if `decoration` is null
             iconColor: (Theme.of(context).brightness == Brightness.light) ? AppColors.cEFEEED : AppColors.c353d4a,
             filled: true,
             fillColor: (Theme.of(context).brightness == Brightness.light) ? AppColors.cFFFFFF : AppColors.c353d4a,

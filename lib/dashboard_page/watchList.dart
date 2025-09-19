@@ -109,7 +109,7 @@ class _WatchlistState extends State<Watchlist> {
                                             padding: EdgeInsets.zero,
                                             decoration: const BoxDecoration(),
                                             child: FutureBuilder(
-                                              future: wp.fetchChartDataForItem(context, data!),
+                                              future: wp.fetchChartDataForItem(context, data),
                                               builder: (context, snapshot) {
                                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                                   return const Center(
@@ -198,37 +198,6 @@ class _WatchlistState extends State<Watchlist> {
                                             const SizedBox(
                                               height: 16,
                                             ),
-                                            // Row(
-                                            //   children: [
-                                            //     Icon(Icons.arrow_drop_up, color: AppColors.c2a8741),
-                                            //     Text(
-                                            //       wp.allPriceDataModal?.nearby?.cASHBU.toString().substring(0, 3) ?? "--",
-                                            //       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                            //         fontWeight: FontWeight.w600,
-                                            //         color: AppColors.c2a8741,
-                                            //       ),
-                                            //     ),
-                                            //     Padding(
-                                            //       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                            //       child: Container(
-                                            //         height: 12,
-                                            //         width: 1,
-                                            //         color: AppColors.c464646,
-                                            //       ),
-                                            //     ),
-                                            //     Text(
-                                            //       wp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
-                                            //       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                            //         fontWeight: FontWeight.w600,
-                                            //         color: AppColors.c2a8741,
-                                            //       ),
-                                            //     ),
-                                            //     Text(
-                                            //       "/MT",
-                                            //       style: TextStyle(color: AppColors.c2a8741, fontSize: 14),
-                                            //     )
-                                            //   ],
-                                            // ),
                                             Container(
                                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                                               decoration: BoxDecoration(
@@ -236,7 +205,7 @@ class _WatchlistState extends State<Watchlist> {
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                               child: Text(
-                                                Miscellaneous.formatPrDate(data.filterdata.date ?? " "),
+                                               data.filterdata.formattedDate ?? " ",
                                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                       color: AppColors.cFFFFFF,
                                                     ),
@@ -362,7 +331,7 @@ class _WatchlistState extends State<Watchlist> {
                                                     Text(
                                                       (data.wheatData?.testWtkghl != null && data.wheatData!.testWtkghl!.isNotEmpty) ? "${data.wheatData!.testWtkghl} " : "--",
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color:c,
+                                                            color: c,
                                                             fontWeight: FontWeight.w900,
                                                           ),
                                                     )
@@ -378,7 +347,7 @@ class _WatchlistState extends State<Watchlist> {
                                                     Text(
                                                       (data.wheatData?.moisture != null && data.wheatData!.moisture!.isNotEmpty) ? "${data.wheatData!.moisture}%" : "--",
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color:c,
+                                                            color: c,
                                                             fontWeight: FontWeight.w900,
                                                           ),
                                                     )
@@ -394,7 +363,7 @@ class _WatchlistState extends State<Watchlist> {
                                                     Text(
                                                       (data.wheatData?.prot12Mb != null && data.wheatData!.prot12Mb!.isNotEmpty) ? "${data.wheatData!.prot12Mb}%" : "--",
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color:c,
+                                                            color: c,
                                                             fontWeight: FontWeight.w900,
                                                           ),
                                                     )
@@ -411,7 +380,7 @@ class _WatchlistState extends State<Watchlist> {
                                                           ? "${data.wheatData!.dryBasisProt}%"
                                                           : "--",
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color:c,
+                                                            color: c,
                                                             fontWeight: FontWeight.w900,
                                                           ),
                                                     ),

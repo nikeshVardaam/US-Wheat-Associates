@@ -50,7 +50,7 @@ class WatchlistProvider extends ChangeNotifier {
     required String dateTime,
     required String wheatClass,
   }) {
-    String pageName = AppStrings.quality; // <- always quality for bottom nav
+    String pageName = AppStrings.quality;
     switch (wheatClass) {
       case "HRW":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
@@ -115,7 +115,6 @@ class WatchlistProvider extends ChangeNotifier {
     }
   }
 
-
   Future<WheatData?> fetchQualityReport({
     required BuildContext context,
     required String wheatClass,
@@ -179,13 +178,17 @@ class WatchlistProvider extends ChangeNotifier {
       List<Future> futures = [];
       for (var item in watchlist) {
         if (item.type == 'quality') {
-          futures.add(fetchQualityReport(
-            context: context,
-            wheatClass: item.filterdata.classs,
-            date: item.filterdata.date,
-          ).then((currentData) {
-            item.wheatData = currentData;
-          }));
+          futures.add(
+            fetchQualityReport(
+              context: context,
+              wheatClass: item.filterdata.classs,
+              date: item.filterdata.date,
+            ).then(
+              (currentData) {
+                item.wheatData = currentData;
+              },
+            ),
+          );
         }
       }
 
@@ -211,7 +214,7 @@ class WatchlistProvider extends ChangeNotifier {
     WatchlistState.watchlistKeys.remove(key);
 
     try {
-      await DeleteService().delete(
+      await DeleteService().deleteWithId(
         endpoint: ApiEndpoint.removeWatchlist,
         context: context,
         id: id,

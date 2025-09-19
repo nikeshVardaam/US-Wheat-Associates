@@ -264,7 +264,7 @@ class _PricesState extends State<Prices> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              "TO",
+                              "/",
                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                     fontWeight: FontWeight.w900,
                                     color: AppColors.c353d4a.withOpacity(0.7),
@@ -272,7 +272,7 @@ class _PricesState extends State<Prices> {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              pp.nextYearFullDate,
+                              pp.selectedNextYearDate,
                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                     fontWeight: FontWeight.w900,
                                     color: AppColors.c353d4a.withOpacity(0.7),
@@ -323,43 +323,41 @@ class _PricesState extends State<Prices> {
                                   annotations: <CartesianChartAnnotation>[
                                     CartesianChartAnnotation(
                                       widget: Container(
-                                        width: MediaQuery.of(context).size.width/2,
+                                        width: MediaQuery.of(context).size.width / 2,
                                         decoration: BoxDecoration(
                                           color: AppColors.c3d3934,
                                           borderRadius: BorderRadius.circular(12),
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4.0,vertical: 4),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                pp.selectedFullDate,
-                                                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
-                                              ),
-                                              const SizedBox(
-                                                width: 4,
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                                child: Text(
-                                                  "/",
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: AppColors.cFFFFFF,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontFamily: '', // ensure standard slash
-                                                  ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              pp.selectedFullDate,
+                                              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
+                                            ),
+                                            const SizedBox(
+                                              width: 4,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                              child: Text(
+                                                "/",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColors.cFFFFFF,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: '', // ensure standard slash
                                                 ),
                                               ),
-                                              Text(
-                                                pp.nextYearFullDate,
-                                                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                      color: AppColors.cFFFFFF,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                            Text(
+                                              pp.selectedNextYearDate,
+                                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                                    color: AppColors.cFFFFFF,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       coordinateUnit: CoordinateUnit.logicalPixel,

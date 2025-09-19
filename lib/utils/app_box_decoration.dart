@@ -20,7 +20,9 @@ class AppBoxDecoration {
       color: AppColors.cab865a,
       borderRadius: BorderRadius.circular(4),
     );
-  }static BoxDecoration blue() {
+  }
+
+  static BoxDecoration blue() {
     return BoxDecoration(
       color: AppColors.cDFDEDE,
       borderRadius: BorderRadius.circular(4),
@@ -33,4 +35,13 @@ class AppBoxDecoration {
       borderRadius: BorderRadius.circular(4),
     );
   }
+
+  static BoxDecoration filledContainer(Color color) {
+    return BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(4),
+    );
+  }
+
+
 }

@@ -1,5 +1,10 @@
 class AppStrings {
   static const logIn = "Login";
+  static const delete = "Delete";
+  static const deleteUser = "Delete User";
+  static const yesDeleteMyAccount = "Yes, delete my account";
+  static const onceYouDeleteYourAccountThereIsNoWayBackMakeSureYouWantToDoThis = "Once you delete your account, there is no getting it back. Make sure you want to do this.";
+  static const accountDeletion = "Account Deletion";
   static const taxonomy = "Taxonomy";
   static const year = "Year";
   static const ye = "YEAR";
@@ -8,6 +13,7 @@ class AppStrings {
   static const logout = "Logout";
   static const signInToYourAccount = "Sign in to your account";
   static const areYouSureYouWantToLogout = "are You Sure You Want To Logout";
+  static const type = "Type";
   static const createYourAccount = "Create your account";
   static const company = "Company";
   static const cancel = "Cancel";

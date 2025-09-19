@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +12,7 @@ import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_colors.dart';
+
 import '../modal/forward_price_modal.dart';
 import '../modal/graph_modal.dart';
 import '../modal/regions_and_classes_modal.dart';
@@ -34,19 +36,12 @@ class PricesProvider extends ChangeNotifier {
   String? selectedYears;
 
   AllPriceDataModal? allPriceDataModal;
-  List<AllPriceDataModal> allPriceDataList = [];
   List<GraphDataModal> graphList = [];
-  List<NearbyModal> nearbyList = [];
   List<SalesData> chartData = [];
-  List<ForwardPricesModal> forwardPricesList = [];
 
-  LatestPrdateModal? latestPrdate;
-  WeekDataModal? weekData;
   RegionsAndClassesModal? regionsAndClasses;
 
   bool loader = false;
-  bool isDataFetched = false;
-  bool _isInWatchlist = false;
   bool _isPickerOpen = false;
   int selectedMonth = DateTime.now().month;
   int selectedDay = DateTime.now().day;
@@ -57,15 +52,16 @@ class PricesProvider extends ChangeNotifier {
 
   String get allPriceDataCacheKey => 'allPriceData_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
 
-  String get nextYearFullDate {
-    final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
-    final date = DateTime(year + 1, selectedMonth, selectedDay);
-    return DateFormat('dd-MMM-yyyy').format(date).toUpperCase();
-  }
-
   String get selectedFullDate {
     final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
     final date = DateTime(year, selectedMonth, selectedDay);
+    return DateFormat('dd-MMM-yyyy').format(date).toUpperCase();
+  }
+
+  String get selectedNextYearDate {
+    final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+    final nextYear = year + 1;
+    final date = DateTime(nextYear, selectedMonth, selectedDay);
     return DateFormat('dd-MMM-yyyy').format(date).toUpperCase();
   }
 
@@ -83,11 +79,56 @@ class PricesProvider extends ChangeNotifier {
     saveFiltersLocally();
   }
 
-  void setYear(BuildContext context, String? year) {
-    if (year == null || year.isEmpty) return;
-    selectedYears = year;
+  void setYear(BuildContext context, String? yearOrDate) {
+    if (yearOrDate == null || yearOrDate.isEmpty) return;
+
+    try {
+      if (yearOrDate.contains('-')) {
+        final dt = DateTime.parse(yearOrDate);
+        selectedYears = dt.year.toString();
+        selectedMonth = dt.month;
+        selectedDay = dt.day;
+      } else {
+        selectedYears = yearOrDate;
+        selectedMonth = 1;
+        selectedDay = 1;
+      }
+    } catch (e) {
+      selectedYears = yearOrDate;
+    }
+
+    prdate = DateFormat('yyyy-MM-dd').format(DateTime(
+      int.tryParse(selectedYears ?? '') ?? DateTime.now().year,
+      selectedMonth,
+      selectedDay,
+    ));
+
     upDateGraphData(context);
     saveFiltersLocally();
+  }
+
+  void updateSelectedDate({int? year, int? month, int? day}) {
+    final int y = year ?? int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+    final int m = month ?? selectedMonth;
+    final int d = day ?? selectedDay;
+
+    selectedYears = y.toString();
+    selectedMonth = m;
+    selectedDay = d;
+
+    prdate = DateFormat('yyyy-MM-dd').format(DateTime(y, m, d));
+
+    final endDate = DateTime(y, m, d);
+    final startDate = DateTime(y - 1, m, d);
+
+    graphList = graphList.where((e) {
+      final dt = DateTime.tryParse(e.pRDATE ?? '');
+      if (dt == null) return false;
+      return !dt.isBefore(startDate) && !dt.isAfter(endDate);
+    }).toList();
+
+    _generateChartDataFromGraphList();
+    notifyListeners();
   }
 
   Future<void> fetchData({
@@ -129,11 +170,9 @@ class PricesProvider extends ChangeNotifier {
     await prefs.setString("selectedClass", selectedClasses ?? "");
     await prefs.setString("selectedYear", selectedYears ?? "");
 
-    // Save graph data
     final graphJson = jsonEncode(graphList.map((e) => e.toJson()).toList());
     await prefs.setString(graphCacheKey, graphJson);
 
-    // Save all price data
     if (allPriceDataModal != null) {
       await prefs.setString(allPriceDataCacheKey, jsonEncode(allPriceDataModal!.toJson()));
     }
@@ -222,7 +261,7 @@ class PricesProvider extends ChangeNotifier {
       return false;
     }
 
-    final fullDate = selectedYears != null && selectedYears!.length == 4 ? "${selectedYears!}-01-01" : selectedYears ?? "";
+    final fullDate = DateFormat('yyyy-MM-dd').format(DateTime(int.parse(selectedYears!), selectedMonth, selectedDay));
 
     final data = {
       "type": "price",
@@ -383,40 +422,28 @@ class PricesProvider extends ChangeNotifier {
                       onTap: () => Navigator.pop(context),
                       child: AppButtons().filledButton(true, AppStrings.cancel, context),
                     ),
-                    // inside _openPicker -> Confirm button
                     GestureDetector(
                       onTap: () async {
-                        // 1) build selected Date
                         final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
                         final DateTime selectedDate = DateTime(year, selectedMonth, selectedDay);
-
-                        // 2) build 1-year window: startDate .. endDate (inclusive)
                         final DateTime endDate = selectedDate;
                         final DateTime startDate = DateTime(selectedDate.year - 1, selectedDate.month, selectedDate.day);
 
-                        // 3) set prdate used by your API (format YYYY-MM-DD)
                         prdate = DateFormat('yyyy-MM-dd').format(selectedDate);
 
-                        // 4) (OPTIONAL) fetch fresh data from API for this prdate
-                        // If you want fresh data from server, uncomment the next line:
-                        await upDateGraphData(context); // this populates graphList from API based on current prdate
+                        await upDateGraphData(context);
 
-                        // 5) Filter graphList locally to include only dates within startDate..endDate.
                         final filteredList = graphList.where((e) {
-                          final DateTime? dt = DateTime.tryParse(e.pRDATE ?? ''); // <-- use existing String field
+                          final DateTime? dt = DateTime.tryParse(e.pRDATE ?? '');
                           if (dt == null) return false;
-                          // inclusive check: startDate <= dt <= endDate
                           return !dt.isBefore(startDate) && !dt.isAfter(endDate);
                         }).toList();
 
-                        // 6) apply filtered list & regenerate chart data
                         graphList = filteredList;
+
                         _generateChartDataFromGraphList();
 
-                        // 7) refresh UI
                         notifyListeners();
-
-                        // 8) close picker
                         Navigator.pop(context);
                       },
                       child: AppButtons().filledButton(true, AppStrings.confirm, context),
@@ -451,7 +478,6 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (value != null) {
-      print(value);
       final body = json.decode(value.body);
       if (body is List && body.isNotEmpty) {
         grphcode = body.last.toString();
@@ -477,7 +503,6 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (response != null) {
-      print(response.body);
       final list = json.decode(response.body) as List;
       graphList = list.map((e) => GraphDataModal.fromJson(e)).toList();
       _generateChartDataFromGraphList();
