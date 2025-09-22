@@ -1,4 +1,4 @@
-import'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -250,7 +250,7 @@ class _PricesState extends State<Prices> {
                         child: Row(
                           children: [
                             Text(
-                              pp.selectedFullDate,
+                              pp.selectedPrevYearDate,
                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                     fontWeight: FontWeight.w900,
                                     color: AppColors.c353d4a.withOpacity(0.7),
@@ -266,7 +266,7 @@ class _PricesState extends State<Prices> {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              pp.selectedNextYearDate,
+                              pp.selectedFullDate,
                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                     fontWeight: FontWeight.w900,
                                     color: AppColors.c353d4a.withOpacity(0.7),
@@ -328,7 +328,7 @@ class _PricesState extends State<Prices> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                pp.selectedFullDate,
+                                                pp.selectedPrevYearDate,
                                                 style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
                                               ),
                                               const SizedBox(
@@ -347,7 +347,7 @@ class _PricesState extends State<Prices> {
                                                 ),
                                               ),
                                               Text(
-                                                pp.selectedNextYearDate,
+                                                pp.selectedFullDate,
                                                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                                       color: AppColors.cFFFFFF,
                                                       fontWeight: FontWeight.w500,
@@ -370,10 +370,12 @@ class _PricesState extends State<Prices> {
                                       color: AppColors.cab865a.withOpacity(0.6),
                                     ),
                                     axisLine: const AxisLine(width: 0),
-                                    labelStyle: const TextStyle(fontSize: 10),
+                                    //if i want months back then only set font size 10
+                                    labelStyle: const TextStyle(fontSize: 0),
                                     tickPosition: TickPosition.inside,
                                     majorTickLines: const MajorTickLines(width: 0),
                                   ),
+
                                   primaryYAxis: const NumericAxis(
                                     interval: 10,
 

@@ -52,9 +52,9 @@ class PricesProvider extends ChangeNotifier {
     return DateFormat('dd-MMM-yyyy').format(date).toUpperCase();
   }
 
-  String get selectedNextYearDate {
+  String get selectedPrevYearDate {
     final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
-    final nextYear = year + 1;
+    final nextYear = year - 1;
     final date = DateTime(nextYear, selectedMonth, selectedDay);
     return DateFormat('dd-MMM-yyyy').format(date).toUpperCase();
   }
@@ -498,6 +498,8 @@ class PricesProvider extends ChangeNotifier {
 
     if (response != null) {
       final list = json.decode(response.body) as List;
+      // debugPrint(response.body.toString(), wrapWidth: 1024);
+
       graphList = list.map((e) => GraphDataModal.fromJson(e)).toList();
       _generateChartDataFromGraphList();
 
