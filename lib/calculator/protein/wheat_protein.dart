@@ -31,7 +31,7 @@ class _WheatProteinState extends State<WheatProtein> {
           child: Padding(
             padding: const EdgeInsets.only(left: 12, bottom: 8.0),
             child: Text(
-              "Convert protein level from a  moisture basis to dry basis and vice vers",
+              "Convert protein level from a  moisture basis to dry basis and vice versa",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
