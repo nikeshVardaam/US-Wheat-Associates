@@ -221,32 +221,32 @@ class _ReportsState extends State<Reports> {
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Transform.scale(
-                    scale: 0.6,
-                    child: Switch(
-                      value: rp.isRecentMode,
-                      onChanged: (value) {
-                        rp.toggleRecentMode(value);
-                        rp.getReports(context: context);
-                      },
-                      activeColor: AppColors.c5B8EDC,
-                      inactiveThumbColor: AppColors.cab865a.withOpacity(0.6),
-                    ),
-                  ),
-                  Text(
-                    rp.isRecentMode ? "Recent Reports" : "Filtered Reports",
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.c353d4a,
-                        ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: [
+              //     Transform.scale(
+              //       scale: 0.6,
+              //       child: Switch(
+              //         value: rp.isRecentMode,
+              //         onChanged: (value) {
+              //           rp.toggleRecentMode(value);
+              //           rp.getReports(context: context);
+              //         },
+              //         activeColor: AppColors.c5B8EDC,
+              //         inactiveThumbColor: AppColors.cab865a.withOpacity(0.6),
+              //       ),
+              //     ),
+              //     Text(
+              //       rp.isRecentMode ? "Recent Reports" : "Filtered Reports",
+              //       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              //             fontWeight: FontWeight.w600,
+              //             color: AppColors.c353d4a,
+              //           ),
+              //     ),
+              //   ],
+              // ),
               const SizedBox(
-                height: 4,
+                height: 14,
               ),
               Expanded(
                 child: SingleChildScrollView(

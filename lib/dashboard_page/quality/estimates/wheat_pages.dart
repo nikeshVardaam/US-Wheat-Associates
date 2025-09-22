@@ -155,7 +155,7 @@ class _WheatPagesState extends State<WheatPages> {
                       fit: BoxFit.contain,
                     ),
                     const SizedBox(
-                      height: 16,
+                      height: 0,
                     ),
                     Container(
                       color: AppColors.c95795d.withOpacity(0.1),

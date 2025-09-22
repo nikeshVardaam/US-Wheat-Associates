@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -122,9 +122,7 @@ class _PricesState extends State<Prices> {
                               pp.showFilterDropdown(
                                 context: context,
                                 details: details,
-                                onSelect: (selectedRegion) {
-                                  print("You selected: $selectedRegion");
-                                },
+                                onSelect: (selectedRegion) {},
                               );
                             },
                             child: Row(
@@ -175,9 +173,7 @@ class _PricesState extends State<Prices> {
                               pp.showClassesDropdown(
                                 context: context,
                                 details: details,
-                                onSelect: (selectedClasses) {
-                                  print("You selected: $selectedClasses");
-                                },
+                                onSelect: (selectedClasses) {},
                               );
                             },
                             child: Row(
@@ -321,41 +317,44 @@ class _PricesState extends State<Prices> {
                                   annotations: <CartesianChartAnnotation>[
                                     CartesianChartAnnotation(
                                       widget: Container(
-                                        width: MediaQuery.of(context).size.width / 2,
+                                        width: MediaQuery.of(context).size.width / 2.2,
                                         decoration: BoxDecoration(
                                           color: AppColors.c3d3934,
                                           borderRadius: BorderRadius.circular(12),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              pp.selectedFullDate,
-                                              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
-                                            ),
-                                            const SizedBox(
-                                              width: 4,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                              child: Text(
-                                                "/",
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: AppColors.cFFFFFF,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: '', // ensure standard slash
-                                                ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 2.0),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                pp.selectedFullDate,
+                                                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
                                               ),
-                                            ),
-                                            Text(
-                                              pp.selectedNextYearDate,
-                                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                              const SizedBox(
+                                                width: 4,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                child: Text(
+                                                  "/",
+                                                  style: TextStyle(
+                                                    fontSize: 12,
                                                     color: AppColors.cFFFFFF,
                                                     fontWeight: FontWeight.w500,
+                                                    fontFamily: '', // ensure standard slash
                                                   ),
-                                            ),
-                                          ],
+                                                ),
+                                              ),
+                                              Text(
+                                                pp.selectedNextYearDate,
+                                                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                                      color: AppColors.cFFFFFF,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       coordinateUnit: CoordinateUnit.logicalPixel,
