@@ -39,7 +39,6 @@ class WatchlistItem {
   factory WatchlistItem.fromJson(Map<String, dynamic> json) {
     WheatData? wheat;
     if (json['type'] == "quality") {
-      // Backend me quality data agar alag object me hai to use parse karo
       wheat = WheatData.fromJson(json['qualityData'] ?? json);
     }
 
@@ -79,13 +78,14 @@ class FilterData {
       color: json['color'] ?? '',
     );
   }
+
   String get formattedDate {
     try {
       if (date.isEmpty) return '';
       final dt = DateTime.parse(date);
       return DateFormat('dd-MMM-yyyy').format(dt).toUpperCase();
     } catch (_) {
-      return date; // fallback
+      return date;
     }
   }
 }
@@ -96,6 +96,9 @@ class WheatData {
   final String? moisture;
   final String? prot12Mb;
   final String? dryBasisProt;
+  final String? dhv;
+  final String? hvac;
+  final String? fallingNumber;
 
   WheatData({
     this.testWtlbbu,
@@ -103,6 +106,9 @@ class WheatData {
     this.moisture,
     this.prot12Mb,
     this.dryBasisProt,
+    this.dhv,
+    this.hvac,
+    this.fallingNumber,
   });
 
   factory WheatData.fromJson(Map<String, dynamic> json) {
@@ -112,6 +118,9 @@ class WheatData {
       moisture: json['Moisture%']?.toString(),
       prot12Mb: json['Prot12%mb']?.toString(),
       dryBasisProt: json['DryBasisProt%']?.toString(),
+      dhv: json['DHV']?.toString(),
+      hvac: json['HVAC']?.toString(),
+      fallingNumber: json['FallingNumber']?.toString(),
     );
   }
 }

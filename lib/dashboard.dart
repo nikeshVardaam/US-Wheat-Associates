@@ -11,6 +11,7 @@ import 'package:uswheat/utils/app_delete_dialog.dart';
 import 'package:uswheat/utils/app_logout_dialog.dart' show AppLogoutDialogs;
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
+import 'package:uswheat/auth/change_password.dart';
 
 import 'dashboard_page/calculator.dart';
 import 'dashboard_page/reprts/reports.dart';
@@ -243,6 +244,37 @@ class _DashboardState extends State<Dashboard> {
                               },
                             ),
                             GestureDetector(
+                             onTap: (){
+                               showDialog(
+                                 context: context,
+                                 builder: (context) {
+                                   return ChangePassword(
+                                     onTap: () {
+                                       dp.logOut(context);
+                                     },
+                                   );
+                                 },
+                               );
+                             },
+                              child: ListTile(
+                                dense: true,
+                                leading: SvgPicture.asset(
+                                  AppAssets.passwordChange,
+                                  height: 18,
+                                  colorFilter: ColorFilter.mode(
+                                    dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                title: Text(
+                                  AppStrings.changePassword,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
                               onTap: () {
                                 showDialog(
                                   context: context,
@@ -286,12 +318,12 @@ class _DashboardState extends State<Dashboard> {
                                 context: context,
                                 builder: (context) {
                                   return Dialog(
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                     child: const AppDeleteDialog(),
                                   );
-                            },
+                                },
                               );
-                                  },
+                            },
                             child: Row(
                               children: [
                                 SvgPicture.asset(

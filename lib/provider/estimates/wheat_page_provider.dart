@@ -68,6 +68,7 @@ class WheatPageProvider extends ChangeNotifier {
     );
 
     if (response != null) {
+      // debugPrint(response.body,wrapWidth: 1024);
       final decoded = json.decode(response.body);
 
       if (decoded['data'] != null) {

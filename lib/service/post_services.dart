@@ -48,7 +48,7 @@ class PostServices {
       if (loader) {
         Navigator.pop(context);
       }
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 409) {
         return response;
       } else if (response.statusCode == 401) {
         ExceptionDialogs.networkDialog(

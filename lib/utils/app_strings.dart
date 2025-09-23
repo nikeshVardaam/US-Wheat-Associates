@@ -2,6 +2,7 @@ class AppStrings {
   static const logIn = "Login";
   static const delete = "Delete";
   static const deleteUser = "Delete User";
+  static const noWatchlistAdded = "No Watchlist Added";
   static const yesDeleteMyAccount = "Yes, delete my account";
   static const onceYouDeleteYourAccountThereIsNoWayBackMakeSureYouWantToDoThis = "Once you delete your account, there is no getting it back. Make sure you want to do this.";
   static const accountDeletion = "Account Deletion";
@@ -9,9 +10,14 @@ class AppStrings {
   static const year = "Year";
   static const ye = "YEAR";
   static const category = "Category";
+  static const newPassword = "New Password";
+  static const passwordChangedSuccessfully = "Password changed successfully";
+  static const newPasswordHint = "Your new password must be different from previous used passwords";
+  static const bothPasswordsMustMatch = "Both passwords must match";
   static const cat = "CATEGORY";
   static const logout = "Logout";
   static const signInToYourAccount = "Sign in to your account";
+  static const createNewPassword = "Create New Password";
   static const areYouSureYouWantToLogout = "are You Sure You Want To Logout";
   static const type = "Type";
   static const createYourAccount = "Create your account";
@@ -26,6 +32,7 @@ class AppStrings {
   static const alreadyHaveAccount = "Already have an account?";
   static const signUp = "Sign Up";
   static const signIn = "Sign in";
+  static const resetPassword = "Reset Password";
   static const rememberMe = "RememberMe";
   static const fullName = "Full Name";
   static const country = "Country";
@@ -94,6 +101,7 @@ class AppStrings {
   static const search = "Search";
   static const gulfOfMexico = "Gulf of Mexico";
   static const calculator = "Calculator";
+  static const changePassword  = "Change Password ";
   static const noDataFound = "No data found";
   static const wheatAssociates = "U.S. Wheat Associates";
   static const error500 = "We are working on server, Please try again later.";

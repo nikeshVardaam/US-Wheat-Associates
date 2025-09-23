@@ -317,19 +317,24 @@ class _PricesState extends State<Prices> {
                                   annotations: <CartesianChartAnnotation>[
                                     CartesianChartAnnotation(
                                       widget: Container(
-                                        width: MediaQuery.of(context).size.width / 2.2,
+                                        width: MediaQuery.of(context).size.width / 2.4,
                                         decoration: BoxDecoration(
                                           color: AppColors.c3d3934,
                                           borderRadius: BorderRadius.circular(12),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 2.0),
+                                          padding: const EdgeInsets.symmetric(vertical: 2.0,horizontal: 4),
                                           child: Row(
+
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 pp.selectedPrevYearDate,
-                                                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: AppColors.cFFFFFF,
+                                                  fontFamily: 'proximanovaexcn',
+                                                ),
                                               ),
                                               const SizedBox(
                                                 width: 4,
@@ -339,20 +344,19 @@ class _PricesState extends State<Prices> {
                                                 child: Text(
                                                   "/",
                                                   style: TextStyle(
-                                                    fontSize: 12,
+                                                    fontSize: 8,
                                                     color: AppColors.cFFFFFF,
                                                     fontWeight: FontWeight.w500,
-                                                    fontFamily: '', // ensure standard slash
+                                                    fontFamily: '',
                                                   ),
                                                 ),
                                               ),
-                                              Text(
-                                                pp.selectedFullDate,
-                                                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                      color: AppColors.cFFFFFF,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                              ),
+                                              Text(pp.selectedFullDate,
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: AppColors.cFFFFFF,
+                                                    fontFamily: 'proximanovaexcn',
+                                                  )),
                                             ],
                                           ),
                                         ),
@@ -360,7 +364,7 @@ class _PricesState extends State<Prices> {
                                       coordinateUnit: CoordinateUnit.logicalPixel,
                                       region: AnnotationRegion.plotArea,
                                       x: MediaQuery.of(context).size.width / 3,
-                                      y: MediaQuery.of(context).size.width / 3,
+                                      y: MediaQuery.of(context).size.width / 2.5,
                                     ),
                                   ],
                                   primaryXAxis: CategoryAxis(
@@ -375,7 +379,6 @@ class _PricesState extends State<Prices> {
                                     tickPosition: TickPosition.inside,
                                     majorTickLines: const MajorTickLines(width: 0),
                                   ),
-
                                   primaryYAxis: const NumericAxis(
                                     interval: 10,
 

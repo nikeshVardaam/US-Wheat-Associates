@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/provider/calculator_provider.dart';
+import 'package:uswheat/provider/change_password_provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/provider/estimates/wheat_page_provider.dart';
 import 'package:uswheat/provider/login_provider.dart';
@@ -42,6 +43,7 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (context) => WatchlistProvider()),
           ChangeNotifierProvider(create: (context) => ReportsProvider()),
           ChangeNotifierProvider(create: (context) => WheatPageProvider()),
+          ChangeNotifierProvider(create: (context) => ChangePasswordProvider()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
