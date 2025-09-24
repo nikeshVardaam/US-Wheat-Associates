@@ -128,8 +128,6 @@ class DashboardProvider extends ChangeNotifier {
         break;
       case 4:
         setChangeActivity(activity: const Calculator(), pageName: AppStrings.calculator, isBottomTab: true);
-        break; case 4:
-        setChangeActivity(activity: const Calculator(), pageName: AppStrings.calculator, isBottomTab: true);
         break;
     }
   }

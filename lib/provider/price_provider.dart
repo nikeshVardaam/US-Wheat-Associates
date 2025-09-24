@@ -84,8 +84,8 @@ class PricesProvider extends ChangeNotifier {
         selectedDay = dt.day;
       } else {
         selectedYears = yearOrDate;
-        selectedMonth = 1;
-        selectedDay = 1;
+        selectedMonth = DateTime.now().month;
+        selectedDay = DateTime.now().day;
       }
     } catch (e) {
       selectedYears = yearOrDate;
@@ -332,7 +332,13 @@ class PricesProvider extends ChangeNotifier {
             orElse: () => uniqueYears.first,
           )
           .toString();
-      prdate = selectedYears;
+      prdate = DateFormat('yyyy-MM-dd').format(
+        DateTime(
+          int.parse(selectedYears ?? "") ?? currentYear,
+          DateTime.now().month,
+          DateTime.now().day,
+        ),
+      );
     }
   }
 
@@ -485,8 +491,7 @@ class PricesProvider extends ChangeNotifier {
   }) async {
     if ((grphcode ?? "").isEmpty || (prdate ?? "").isEmpty) return;
 
-    final date = prdate!.length == 4 ? "$prdate-01-01" : prdate!;
-    final data = {"grphcode": grphcode!, "prdate": date};
+    final data = {"grphcode": grphcode!, "prdate": prdate!};
 
     final response = await PostServices().post(
       endpoint: ApiEndpoint.getGraphData,
@@ -498,7 +503,7 @@ class PricesProvider extends ChangeNotifier {
 
     if (response != null) {
       final list = json.decode(response.body) as List;
-      // debugPrint(response.body.toString(), wrapWidth: 1024);
+      debugPrint(response.body.toString(), wrapWidth: 1024);
 
       graphList = list.map((e) => GraphDataModal.fromJson(e)).toList();
       _generateChartDataFromGraphList();

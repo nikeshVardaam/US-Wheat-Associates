@@ -323,9 +323,8 @@ class _PricesState extends State<Prices> {
                                           borderRadius: BorderRadius.circular(12),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 2.0,horizontal: 4),
+                                          padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4),
                                           child: Row(
-
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
