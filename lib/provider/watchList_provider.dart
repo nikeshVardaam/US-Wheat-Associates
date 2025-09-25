@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:uswheat/dashboard_page/prices.dart';
 import 'package:uswheat/modal/watchlist_modal.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
@@ -28,11 +29,28 @@ class WatchlistProvider extends ChangeNotifier {
 
   final Map<String, List<SalesData>> _localChartCache = {};
 
+  navigateToPriceReport({
+    required BuildContext context,
+    required String region,
+    required String classs,
+    required String year,
+  }) {
+    Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
+      activity: Prices(
+        classs: classs,
+        region: region,
+        year: year,
+      ),
+      pageName: AppStrings.price,
+    );
+  }
+
   navigateToQualityReport({
     required BuildContext context,
     required String dateTime,
     required String wheatClass,
   }) {
+    String pageName = AppStrings.quality;
     switch (wheatClass) {
       case "HRW":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
@@ -43,8 +61,9 @@ class WatchlistProvider extends ChangeNotifier {
             imageAsset: AppAssets.hardRedWinter,
             selectedClass: 'HRW',
           ),
-          pageName: AppStrings.hardRedWinter,
+          pageName: pageName,
         );
+        break;
       case "SRW":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
@@ -54,8 +73,9 @@ class WatchlistProvider extends ChangeNotifier {
             imageAsset: AppAssets.softRedWinter,
             selectedClass: 'SRW',
           ),
-          pageName: AppStrings.hardRedWinter,
+          pageName: pageName,
         );
+        break;
       case "SW":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
@@ -65,8 +85,9 @@ class WatchlistProvider extends ChangeNotifier {
             imageAsset: AppAssets.softWhite,
             selectedClass: 'SW',
           ),
-          pageName: AppStrings.hardRedWinter,
+          pageName: pageName,
         );
+        break;
       case "HRS":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
@@ -76,8 +97,9 @@ class WatchlistProvider extends ChangeNotifier {
             imageAsset: AppAssets.hardRedSpring,
             selectedClass: 'HRS',
           ),
-          pageName: AppStrings.hardRedWinter,
+          pageName: pageName,
         );
+        break;
       case "durum":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
@@ -87,8 +109,9 @@ class WatchlistProvider extends ChangeNotifier {
             imageAsset: AppAssets.northernDurum,
             selectedClass: "Durum",
           ),
-          pageName: AppStrings.hardRedWinter,
+          pageName: pageName,
         );
+        break;
     }
   }
 
@@ -155,13 +178,17 @@ class WatchlistProvider extends ChangeNotifier {
       List<Future> futures = [];
       for (var item in watchlist) {
         if (item.type == 'quality') {
-          futures.add(fetchQualityReport(
-            context: context,
-            wheatClass: item.filterdata.classs,
-            date: item.filterdata.date,
-          ).then((currentData) {
-            item.wheatData = currentData;
-          }));
+          futures.add(
+            fetchQualityReport(
+              context: context,
+              wheatClass: item.filterdata.classs,
+              date: item.filterdata.date,
+            ).then(
+              (currentData) {
+                item.wheatData = currentData;
+              },
+            ),
+          );
         }
       }
 
@@ -187,7 +214,7 @@ class WatchlistProvider extends ChangeNotifier {
     WatchlistState.watchlistKeys.remove(key);
 
     try {
-      await DeleteService().delete(
+      await DeleteService().deleteWithId(
         endpoint: ApiEndpoint.removeWatchlist,
         context: context,
         id: id,

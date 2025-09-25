@@ -130,7 +130,6 @@ class Calculator extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -218,6 +217,33 @@ class Calculator extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.commonWheat,
+                );
+              },
+              child: Container(
+                decoration: AppBoxDecoration.blueRounded(),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        AppStrings.testWeight,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+                      ),
+                      Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -276,6 +302,31 @@ class Calculator extends StatelessWidget {
                     children: [
                       Text(
                         AppStrings.protein,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+                      ),
+                      Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.flourProtein,
+                );
+              },
+              child: Container(
+                decoration: AppBoxDecoration.blueRounded(),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        AppStrings.flourProtein,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),

@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
-
 import '../modal/login_modal.dart';
 import '../utils/app_routes.dart';
 import '../utils/app_widgets.dart';
@@ -60,7 +58,9 @@ class SignUpProvider extends ChangeNotifier {
     return true;
   }
 
-  createAccount({required BuildContext context}) {
+  createAccount({
+    required BuildContext context,
+  }) {
     if (validation(context)) {
       var data = {
         "name": nameController.text.trim(),
@@ -73,18 +73,38 @@ class SignUpProvider extends ChangeNotifier {
         requestData: data,
         context: context,
         isBottomSheet: false,
-        loader: false,
+        loader: true,
       )
           .then((value) async {
-        if (value != null) {
-          LoginModal loginModel = LoginModal.fromJson(json.decode(value.body));
-          sp = await SharedPreferences.getInstance();
-          await sp?.setString(PrefKeys.token, loginModel.token ?? "");
-          await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
+        if (value != null && value.body.isNotEmpty) {
+          final response = json.decode(value.body);
 
-          Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+          if (response["success"] == true) {
+            LoginModal loginModel = LoginModal.fromJson(response);
+            sp = await SharedPreferences.getInstance();
+            await sp?.setString(PrefKeys.token, loginModel.token ?? "");
+            await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
+            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+          } else {
+            String errorMsg = response["errors"]?["email"]?.first
+                ?? response["message"]
+                ?? "Something went wrong";
+
+            AppWidgets.appSnackBar(
+              context: context,
+              text: errorMsg,
+              color: Colors.redAccent,
+            );
+          }
+        } else {
+          AppWidgets.appSnackBar(
+            context: context,
+            text: "Something went wrong",
+            color: Colors.redAccent,
+          );
         }
       });
+
     }
   }
 }

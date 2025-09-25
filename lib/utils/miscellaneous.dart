@@ -45,18 +45,45 @@ class Miscellaneous {
     }
   }
 
-  static String formatPrDate(String? dateStr) {
+  static String formatDateCustom(
+    String? dateStr, {
+    String format = 'yyyyMMdd', // default format
+    bool toUpperCase = true, // convert to uppercase if needed
+  }) {
     if (dateStr == null || dateStr.isEmpty) return "--";
+
     try {
       final parsedDate = DateTime.parse(dateStr);
-      return DateFormat('MMMM d, yyyy').format(parsedDate).toUpperCase(); // e.g. July 18, 2025
+      String formatted = DateFormat(format).format(parsedDate);
+      return toUpperCase ? formatted.toUpperCase() : formatted;
     } catch (e) {
       return "--";
     }
   }
- static String capitalize(String text) {
+
+  static String formatPrDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return "--";
+    try {
+      final parsedDate = DateTime.parse(dateStr);
+      return DateFormat('MMMM d, yyyy').format(parsedDate).toUpperCase();
+    } catch (e) {
+      return "--";
+    }
+  }
+
+  static String getYear(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return "--";
+
+    try {
+      final parsedDate = dateStr.length == 4 ? DateTime.parse("$dateStr-01-01") : DateTime.parse(dateStr);
+      return DateFormat("yyyy").format(parsedDate).toUpperCase();
+    } catch (e) {
+      return "--";
+    }
+  }
+
+  static String capitalize(String text) {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1);
   }
-
 }

@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/dashboard_page/quality/estimates/wheat_pages.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
@@ -9,7 +7,6 @@ import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 
-import '../../utils/app_box_decoration.dart';
 
 class Quality extends StatefulWidget {
   const Quality({super.key});
@@ -108,10 +105,10 @@ class _QualityState extends State<Quality> {
                 ),
                 Image.asset(
                   AppAssets.wheatProduction,
-                  fit: BoxFit.contain,
+                  fit: BoxFit.fitHeight,
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 12,
+                const SizedBox(
+                  height: 16,
                 ),
                 Divider(
                   thickness: 0.5,
@@ -130,7 +127,7 @@ class _QualityState extends State<Quality> {
                             imageAsset: AppAssets.hardRedWinter,
                             selectedClass: 'HRW',
                           ),
-                          pageName: AppStrings.hardRedWinter,
+                          pageName: AppStrings.quality,
                         );
                       },
                       child: Container(
@@ -176,7 +173,7 @@ class _QualityState extends State<Quality> {
                             imageAsset: AppAssets.softRedWinter,
                             selectedClass: 'SRW',
                           ),
-                          pageName: AppStrings.softRedWinter,
+                          pageName: AppStrings.quality,
                         );
                       },
                       child: Container(
@@ -220,7 +217,7 @@ class _QualityState extends State<Quality> {
                           imageAsset: AppAssets.softWhite,
                           selectedClass: 'SW',
                         ),
-                        pageName: AppStrings.softWhite,
+                        pageName: AppStrings.quality,
                       );
                     },
                     child: Container(
@@ -265,7 +262,7 @@ class _QualityState extends State<Quality> {
                             imageAsset: AppAssets.hardRedSpring,
                             selectedClass: 'HRS',
                           ),
-                          pageName: AppStrings.hardRedSpring,
+                          pageName: AppStrings.quality,
                         );
                       },
                       child: Container(
@@ -309,7 +306,7 @@ class _QualityState extends State<Quality> {
                           imageAsset: AppAssets.northernDurum,
                           selectedClass: "Durum",
                         ),
-                        pageName: AppStrings.northernDurum,
+                        pageName: AppStrings.quality,
                       );
                     },
                     child: Container(

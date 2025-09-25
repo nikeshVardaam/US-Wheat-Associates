@@ -7,9 +7,11 @@ import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
+import 'package:uswheat/utils/app_delete_dialog.dart';
 import 'package:uswheat/utils/app_logout_dialog.dart' show AppLogoutDialogs;
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
+import 'package:uswheat/auth/change_password.dart';
 
 import 'dashboard_page/calculator.dart';
 import 'dashboard_page/reprts/reports.dart';
@@ -168,7 +170,13 @@ class _DashboardState extends State<Dashboard> {
                                     ),
                               ),
                               onTap: () {
-                                dp.setChangeActivity(activity: const Prices(), pageName: AppStrings.price);
+                                dp.setChangeActivity(
+                                    activity: const Prices(
+                                      region: '',
+                                      classs: '',
+                                      year: '',
+                                    ),
+                                    pageName: AppStrings.price);
                                 Navigator.pop(context);
                               },
                             ),
@@ -235,6 +243,7 @@ class _DashboardState extends State<Dashboard> {
                                 Navigator.pop(context);
                               },
                             ),
+
                             GestureDetector(
                               onTap: () {
                                 showDialog(
@@ -264,6 +273,49 @@ class _DashboardState extends State<Dashboard> {
                               ),
                             ),
                           ],
+                        ),
+                        const Spacer(),
+                        Divider(
+                          color: AppColors.cAB865A,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                    child: const AppDeleteDialog(),
+                                  );
+                                },
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.delete,
+                                  height: 14,
+                                  color: AppColors.cFFFFFF,
+                                ),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                Text(
+                                  AppStrings.deleteUser,
+                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                        color: AppColors.cFFFFFF,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Divider(
+                          color: AppColors.cAB865A,
                         ),
                       ],
                     ),
@@ -353,3 +405,34 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
+// GestureDetector(
+//   onTap: (){
+//     showDialog(
+//       context: context,
+//       builder: (context) {
+//         return ChangePassword(
+//           onTap: () {
+//             dp.logOut(context);
+//           },
+//         );
+//       },
+//     );
+//   },
+//   child: ListTile(
+//     dense: true,
+//     leading: SvgPicture.asset(
+//       AppAssets.passwordChange,
+//       height: 18,
+//       colorFilter: ColorFilter.mode(
+//         dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+//         BlendMode.srcIn,
+//       ),
+//     ),
+//     title: Text(
+//       AppStrings.changePassword,
+//       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+//         color: dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+//       ),
+//     ),
+//   ),
+// ),

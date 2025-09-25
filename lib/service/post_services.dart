@@ -33,7 +33,9 @@ class PostServices {
 
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
-
+print(bearerToken);
+print(url);
+print(requestData);
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -48,7 +50,7 @@ class PostServices {
       if (loader) {
         Navigator.pop(context);
       }
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 409) {
         return response;
       } else if (response.statusCode == 401) {
         ExceptionDialogs.networkDialog(

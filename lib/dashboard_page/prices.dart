@@ -7,13 +7,15 @@ import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
-
 import '../modal/sales_modal.dart';
-import '../modal/watch_list_state.dart';
 import '../utils/app_assets.dart';
 
 class Prices extends StatefulWidget {
-  const Prices({super.key});
+  final String? region;
+  final String? classs;
+  final String? year;
+
+  const Prices({super.key, required this.region, required this.classs, required this.year});
 
   @override
   State<Prices> createState() => _PricesState();
@@ -23,11 +25,26 @@ class _PricesState extends State<Prices> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
+    Future.delayed(Duration.zero, () async {
       final pp = Provider.of<PricesProvider>(context, listen: false);
-      if (!pp.loader) {
-        pp.fetchData(context: context);
+      if (widget.region != null && widget.region!.isNotEmpty) {
+        pp.setRegion(context, widget.region);
       }
+      if (widget.classs != null && widget.classs!.isNotEmpty) {
+        pp.setClass(context, widget.classs!);
+      }
+      if (widget.year != null && widget.year!.isNotEmpty) {
+        pp.setYear(context, widget.year!);
+      }
+
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      await pp.fetchData(
+        context: context,
+        classs: widget.classs ?? "",
+        region: widget.region ?? "",
+        year: widget.year ?? "",
+      );
     });
   }
 
@@ -105,9 +122,7 @@ class _PricesState extends State<Prices> {
                               pp.showFilterDropdown(
                                 context: context,
                                 details: details,
-                                onSelect: (selectedRegion) {
-                                  print("You selected: $selectedRegion");
-                                },
+                                onSelect: (selectedRegion) {},
                               );
                             },
                             child: Row(
@@ -158,9 +173,7 @@ class _PricesState extends State<Prices> {
                               pp.showClassesDropdown(
                                 context: context,
                                 details: details,
-                                onSelect: (selectedClasses) {
-                                  print("You selected: $selectedClasses");
-                                },
+                                onSelect: (selectedClasses) {},
                               );
                             },
                             child: Row(
@@ -201,22 +214,18 @@ class _PricesState extends State<Prices> {
                   ),
                   Row(
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 3.6,
-                        color: AppColors.c95795d.withOpacity(0.1),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                          child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              pp.showYearsDropdown(
-                                context: context,
-                                details: details,
-                                onSelect: (selectedYears) {
-                                  pp.setYear(selectedYears.toString());
-                                  print("You selected: $selectedYears");
-                                },
-                              );
-                            },
+                      GestureDetector(
+                        onTap: () {
+                          pp.showYearPicker(
+                            context,
+                            wheatClass: '',
+                          );
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 3.6,
+                          color: AppColors.c95795d.withOpacity(0.1),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -227,67 +236,45 @@ class _PricesState extends State<Prices> {
                                         color: AppColors.cab865a,
                                       ),
                                 ),
-                                GestureDetector(
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: AppColors.cab865a,
-                                  ),
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.cab865a,
                                 ),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: pp.selectedYears?.isNotEmpty ?? false
-                                ? SingleChildScrollView(
-                                    physics: BouncingScrollPhysics(),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "01-JAN-${pp.selectedYears ?? ""}",
-                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                fontWeight: FontWeight.w900,
-                                                color: AppColors.c353d4a.withOpacity(0.7),
-                                              ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          "TO",
-                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                fontWeight: FontWeight.w900,
-                                                color: AppColors.c353d4a.withOpacity(0.7),
-                                              ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          "31-DEC-${pp.selectedYears ?? ""}",
-                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                fontWeight: FontWeight.w900,
-                                                color: AppColors.c353d4a.withOpacity(0.7),
-                                              ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Text(
-                                    "Select Year",
-                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                          fontWeight: FontWeight.w900,
-                                          color: AppColors.c353d4a.withOpacity(0.7),
-                                        ),
-                                    overflow: TextOverflow.ellipsis,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Text(
+                              pp.selectedPrevYearDate,
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
                                   ),
-                          ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              "/",
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              pp.selectedFullDate,
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
+                          ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                   SingleChildScrollView(
@@ -330,53 +317,53 @@ class _PricesState extends State<Prices> {
                                   annotations: <CartesianChartAnnotation>[
                                     CartesianChartAnnotation(
                                       widget: Container(
+                                        width: MediaQuery.of(context).size.width / 2.4,
                                         decoration: BoxDecoration(
                                           color: AppColors.c3d3934,
                                           borderRadius: BorderRadius.circular(12),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4),
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context).size.width / 2.8,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "JAN${pp.selectedYears ?? "--"}",
+                                          padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                pp.selectedPrevYearDate,
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: AppColors.cFFFFFF,
+                                                  fontFamily: 'proximanovaexcn',
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 4,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                child: Text(
+                                                  "/",
                                                   style: TextStyle(
-                                                    fontSize: 12,
+                                                    fontSize: 8,
                                                     color: AppColors.cFFFFFF,
                                                     fontWeight: FontWeight.w500,
+                                                    fontFamily: '',
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                  child: Text(
-                                                    "/",
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: AppColors.cFFFFFF,
-                                                      fontWeight: FontWeight.w500,
-                                                      fontFamily: '', // ensure standard slash
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "DEC${pp.selectedYears ?? "--"}",
+                                              ),
+                                              Text(pp.selectedFullDate,
                                                   style: TextStyle(
-                                                    fontSize: 12,
+                                                    fontSize: 10,
                                                     color: AppColors.cFFFFFF,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                                    fontFamily: 'proximanovaexcn',
+                                                  )),
+                                            ],
                                           ),
                                         ),
                                       ),
                                       coordinateUnit: CoordinateUnit.logicalPixel,
                                       region: AnnotationRegion.plotArea,
                                       x: MediaQuery.of(context).size.width / 3,
-                                      y: MediaQuery.of(context).size.width / 3,
+                                      y: MediaQuery.of(context).size.width / 2.5,
                                     ),
                                   ],
                                   primaryXAxis: CategoryAxis(
@@ -386,7 +373,8 @@ class _PricesState extends State<Prices> {
                                       color: AppColors.cab865a.withOpacity(0.6),
                                     ),
                                     axisLine: const AxisLine(width: 0),
-                                    labelStyle: const TextStyle(fontSize: 10),
+                                    //if i want months back then only set font size 10
+                                    labelStyle: const TextStyle(fontSize: 0),
                                     tickPosition: TickPosition.inside,
                                     majorTickLines: const MajorTickLines(width: 0),
                                   ),
@@ -478,7 +466,7 @@ class _PricesState extends State<Prices> {
                                 width: 4,
                               ),
                               Text(
-                                pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 6) ?? "--",
+                                pp.allPriceDataModal?.nearby?.cASHMT.toString().substring(0, 6) ?? "",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.c353d4a.withOpacity(0.7),
@@ -556,7 +544,7 @@ class _PricesState extends State<Prices> {
                                 width: 4,
                               ),
                               Text(
-                                pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 6) ?? "--",
+                                pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 2) ?? "--",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.cd63a3a,

@@ -15,4 +15,6 @@ class ApiEndpoint {
   static const getWatchlist = "getWatchlist";
   static const removeWatchlist = "removeWatchlist";
   static const qualityReport = "quality-report";
+  static const deleteUser= "deleteUser";
+  static const changePassword = "changePassword ";
 }

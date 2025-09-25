@@ -401,6 +401,70 @@ class CalculatorProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Test Weight controllers
+  final TextEditingController commonLbController = TextEditingController();
+  final TextEditingController commonKgController = TextEditingController();
+  final TextEditingController durumLbController = TextEditingController();
+  final TextEditingController durumKgController = TextEditingController();
+
+  /// Common wheat: lb/bu → kg/hl
+  void convertCommonLbToKg(String val) {
+    if (val.isEmpty) {
+      commonKgController.clear();
+      return;
+    }
+    double lb = double.tryParse(val) ?? 0;
+    double kg = (lb * 1.292) + 1.419;
+    commonKgController.text = kg.toStringAsFixed(2);
+    notifyListeners();
+  }
+
+  /// Common wheat: kg/hl → lb/bu
+  void convertCommonKgToLb(String val) {
+    if (val.isEmpty) {
+      commonLbController.clear();
+      return;
+    }
+    double kg = double.tryParse(val) ?? 0;
+    double lb = (kg - 1.419) / 1.292;
+    commonLbController.text = lb.toStringAsFixed(2);
+    notifyListeners();
+  }
+
+  /// Durum wheat: lb/bu → kg/hl
+  void convertDurumLbToKg(String val) {
+    if (val.isEmpty) {
+      durumKgController.clear();
+      return;
+    }
+    double lb = double.tryParse(val) ?? 0;
+    double kg = (lb * 1.292) + 0.630;
+    durumKgController.text = kg.toStringAsFixed(2);
+    notifyListeners();
+  }
+
+  /// Durum wheat: kg/hl → lb/bu
+  void convertDurumKgToLb(String val) {
+    if (val.isEmpty) {
+      durumLbController.clear();
+      return;
+    }
+    double kg = double.tryParse(val) ?? 0;
+    double lb = (kg - 0.630) / 1.292;
+    durumLbController.text = lb.toStringAsFixed(2);
+    notifyListeners();
+  }
+
+  /// Clear all Test Weight fields
+  void clearTestWeight() {
+    commonLbController.clear();
+    commonKgController.clear();
+    durumLbController.clear();
+    durumKgController.clear();
+    notifyListeners();
+  }
+
+
 // yields
   TextEditingController buAcreController = TextEditingController();
   TextEditingController mtHectareController = TextEditingController();
@@ -470,6 +534,40 @@ class CalculatorProvider extends ChangeNotifier {
   void clearProtein() {
     mbController.clear();
     dbController.clear();
+    notifyListeners();
+  }
+// flour protein
+  final TextEditingController flourMbController = TextEditingController(); // 14% mb
+  final TextEditingController flourDbController = TextEditingController(); // dry basis
+
+  /// 14% MB → Dry Basis
+  void convertFlourMbToDb(String val) {
+    if (val.isEmpty) {
+      flourDbController.clear();
+      return;
+    }
+    double mb = double.tryParse(val) ?? 0;
+    double db = mb / 0.86; // 14% moisture
+    flourDbController.text = db.toStringAsFixed(2);
+    notifyListeners();
+  }
+
+  /// Dry Basis → 14% MB
+  void convertFlourDbToMb(String val) {
+    if (val.isEmpty) {
+      flourMbController.clear();
+      return;
+    }
+    double db = double.tryParse(val) ?? 0;
+    double mb = db * 0.86;
+    flourMbController.text = mb.toStringAsFixed(2);
+    notifyListeners();
+  }
+
+  /// Clear Flour Protein fields
+  void clearFlourProtein() {
+    flourMbController.clear();
+    flourDbController.clear();
     notifyListeners();
   }
 

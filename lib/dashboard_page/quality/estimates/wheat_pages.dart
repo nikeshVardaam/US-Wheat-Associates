@@ -29,7 +29,7 @@ class _WheatPagesState extends State<WheatPages> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        Provider.of<WheatPageProvider>(context, listen: false).init(prDate: widget.date, context: context, wClass: widget.selectedClass);
+        Provider.of<WheatPageProvider>(context, listen: false).updateFinalDate(prDate: widget.date, context: context, wClass: widget.selectedClass);
       },
     );
     super.initState();
@@ -81,7 +81,11 @@ class _WheatPagesState extends State<WheatPages> {
                       onTap: wpp.isInWatchlist(widget.selectedClass, wpp.prdate)
                           ? null
                           : () {
-                              wpp.addWatchList(context: context, wheatClass: widget.selectedClass);
+                              String hexCode = '${widget.appBarColor.alpha.toRadixString(16).padLeft(2, '0')}'
+                                  '${widget.appBarColor.red.toRadixString(16).padLeft(2, '0')}'
+                                  '${widget.appBarColor.green.toRadixString(16).padLeft(2, '0')}'
+                                  '${widget.appBarColor.blue.toRadixString(16).padLeft(2, '0')}';
+                              wpp.addWatchList(context: context, wheatClass: widget.selectedClass, color: hexCode);
                             },
                       child: Row(
                         children: [
@@ -118,7 +122,7 @@ class _WheatPagesState extends State<WheatPages> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              wpp.openPicker(context: context, wheatClass: widget.selectedClass);
+                              wpp.showYearPicker(context, wheatClass: widget.selectedClass);
                             },
                             child: Container(
                               padding: const EdgeInsets.all(4),
@@ -131,19 +135,14 @@ class _WheatPagesState extends State<WheatPages> {
                                     size: 16,
                                   ),
                                   const SizedBox(width: 8),
-                                  (wpp.finalDate?.isNotEmpty ?? false)
-                                      ? Text(
-                                          DateFormat('dd-MMM-yyyy').format(DateTime.parse(wpp.finalDate ?? "")),
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                color: AppColors.c464646,
-                                              ),
-                                        )
-                                      : Text(
-                                          'Select Date',
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                color: AppColors.c464646,
-                                              ),
+                                  Text(
+                                    (wpp.finalDate != null && wpp.finalDate!.isNotEmpty)
+                                        ? DateFormat('dd-MMM-yyyy').format(DateTime.tryParse(wpp.finalDate!) ?? DateTime.now())
+                                        : 'Select Date',
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: AppColors.c464646,
                                         ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -155,8 +154,8 @@ class _WheatPagesState extends State<WheatPages> {
                       widget.imageAsset,
                       fit: BoxFit.contain,
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 12,
+                    const SizedBox(
+                      height: 0,
                     ),
                     Container(
                       color: AppColors.c95795d.withOpacity(0.1),
@@ -200,8 +199,6 @@ class _WheatPagesState extends State<WheatPages> {
                                 )
                               ],
                             ),
-
-                            // Manually written data rows
                             TableRow(
                               children: [
                                 Padding(
@@ -276,7 +273,7 @@ class _WheatPagesState extends State<WheatPages> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(AppStrings.prot12, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                                  child: Text(AppStrings.proteinMb, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
@@ -299,8 +296,8 @@ class _WheatPagesState extends State<WheatPages> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child:
-                                      Text(AppStrings.dryBasisProt, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
+                                  child: Text(AppStrings.proteinDryBasis,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d)),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
@@ -319,6 +316,66 @@ class _WheatPagesState extends State<WheatPages> {
                                 ),
                               ],
                             ),
+                            (widget.selectedClass == "HRS")
+                                ? TableRow(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Text(
+                                          'DHV',
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Text(wpp.current?.dhv ?? "--",
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Text(wpp.lastYear?.dhv ?? "--",
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Text(wpp.fiveYearsAgo?.dhv ?? "--",
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                      ),
+                                    ],
+                                  )
+                                : (widget.selectedClass == "Durum")
+                                    ? TableRow(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Text(
+                                              'HVAC',
+                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Text(wpp.current?.hvac ?? "--",
+                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Text(wpp.lastYear?.hvac ?? "--",
+                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Text(wpp.fiveYearsAgo?.hvac ?? "--",
+                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
+                                          ),
+                                        ],
+                                      )
+                                    : const TableRow(children: [
+                                        SizedBox(),
+                                        SizedBox(),
+                                        SizedBox(),
+                                        SizedBox(),
+                                      ])
                           ],
                         ),
                       ),
