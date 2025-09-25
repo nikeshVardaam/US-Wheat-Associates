@@ -4,38 +4,37 @@ import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
 
 class AppWidgets {
-  static Widget initial(BuildContext context, String title, Color color,) {
+  static Widget initial(
+    BuildContext context,
+    String title,
+    Color color,
+  ) {
     // return Consumer<BaseActivityProvider>(builder: (context, bap, child) {
-       final initials = title.isNotEmpty ? Miscellaneous.getInitials(title) : Miscellaneous.getInitials( "");
+    final initials = title.isNotEmpty ? Miscellaneous.getInitials(title) : Miscellaneous.getInitials("");
 
-      return CircleAvatar(
-        maxRadius: 18,
-        backgroundColor: color,
-        child: Text(
-          initials,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: AppColors.cFFFFFF,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
+    return CircleAvatar(
+      maxRadius: 18,
+      backgroundColor: color,
+      child: Text(
+        initials,
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: AppColors.cFFFFFF,
+              fontWeight: FontWeight.w500,
+            ),
+      ),
+    );
   }
+
   static Widget loading() {
-    return Dialog(
+    return const Dialog(
       backgroundColor: Colors.transparent,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CupertinoActivityIndicator(
-                color: Colors.grey,
-              ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CupertinoActivityIndicator(
+              color: Colors.grey,
             ),
           ),
         ],
@@ -43,9 +42,15 @@ class AppWidgets {
     );
   }
 
+  static Widget divider(BuildContext context) {
+    return Container(
+      color: AppColors.c464646, // G
+      height: 0.5,
+      width: MediaQuery.of(context).size.width,
+    );
+  }
+
   static appSnackBar({required BuildContext context, required String text, required Color color}) {
-
-
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         text,
@@ -56,6 +61,7 @@ class AppWidgets {
       backgroundColor: color,
     ));
   }
+
   static topSnackBar({required BuildContext context, required String message, required Color color}) {
     final overlay = Overlay.of(context);
     final overlayEntry = OverlayEntry(
@@ -85,5 +91,4 @@ class AppWidgets {
       overlayEntry.remove();
     });
   }
-
 }

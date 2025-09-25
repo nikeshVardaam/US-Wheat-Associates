@@ -6,6 +6,7 @@ import 'package:uswheat/utils/app_colors.dart';
 class AppTextField {
   static TextFormField textField(BuildContext context,
       {String hintText = "",
+      TextStyle? hintStyle,
       Icon? icon,
       TextEditingController? controller,
       Key? key,
@@ -133,39 +134,46 @@ class AppTextField {
       keyboardAppearance: keyboardAppearance,
       scrollPadding: scrollPadding,
       dragStartBehavior: dragStartBehavior,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-        color: AppColors.c353d4a.withOpacity(0.7),
-      ),
-        suffixIcon: icon,
-        iconColor: (Theme.of(context).brightness == Brightness.light) ? AppColors.cEFEEED : AppColors.c353d4a,
-        filled: true,
-        fillColor: (Theme.of(context).brightness == Brightness.light) ? AppColors.cFFFFFF : AppColors.c353d4a,
-        contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(
-            color: (Theme.of(context).brightness == Brightness.light) ? AppColors.cEFEEED : AppColors.c353d4a,
-            width: (Theme.of(context).brightness == Brightness.light) ? 2 : 0,
+      decoration: decoration ??
+          InputDecoration(
+            labelText: label,
+            labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.c353d4a.withOpacity(0.7),
+                ),
+            hintText: hintText,
+            hintStyle: hintStyle ??
+                TextStyle(
+                  color: AppColors.cDFDEDE,
+                  fontSize: 12
+                ),
+            suffixIcon: icon,
+            iconColor: (Theme.of(context).brightness == Brightness.light) ? AppColors.cEFEEED : AppColors.c353d4a,
+            filled: true,
+            fillColor: (Theme.of(context).brightness == Brightness.light) ? AppColors.cFFFFFF : AppColors.c353d4a,
+            contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(
+                color: (Theme.of(context).brightness == Brightness.light) ? AppColors.cEFEEED : AppColors.c353d4a,
+                width: (Theme.of(context).brightness == Brightness.light) ? 2 : 0,
+              ),
+            ),
+            counterText: "",
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(
+                color: (Theme.of(context).brightness == Brightness.light) ? AppColors.cEFEEED : AppColors.c353d4a,
+                width: (Theme.of(context).brightness == Brightness.light) ? 2 : 0,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(
+                color: (Theme.of(context).brightness == Brightness.light) ? AppColors.cEFEEED : AppColors.c353d4a,
+                width: (Theme.of(context).brightness == Brightness.light) ? 2 : 0,
+              ),
+            ),
           ),
-        ),
-        counterText: "",
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(
-            color: (Theme.of(context).brightness == Brightness.light) ? AppColors.cEFEEED : AppColors.c353d4a,
-            width: (Theme.of(context).brightness == Brightness.light) ? 2 : 0,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(
-            color: (Theme.of(context).brightness == Brightness.light) ? AppColors.cEFEEED : AppColors.c353d4a,
-            width: (Theme.of(context).brightness == Brightness.light) ? 2 : 0,
-          ),
-        ),
-      ),
     );
   }
 

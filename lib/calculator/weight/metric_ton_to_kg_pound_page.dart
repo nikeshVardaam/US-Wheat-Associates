@@ -40,115 +40,156 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
       ),
       body: Consumer<CalculatorProvider>(
         builder: (context, cp, child) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("METRIC TONS", style: Theme.of(context).textTheme.bodySmall),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.metricTonInputController,
-                        onChanged: (val) => cp.convertMetricTonToKgAndPound(val),keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.metricTonInputController.text));
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(AppStrings.equals,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.c656e79,
-                          fontStyle: FontStyle.italic,
-                        )),
-                const SizedBox(height: 8),
-                Text("KILOGRAMS (kg)", style: Theme.of(context).textTheme.bodySmall),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.kgOutputController,
-                        readOnly: true,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.kgOutputController.text));
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.poundOutputController,
-                        readOnly: true,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.poundOutputController.text));
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.cEFEEED.withOpacity(0.6),
-                    border: Border.all(color: Colors.white38),
-                    borderRadius: BorderRadius.circular(6),
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("METRIC TONS", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 6,
                   ),
-                  child: Row(
+                  Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          "Calculation:\n"
-                          "1 metric ton = 1000 kilograms\n"
-                          "1 kilogram = 2.20462262 pounds\n"
-                          "→ 1 metric ton = 2204.62262 pounds",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
+                        child: AppTextField.textField(
+                          context,
+                          controller: cp.metricTonInputController,
+                          onChanged: (val) => cp.convertFromMetricTon(val),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          ],
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
-                          Clipboard.setData(const ClipboardData(
-                            text: "1 metric ton = 1000 kilograms\n1 kilogram = 2.20462262 pounds\n1 metric ton = 2204.62262 pounds",
-                          ));
+                          Clipboard.setData(ClipboardData(text: cp.metricTonInputController.text));
                         },
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        cp.clearMetricTonKgPound();
-                      },
-                      child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
+                  const SizedBox(height: 12),
+                  Text(AppStrings.equals,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: AppColors.c656e79,
+                            fontStyle: FontStyle.italic,
+                          )),
+                  const SizedBox(height: 8),
+                  Text("KILOGRAMS (kg)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppTextField.textField(
+                          context,
+                          controller: cp.kgOutputController,
+                          keyboardType: TextInputType.number,
+                          onChanged: (val) => cp.convertFromKg(val),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: cp.kgOutputController.text));
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppTextField.textField(
+                          context,
+                          controller: cp.poundOutputController,
+                          keyboardType: TextInputType.number,
+                          onChanged: (val) => cp.convertFromPound(val),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: cp.poundOutputController.text));
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.cEFEEED.withOpacity(0.6),
+                      border: Border.all(color: Colors.white38),
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                  ],
-                ),
-              ],
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Calculation:\n"
+                            "1 metric ton = 1000 kilograms\n"
+                            "1 kilogram = 2.20462262 pounds\n"
+                            "1 metric ton = 2204.62262 pounds",
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.copy,
+                            color: AppColors.c656e79,
+                            size: 18,
+                          ),
+                          onPressed: () {
+                            Clipboard.setData(const ClipboardData(
+                              text: "1 metric ton = 1000 kilograms\n1 kilogram = 2.20462262 pounds\n1 metric ton = 2204.62262 pounds",
+                            ));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          cp.clearMetricTonKgPound();
+                        },
+                        child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         },

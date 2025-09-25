@@ -7,8 +7,8 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_text_field.dart';
 
-class AcresHectaresMu extends StatelessWidget {
-  const AcresHectaresMu({super.key});
+class AcresHectares extends StatelessWidget {
+  const AcresHectares({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +16,10 @@ class AcresHectaresMu extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
-          "Acres = Hectares = Mu",
+          "Acres = Hectares ",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: AppColors.cFFFFFF,
-          ),
+                color: AppColors.cFFFFFF,
+              ),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -27,148 +27,178 @@ class AcresHectaresMu extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Input and convert values from Acres to Hectares and Mu.",
+              "Input and convert values from Acres to Hectares ",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.cFFFFFF,
-              ),
+                    color: AppColors.cFFFFFF,
+                  ),
             ),
           ),
         ),
       ),
       body: Consumer<CalculatorProvider>(
         builder: (context, cp, child) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Acres
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text("ACRES",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.c000000,
-                      )),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.acreController,
-                        onChanged: (val) => cp.convertAcresToHectaresMu(val),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.acreController.text));
-                      },
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 12),
-                Text(AppStrings.equals,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.c656e79,
-                      fontStyle: FontStyle.italic,
-                    )),
-
-                // Hectares
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text("HECTARES",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.c000000,
-                      )),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.hectareController,
-                        readOnly: true,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.hectareController.text));
-                      },
-                    ),
-                  ],
-                ),
-
-                // Mu
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text("MU",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.c000000,
-                      )),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppTextField.textField(
-                        context,
-                        controller: cp.muController,
-                        readOnly: true,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: cp.muController.text));
-                      },
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.cEFEEED.withOpacity(0.6),
-                    border: Border.all(color: Colors.white38),
-                    borderRadius: BorderRadius.circular(6),
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Acres
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text("ACRES",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppColors.c000000,
+                            )),
                   ),
-                  child: Row(
+                  Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          "Calculation:\n1 acre = 0.404686 ha\n1 acre = 15.99 mu",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppColors.c000000,
-                          ),
+                        child: AppTextField.textField(
+                          context,
+                          controller: cp.acreController,
+                          onChanged: (val) => cp.convertFromAcre(val),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          ],
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
-                          Clipboard.setData(const ClipboardData(
-                            text: "1 acre = 0.404686 ha\n1 acre = 15.99 mu",
-                          ));
+                          Clipboard.setData(ClipboardData(text: cp.acreController.text));
                         },
                       ),
                     ],
                   ),
-                ),
 
-                const SizedBox(height: 20),
-                // Clear Button
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => cp.clearAcresHectaresMu(),
-                      child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
+                  const SizedBox(height: 12),
+                  Text(AppStrings.equals,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: AppColors.c656e79,
+                            fontStyle: FontStyle.italic,
+                          )),
+
+                  // Hectares
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text("HECTARES",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppColors.c000000,
+                            )),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppTextField.textField(
+                          context,
+                          controller: cp.hectareController,
+                          onChanged: (val) => cp.convertFromHectare(val),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: cp.hectareController.text));
+                        },
+                      ),
+                    ],
+                  ),
+
+                  // Mu
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  //   child: Text("MU",
+                  //       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  //             color: AppColors.c000000,
+                  //           )),
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: AppTextField.textField(
+                  //         context,
+                  //         controller: cp.muController,
+                  //         onChanged: (val) => cp.convertFromMu(val),
+                  //         keyboardType: TextInputType.number,
+                  //         inputFormatters: [
+                  //           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     IconButton(
+                  //       icon: Icon(
+                  //         Icons.copy,
+                  //         color: AppColors.c656e79,
+                  //         size: 18,
+                  //       ),
+                  //       onPressed: () {
+                  //         Clipboard.setData(ClipboardData(text: cp.muController.text));
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
+
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.cEFEEED.withOpacity(0.6),
+                      border: Border.all(color: Colors.white38),
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                  ],
-                ),
-              ],
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Calculation:\n1 acre = 0.404686 ",
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  color: AppColors.c000000,
+                                ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.copy,
+                            color: AppColors.c656e79,
+                            size: 18,
+                          ),
+                          onPressed: () {
+                            Clipboard.setData(const ClipboardData(
+                              text: "1 acre = 0.404686 ",
+                            ));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                  // Clear Button
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => cp.clearAcresHectaresMu(),
+                        child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         },

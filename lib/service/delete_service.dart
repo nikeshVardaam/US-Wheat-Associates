@@ -9,6 +9,7 @@ import 'package:uswheat/utils/api_endpoint.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 import '../utils/pref_keys.dart';
+import 'exception_dialogs.dart';
 
 class DeleteService {
   SharedPreferences? sp;
@@ -21,7 +22,7 @@ class DeleteService {
     return _instance;
   }
 
-  Future<http.Response?> delete({
+  Future<http.Response?> deleteWithId({
     required String endpoint,
     required BuildContext context,
     required String id,
@@ -42,7 +43,7 @@ class DeleteService {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': bearerToken,
-          'X-Inertia-Platform': "mobile",
+          'Accept': 'application/json',
         },
       ).timeout(const Duration(seconds: 5));
       var data = json.decode(response.body);
@@ -50,25 +51,50 @@ class DeleteService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else if (response.statusCode == 401) {
-        AppWidgets.appSnackBar(context: context, text: data["message"], color: Colors.redAccent);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: data["message"],
+          onPressed: () {},
+        );
         return null;
       } else if (response.statusCode == 404) {
-        AppWidgets.appSnackBar(context: context, text: data["message"], color: Colors.redAccent);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: data["message"],
+          onPressed: () {},
+        );
         return null;
       } else if (response.statusCode == 422) {
-        AppWidgets.appSnackBar(context: context, text: data["message"], color: Colors.redAccent);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: data["message"],
+          onPressed: () {},
+        );
         return null;
       } else if (response.statusCode == 500) {
-        AppWidgets.appSnackBar(context: context, text: AppStrings.error500, color: Colors.redAccent);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: AppStrings.error500,
+          onPressed: () {},
+        );
         return null;
       } else if (response.statusCode == 503) {
-        AppWidgets.appSnackBar(context: context, text: AppStrings.error503, color: Colors.redAccent);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: AppStrings.error503,
+          onPressed: () {},
+        );
         return null;
       }
     } on TimeoutException catch (e) {
       if (context.mounted) {
         print(e);
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.message ?? "",
+          onPressed: () {},
+        );
         // show dialog
       }
       return null;
@@ -76,18 +102,35 @@ class DeleteService {
       if (context.mounted) {
         print(e);
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.message ?? "",
+          onPressed: () {},
+        );
       }
       return null;
     } on SocketException catch (e) {
       if (context.mounted) {
         print(e);
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: "No Internet connection.",
+          onPressed: () {
+
+          },
+        );
         // show dialog
       }
       return null;
     } on FormatException catch (e) {
       if (context.mounted) {
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.message ?? "",
+          onPressed: () {},
+        );
         // show dialog
       }
       return null;
@@ -96,6 +139,137 @@ class DeleteService {
         print(e);
 
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.toString() ?? "",
+          onPressed: () {},
+        );
+        // show dialog
+      }
+      return null;
+    }
+    return null;
+  } Future<http.Response?> delete({
+    required String endpoint,
+    required BuildContext context,
+  }) async {
+    sp = await SharedPreferences.getInstance();
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AppWidgets.loading(),
+    );
+    String url = "${(ApiEndpoint.baseUrl)}$endpoint";
+    String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
+    print(url);
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': bearerToken,
+          'Accept': 'application/json',
+        },
+      ).timeout(const Duration(seconds: 5));
+      var data = json.decode(response.body);
+      Navigator.pop(context);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response;
+      } else if (response.statusCode == 401) {
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: data["message"],
+          onPressed: () {},
+        );
+        return null;
+      } else if (response.statusCode == 404) {
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: data["message"],
+          onPressed: () {},
+        );
+        return null;
+      } else if (response.statusCode == 422) {
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: data["message"],
+          onPressed: () {},
+        );
+        return null;
+      } else if (response.statusCode == 500) {
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: AppStrings.error500,
+          onPressed: () {},
+        );
+        return null;
+      } else if (response.statusCode == 503) {
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: AppStrings.error503,
+          onPressed: () {},
+        );
+        return null;
+      }
+    } on TimeoutException catch (e) {
+      if (context.mounted) {
+        print(e);
+        Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.message ?? "",
+          onPressed: () {},
+        );
+        // show dialog
+      }
+      return null;
+    } on HttpException catch (e) {
+      if (context.mounted) {
+        print(e);
+        Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.message ?? "",
+          onPressed: () {},
+        );
+      }
+      return null;
+    } on SocketException catch (e) {
+      if (context.mounted) {
+        print(e);
+        Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: "No Internet connection.",
+          onPressed: () {
+
+          },
+        );
+        // show dialog
+      }
+      return null;
+    } on FormatException catch (e) {
+      if (context.mounted) {
+        Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.message ?? "",
+          onPressed: () {},
+        );
+        // show dialog
+      }
+      return null;
+    } on Exception catch (e) {
+      if (context.mounted) {
+        print(e);
+
+        Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.toString() ?? "",
+          onPressed: () {},
+        );
         // show dialog
       }
       return null;

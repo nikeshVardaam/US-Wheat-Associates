@@ -9,20 +9,35 @@ class AllPriceDataModal {
       {this.nearby, this.weekly, this.yearly, this.forward, this.prdate});
 
   AllPriceDataModal.fromJson(Map<String, dynamic> json) {
-    nearby =
-    json['nearby'] != null ? new Nearby.fromJson(json['nearby']) : null;
-    weekly =
-    json['weekly'] != null ? new Nearby.fromJson(json['weekly']) : null;
-    yearly =
-    json['yearly'] != null ? new Yearly.fromJson(json['yearly']) : null;
-    if (json['forward'] != null) {
-      forward = <Forward>[];
-      json['forward'].forEach((v) {
-        forward!.add(new Forward.fromJson(v));
-      });
+    if (json['nearby'] is Map<String, dynamic>) {
+      nearby = Nearby.fromJson(json['nearby']);
+    } else {
+      nearby = null;
     }
+
+    if (json['weekly'] is Map<String, dynamic>) {
+      weekly = Nearby.fromJson(json['weekly']);
+    } else {
+      weekly = null;
+    }
+
+    if (json['yearly'] is Map<String, dynamic>) {
+      yearly = Yearly.fromJson(json['yearly']);
+    } else {
+      yearly = null;
+    }
+
+    if (json['forward'] != null && json['forward'] is List) {
+      forward = (json['forward'] as List)
+          .map((v) => Forward.fromJson(v))
+          .toList();
+    } else {
+      forward = [];
+    }
+
     prdate = json['prdate'];
   }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

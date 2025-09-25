@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/provider/calculator_provider.dart';
+import 'package:uswheat/provider/change_password_provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
+import 'package:uswheat/provider/estimates/wheat_page_provider.dart';
 import 'package:uswheat/provider/login_provider.dart';
 import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/provider/reports_provider.dart';
 import 'package:uswheat/provider/sign_provider.dart';
 import 'package:uswheat/provider/watchList_provider.dart';
-import 'package:uswheat/utils/app_routes.dart';
+import 'package:uswheat/splash_screen.dart';
 import 'package:uswheat/utils/route_generator.dart';
 import 'package:uswheat/utils/themes.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (WebViewPlatform.instance == null && WebViewPlatform.instance is! AndroidWebViewPlatform) {
+    WebViewPlatform.instance = AndroidWebViewPlatform();
+  }
   runApp(const MyApp());
 }
 
@@ -40,12 +47,14 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (context) => CalculatorProvider()),
           ChangeNotifierProvider(create: (context) => WatchlistProvider()),
           ChangeNotifierProvider(create: (context) => ReportsProvider()),
+          ChangeNotifierProvider(create: (context) => WheatPageProvider()),
+          ChangeNotifierProvider(create: (context) => ChangePasswordProvider()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.system,
           theme: ThemeClass.lightTheme,
-          initialRoute: AppRoutes.splashScreen,
+          home: const SplashScreen(),
           onGenerateRoute: RouteGenerator.generateRoute,
         ));
   }

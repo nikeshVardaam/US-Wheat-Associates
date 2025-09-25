@@ -17,13 +17,31 @@ class AppBoxDecoration {
 
   static BoxDecoration blueRounded() {
     return BoxDecoration(
-      color: AppColors.c95795d,
+      color: AppColors.cab865a,
       borderRadius: BorderRadius.circular(4),
     );
-  }static BoxDecoration lightContainer() {
+  }
+
+  static BoxDecoration blue() {
+    return BoxDecoration(
+      color: AppColors.cDFDEDE,
+      borderRadius: BorderRadius.circular(4),
+    );
+  }
+
+  static BoxDecoration lightContainer() {
     return BoxDecoration(
       color: AppColors.cAB865A.withOpacity(0.2),
       borderRadius: BorderRadius.circular(4),
     );
   }
+
+  static BoxDecoration filledContainer(Color color) {
+    return BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(4),
+    );
+  }
+
+
 }

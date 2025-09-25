@@ -10,6 +10,7 @@ import '../utils/api_endpoint.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 import '../utils/pref_keys.dart';
+import 'exception_dialogs.dart';
 
 class PostServices {
   SharedPreferences? sp;
@@ -32,7 +33,9 @@ class PostServices {
 
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
-
+print(bearerToken);
+print(url);
+print(requestData);
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -47,90 +50,95 @@ class PostServices {
       if (loader) {
         Navigator.pop(context);
       }
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 409) {
         return response;
       } else if (response.statusCode == 401) {
-        if (isBottomSheet) {
-          AppWidgets.topSnackBar(
-            context: context,
-            message: jsonData["message"],
-            color: Colors.redAccent,
-          );
-        } else {
-          AppWidgets.appSnackBar(context: context, text: jsonData["message"], color: Colors.redAccent);
-        }
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: jsonData["message"] ?? "",
+          onPressed: () {},
+        );
         return null;
       } else if (response.statusCode == 422) {
-        if (isBottomSheet) {
-          AppWidgets.topSnackBar(
-            context: context,
-            message: jsonData["message"],
-            color: Colors.redAccent,
-          );
-        } else {
-          AppWidgets.appSnackBar(context: context, text: jsonData["message"]?? "", color: Colors.redAccent);
-        }
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: jsonData["message"] ?? "",
+          onPressed: () {},
+        );
         return null;
       } else if (response.statusCode == 404) {
-        if (isBottomSheet) {
-          AppWidgets.topSnackBar(
-            context: context,
-            message: jsonData["message"],
-            color: Colors.redAccent,
-          );
-        } else {
-          AppWidgets.appSnackBar(context: context, text: jsonData["message"], color: Colors.redAccent);
-        }
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: jsonData["message"] ?? "",
+          onPressed: () {},
+        );
         return null;
       } else if (response.statusCode == 500) {
-        if (isBottomSheet) {
-          AppWidgets.topSnackBar(
-            context: context,
-            message: AppStrings.error500,
-            color: Colors.redAccent,
-          );
-        } else {
-          AppWidgets.appSnackBar(context: context, text: AppStrings.error500, color: Colors.redAccent);
-        }
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: AppStrings.error500,
+          onPressed: () {},
+        );
         return null;
       } else if (response.statusCode == 503) {
-        if (isBottomSheet) {
-          AppWidgets.topSnackBar(
-            context: context,
-            message: AppStrings.error500,
-            color: Colors.redAccent,
-          );
-        } else {
-          AppWidgets.appSnackBar(context: context, text: AppStrings.error503, color: Colors.redAccent);
-        }
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: AppStrings.error503,
+          onPressed: () {},
+        );
         return null;
       }
     } on TimeoutException catch (e) {
       if (context.mounted && loader) {
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message:  "Request timed out. Please check your internet and try again.",
+          onPressed: () {},
+        );
         // show dialog
       }
       return null;
     } on HttpException catch (e) {
       if (context.mounted && loader) {
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.message ?? "",
+          onPressed: () {},
+        );
       }
       return null;
     } on SocketException catch (e) {
       if (context.mounted && loader) {
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: "No Internet connection.",
+          onPressed: () {},
+        );
         // show dialog
       }
       return null;
     } on FormatException catch (e) {
       if (context.mounted && loader) {
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.message ?? "",
+          onPressed: () {},
+        );
         // show dialog
       }
       return null;
     } on Exception catch (e) {
       if (context.mounted && loader) {
         Navigator.pop(context);
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: e.toString() ?? "",
+          onPressed: () {},
+        );
         // show dialog
       }
       return null;

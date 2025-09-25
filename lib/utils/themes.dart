@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:uswheat/utils/app_colors.dart';
 
 class ThemeClass {
-  Color lightPrimaryColor = const Color(0xffffffff);
+  static Color lightPrimaryColor = const Color(0xffffffff);
   Color darkPrimaryColor = const Color(0xff1f2836);
+  static Color appBarColor = const Color(0xFF3D3934);
 
   static ThemeData lightTheme = ThemeData(
-    primaryColor: _themeClass.lightPrimaryColor,
+    primaryColor: ThemeClass.lightPrimaryColor,
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.cFFFFFF,
@@ -27,7 +28,7 @@ class ThemeClass {
       hintStyle: TextStyle(
         fontWeight: FontWeight.w400,
         fontSize: 14,
-        fontFamily: "Roboto",
+        fontFamily: "proximanovaexcn",
         color: AppColors.c666666,
       ),
     ),
@@ -35,49 +36,59 @@ class ThemeClass {
       labelLarge: const TextStyle().copyWith(
         fontWeight: FontWeight.w400,
         fontSize: 14,
-        fontFamily: "Roboto",
+        fontFamily: "proximanovaexcn",
         color: AppColors.c464646,
       ),
       labelSmall: const TextStyle().copyWith(
         fontWeight: FontWeight.w400,
         fontSize: 11,
-        fontFamily: "Roboto",
+        fontFamily: "proximanovaexcn",
         color: AppColors.c000000,
       ),
       headlineSmall: const TextStyle().copyWith(
         fontWeight: FontWeight.w500,
         fontSize: 24,
-        fontFamily: "Roboto",
+        fontFamily: "proximanovaexcn",
         color: AppColors.c000000,
       ),
       bodySmall: const TextStyle().copyWith(
         fontWeight: FontWeight.w400,
         fontSize: 12,
-        fontFamily: "Roboto",
+        fontFamily: "proximanovaexcn",
         color: AppColors.c000000,
       ),
       titleMedium: const TextStyle().copyWith(
         fontWeight: FontWeight.w500,
         fontSize: 18,
-        fontFamily: "Roboto",
+        fontFamily: "proximanovaexcn",
         color: AppColors.c000000,
       ),
       titleLarge: const TextStyle().copyWith(
         fontWeight: FontWeight.w600,
         fontSize: 20,
-        fontFamily: "Roboto",
+        fontFamily: "proximanovaexcn",
         color: AppColors.c464646,
       ),
       bodyLarge: const TextStyle().copyWith(
         fontWeight: FontWeight.w600,
         fontSize: 16,
-        fontFamily: "Roboto",
+        fontFamily: "proximanovaexcn",
         color: Colors.black,
       ),
     ),
-    scaffoldBackgroundColor: _themeClass.lightPrimaryColor,
+    scaffoldBackgroundColor: ThemeClass.lightPrimaryColor,
     colorScheme: const ColorScheme.light().copyWith(
-      primary: _themeClass.lightPrimaryColor,
+      primary: ThemeClass.lightPrimaryColor,
+    ),
+    appBarTheme: AppBarTheme(
+      elevation: 0,
+      backgroundColor: lightPrimaryColor,
+      surfaceTintColor: Colors.transparent,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: appBarColor,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
     ),
   );
 }

@@ -18,19 +18,17 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-      ),
-      backgroundColor: Colors.white,
-      body: Consumer<LoginProvider>(builder: (context, lp, child) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Consumer<LoginProvider>(builder: (context, lp, child) {
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +40,7 @@ class _LoginState extends State<Login> {
                         )),
                         const SizedBox(height: 32),
                         Text(
-                          AppStrings.logInToYourAccount,
+                          AppStrings.signInToYourAccount,
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.c45413b),
                         ),
                         const SizedBox(height: 32),
@@ -84,12 +82,33 @@ class _LoginState extends State<Login> {
                         AppTextField.textField(
                           controller: lp.passwordController,
                           context,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.text,
+                          obscureText: !lp.passwordIsVisible,
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           cursorColor: AppColors.c000000,
                           decoration: InputDecoration(
                             filled: true,
-                            suffixIcon: const Icon(Icons.password),
+                            suffixIcon: lp.passwordIsVisible
+                                ? GestureDetector(
+                                    onTap: () {
+                                      lp.setPasswordVisibility();
+                                    },
+                                    child: Icon(
+                                      Icons.visibility_off,
+                                      color: AppColors.c464646,
+                                      size: 16,
+                                    ),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      lp.setPasswordVisibility();
+                                    },
+                                    child: Icon(
+                                      Icons.visibility,
+                                      color: AppColors.c464646,
+                                      size: 16,
+                                    ),
+                                  ),
                             fillColor: AppColors.cFFFFFF,
                             contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                             border: OutlineInputBorder(
@@ -107,78 +126,69 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // Row(
-                        //   children: [
-                        //     Theme(
-                        //       data: ThemeData(),
-                        //       child: Checkbox(
-                        //         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        //         visualDensity: const VisualDensity(horizontal: -4),
-                        //         activeColor: AppColors.c5B8EDC,
-                        //         checkColor: AppColors.cFFFFFF,
-                        //         value: lp.rememberMe,
-                        //         onChanged: (val) {
-                        //           lp.setRemember();
-                        //         },
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
+                        // GestureDetector(
+                        //   onTap: () {},
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.end,
+                        //     children: [
+                        //       Text(
+                        //         AppStrings.forgotPassword,
+                        //         style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c666666),
                         //       ),
-                        //     ),
-                        //     const SizedBox(
-                        //       width: 10,
-                        //     ),
-                        //     Text(
-                        //       AppStrings.rememberMe,
-                        //       style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c3d3934),
-                        //     ),
-                        //   ],
+                        //     ],
+                        //   ),
                         // ),
                       ],
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: InkWell(
-                    onTap: () async {
-                      lp.logIn(context: context);
-                    },
-                    child: AppButtons().filledButton(true, AppStrings.logIn, context),
+                  const SizedBox(
+                    height: 36,
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppStrings.dontHaveAnAccount,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c666666),
-                    ),
-                    const SizedBox(
-                      width: 2,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.signUp,
-                        );
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: InkWell(
+                      onTap: () async {
+                        lp.logIn(context: context);
                       },
-                      child: Text(
-                        AppStrings.signUp,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c45413b, fontWeight: FontWeight.bold),
-                      ),
+                      child: AppButtons().filledButton(true, AppStrings.signIn, context),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        AppStrings.dontHaveAnAccount,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c666666),
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.signUp,
+                          );
+                        },
+                        child: Text(
+                          AppStrings.signUp,
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c45413b, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }
