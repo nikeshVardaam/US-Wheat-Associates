@@ -466,7 +466,7 @@ class _PricesState extends State<Prices> {
                                 width: 4,
                               ),
                               Text(
-                                pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 6) ?? "--",
+                                pp.allPriceDataModal?.nearby?.cASHMT.toString().substring(0, 6) ?? "",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.c353d4a.withOpacity(0.7),
@@ -544,7 +544,7 @@ class _PricesState extends State<Prices> {
                                 width: 4,
                               ),
                               Text(
-                                pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 6) ?? "--",
+                                pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 2) ?? "--",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.cd63a3a,

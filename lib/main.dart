@@ -12,9 +12,14 @@ import 'package:uswheat/provider/watchList_provider.dart';
 import 'package:uswheat/splash_screen.dart';
 import 'package:uswheat/utils/route_generator.dart';
 import 'package:uswheat/utils/themes.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (WebViewPlatform.instance == null && WebViewPlatform.instance is! AndroidWebViewPlatform) {
+    WebViewPlatform.instance = AndroidWebViewPlatform();
+  }
   runApp(const MyApp());
 }
 

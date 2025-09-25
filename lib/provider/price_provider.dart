@@ -520,7 +520,10 @@ class PricesProvider extends ChangeNotifier {
   }) async {
     final response = await PostServices().post(
       endpoint: ApiEndpoint.getAllPriceData,
-      requestData: {"grphcode": grphcode ?? ""},
+      requestData: {
+        "grphcode": grphcode,
+        "date": prdate,
+      },
       context: context,
       isBottomSheet: false,
       loader: loader,

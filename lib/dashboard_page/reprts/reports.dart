@@ -26,11 +26,21 @@ class _ReportsState extends State<Reports> {
       Provider.of<ReportsProvider>(context, listen: false).getDefaultReports(context: context);
     });
     scrollController.addListener(() {
-      final provider = Provider.of<ReportsProvider>(context, listen: false);
-      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100 && provider.hasMoreData && !provider.isLoading) {
-        provider.getReports(context: context);
+      final rp = Provider.of<ReportsProvider>(context, listen: false);
+
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+        // Load more when near bottom
+        if (!rp.isLoading && rp.hasMoreData) {
+          rp.getDefaultReports(context: context);
+        }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -221,128 +231,80 @@ class _ReportsState extends State<Reports> {
                   ],
                 ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.start,
-              //   children: [
-              //     Transform.scale(
-              //       scale: 0.6,
-              //       child: Switch(
-              //         value: rp.isRecentMode,
-              //         onChanged: (value) {
-              //           rp.toggleRecentMode(value);
-              //           rp.getReports(context: context);
-              //         },
-              //         activeColor: AppColors.c5B8EDC,
-              //         inactiveThumbColor: AppColors.cab865a.withOpacity(0.6),
-              //       ),
-              //     ),
-              //     Text(
-              //       rp.isRecentMode ? "Recent Reports" : "Filtered Reports",
-              //       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              //             fontWeight: FontWeight.w600,
-              //             color: AppColors.c353d4a,
-              //           ),
-              //     ),
-              //   ],
-              // ),
               const SizedBox(
                 height: 14,
               ),
               Expanded(
-                child: SingleChildScrollView(
+                child: ListView.builder(
                   controller: scrollController,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                    ),
-                    child: rp.reports.isEmpty && !rp.isLoading
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 100),
-                            child: Text(
-                              "No Data Found",
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: Colors.grey,
-                                  ),
-                            ),
-                          )
-                        : Column(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  itemCount: rp.reports.length + 1, // extra 1 for loader
+                  itemBuilder: (context, index) {
+                    if (index < rp.reports.length) {
+                      final report = rp.reports[index];
+                      return GestureDetector(
+                        onTap: () {
+                          final arg = ReportDetailArg(
+                            title: report.title ?? "",
+                            pdfUrl: report.effectiveUrl ?? "",
+                          );
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.reportDetailPage,
+                            arguments: arg,
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          decoration: AppBoxDecoration.greyBorder(context),
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
                             children: [
-                              ...List.generate(rp.reports.length, (index) {
-                                final report = rp.reports[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    ReportDetailArg arg = ReportDetailArg(
-                                      title: report.title ?? "",
-                                      pdfUrl: report.effectiveUrl ?? "",
-
-                                    );
-                                    Navigator.pushNamed(
-                                      context,
-                                      AppRoutes.reportDetailPage,
-                                      arguments: arg,
-                                    );
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(bottom: 12),
-                                    decoration: AppBoxDecoration.greyBorder(context),
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Row(
-                                            children: [
-                                              Image.asset(
-                                                AppAssets.pdf,
-                                                scale: 35,
-                                              ),
-                                              const SizedBox(
-                                                width: 8,
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  report.title ?? "",
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 2,
-                                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                        color: AppColors.c000000,
-                                                      ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              AppStrings.view,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                    color: AppColors.cB6B6B6,
-                                                  ),
-                                            ),
-                                            Icon(
-                                              Icons.arrow_forward_ios_rounded,
-                                              size: 12,
-                                              color: AppColors.cB6B6B6,
-                                            )
-                                          ],
-                                        )
-                                      ],
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Image.asset(AppAssets.pdf, scale: 35),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        report.title ?? "",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }),
-                              if (rp.isLoading && rp.hasMoreData)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  child: AppWidgets.loading(),
+                                  ],
                                 ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    AppStrings.view,
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cB6B6B6),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 12,
+                                    color: AppColors.cB6B6B6,
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
-                  ),
+                        ),
+                      );
+                    } else {
+                      // 👇 last index pe loader ya empty
+                      return rp.isLoading && rp.hasMoreData
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: AppWidgets.loading(),
+                            )
+                          : const SizedBox.shrink();
+                    }
+                  },
                 ),
-              )
+              ),
             ],
           );
         },

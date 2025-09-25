@@ -10,7 +10,7 @@ class ReportModel {
     required this.pdfUrl,
     required this.url,
   });
-  String get effectiveUrl => pdfUrl?.isNotEmpty == true ? pdfUrl! : url ?? '';
+  String get effectiveUrl => pdfUrl.isNotEmpty == true ? pdfUrl : url ?? '';
   factory ReportModel.fromJson(Map<String, dynamic> json) {
     return ReportModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,

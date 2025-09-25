@@ -243,37 +243,7 @@ class _DashboardState extends State<Dashboard> {
                                 Navigator.pop(context);
                               },
                             ),
-                            GestureDetector(
-                             onTap: (){
-                               showDialog(
-                                 context: context,
-                                 builder: (context) {
-                                   return ChangePassword(
-                                     onTap: () {
-                                       dp.logOut(context);
-                                     },
-                                   );
-                                 },
-                               );
-                             },
-                              child: ListTile(
-                                dense: true,
-                                leading: SvgPicture.asset(
-                                  AppAssets.passwordChange,
-                                  height: 18,
-                                  colorFilter: ColorFilter.mode(
-                                    dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-                                    BlendMode.srcIn,
-                                  ),
-                                ),
-                                title: Text(
-                                  AppStrings.changePassword,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-                                      ),
-                                ),
-                              ),
-                            ),
+
                             GestureDetector(
                               onTap: () {
                                 showDialog(
@@ -435,3 +405,34 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
+// GestureDetector(
+//   onTap: (){
+//     showDialog(
+//       context: context,
+//       builder: (context) {
+//         return ChangePassword(
+//           onTap: () {
+//             dp.logOut(context);
+//           },
+//         );
+//       },
+//     );
+//   },
+//   child: ListTile(
+//     dense: true,
+//     leading: SvgPicture.asset(
+//       AppAssets.passwordChange,
+//       height: 18,
+//       colorFilter: ColorFilter.mode(
+//         dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+//         BlendMode.srcIn,
+//       ),
+//     ),
+//     title: Text(
+//       AppStrings.changePassword,
+//       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+//         color: dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+//       ),
+//     ),
+//   ),
+// ),

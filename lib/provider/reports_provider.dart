@@ -5,7 +5,6 @@ import '../modal/repots_modal.dart';
 
 class ReportsProvider extends ChangeNotifier {
   bool isRecentMode = false;
-  bool isDefaultDataMode= true;
   final List<Map<String, String>> reportTypes = [
     {'name': 'Commercial Sales Report', 'value': 'commercial-sales'},
     {'name': 'Crop Quality Report', 'value': 'crop-quality'},
@@ -27,7 +26,6 @@ class ReportsProvider extends ChangeNotifier {
   final List<ReportModel> _reports = [];
 
   List<ReportModel> get reports => _reports;
-  List<ReportModel> get post => post;
 
   bool _isLoading = false;
 
@@ -40,12 +38,6 @@ class ReportsProvider extends ChangeNotifier {
     currentPage = 1;
     _reports.clear();
     hasMoreData = true;
-    notifyListeners();
-  }
-
-  void toggleRecentMode(bool value) {
-    isRecentMode = value;
-    resetPagination();
     notifyListeners();
   }
 
@@ -67,48 +59,50 @@ class ReportsProvider extends ChangeNotifier {
         return '';
     }
   }
+
+  final int perPage = 20;
+
   Future<void> getDefaultReports({required BuildContext context}) async {
-    if (_isLoading) return;
+    if (_isLoading || !hasMoreData) return;
 
     _isLoading = true;
     notifyListeners();
 
-    const url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data";
+    final url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data?page&per_page=$perPage";
 
     try {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body) as List<dynamic>;
-        print("Raw API Response: $decoded");
 
-        _reports.clear();
-
+        // Flatten all posts
+        final List<Map<String, dynamic>> allPosts = [];
         for (var item in decoded) {
           final posts = item['posts'] as List<dynamic>? ?? [];
           for (var post in posts) {
-            _reports.add(ReportModel.fromJson({
+            allPosts.add({
               'title': post['title'] ?? '',
               'url': post['url'] ?? '',
-            }));
-
-            print("Report: ${post['title']} | ${post['url']}");
+            });
           }
         }
 
-        print("Parsed Reports: ${_reports.length} items");
+        // Load only first 10 items
+        final chunk = allPosts.take(10).toList();
+        _reports.clear();
+        _reports.addAll(chunk.map((e) => ReportModel.fromJson(e)).toList());
+
+        // Disable further loading
         hasMoreData = false;
-      } else {
-        print("Failed to load default reports: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error fetching default reports: $e");
+      print("Error: $e");
     }
 
     _isLoading = false;
     notifyListeners();
   }
-
 
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
