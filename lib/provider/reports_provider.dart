@@ -60,7 +60,6 @@ class ReportsProvider extends ChangeNotifier {
     }
   }
 
-  final int perPage = 20;
 
   Future<void> getDefaultReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
@@ -68,7 +67,7 @@ class ReportsProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data?page&per_page=$perPage";
+    final url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data?page&per_page";
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -93,8 +92,7 @@ class ReportsProvider extends ChangeNotifier {
         _reports.clear();
         _reports.addAll(chunk.map((e) => ReportModel.fromJson(e)).toList());
 
-        // Disable further loading
-        hasMoreData = false;
+        hasMoreData = false; // 👈 disables any further pagination
       }
     } catch (e) {
       print("Error: $e");
@@ -107,6 +105,12 @@ class ReportsProvider extends ChangeNotifier {
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
 
+    // Check filters
+    if (!isRecentMode && (selectedReportType == null || selectedYear == null || selectedCategory == null)) {
+      // Filters incomplete, do not fetch
+      return;
+    }
+
     _isLoading = true;
     notifyListeners();
 
@@ -114,15 +118,8 @@ class ReportsProvider extends ChangeNotifier {
       String url;
       if (isRecentMode) {
         url = "https://uswheat.org/wp-json/uswheat/v1/reports"
-            "?per_page=20&page=$currentPage"
-            "&report_type=all";
+            "?per_page=20&page=$currentPage&report_type=all";
       } else {
-        if (selectedReportType == null || selectedYear == null || selectedCategory == null) {
-          _isLoading = false;
-          notifyListeners();
-          return;
-        }
-
         url = "https://uswheat.org/wp-json/uswheat/v1/reports"
             "?per_page=20&page=$currentPage"
             "&year=$selectedYear&category=$selectedCategory"
@@ -135,10 +132,12 @@ class ReportsProvider extends ChangeNotifier {
         final decoded = jsonDecode(response.body);
         final List<dynamic> data = decoded['data'] ?? [];
 
+        if (currentPage == 1) _reports.clear();
+
         if (data.isEmpty) {
           hasMoreData = false;
+          // Show empty state instead of default data
         } else {
-          if (currentPage == 1) _reports.clear();
           currentPage++;
           _reports.addAll(data.map((e) => ReportModel.fromJson(e)).toList());
         }
@@ -152,6 +151,7 @@ class ReportsProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
 
   Future<void> showFilterDropdown({
     required BuildContext context,

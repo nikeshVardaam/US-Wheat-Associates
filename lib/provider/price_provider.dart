@@ -221,7 +221,7 @@ class PricesProvider extends ChangeNotifier {
 
     apiCount++;
     await graphData(context: context, loader: true);
-    await getAllPriceData(context: context, loader: false);
+    await getAllPriceData(context: context, loader: true);
 
     await saveFiltersLocally();
     _isGraphUpdating = false;

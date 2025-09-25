@@ -29,12 +29,17 @@ class _ReportsState extends State<Reports> {
       final rp = Provider.of<ReportsProvider>(context, listen: false);
 
       if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
-        // Load more when near bottom
         if (!rp.isLoading && rp.hasMoreData) {
-          rp.getDefaultReports(context: context);
+          if (rp.isRecentMode || (rp.selectedReportType == null && rp.selectedYear == null && rp.selectedCategory == null)) {
+            rp.getDefaultReports(context: context);
+          } else {
+            rp.getReports(context: context);
+          }
         }
       }
     });
+
+
   }
 
   @override
