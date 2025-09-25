@@ -503,7 +503,7 @@ class PricesProvider extends ChangeNotifier {
 
     if (response != null) {
       final list = json.decode(response.body) as List;
-      debugPrint(response.body.toString(), wrapWidth: 1024);
+      // debugPrint(response.body.toString(), wrapWidth: 1024);
 
       graphList = list.map((e) => GraphDataModal.fromJson(e)).toList();
       _generateChartDataFromGraphList();

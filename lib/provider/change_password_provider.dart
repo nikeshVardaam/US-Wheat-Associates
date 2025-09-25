@@ -83,9 +83,9 @@ class ChangePasswordProvider extends ChangeNotifier {
   changePassword({required BuildContext context}) async {
     if (validation(context)) {
       var data = {
-        "password": passwordController.text.trim(),
+        "current_password": passwordController.text.trim(),
         "new_password": newPasswordController.text.trim(),
-        "confirm_password": confirmPasswordController.text.trim(),
+        "new_password_confirmation": confirmPasswordController.text.trim(),
       };
       await PostServices()
           .post(

@@ -5,6 +5,7 @@ import '../modal/repots_modal.dart';
 
 class ReportsProvider extends ChangeNotifier {
   bool isRecentMode = false;
+  bool isDefaultDataMode= true;
   final List<Map<String, String>> reportTypes = [
     {'name': 'Commercial Sales Report', 'value': 'commercial-sales'},
     {'name': 'Crop Quality Report', 'value': 'crop-quality'},
@@ -18,13 +19,15 @@ class ReportsProvider extends ChangeNotifier {
 
   final List<String> languages = ['english'];
 
-  String? selectedReportType = "commercial-sales";
-  String? selectedYear = DateTime.now().year.toString();
-  String? selectedCategory = "english";
+  String? selectedReportType;
+  String? selectedYear;
+
+  String? selectedCategory;
 
   final List<ReportModel> _reports = [];
 
   List<ReportModel> get reports => _reports;
+  List<ReportModel> get post => post;
 
   bool _isLoading = false;
 
@@ -64,6 +67,48 @@ class ReportsProvider extends ChangeNotifier {
         return '';
     }
   }
+  Future<void> getDefaultReports({required BuildContext context}) async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+    notifyListeners();
+
+    const url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data";
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body) as List<dynamic>;
+        print("Raw API Response: $decoded");
+
+        _reports.clear();
+
+        for (var item in decoded) {
+          final posts = item['posts'] as List<dynamic>? ?? [];
+          for (var post in posts) {
+            _reports.add(ReportModel.fromJson({
+              'title': post['title'] ?? '',
+              'url': post['url'] ?? '',
+            }));
+
+            print("Report: ${post['title']} | ${post['url']}");
+          }
+        }
+
+        print("Parsed Reports: ${_reports.length} items");
+        hasMoreData = false;
+      } else {
+        print("Failed to load default reports: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching default reports: $e");
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
 
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
@@ -154,7 +199,7 @@ class ReportsProvider extends ChangeNotifier {
       ],
     );
 
-    if (selected != null) {
+    if (selected != null && selected.isNotEmpty) {
       selectedReportType = selected;
       onSelect(selected);
       notifyListeners();

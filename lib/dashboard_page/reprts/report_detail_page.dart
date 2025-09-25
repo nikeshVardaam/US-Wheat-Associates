@@ -33,10 +33,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: widget.reportDetailArg.pdfUrl.isNotEmpty
-            ? SfPdfViewer.network(
-                widget.reportDetailArg.pdfUrl,
-                controller: _pdfViewerController,
-              )
+            ? SfPdfViewer.network(widget.reportDetailArg.pdfUrl, controller: _pdfViewerController)
             : Center(
                 child: Text(
                   AppStrings.noData,

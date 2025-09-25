@@ -24,8 +24,7 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.white,
         body: Consumer<LoginProvider>(builder: (context, lp, child) {
           return SafeArea(
-            child:
-            Padding(
+            child: Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
@@ -129,6 +128,18 @@ class _LoginState extends State<Login> {
                         ),
                         const SizedBox(
                           height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                AppStrings.forgotPassword,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c666666),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

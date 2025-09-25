@@ -23,7 +23,7 @@ class _ReportsState extends State<Reports> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<ReportsProvider>(context, listen: false).getReports(context: context);
+      Provider.of<ReportsProvider>(context, listen: false).getDefaultReports(context: context);
     });
     scrollController.addListener(() {
       final provider = Provider.of<ReportsProvider>(context, listen: false);
@@ -145,7 +145,7 @@ class _ReportsState extends State<Reports> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            rp.selectedYear ?? "Select Report Type",
+                            rp.selectedYear ?? "Select Year Type",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.c353d4a.withOpacity(0.7),
@@ -204,7 +204,7 @@ class _ReportsState extends State<Reports> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            rp.selectedCategory != null ? rp.selectedCategory![0].toUpperCase() + rp.selectedCategory!.substring(1) : "Select Report Type",
+                            rp.selectedCategory != null ? rp.selectedCategory![0].toUpperCase() + rp.selectedCategory!.substring(1) : "Select Category Type",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.c353d4a.withOpacity(0.7),
@@ -273,7 +273,8 @@ class _ReportsState extends State<Reports> {
                                   onTap: () {
                                     ReportDetailArg arg = ReportDetailArg(
                                       title: report.title ?? "",
-                                      pdfUrl: report.pdfUrl ?? "",
+                                      pdfUrl: report.effectiveUrl ?? "",
+
                                     );
                                     Navigator.pushNamed(
                                       context,

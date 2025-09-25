@@ -11,7 +11,7 @@ import '../utils/app_widgets.dart';
 import '../utils/miscellaneous.dart';
 import '../utils/pref_keys.dart';
 
-class  LoginProvider extends ChangeNotifier {
+class LoginProvider extends ChangeNotifier {
   SharedPreferences? sp;
   bool passwordIsVisible = false;
   bool rememberMe = false;

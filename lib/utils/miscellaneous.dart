@@ -45,20 +45,11 @@ class Miscellaneous {
     }
   }
 
-  static String formatPrDate(String? dateStr) {
-    if (dateStr == null || dateStr.isEmpty) return "--";
-    try {
-      final parsedDate = DateTime.parse(dateStr);
-      return DateFormat('MMMM d, yyyy').format(parsedDate).toUpperCase(); // e.g. July 18, 2025
-    } catch (e) {
-      return "--";
-    }
-  }
   static String formatDateCustom(
-      String? dateStr, {
-        String format = 'yyyyMMdd', // default format
-        bool toUpperCase = true,    // convert to uppercase if needed
-      }) {
+    String? dateStr, {
+    String format = 'yyyyMMdd', // default format
+    bool toUpperCase = true, // convert to uppercase if needed
+  }) {
     if (dateStr == null || dateStr.isEmpty) return "--";
 
     try {
@@ -69,6 +60,17 @@ class Miscellaneous {
       return "--";
     }
   }
+
+  static String formatPrDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return "--";
+    try {
+      final parsedDate = DateTime.parse(dateStr);
+      return DateFormat('MMMM d, yyyy').format(parsedDate).toUpperCase();
+    } catch (e) {
+      return "--";
+    }
+  }
+
   static String getYear(String? dateStr) {
     if (dateStr == null || dateStr.isEmpty) return "--";
 
