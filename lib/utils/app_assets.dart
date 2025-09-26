@@ -21,5 +21,6 @@ class AppAssets {
   static const hardRedSpring = "assets/images/hard_red_spring.jpg";
   static const hardRedWinter = "assets/images/hard_red_winter.jpg";
   static const passwordChange = "assets/images/password_change.svg";
+  static const news = "assets/images/news.svg";
 
 }

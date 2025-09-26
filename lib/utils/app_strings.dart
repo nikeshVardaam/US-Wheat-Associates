@@ -102,6 +102,7 @@ class AppStrings {
   static const search = "Search";
   static const gulfOfMexico = "Gulf of Mexico";
   static const calculator = "Calculator";
+  static const newFeed = "News Feed";
   static const changePassword  = "Change Password ";
   static const noDataFound = "No data found";
   static const wheatAssociates = "U.S. Wheat Associates";

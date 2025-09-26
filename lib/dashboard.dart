@@ -9,6 +9,7 @@ import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_delete_dialog.dart';
 import 'package:uswheat/utils/app_logout_dialog.dart' show AppLogoutDialogs;
+import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import 'package:uswheat/auth/change_password.dart';
@@ -243,7 +244,28 @@ class _DashboardState extends State<Dashboard> {
                                 Navigator.pop(context);
                               },
                             ),
-
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.newsFeed,
+                                );
+                              },
+                              child: ListTile(
+                                dense: true,
+                                leading: SvgPicture.asset(
+                                  AppAssets.news,
+                                  height: 16,
+                                  color: AppColors.cFFFFFF,
+                                ),
+                                title: Text(
+                                  AppStrings.newFeed,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: AppColors.cFFFFFF,
+                                      ),
+                                ),
+                              ),
+                            ),
                             GestureDetector(
                               onTap: () {
                                 showDialog(

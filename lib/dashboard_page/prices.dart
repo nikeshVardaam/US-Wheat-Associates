@@ -438,13 +438,14 @@ class _PricesState extends State<Prices> {
                           const SizedBox(
                             width: 4,
                           ),
-                          Text(
-                            "FOB \$/BU ",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                ),
-                          ),
+                          if (pp.allPriceDataModal?.nearby?.cASHBU != null)
+                            Text(
+                              "FOB \$/BU",
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Container(
@@ -455,18 +456,19 @@ class _PricesState extends State<Prices> {
                           ),
                           Row(
                             children: [
-                              Text(
-                                "\$/MT -",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.c353d4a.withOpacity(0.7),
-                                    ),
-                              ),
+                              if (pp.allPriceDataModal?.nearby?.cASHMT != null)
+                                Text(
+                                  "\$/MT",
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        color: AppColors.c353d4a.withOpacity(0.7),
+                                      ),
+                                ),
                               const SizedBox(
                                 width: 4,
                               ),
                               Text(
-                                pp.allPriceDataModal?.nearby?.cASHMT.toString().substring(0, 6) ?? "",
+                                pp.allPriceDataModal?.nearby?.cASHMT.toString().substring(0, 6) ?? "--",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.c353d4a.withOpacity(0.7),
@@ -514,13 +516,14 @@ class _PricesState extends State<Prices> {
                               const SizedBox(
                                 width: 4,
                               ),
-                              Text(
-                                "FOB \$/BU ",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.cd63a3a,
-                                    ),
-                              ),
+                              if (pp.allPriceDataModal?.weekly?.cASHBU != null)
+                                Text(
+                                  "FOB \$/BU ",
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        color: AppColors.cd63a3a,
+                                      ),
+                                ),
                             ],
                           ),
                           Padding(
@@ -533,13 +536,14 @@ class _PricesState extends State<Prices> {
                           ),
                           Row(
                             children: [
-                              Text(
-                                "\$/MT -",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.cd63a3a,
-                                    ),
-                              ),
+                              if (pp.allPriceDataModal?.weekly?.cASHMT != null)
+                                Text(
+                                  "\$/MT",
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        color: AppColors.cd63a3a,
+                                      ),
+                                ),
                               const SizedBox(
                                 width: 4,
                               ),
@@ -580,13 +584,14 @@ class _PricesState extends State<Prices> {
                               ],
                             ),
                           ),
-                          Text(
-                            "\$/MT",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                ),
-                          ),
+                          if (pp.allPriceDataModal?.yearly?.cASHMT != null)
+                            Text(
+                              "\$/MT",
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
                           const SizedBox(
                             width: 4,
                           ),
@@ -625,13 +630,14 @@ class _PricesState extends State<Prices> {
                               ],
                             ),
                           ),
-                          Text(
-                            Miscellaneous.formatPrDate(pp.allPriceDataModal?.prdate ?? ""),
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                ),
-                          ),
+                          if (pp.allPriceDataModal?.prdate != null)
+                            Text(
+                              Miscellaneous.formatPrDate(pp.allPriceDataModal?.prdate ?? "--"),
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
+                            ),
                         ],
                       ),
                     ),

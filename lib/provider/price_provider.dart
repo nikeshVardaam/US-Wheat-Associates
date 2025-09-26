@@ -395,6 +395,13 @@ class PricesProvider extends ChangeNotifier {
                         itemExtent: 40,
                         onSelectedItemChanged: (index) {
                           selectedMonth = index + 1;
+
+                          int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+                          int maxDays = DateTime(year, selectedMonth + 1, 0).day;
+
+                          if (selectedDay > maxDays) selectedDay = maxDays;
+
+                          notifyListeners();
                         },
                         children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
                       ),
@@ -469,20 +476,24 @@ class PricesProvider extends ChangeNotifier {
       "region": selectedRegion ?? "",
     };
 
-    final value = await PostServices().post(
+    await PostServices()
+        .post(
       endpoint: ApiEndpoint.getGraphCodesByClassAndRegion,
       requestData: data,
       context: context,
       isBottomSheet: false,
       loader: loader,
+    )
+        .then(
+      (value) {
+        if (value != null) {
+          final body = json.decode(value.body);
+          if (body is List && body.isNotEmpty) {
+            grphcode = body.last.toString();
+          }
+        }
+      },
     );
-
-    if (value != null) {
-      final body = json.decode(value.body);
-      if (body is List && body.isNotEmpty) {
-        grphcode = body.last.toString();
-      }
-    }
   }
 
   Future<void> graphData({
@@ -491,7 +502,7 @@ class PricesProvider extends ChangeNotifier {
   }) async {
     if ((grphcode ?? "").isEmpty || (prdate ?? "").isEmpty) return;
 
-    final data = {"grphcode": grphcode!, "prdate": prdate!};
+    final data = {"grphcode": grphcode ?? "", "prdate": prdate ?? ""};
 
     final response = await PostServices().post(
       endpoint: ApiEndpoint.getGraphData,
@@ -521,8 +532,8 @@ class PricesProvider extends ChangeNotifier {
     final response = await PostServices().post(
       endpoint: ApiEndpoint.getAllPriceData,
       requestData: {
-        "grphcode": grphcode,
-        "date": prdate,
+        "grphcode": grphcode ?? "",
+        "date": prdate ?? "",
       },
       context: context,
       isBottomSheet: false,
@@ -530,6 +541,7 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (response != null) {
+      print(response.body);
       final body = json.decode(response.body);
       allPriceDataModal = AllPriceDataModal.fromJson(
         body is Map ? body : (body is List && body.isNotEmpty ? body.first : {}),

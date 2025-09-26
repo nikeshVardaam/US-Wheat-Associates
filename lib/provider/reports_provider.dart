@@ -5,6 +5,10 @@ import '../modal/repots_modal.dart';
 
 class ReportsProvider extends ChangeNotifier {
   bool isRecentMode = false;
+  bool isFilterCleared = false;
+  String? backupReportType;
+  String? backupYear;
+  String? backupCategory;
   final List<Map<String, String>> reportTypes = [
     {'name': 'Commercial Sales Report', 'value': 'commercial-sales'},
     {'name': 'Crop Quality Report', 'value': 'crop-quality'},
@@ -41,6 +45,18 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  backupFilter() {
+    backupReportType = selectedReportType;
+    backupCategory = selectedCategory;
+    backupYear = selectedYear;
+  }
+
+  resetFilter() {
+    selectedReportType = backupReportType;
+    selectedCategory = backupCategory;
+    selectedYear = backupYear;
+  }
+
   String getTaxonomy() {
     switch (selectedReportType) {
       case 'commercial-sales':
@@ -60,14 +76,13 @@ class ReportsProvider extends ChangeNotifier {
     }
   }
 
-
   Future<void> getDefaultReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
 
     _isLoading = true;
     notifyListeners();
 
-    final url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data?page&per_page";
+    final url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data";
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -75,7 +90,6 @@ class ReportsProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body) as List<dynamic>;
 
-        // Flatten all posts
         final List<Map<String, dynamic>> allPosts = [];
         for (var item in decoded) {
           final posts = item['posts'] as List<dynamic>? ?? [];
@@ -86,13 +100,11 @@ class ReportsProvider extends ChangeNotifier {
             });
           }
         }
-
-        // Load only first 10 items
         final chunk = allPosts.take(10).toList();
         _reports.clear();
         _reports.addAll(chunk.map((e) => ReportModel.fromJson(e)).toList());
 
-        hasMoreData = false; // 👈 disables any further pagination
+        hasMoreData = false;
       }
     } catch (e) {
       print("Error: $e");
@@ -105,9 +117,7 @@ class ReportsProvider extends ChangeNotifier {
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
 
-    // Check filters
     if (!isRecentMode && (selectedReportType == null || selectedYear == null || selectedCategory == null)) {
-      // Filters incomplete, do not fetch
       return;
     }
 
@@ -136,7 +146,6 @@ class ReportsProvider extends ChangeNotifier {
 
         if (data.isEmpty) {
           hasMoreData = false;
-          // Show empty state instead of default data
         } else {
           currentPage++;
           _reports.addAll(data.map((e) => ReportModel.fromJson(e)).toList());
@@ -151,7 +160,6 @@ class ReportsProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
-
 
   Future<void> showFilterDropdown({
     required BuildContext context,

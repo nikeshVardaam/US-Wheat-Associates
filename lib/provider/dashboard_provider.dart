@@ -32,8 +32,9 @@ class DashboardProvider extends ChangeNotifier {
   SharedPreferences? sp;
   User? user;
 
-  confirmDelete({required BuildContext context}) {
+  void confirmDelete({required BuildContext context}) {
     final text = deleteController.text.trim();
+
     if (text.isEmpty) {
       AppWidgets.topSnackBar(
         context: context,
@@ -43,36 +44,49 @@ class DashboardProvider extends ChangeNotifier {
       return;
     }
 
-    final delete = text.toUpperCase();
-
-    if (delete != "DELETE") {
+    if (text.toUpperCase() != "DELETE") {
       AppWidgets.topSnackBar(
         context: context,
         message: "Please type DELETE in capital letters",
         color: AppColors.cd63a3a,
       );
-    } else {
-      AppWidgets.topSnackBar(
-        context: context,
-        message: "Account deleted successfully",
-        color: AppColors.c2a8741,
+      return;
+    }
+
+    // Call deleteUser directly, without showing "success" before actual deletion
+    deleteUser(context: context);
+  }
+
+
+  logOut(BuildContext context) async {
+    sp = await SharedPreferences.getInstance();
+    sp?.clear();
+    Provider.of<LoginProvider>(context, listen: false).cleanData();
+    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
+  }
+
+  Future<void> deleteUser({required BuildContext context}) async {
+    final response = await DeleteService().delete(
+      endpoint: ApiEndpoint.deleteUser,
+      context: context,
+    );
+
+    // If deletion is successful, immediately clear data and navigate
+    if (response != null) {
+      final sp = await SharedPreferences.getInstance();
+      await sp.clear();
+
+      Provider.of<LoginProvider>(context, listen: false).cleanData();
+
+      // Directly navigate to login page, removing all previous routes
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.login,
+            (Route<dynamic> route) => false,
       );
-      deleteUser(context: context);
     }
   }
 
-  deleteUser({required BuildContext context}) {
-    DeleteService().delete(endpoint: ApiEndpoint.deleteUser, context: context).then(
-      (value) async {
-        if (value != null) {
-          sp = await SharedPreferences.getInstance();
-          sp?.clear();
-          Provider.of<LoginProvider>(context, listen: false).cleanData();
-          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
-        }
-      },
-    );
-  }
 
   getPrefData() async {
     sp = await SharedPreferences.getInstance();
@@ -132,12 +146,6 @@ class DashboardProvider extends ChangeNotifier {
     }
   }
 
-  logOut(BuildContext context) async {
-    sp = await SharedPreferences.getInstance();
-    sp?.clear();
-    Provider.of<LoginProvider>(context, listen: false).cleanData();
-    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
-  }
 
   int _getIndexFromPageName(String pageName) {
     switch (pageName) {

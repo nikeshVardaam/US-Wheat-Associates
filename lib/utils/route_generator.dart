@@ -21,6 +21,7 @@ import '../calculator/weight/short_tons_metric_tons.dart';
 import '../calculator/distance_area/square_feet_square_meters.dart';
 import '../calculator/temperature/temperature_converter_pag.dart';
 import '../calculator/yelds/bushels_acre_metric_tons_hectare.dart';
+import '../dashboard_page/news_feed.dart';
 import '../splash_screen.dart';
 
 class RouteGenerator {
@@ -64,6 +65,8 @@ class RouteGenerator {
         return buildRoute(const WheatProtein(), settings: settings);
       case AppRoutes.flourProtein:
         return buildRoute(const FlourProtein(), settings: settings);
+      case AppRoutes.newsFeed:
+        return buildRoute(const NewsFeed(), settings: settings);
       case AppRoutes.reportDetailPage:
         ReportDetailArg reportDetailArg = settings.arguments as ReportDetailArg;
         return buildRoute(ReportDetailPage(reportDetailArg: reportDetailArg), settings: settings);

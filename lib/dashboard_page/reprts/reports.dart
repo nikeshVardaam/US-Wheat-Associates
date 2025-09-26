@@ -38,8 +38,6 @@ class _ReportsState extends State<Reports> {
         }
       }
     });
-
-
   }
 
   @override
@@ -236,9 +234,35 @@ class _ReportsState extends State<Reports> {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 14,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Transform.scale(
+                    scale: 0.6,
+                    child: Switch(
+                      activeColor: AppColors.c5B8EDC,
+                      inactiveThumbColor: AppColors.c353d4a.withOpacity(0.7),
+                      value: rp.isFilterCleared,
+                      onChanged: (value) {
+                        rp.isFilterCleared = value;
+                        if (value) {
+                          rp.backupFilter();
+                          rp.selectedReportType = null;
+                          rp.selectedYear = null;
+                          rp.selectedCategory = null;
+                          rp.resetPagination();
+                          rp.getDefaultReports(context: context);
+                        } else {
+                          rp.resetFilter();
+                          rp.resetPagination();
+                          rp.getReports(context: context);
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
+
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,
