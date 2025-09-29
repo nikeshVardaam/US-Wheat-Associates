@@ -12,8 +12,6 @@ import 'package:uswheat/utils/app_logout_dialog.dart' show AppLogoutDialogs;
 import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
-import 'package:uswheat/auth/change_password.dart';
-
 import 'dashboard_page/calculator.dart';
 import 'dashboard_page/reprts/reports.dart';
 

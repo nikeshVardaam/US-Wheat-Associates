@@ -82,7 +82,7 @@ class ReportsProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data";
+    const url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data";
 
     try {
       final response = await http.get(Uri.parse(url));

@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/utils/app_box_decoration.dart';
-import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_text_field.dart';
-
 import 'app_strings.dart';
 
 class AppDeleteDialog extends StatefulWidget {

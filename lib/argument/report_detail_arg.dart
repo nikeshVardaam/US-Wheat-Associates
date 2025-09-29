@@ -1,5 +1,4 @@
 class ReportDetailArg {
-
   final String title;
   final String pdfUrl;
 

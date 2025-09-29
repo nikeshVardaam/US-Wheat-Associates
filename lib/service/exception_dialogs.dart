@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../utils/app_colors.dart';
 
 class ExceptionDialogs {
@@ -22,11 +20,11 @@ class ExceptionDialogs {
               child: Material(
                 color: Colors.transparent,
                 child: Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: AppColors.cB1271C,
                     borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 10,
@@ -71,7 +69,7 @@ class ExceptionDialogs {
           child: child,
         );
       },
-      transitionDuration: Duration(milliseconds: 300),
+      transitionDuration: const Duration(milliseconds: 300),
     );
   }
 }
