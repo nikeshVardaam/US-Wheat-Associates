@@ -294,49 +294,49 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ],
                         ),
-                        const Spacer(),
-                        Divider(
-                          color: AppColors.cAB865A,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                                    child: const AppDeleteDialog(),
-                                  );
-                                },
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  AppAssets.delete,
-                                  height: 14,
-                                  color: AppColors.cFFFFFF,
-                                ),
-                                const SizedBox(
-                                  width: 16,
-                                ),
-                                Text(
-                                  AppStrings.deleteUser,
-                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                        color: AppColors.cFFFFFF,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          color: AppColors.cAB865A,
-                        ),
+                        // const Spacer(),
+                        // Divider(
+                        //   color: AppColors.cAB865A,
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(
+                        //     horizontal: 16,
+                        //   ),
+                        //   child: GestureDetector(
+                        //     onTap: () {
+                        //       showDialog(
+                        //         context: context,
+                        //         builder: (context) {
+                        //           return Dialog(
+                        //             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                        //             child: const AppDeleteDialog(),
+                        //           );
+                        //         },
+                        //       );
+                        //     },
+                        //     child: Row(
+                        //       children: [
+                        //         SvgPicture.asset(
+                        //           AppAssets.delete,
+                        //           height: 14,
+                        //           color: AppColors.cFFFFFF,
+                        //         ),
+                        //         const SizedBox(
+                        //           width: 16,
+                        //         ),
+                        //         Text(
+                        //           AppStrings.deleteUser,
+                        //           style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        //                 color: AppColors.cFFFFFF,
+                        //               ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
+                        // Divider(
+                        //   color: AppColors.cAB865A,
+                        // ),
                       ],
                     ),
                   );

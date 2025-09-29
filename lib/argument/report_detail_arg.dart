@@ -6,4 +6,5 @@ class ReportDetailArg {
     required this.title,
     required this.pdfUrl,
   });
+
 }

@@ -35,7 +35,7 @@ class LongMetricTonPage extends StatelessWidget {
       body: Consumer<CalculatorProvider>(
         builder: (context, cp, child) {
           return SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
 
             child: Padding(
               padding: const EdgeInsets.all(16.0),

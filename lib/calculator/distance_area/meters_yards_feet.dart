@@ -38,7 +38,7 @@ class MetersYardsFeet extends StatelessWidget {
       body: Consumer<CalculatorProvider>(
         builder: (context, cp, child) {
           return SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
 
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -56,7 +56,7 @@ class MetersYardsFeet extends StatelessWidget {
                         child: AppTextField.textField(
                           context,
                           controller: cp.meterController,
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           onChanged: (val) => cp.convertFromMeter(val),
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),

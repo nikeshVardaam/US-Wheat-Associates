@@ -53,7 +53,6 @@ class DashboardProvider extends ChangeNotifier {
       return;
     }
 
-    // Call deleteUser directly, without showing "success" before actual deletion
     deleteUser(context: context);
   }
 
@@ -71,14 +70,12 @@ class DashboardProvider extends ChangeNotifier {
       context: context,
     );
 
-    // If deletion is successful, immediately clear data and navigate
     if (response != null) {
       final sp = await SharedPreferences.getInstance();
       await sp.clear();
 
       Provider.of<LoginProvider>(context, listen: false).cleanData();
 
-      // Directly navigate to login page, removing all previous routes
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppRoutes.login,
@@ -112,7 +109,6 @@ class DashboardProvider extends ChangeNotifier {
     selectActivity = activity;
     selectMenu = pageName;
 
-    // pageName ke hisaab se currentIndex set karo
     currentIndex = _getIndexFromPageName(pageName);
 
     notifyListeners();

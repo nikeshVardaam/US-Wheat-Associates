@@ -418,7 +418,7 @@ class _PricesState extends State<Prices> {
                               ? Row(
                                   children: [
                                     Text(
-                                      pp.allPriceDataModal?.nearby?.cASHBU.toString().substring(0, 4) ?? "--",
+                                      pp.allPriceDataModal?.nearby?.cASHBU?.toDouble().toStringAsFixed(2) ?? "--",
                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                             fontWeight: FontWeight.w900,
                                             color: AppColors.c353d4a.withOpacity(0.7),
@@ -457,7 +457,7 @@ class _PricesState extends State<Prices> {
                                           width: 4,
                                         ),
                                         Text(
-                                          pp.allPriceDataModal?.nearby?.cASHMT.toString().substring(0, 6) ?? "--",
+                                          pp.allPriceDataModal?.nearby?.cASHMT?.toDouble().toStringAsFixed(2) ?? "--",
                                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                 fontWeight: FontWeight.w900,
                                                 color: AppColors.c353d4a.withOpacity(0.7),
@@ -508,7 +508,7 @@ class _PricesState extends State<Prices> {
                                     Row(
                                       children: [
                                         Text(
-                                          pp.allPriceDataModal?.weekly?.cASHBU.toString().substring(0, 3) ?? "--",
+                                          pp.allPriceDataModal?.weekly?.cASHBU?.toDouble().toStringAsFixed(2) ?? "--",
                                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                 fontWeight: FontWeight.w900,
                                                 color: AppColors.cd63a3a,
@@ -547,7 +547,7 @@ class _PricesState extends State<Prices> {
                                           width: 4,
                                         ),
                                         Text(
-                                          pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 2) ?? "--",
+                                          pp.allPriceDataModal?.weekly?.cASHMT?.toDouble().toStringAsFixed(2) ?? "--",
                                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                 fontWeight: FontWeight.w900,
                                                 color: AppColors.cd63a3a,
@@ -604,7 +604,7 @@ class _PricesState extends State<Prices> {
                             width: 4,
                           ),
                           Text(
-                            pp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
+                            pp.allPriceDataModal?.yearly?.cASHMT?.toDouble().toStringAsFixed(2) ?? "--",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),
@@ -703,7 +703,7 @@ class _PricesState extends State<Prices> {
                                                     ),
                                                     const SizedBox(width: 4),
                                                      Text(
-                                                      data?.cASHMT.toString().substring(0, 6) ?? '--',
+                                                      data?.cASHMT?.toDouble().toStringAsFixed(2)?? '--',
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                             fontWeight: FontWeight.w900,
                                                             color: AppColors.c353d4a.withOpacity(0.7),

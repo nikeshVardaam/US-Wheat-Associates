@@ -215,33 +215,23 @@ class PricesProvider extends ChangeNotifier {
   }
 
   void _generateChartDataFromGraphList() {
-    if (graphList.isEmpty) {
-      chartData = [];
-      notifyListeners();
-      return;
-    }
-
     final tempChartData = fixedMonths.map((month) {
       final entries = graphList.where((e) {
         try {
-          final date = DateTime.tryParse(e.pRDATE ?? '');
-          return date != null && DateFormat('MMM').format(date) == month;
+          final date = DateTime.parse(e.pRDATE ?? '');
+          return DateFormat('MMM').format(date) == month;
         } catch (_) {
           return false;
         }
       }).toList();
 
-      final avg = entries.isNotEmpty
-          ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length
-          : 0.0;
+      final avg = entries.isNotEmpty ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length : 0.0;
 
       return SalesData(month: month, sales: avg);
     }).toList();
 
     chartData = tempChartData.any((e) => e.sales != 0.0) ? tempChartData : [];
-    notifyListeners();
   }
-
 
   bool isInWatchlist(String region, String wheatClass, String? date) {
     if (date == null) return false;
@@ -355,12 +345,12 @@ class PricesProvider extends ChangeNotifier {
 
     if (uniqueYears.isEmpty) {
       getYears(context: context, loader: false).then((_) {
-        Future.delayed(Duration(milliseconds: 100), () {
+        Future.delayed(const Duration(milliseconds: 100), () {
           _openPicker(context, wheatClass);
         });
       });
     } else {
-      Future.delayed(Duration(milliseconds: 100), () {
+      Future.delayed(const Duration(milliseconds: 100), () {
         _openPicker(context, wheatClass);
       });
     }
@@ -471,7 +461,6 @@ class PricesProvider extends ChangeNotifier {
                 ),
               ),
             ],
-
           ),
         ),
       ),
@@ -645,7 +634,7 @@ class PricesProvider extends ChangeNotifier {
 
     if (uniqueClasses.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("No classes available for selected region")),
+        const SnackBar(content: Text("No classes available for selected region")),
       );
       return;
     }

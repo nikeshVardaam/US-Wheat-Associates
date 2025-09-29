@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uswheat/auth/login.dart';
 import 'package:uswheat/auth/sign_up.dart';
