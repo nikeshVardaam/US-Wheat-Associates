@@ -215,23 +215,33 @@ class PricesProvider extends ChangeNotifier {
   }
 
   void _generateChartDataFromGraphList() {
+    if (graphList.isEmpty) {
+      chartData = [];
+      notifyListeners();
+      return;
+    }
+
     final tempChartData = fixedMonths.map((month) {
       final entries = graphList.where((e) {
         try {
-          final date = DateTime.parse(e.pRDATE ?? '');
-          return DateFormat('MMM').format(date) == month;
+          final date = DateTime.tryParse(e.pRDATE ?? '');
+          return date != null && DateFormat('MMM').format(date) == month;
         } catch (_) {
           return false;
         }
       }).toList();
 
-      final avg = entries.isNotEmpty ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length : 0.0;
+      final avg = entries.isNotEmpty
+          ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length
+          : 0.0;
 
       return SalesData(month: month, sales: avg);
     }).toList();
 
     chartData = tempChartData.any((e) => e.sales != 0.0) ? tempChartData : [];
+    notifyListeners();
   }
+
 
   bool isInWatchlist(String region, String wheatClass, String? date) {
     if (date == null) return false;
@@ -461,6 +471,7 @@ class PricesProvider extends ChangeNotifier {
                 ),
               ),
             ],
+
           ),
         ),
       ),
@@ -483,7 +494,7 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (response != null) {
-      // debugPrint(response.body.toString(), wrapWidth: 1024);
+      debugPrint(response.body.toString(), wrapWidth: 1024);
       final body = json.decode(response.body);
       if (body is List && body.isNotEmpty) {
         graphList = body.map((e) => GraphDataModal.fromJson(e)).toList();

@@ -698,10 +698,11 @@ class _PricesState extends State<Prices> {
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                             fontWeight: FontWeight.w900,
                                                             color: AppColors.c353d4a.withOpacity(0.7),
+
                                                           ),
                                                     ),
                                                     const SizedBox(width: 4),
-                                                    Text(
+                                                     Text(
                                                       data?.cASHMT.toString().substring(0, 6) ?? '--',
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                             fontWeight: FontWeight.w900,

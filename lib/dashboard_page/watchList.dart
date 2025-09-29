@@ -409,16 +409,16 @@ class _WatchlistState extends State<Watchlist> {
                       ],
                     )
                   : Padding(
-                    padding: const EdgeInsets.only(top: 24),
-                    child: Center(
-                        child: Text(
+                      padding: const EdgeInsets.only(top: 24),
+                      child: Center(
+                          child: Text(
                         AppStrings.noWatchlistAdded,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                               color: AppColors.caebbc8,
                               fontWeight: FontWeight.w700,
                             ),
                       )),
-                  )));
+                    )));
     });
   }
 }
