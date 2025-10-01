@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:uswheat/utils/app_colors.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:uswheat/argument/report_detail_arg.dart';
 import 'package:uswheat/utils/app_widgets.dart';
@@ -78,7 +77,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
       body: Stack(
         children: [
           Container(
-            color: Colors.white, // ensures no black background
+            color: Colors.white,
             child: _url.isEmpty
                 ? Center(
               child: Text(

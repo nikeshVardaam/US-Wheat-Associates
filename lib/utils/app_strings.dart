@@ -68,7 +68,7 @@ class AppStrings {
   static const region = "REGION";
   static const wheatData = "WHEAT DATA";
   static const currentAverage = "Current Avg";
-  static const finalAverage = "2024 Final Avg";
+  static const finalAverage = "Final Avg";
   static const yearAverage = "5-Year Avg";
   static const lbBu = "TW (lb/bu)";
   static const kgHl = "TW (kg/hl)";

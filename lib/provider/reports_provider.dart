@@ -2,9 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart' show PdfViewerController;
+import 'package:webview_flutter/webview_flutter.dart';
 import '../modal/repots_modal.dart';
 
 class ReportsProvider extends ChangeNotifier {
+  final PdfViewerController pdfController = PdfViewerController();
+  WebViewController? webController;
+
   bool isRecentMode = false;
   bool isFilterCleared = false;
   String? backupReportType;
@@ -47,7 +52,7 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  clearFilterAndReload({ required BuildContext context}) {
+  clearFilterAndReload({required BuildContext context}) {
     clearFilter();
     getDefaultReports(context: context);
   }
@@ -117,8 +122,6 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
 
@@ -136,16 +139,14 @@ class ReportsProvider extends ChangeNotifier {
               "?per_page=20&page=$currentPage"
               "&report_type=all";
         } else {
-          if (selectedReportType == null ||
-              selectedYear == null ||
-              selectedCategory == null) {
+          if (selectedReportType == null || selectedYear == null || selectedCategory == null) {
             _isLoading = false;
             notifyListeners();
             return;
           }
 
           url =
-          "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage&year=$selectedYear&category=$selectedCategory&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
+              "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage&year=$selectedYear&category=$selectedCategory&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
         }
 
         final response = await http.get(

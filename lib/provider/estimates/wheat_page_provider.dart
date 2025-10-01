@@ -18,16 +18,16 @@ class WheatPageProvider extends ChangeNotifier {
   String? finalDate;
   String? prdate;
   WheatData? current;
-  WheatData? lastYear;
-  WheatData? fiveYearsAgo;
+  WheatData? yearAverage;
+  WheatData? fiveYearAverage;
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   bool isLoading = false;
   bool _isPickerOpen = false;
 
   void clearData() {
     current = null;
-    lastYear = null;
-    fiveYearsAgo = null;
+    yearAverage = null;
+    fiveYearAverage = null;
   }
 
   Future<void> getYears({required BuildContext context, required bool loader}) async {
@@ -71,18 +71,15 @@ class WheatPageProvider extends ChangeNotifier {
       final decoded = json.decode(response.body);
 
       if (decoded['data'] != null) {
-        var currentList = decoded['data']['current'] as List<dynamic>?;
-        var lastYearList = decoded['data']['last_year'] as List<dynamic>?;
-        var fiveYearsList = decoded['data']['five_years_ago'] as List<dynamic>?;
+        final data = decoded['data'];
 
-        current = (currentList != null && currentList.isNotEmpty) ? WheatData.fromJson(currentList[0]) : null;
-
-        lastYear = (lastYearList != null && lastYearList.isNotEmpty) ? WheatData.fromJson(lastYearList[0]) : null;
-
-        fiveYearsAgo = (fiveYearsList != null && fiveYearsList.isNotEmpty) ? WheatData.fromJson(fiveYearsList[0]) : null;
+        current = data['current'] != null ? WheatData.fromJson(data['current']) : null;
+        yearAverage = data['year_average'] != null ? WheatData.fromJson(data['year_average']) : null;
+        fiveYearAverage = data['five_year_average'] != null ? WheatData.fromJson(data['five_year_average']) : null;
 
         notifyListeners();
       }
+
     }
   }
 

@@ -186,8 +186,11 @@ class _WheatPagesState extends State<WheatPages> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(AppStrings.finalAverage,
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7))),
+                                  child: wpp.selectedYears?.isNotEmpty ?? false
+                                      ? Text("${AppStrings.finalAverage} ${wpp.selectedYears}",
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7)))
+                                      : Text("${AppStrings.finalAverage} ${"--"}",
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
@@ -212,12 +215,12 @@ class _WheatPagesState extends State<WheatPages> {
                                 Padding(
                                     padding: const EdgeInsets.all(12),
                                     child: Text(
-                                      wpp.lastYear?.testWtlbbu ?? "--",
+                                      wpp.yearAverage?.testWtlbbu ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7)),
                                     )),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(wpp.fiveYearsAgo?.testWtlbbu ?? "--",
+                                  child: Text(wpp.fiveYearAverage?.testWtlbbu ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                               ],
@@ -235,12 +238,12 @@ class _WheatPagesState extends State<WheatPages> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(wpp.lastYear?.testWtkghl ?? "--",
+                                  child: Text(wpp.yearAverage?.testWtkghl ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(wpp.fiveYearsAgo?.testWtkghl ?? "--",
+                                  child: Text(wpp.fiveYearAverage?.testWtkghl ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                               ],
@@ -258,12 +261,12 @@ class _WheatPagesState extends State<WheatPages> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(wpp.lastYear?.moisture ?? "--",
+                                  child: Text(wpp.yearAverage?.moisture ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(wpp.fiveYearsAgo?.moisture ?? "--",
+                                  child: Text(wpp.fiveYearAverage?.moisture ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                               ],
@@ -281,12 +284,12 @@ class _WheatPagesState extends State<WheatPages> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(wpp.lastYear?.moisture ?? "--",
+                                  child: Text(wpp.yearAverage?.moisture ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(wpp.fiveYearsAgo?.moisture ?? "--",
+                                  child: Text(wpp.fiveYearAverage?.moisture ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                               ],
@@ -305,12 +308,12 @@ class _WheatPagesState extends State<WheatPages> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(wpp.lastYear?.dryBasisProt ?? "--",
+                                  child: Text(wpp.yearAverage?.dryBasisProt ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Text(wpp.fiveYearsAgo?.dryBasisProt ?? "--",
+                                  child: Text(wpp.fiveYearAverage?.dryBasisProt ?? "--",
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                 ),
                               ],
@@ -332,12 +335,12 @@ class _WheatPagesState extends State<WheatPages> {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(12),
-                                        child: Text(wpp.lastYear?.dhv ?? "--",
+                                        child: Text(wpp.yearAverage?.dhv ?? "--",
                                             style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(12),
-                                        child: Text(wpp.fiveYearsAgo?.dhv ?? "--",
+                                        child: Text(wpp.fiveYearAverage?.dhv ?? "--",
                                             style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                       ),
                                     ],
@@ -359,12 +362,12 @@ class _WheatPagesState extends State<WheatPages> {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(12),
-                                            child: Text(wpp.lastYear?.hvac ?? "--",
+                                            child: Text(wpp.yearAverage?.hvac ?? "--",
                                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(12),
-                                            child: Text(wpp.fiveYearsAgo?.hvac ?? "--",
+                                            child: Text(wpp.fiveYearAverage?.hvac ?? "--",
                                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.c353d4a.withOpacity(0.7))),
                                           ),
                                         ],
