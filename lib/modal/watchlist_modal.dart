@@ -15,6 +15,210 @@ class WatchlistModel {
   }
 }
 
+
+class Data {
+  Current? current;
+  YearAverage? yearAverage;
+  FiveYearAverage? fiveYearAverage;
+
+  Data({this.current, this.yearAverage, this.fiveYearAverage});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    current = json['current'] != null ? new Current.fromJson(json['current']) : null;
+    yearAverage = json['year_average'] != null ? new YearAverage.fromJson(json['year_average']) : null;
+    fiveYearAverage = json['five_year_average'] != null ? new FiveYearAverage.fromJson(json['five_year_average']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.current != null) {
+      data['current'] = this.current!.toJson();
+    }
+    if (this.yearAverage != null) {
+      data['year_average'] = this.yearAverage!.toJson();
+    }
+    if (this.fiveYearAverage != null) {
+      data['five_year_average'] = this.fiveYearAverage!.toJson();
+    }
+    return data;
+  }
+}
+
+class Current {
+  String date;
+  String className; // renamed from 'class'
+  String? testWtlbbu;
+  String? testWtkghl;
+  String? moisture;
+  String? prot12Mb;
+  String? dryBasisProt;
+  String? dHV;
+  String? hVAC;
+  String? fallingNum;
+
+  Current({
+    required this.date,
+    required this.className,
+    this.testWtlbbu,
+    this.testWtkghl,
+    this.moisture,
+    this.prot12Mb,
+    this.dryBasisProt,
+    this.dHV,
+    this.hVAC,
+    this.fallingNum,
+  });
+
+  factory Current.fromJson(Map<String, dynamic> json) {
+    return Current(
+      date: json['Date'] ?? '',
+      className: json['class'] ?? '', // map JSON key 'class' to variable 'className'
+      testWtlbbu: json['testWtlbbu']?.toString(),
+      testWtkghl: json['testWtkghl']?.toString(),
+      moisture: json['Moisture%']?.toString(),
+      prot12Mb: json['Prot12%mb']?.toString(),
+      dryBasisProt: json['DryBasisProt%']?.toString(),
+      dHV: json['DHV']?.toString(),
+      hVAC: json['HVAC']?.toString(),
+      fallingNum: json['FallingNum']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Date': date,
+      'class': className, // map back to JSON key
+      'testWtlbbu': testWtlbbu,
+      'testWtkghl': testWtkghl,
+      'Moisture%': moisture,
+      'Prot12%mb': prot12Mb,
+      'DryBasisProt%': dryBasisProt,
+      'DHV': dHV,
+      'HVAC': hVAC,
+      'FallingNum': fallingNum,
+    };
+  }
+}
+
+
+
+class YearAverage {
+  int? year;
+  String? className; // renamed from 'class'
+  double? testWtlbbu;
+  double? testWtkghl;
+  double? moisture;
+  double? prot12Mb;
+  double? dryBasisProt;
+  int? dHV;
+  int? hVAC;
+  int? fallingNum;
+  int? totalRecords;
+
+  YearAverage({
+    this.year,
+    this.className,
+    this.testWtlbbu,
+    this.testWtkghl,
+    this.moisture,
+    this.prot12Mb,
+    this.dryBasisProt,
+    this.dHV,
+    this.hVAC,
+    this.fallingNum,
+    this.totalRecords,
+  });
+
+  YearAverage.fromJson(Map<String, dynamic> json) {
+    year = json['year'];
+    className = json['class'];
+    testWtlbbu = (json['testWtlbbu'] as num?)?.toDouble();
+    testWtkghl = (json['testWtkghl'] as num?)?.toDouble();
+    moisture = (json['Moisture%'] as num?)?.toDouble();
+    prot12Mb = (json['Prot12%mb'] as num?)?.toDouble();
+    dryBasisProt = (json['DryBasisProt%'] as num?)?.toDouble();
+    dHV = json['DHV'];
+    hVAC = json['HVAC'];
+    fallingNum = json['FallingNum'];
+    totalRecords = json['total_records'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'year': year,
+      'class': className,
+      'testWtlbbu': testWtlbbu,
+      'testWtkghl': testWtkghl,
+      'Moisture%': moisture,
+      'Prot12%mb': prot12Mb,
+      'DryBasisProt%': dryBasisProt,
+      'DHV': dHV,
+      'HVAC': hVAC,
+      'FallingNum': fallingNum,
+      'total_records': totalRecords,
+    };
+  }
+}
+
+class FiveYearAverage {
+  String? yearsRange;
+  String? className;
+  double? testWtlbbu;
+  double? testWtkghl;
+  double? moisture;
+  double? prot12Mb;
+  double? dryBasisProt;
+  int? dHV;
+  int? hVAC;
+  int? fallingNum;
+  int? totalRecords;
+
+  FiveYearAverage({
+    this.yearsRange,
+    this.className,
+    this.testWtlbbu,
+    this.testWtkghl,
+    this.moisture,
+    this.prot12Mb,
+    this.dryBasisProt,
+    this.dHV,
+    this.hVAC,
+    this.fallingNum,
+    this.totalRecords,
+  });
+
+  FiveYearAverage.fromJson(Map<String, dynamic> json) {
+    yearsRange = json['years_range'];
+    className = json['class']; // map JSON key to variable
+    testWtlbbu = (json['testWtlbbu'] as num?)?.toDouble();
+    testWtkghl = (json['testWtkghl'] as num?)?.toDouble();
+    moisture = (json['Moisture%'] as num?)?.toDouble();
+    prot12Mb = (json['Prot12%mb'] as num?)?.toDouble();
+    dryBasisProt = (json['DryBasisProt%'] as num?)?.toDouble();
+    dHV = json['DHV'];
+    hVAC = json['HVAC'];
+    fallingNum = json['FallingNum'];
+    totalRecords = json['total_records'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'years_range': yearsRange,
+      'class': className, // map variable back to JSON
+      'testWtlbbu': testWtlbbu,
+      'testWtkghl': testWtkghl,
+      'Moisture%': moisture,
+      'Prot12%mb': prot12Mb,
+      'DryBasisProt%': dryBasisProt,
+      'DHV': dHV,
+      'HVAC': hVAC,
+      'FallingNum': fallingNum,
+      'total_records': totalRecords,
+    };
+  }
+}
+
+
 class WatchlistItem {
   final String id;
   final String userId;

@@ -23,6 +23,7 @@ class PricesProvider extends ChangeNotifier {
   String? selectedRegion;
   String? selectedClasses;
   String? grphcode;
+  bool loading = false;
   String? prdate;
   String? graphDate;
   String? selectedYears;
@@ -32,8 +33,6 @@ class PricesProvider extends ChangeNotifier {
   List<SalesData> chartData = [];
 
   RegionsAndClassesModal? regionsAndClasses;
-
-  bool loader = false;
   bool _isPickerOpen = false;
   int selectedMonth = DateTime.now().month;
   int selectedDay = DateTime.now().day;
@@ -520,7 +519,7 @@ class PricesProvider extends ChangeNotifier {
       requestData: data,
       context: context,
       isBottomSheet: false,
-      loader: loader,
+      loader: false,
     );
 
     if (response != null) {
