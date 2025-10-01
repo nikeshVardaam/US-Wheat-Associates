@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../modal/repots_modal.dart';
 
 class ReportsProvider extends ChangeNotifier {
   bool isRecentMode = false;
+  bool isFilterCleared = false;
+  String? backupReportType;
+  String? backupYear;
+  String? backupCategory;
   final List<Map<String, String>> reportTypes = [
     {'name': 'Commercial Sales Report', 'value': 'commercial-sales'},
     {'name': 'Crop Quality Report', 'value': 'crop-quality'},
@@ -34,6 +39,19 @@ class ReportsProvider extends ChangeNotifier {
   int currentPage = 1;
   bool hasMoreData = true;
 
+  clearFilter() {
+    selectedReportType = null;
+    selectedYear = null;
+    selectedCategory = null;
+    isFilterCleared = true;
+    notifyListeners();
+  }
+
+  clearFilterAndReload({ required BuildContext context}) {
+    clearFilter();
+    getDefaultReports(context: context);
+  }
+
   void resetPagination() {
     currentPage = 1;
     _reports.clear();
@@ -60,14 +78,14 @@ class ReportsProvider extends ChangeNotifier {
     }
   }
 
-
   Future<void> getDefaultReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
 
     _isLoading = true;
+    reports.clear();
     notifyListeners();
 
-    final url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data?page&per_page";
+    const url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data";
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -75,7 +93,6 @@ class ReportsProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body) as List<dynamic>;
 
-        // Flatten all posts
         final List<Map<String, dynamic>> allPosts = [];
         for (var item in decoded) {
           final posts = item['posts'] as List<dynamic>? ?? [];
@@ -86,13 +103,11 @@ class ReportsProvider extends ChangeNotifier {
             });
           }
         }
-
-        // Load only first 10 items
         final chunk = allPosts.take(10).toList();
         _reports.clear();
         _reports.addAll(chunk.map((e) => ReportModel.fromJson(e)).toList());
 
-        hasMoreData = false; // 👈 disables any further pagination
+        hasMoreData = false;
       }
     } catch (e) {
       print("Error: $e");
@@ -101,57 +116,74 @@ class ReportsProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+
 
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
 
-    // Check filters
-    if (!isRecentMode && (selectedReportType == null || selectedYear == null || selectedCategory == null)) {
-      // Filters incomplete, do not fetch
-      return;
-    }
-
     _isLoading = true;
     notifyListeners();
 
-    try {
-      String url;
-      if (isRecentMode) {
-        url = "https://uswheat.org/wp-json/uswheat/v1/reports"
-            "?per_page=20&page=$currentPage&report_type=all";
-      } else {
-        url = "https://uswheat.org/wp-json/uswheat/v1/reports"
-            "?per_page=20&page=$currentPage"
-            "&year=$selectedYear&category=$selectedCategory"
-            "&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
-      }
+    final int maxRetries = 3;
+    int retryCount = 0;
 
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        final List<dynamic> data = decoded['data'] ?? [];
-
-        if (currentPage == 1) _reports.clear();
-
-        if (data.isEmpty) {
-          hasMoreData = false;
-          // Show empty state instead of default data
+    while (retryCount < maxRetries) {
+      try {
+        String url;
+        if (isRecentMode) {
+          url = "https://uswheat.org/wp-json/uswheat/v1/reports"
+              "?per_page=20&page=$currentPage"
+              "&report_type=all";
         } else {
-          currentPage++;
-          _reports.addAll(data.map((e) => ReportModel.fromJson(e)).toList());
+          if (selectedReportType == null ||
+              selectedYear == null ||
+              selectedCategory == null) {
+            _isLoading = false;
+            notifyListeners();
+            return;
+          }
+
+          url =
+          "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage&year=$selectedYear&category=$selectedCategory&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
         }
-      } else {
-        print("Failed: ${response.statusCode}");
+
+        final response = await http.get(
+          Uri.parse(url),
+          headers: {
+            'User-Agent': 'FlutterApp',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final decoded = jsonDecode(response.body);
+          final List<dynamic> data = decoded['data'] ?? [];
+
+          if (data.isEmpty) {
+            hasMoreData = false;
+          } else {
+            if (currentPage == 1) _reports.clear();
+            currentPage++;
+            _reports.addAll(data.map((e) => ReportModel.fromJson(e)).toList());
+          }
+          break;
+        } else {
+          print("Failed: ${response.statusCode}");
+          break;
+        }
+      } on SocketException catch (e) {
+        retryCount++;
+        print("SocketException, retrying $retryCount/$maxRetries: $e");
+        await Future.delayed(const Duration(seconds: 2));
+      } catch (e) {
+        print("Other error: $e");
+        break;
       }
-    } catch (e) {
-      print("Error: $e");
     }
 
     _isLoading = false;
     notifyListeners();
   }
-
 
   Future<void> showFilterDropdown({
     required BuildContext context,

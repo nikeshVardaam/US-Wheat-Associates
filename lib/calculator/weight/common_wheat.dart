@@ -86,7 +86,6 @@ class _CommonWheatState extends State<CommonWheat> {
                 ],
               ),
               const SizedBox(height: 12),
-
               // Formula box
               Container(
                 padding: const EdgeInsets.all(12),
@@ -197,7 +196,9 @@ class _CommonWheatState extends State<CommonWheat> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () => cp.clearTestWeight(),
+                    onTap: () {
+                      cp.clearTestWeight();
+                    },
                     child: AppButtons().outLineMiniButton(false, "Clear", context),
                   ),
                 ],

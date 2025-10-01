@@ -35,14 +35,14 @@ class LongMetricTonPage extends StatelessWidget {
       body: Consumer<CalculatorProvider>(
         builder: (context, cp, child) {
           return SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("BRITISH TONS (LONG)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  Text("BRITISH TONS (LONG)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(
                     height: 6,
                   ),
                   Row(
@@ -51,14 +51,19 @@ class LongMetricTonPage extends StatelessWidget {
                         child: AppTextField.textField(
                           context,
                           controller: cp.longTonController,
-                          onChanged: (val) => cp.convertLongToMetricTon(val),keyboardType: TextInputType.number,
+                          onChanged: (val) => cp.convertLongToMetricTon(val),
+                          keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
                           ],
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: cp.longTonController.text));
                         },
@@ -68,11 +73,12 @@ class LongMetricTonPage extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(AppStrings.equals,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.c656e79,
-                        fontStyle: FontStyle.italic,
-                      )),
+                            color: AppColors.c656e79,
+                            fontStyle: FontStyle.italic,
+                          )),
                   const SizedBox(height: 8),
-                  Text("METRIC TONS (TONNES)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  Text("METRIC TONS (TONNES)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(
                     height: 6,
                   ),
                   Row(
@@ -88,7 +94,11 @@ class LongMetricTonPage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: cp.longToMetricController.text));
                         },
@@ -112,7 +122,11 @@ class LongMetricTonPage extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                          icon: Icon(
+                            Icons.copy,
+                            color: AppColors.c656e79,
+                            size: 18,
+                          ),
                           onPressed: () {
                             Clipboard.setData(const ClipboardData(
                               text: "1 long ton = 1.01604691 metric tons\n1 metric ton = 0.98420653 long tons",
@@ -126,7 +140,9 @@ class LongMetricTonPage extends StatelessWidget {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => cp.clearLongMetricTons(),
+                        onTap: () {
+                          cp.clearLongMetricTons();
+                        },
                         child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
                       ),
                     ],

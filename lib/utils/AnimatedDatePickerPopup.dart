@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedDatePickerPopup extends StatefulWidget {
-  const AnimatedDatePickerPopup({Key? key}) : super(key: key);
+  const AnimatedDatePickerPopup({super.key});
 
   @override
   State<AnimatedDatePickerPopup> createState() => _AnimatedDatePickerPopupState();
@@ -37,7 +37,7 @@ class _AnimatedDatePickerPopupState extends State<AnimatedDatePickerPopup> {
                   onPressed: () => Navigator.pop(context),
                 ),
                 CupertinoButton(
-                  child: const Text("Confirm",style: const TextStyle(fontSize: 16, color: Colors.grey),),
+                  child: const Text("Confirm",style: TextStyle(fontSize: 16, color: Colors.grey),),
                   onPressed: () => Navigator.pop(context, _selectedDate),
                 ),
               ],

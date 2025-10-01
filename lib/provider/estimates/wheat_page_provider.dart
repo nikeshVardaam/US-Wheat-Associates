@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_colors.dart';
@@ -162,12 +161,12 @@ class WheatPageProvider extends ChangeNotifier {
 
     if (uniqueYears.isEmpty) {
       getYears(context: context, loader: false).then((_) {
-        Future.delayed(Duration(milliseconds: 100), () {
+        Future.delayed(const Duration(milliseconds: 100), () {
           _openPicker(context, wheatClass);
         });
       });
     } else {
-      Future.delayed(Duration(milliseconds: 100), () {
+      Future.delayed(const Duration(milliseconds: 100), () {
         _openPicker(context, wheatClass);
       });
     }

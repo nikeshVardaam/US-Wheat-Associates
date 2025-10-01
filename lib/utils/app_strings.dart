@@ -3,6 +3,7 @@ class AppStrings {
   static const delete = "Delete";
   static const deleteUser = "Delete User";
   static const noWatchlistAdded = "No Watchlist Added";
+  static const uSWheatNewsFeed = "US Wheat News Feed";
   static const yesDeleteMyAccount = "Yes, delete my account";
   static const onceYouDeleteYourAccountThereIsNoWayBackMakeSureYouWantToDoThis = "Once you delete your account, there is no getting it back. Make sure you want to do this.";
   static const accountDeletion = "Account Deletion";
@@ -102,6 +103,7 @@ class AppStrings {
   static const search = "Search";
   static const gulfOfMexico = "Gulf of Mexico";
   static const calculator = "Calculator";
+  static const newFeed = "News Feed";
   static const changePassword  = "Change Password ";
   static const noDataFound = "No data found";
   static const wheatAssociates = "U.S. Wheat Associates";

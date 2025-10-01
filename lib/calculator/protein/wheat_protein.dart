@@ -31,7 +31,7 @@ class _WheatProteinState extends State<WheatProtein> {
           child: Padding(
             padding: const EdgeInsets.only(left: 12, bottom: 8.0),
             child: Text(
-              "Convert protein level from a  moisture basis to dry basis and vice versa",
+              "Convert protein level from a 12% moisture basis to dry basis and vice versa",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
@@ -40,14 +40,14 @@ class _WheatProteinState extends State<WheatProtein> {
       body: Consumer<CalculatorProvider>(
         builder: (context, cp, child) {
           return SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // MB input
-                  Text("PROTEIN ON A MOISTURE BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
+                  Text("PROTEIN ON A 12% MOISTURE BASIS ", style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 6),
                   Row(
                     children: [
@@ -58,7 +58,9 @@ class _WheatProteinState extends State<WheatProtein> {
                           onChanged: (val) => cp.convertMbToDb(val),
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d*\.?\d*$'),
+                            ),
                           ],
                         ),
                       ),
@@ -70,7 +72,6 @@ class _WheatProteinState extends State<WheatProtein> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
                   Text(AppStrings.equals,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -78,8 +79,6 @@ class _WheatProteinState extends State<WheatProtein> {
                             fontStyle: FontStyle.italic,
                           )),
                   const SizedBox(height: 8),
-
-                  // DB input
                   Text("PROTEIN ON A DRY MOISTURE BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 6),
                   Row(
