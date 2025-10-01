@@ -20,6 +20,64 @@ class Calculator extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
+                AppStrings.protein,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.wheatProtein,
+                );
+              },
+              child: Container(
+                decoration: AppBoxDecoration.blueRounded(),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        AppStrings.protein,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+                      ),
+                      Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.flourProtein,
+                );
+              },
+              child: Container(
+                decoration: AppBoxDecoration.blueRounded(),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        AppStrings.flourProtein,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+                      ),
+                      Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(
                 AppStrings.distanceArea,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
@@ -269,64 +327,6 @@ class Calculator extends StatelessWidget {
                     children: [
                       Text(
                         AppStrings.buAcreMtHectare,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
-                      ),
-                      Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text(
-                AppStrings.protein,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.wheatProtein,
-                );
-              },
-              child: Container(
-                decoration: AppBoxDecoration.blueRounded(),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        AppStrings.protein,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
-                      ),
-                      Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.flourProtein,
-                );
-              },
-              child: Container(
-                decoration: AppBoxDecoration.blueRounded(),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        AppStrings.flourProtein,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.cFFFFFF),

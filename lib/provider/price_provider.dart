@@ -156,7 +156,6 @@ class PricesProvider extends ChangeNotifier {
     _generateChartDataFromGraphList();
     notifyListeners();
   }
-
   Future<void> fetchData({
     required BuildContext context,
     required String classs,
@@ -178,15 +177,25 @@ class PricesProvider extends ChangeNotifier {
       builder: (context) => AppWidgets.loading(),
     );
 
-    await getRegionsAndClasses(context: context, loader: false);
-    await getYears(context: context, loader: false);
-    await getGraphCodesByClassAndRegion(context: context, loader: false);
-    await graphData(context: context, loader: false);
-    await getAllPriceData(context: context, loader: false);
-    await saveFiltersLocally();
-    Navigator.pop(context);
-    notifyListeners();
+    try {
+      await Future.wait([
+        getRegionsAndClasses(context: context, loader: false),
+        getYears(context: context, loader: false),
+      ]);
+
+      await getGraphCodesByClassAndRegion(context: context, loader: false);
+
+      await Future.wait([
+        graphData(context: context, loader: false),
+        getAllPriceData(context: context, loader: false),
+      ]);
+      await saveFiltersLocally();
+    } finally {
+      Navigator.pop(context);
+      notifyListeners();
+    }
   }
+
 
   Future<void> saveFiltersLocally() async {
     final prefs = await SharedPreferences.getInstance();
