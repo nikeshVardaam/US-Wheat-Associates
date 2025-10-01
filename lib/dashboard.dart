@@ -7,7 +7,6 @@ import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
-import 'package:uswheat/utils/app_delete_dialog.dart';
 import 'package:uswheat/utils/app_logout_dialog.dart' show AppLogoutDialogs;
 import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/app_strings.dart';

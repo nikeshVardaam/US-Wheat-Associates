@@ -3,6 +3,7 @@ class AppStrings {
   static const delete = "Delete";
   static const deleteUser = "Delete User";
   static const noWatchlistAdded = "No Watchlist Added";
+  static const uSWheatNewsFeed = "US Wheat News Feed";
   static const yesDeleteMyAccount = "Yes, delete my account";
   static const onceYouDeleteYourAccountThereIsNoWayBackMakeSureYouWantToDoThis = "Once you delete your account, there is no getting it back. Make sure you want to do this.";
   static const accountDeletion = "Account Deletion";

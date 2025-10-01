@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -43,7 +44,7 @@ class _NewsFeedState extends State<NewsFeed> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('US Wheat News Feed'),
+        title: const Text(AppStrings.uSWheatNewsFeed),
       ),
       body: Stack(
         children: [
@@ -51,7 +52,7 @@ class _NewsFeedState extends State<NewsFeed> {
 
           if (isLoading)
             Container(
-              color: Colors.white, // black ke jagah white background
+              color: Colors.white,
               child:  Center(
                 child: AppWidgets.loading(),
               ),

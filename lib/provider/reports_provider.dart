@@ -117,63 +117,74 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
-
-    if (!isRecentMode &&
-        (selectedReportType == null ||
-            selectedYear == null ||
-            selectedCategory == null)) {
-      return;
-    }
 
     _isLoading = true;
     notifyListeners();
 
-    try {
-      String url;
-      if (isRecentMode) {
-        url =
-        "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage&report_type=all";
-      } else {
-        url =
-        "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage"
-            "&year=$selectedYear&category=$selectedCategory"
-            "&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
-      }
+    final int maxRetries = 3;
+    int retryCount = 0;
 
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (Flutter App)',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        final List<dynamic> data = decoded['data'] ?? [];
-
-        if (currentPage == 1) _reports.clear();
-
-        if (data.isEmpty) {
-          hasMoreData = false;
+    while (retryCount < maxRetries) {
+      try {
+        String url;
+        if (isRecentMode) {
+          url = "https://uswheat.org/wp-json/uswheat/v1/reports"
+              "?per_page=20&page=$currentPage"
+              "&report_type=all";
         } else {
-          currentPage++;
-          _reports.addAll(data.map((e) => ReportModel.fromJson(e)).toList());
+          if (selectedReportType == null ||
+              selectedYear == null ||
+              selectedCategory == null) {
+            _isLoading = false;
+            notifyListeners();
+            return;
+          }
+
+          url =
+          "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage&year=$selectedYear&category=$selectedCategory&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
         }
-      } else {
-        print("Failed: ${response.statusCode}");
+
+        final response = await http.get(
+          Uri.parse(url),
+          headers: {
+            'User-Agent': 'FlutterApp',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final decoded = jsonDecode(response.body);
+          final List<dynamic> data = decoded['data'] ?? [];
+
+          if (data.isEmpty) {
+            hasMoreData = false;
+          } else {
+            if (currentPage == 1) _reports.clear();
+            currentPage++;
+            _reports.addAll(data.map((e) => ReportModel.fromJson(e)).toList());
+          }
+          break;
+        } else {
+          print("Failed: ${response.statusCode}");
+          break;
+        }
+      } on SocketException catch (e) {
+        retryCount++;
+        print("SocketException, retrying $retryCount/$maxRetries: $e");
+        await Future.delayed(const Duration(seconds: 2));
+      } catch (e) {
+        print("Other error: $e");
+        break;
       }
-    } on SocketException catch (e) {
-      print("Network error: $e"); // connection reset
-    } catch (e) {
-      print("Error: $e");
     }
 
     _isLoading = false;
     notifyListeners();
   }
+
   Future<void> showFilterDropdown({
     required BuildContext context,
     required TapDownDetails details,

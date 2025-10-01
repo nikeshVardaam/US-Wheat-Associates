@@ -275,6 +275,7 @@ class _ReportsState extends State<Reports> {
                                 title: report.title ?? "",
                                 pdfUrl: report.effectiveUrl ?? "",
                               );
+
                               Navigator.pushNamed(
                                 context,
                                 AppRoutes.reportDetailPage,
