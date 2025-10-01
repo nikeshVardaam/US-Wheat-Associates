@@ -36,7 +36,6 @@ class ShortMetricTonPage extends StatelessWidget {
         builder: (context, cp, child) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -52,15 +51,19 @@ class ShortMetricTonPage extends StatelessWidget {
                         child: AppTextField.textField(
                           context,
                           controller: cp.shortTonController,
-                          onChanged: (val) => cp.convertShortToMetricTon(val),keyboardType: TextInputType.number,
+                          onChanged: (val) => cp.convertShortToMetricTon(val),
+                          keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
                           ],
                         ),
                       ),
-
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: cp.shortTonController.text));
                         },
@@ -74,7 +77,8 @@ class ShortMetricTonPage extends StatelessWidget {
                             fontStyle: FontStyle.italic,
                           )),
                   const SizedBox(height: 8),
-                  Text("METRIC TONS (TONNES)", style: Theme.of(context).textTheme.bodySmall),  const SizedBox(
+                  Text("METRIC TONS (TONNES)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(
                     height: 6,
                   ),
                   Row(
@@ -90,7 +94,11 @@ class ShortMetricTonPage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: cp.metric_TonController.text));
                         },
@@ -114,7 +122,11 @@ class ShortMetricTonPage extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                          icon: Icon(
+                            Icons.copy,
+                            color: AppColors.c656e79,
+                            size: 18,
+                          ),
                           onPressed: () {
                             Clipboard.setData(const ClipboardData(
                               text: "1 short ton = 0.90718474 metric tons\n1 metric ton = 1.10231131 short tons",
@@ -128,7 +140,9 @@ class ShortMetricTonPage extends StatelessWidget {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => cp.clearShortMetricTons(),
+                        onTap: () {
+                          cp.clearShortMetricTons();
+                        },
                         child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
                       ),
                     ],

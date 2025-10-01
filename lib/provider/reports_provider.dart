@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../modal/repots_modal.dart';
@@ -38,23 +39,24 @@ class ReportsProvider extends ChangeNotifier {
   int currentPage = 1;
   bool hasMoreData = true;
 
+  clearFilter() {
+    selectedReportType = null;
+    selectedYear = null;
+    selectedCategory = null;
+    isFilterCleared = true;
+    notifyListeners();
+  }
+
+  clearFilterAndReload({ required BuildContext context}) {
+    clearFilter();
+    getDefaultReports(context: context);
+  }
+
   void resetPagination() {
     currentPage = 1;
     _reports.clear();
     hasMoreData = true;
     notifyListeners();
-  }
-
-  backupFilter() {
-    backupReportType = selectedReportType;
-    backupCategory = selectedCategory;
-    backupYear = selectedYear;
-  }
-
-  resetFilter() {
-    selectedReportType = backupReportType;
-    selectedCategory = backupCategory;
-    selectedYear = backupYear;
   }
 
   String getTaxonomy() {
@@ -80,6 +82,7 @@ class ReportsProvider extends ChangeNotifier {
     if (_isLoading || !hasMoreData) return;
 
     _isLoading = true;
+    reports.clear();
     notifyListeners();
 
     const url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data";
@@ -117,7 +120,10 @@ class ReportsProvider extends ChangeNotifier {
   Future<void> getReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
 
-    if (!isRecentMode && (selectedReportType == null || selectedYear == null || selectedCategory == null)) {
+    if (!isRecentMode &&
+        (selectedReportType == null ||
+            selectedYear == null ||
+            selectedCategory == null)) {
       return;
     }
 
@@ -127,16 +133,22 @@ class ReportsProvider extends ChangeNotifier {
     try {
       String url;
       if (isRecentMode) {
-        url = "https://uswheat.org/wp-json/uswheat/v1/reports"
-            "?per_page=20&page=$currentPage&report_type=all";
+        url =
+        "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage&report_type=all";
       } else {
-        url = "https://uswheat.org/wp-json/uswheat/v1/reports"
-            "?per_page=20&page=$currentPage"
+        url =
+        "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage"
             "&year=$selectedYear&category=$selectedCategory"
             "&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
       }
 
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Flutter App)',
+        },
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -153,6 +165,8 @@ class ReportsProvider extends ChangeNotifier {
       } else {
         print("Failed: ${response.statusCode}");
       }
+    } on SocketException catch (e) {
+      print("Network error: $e"); // connection reset
     } catch (e) {
       print("Error: $e");
     }
@@ -160,7 +174,6 @@ class ReportsProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
-
   Future<void> showFilterDropdown({
     required BuildContext context,
     required TapDownDetails details,

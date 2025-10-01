@@ -77,7 +77,6 @@ class AcresHectares extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
                   Text(AppStrings.equals,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -118,7 +117,6 @@ class AcresHectares extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   // Mu
                   // Padding(
                   //   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -152,7 +150,6 @@ class AcresHectares extends StatelessWidget {
                   //     ),
                   //   ],
                   // ),
-
                   const SizedBox(height: 20),
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -186,13 +183,14 @@ class AcresHectares extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 20),
                   // Clear Button
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => cp.clearAcresHectaresMu(),
+                        onTap: () {
+                          cp.clearAcresHectaresMu();
+                        },
                         child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
                       ),
                     ],

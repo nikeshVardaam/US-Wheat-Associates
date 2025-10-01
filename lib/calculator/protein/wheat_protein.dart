@@ -58,7 +58,9 @@ class _WheatProteinState extends State<WheatProtein> {
                           onChanged: (val) => cp.convertMbToDb(val),
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d*\.?\d*$'),
+                            ),
                           ],
                         ),
                       ),
@@ -70,7 +72,6 @@ class _WheatProteinState extends State<WheatProtein> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
                   Text(AppStrings.equals,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -78,8 +79,6 @@ class _WheatProteinState extends State<WheatProtein> {
                             fontStyle: FontStyle.italic,
                           )),
                   const SizedBox(height: 8),
-
-                  // DB input
                   Text("PROTEIN ON A DRY MOISTURE BASIS (%)", style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 6),
                   Row(

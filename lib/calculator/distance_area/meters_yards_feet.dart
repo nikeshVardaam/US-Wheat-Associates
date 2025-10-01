@@ -39,7 +39,6 @@ class MetersYardsFeet extends StatelessWidget {
         builder: (context, cp, child) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -187,7 +186,9 @@ class MetersYardsFeet extends StatelessWidget {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => cp.clearMeterYardFeet(),
+                        onTap: () {
+                          cp.clearMeterYardFeet();
+                        },
                         child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
                       ),
                     ],

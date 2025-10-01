@@ -20,7 +20,6 @@ class PricesProvider extends ChangeNotifier {
   List<String> uniqueRegion = [];
   List<String> uniqueClasses = [];
   List<num> uniqueYears = [];
-
   String? selectedRegion;
   String? selectedClasses;
   String? grphcode;
@@ -45,6 +44,17 @@ class PricesProvider extends ChangeNotifier {
 
   String get allPriceDataCacheKey => 'allPriceData_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
 
+
+  clearData(){
+    selectedRegion = null;
+    selectedClasses = null;
+    grphcode = null;
+    prdate = null;
+    graphDate = null;
+    selectedYears = null;
+    allPriceDataModal = null;
+    graphList = [];
+  }
   String get selectedFullDate {
     final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
     final date = DateTime(year, selectedMonth, selectedDay);
@@ -121,7 +131,6 @@ class PricesProvider extends ChangeNotifier {
       },
     );
     saveFiltersLocally();
-    saveFiltersLocally();
   }
 
   void updateSelectedDate({int? year, int? month, int? day}) {
@@ -174,9 +183,7 @@ class PricesProvider extends ChangeNotifier {
     await getGraphCodesByClassAndRegion(context: context, loader: false);
     await graphData(context: context, loader: false);
     await getAllPriceData(context: context, loader: false);
-
     await saveFiltersLocally();
-
     Navigator.pop(context);
     notifyListeners();
   }
@@ -195,15 +202,20 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> loadFiltersLocally() async {
+  Future<void> loadFiltersLocally({bool forceClear = false}) async {
     final sp = await SharedPreferences.getInstance();
     selectedRegion = sp.getString("selectedRegion") ?? "";
     selectedClasses = sp.getString("selectedClass") ?? "";
     selectedYears = sp.getString("selectedYear") ?? "";
-    loader = sp.getBool("isDataFetched") ?? false;
+
+    if (forceClear) {
+      graphList = [];
+      chartData = [];
+      return;
+    }
 
     final graphString = sp.getString(graphCacheKey);
-    if (graphString != null && graphString.isNotEmpty) {
+    if (graphString != null && graphString.isNotEmpty && graphList.isEmpty) {
       try {
         List<dynamic> jsonList = json.decode(graphString);
         graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
@@ -215,6 +227,12 @@ class PricesProvider extends ChangeNotifier {
   }
 
   void _generateChartDataFromGraphList() {
+    if (graphList.isEmpty) {
+      chartData = []; // ensure chartData is cleared
+      notifyListeners();
+      return;
+    }
+
     final tempChartData = fixedMonths.map((month) {
       final entries = graphList.where((e) {
         try {
@@ -225,7 +243,9 @@ class PricesProvider extends ChangeNotifier {
         }
       }).toList();
 
-      final avg = entries.isNotEmpty ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length : 0.0;
+      final avg = entries.isNotEmpty
+          ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length
+          : 0.0;
 
       return SalesData(month: month, sales: avg);
     }).toList();
@@ -362,105 +382,113 @@ class PricesProvider extends ChangeNotifier {
 
     int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
     int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
+    List<int> dayList = List.generate(daysInMonth, (i) => i + 1);
 
     showCupertinoModalPopup(
       context: context,
       builder: (_) => SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height / 2.5,
-          color: AppColors.cFFFFFF,
-          child: Column(
-            children: [
-              // Pickers
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 4,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CupertinoPicker(
-                        scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
-                        itemExtent: 40,
-                        onSelectedItemChanged: (index) {
-                          selectedYears = uniqueYears[index].toString();
-                        },
-                        children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
-                      ),
-                    ),
-                    Expanded(
-                      child: CupertinoPicker(
-                        scrollController: FixedExtentScrollController(initialItem: selectedMonth - 1),
-                        itemExtent: 40,
-                        onSelectedItemChanged: (index) {
-                          selectedMonth = index + 1;
-
-                          int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
-                          int maxDays = DateTime(year, selectedMonth + 1, 0).day;
-
-                          if (selectedDay > maxDays) selectedDay = maxDays;
-
-                          notifyListeners();
-                        },
-                        children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
-                      ),
-                    ),
-                    Expanded(
-                      child: CupertinoPicker(
-                        scrollController: FixedExtentScrollController(initialItem: selectedDay - 1),
-                        itemExtent: 40,
-                        onSelectedItemChanged: (index) {
-                          selectedDay = index + 1;
-                        },
-                        children: List.generate(daysInMonth, (i) => Center(child: Text((i + 1).toString()))),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // Buttons
-              Padding(
-                padding: const EdgeInsets.only(right: 8, left: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: AppButtons().filledButton(true, AppStrings.cancel, context),
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
-                        final DateTime selectedDate = DateTime(year, selectedMonth, selectedDay);
-                        final DateTime endDate = selectedDate;
-                        final DateTime startDate = DateTime(selectedDate.year - 1, selectedDate.month, selectedDate.day);
-
-                        prdate = DateFormat('yyyy-MM-dd').format(selectedDate);
-
-                        await getGraphCodesByClassAndRegion(context: context, loader: true).then(
-                          (value) {
-                            graphData(context: context, loader: false);
-                            getAllPriceData(context: context, loader: false);
+        child: StatefulBuilder(
+          builder: (context, setState) => Container(
+            height: MediaQuery.of(context).size.height / 2.5,
+            color: AppColors.cFFFFFF,
+            child: Column(
+              children: [
+                // Pickers
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 4,
+                  child: Row(
+                    children: [
+                      // Year Picker
+                      Expanded(
+                        child: CupertinoPicker(
+                          scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
+                          itemExtent: 40,
+                          onSelectedItemChanged: (index) {
+                            setState(() {
+                              selectedYears = uniqueYears[index].toString();
+                              int y = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+                              int maxDays = DateTime(y, selectedMonth + 1, 0).day;
+                              if (selectedDay > maxDays) selectedDay = maxDays;
+                              dayList = List.generate(maxDays, (i) => i + 1);
+                            });
                           },
-                        );
+                          children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
+                        ),
+                      ),
 
-                        final filteredList = graphList.where((e) {
-                          final DateTime? dt = DateTime.tryParse(e.pRDATE ?? '');
-                          if (dt == null) return false;
-                          return !dt.isBefore(startDate) && !dt.isAfter(endDate);
-                        }).toList();
+                      Expanded(
+                        child: CupertinoPicker(
+                          scrollController: FixedExtentScrollController(initialItem: selectedMonth - 1),
+                          itemExtent: 40,
+                          onSelectedItemChanged: (index) {
+                            setState(() {
+                              selectedMonth = index + 1;
+                              int y = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+                              int maxDays = DateTime(y, selectedMonth + 1, 0).day;
+                              if (selectedDay > maxDays) selectedDay = maxDays;
+                              dayList = List.generate(maxDays, (i) => i + 1);
+                            });
+                          },
+                          children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
+                        ),
+                      ),
 
-                        graphList = filteredList;
-
-                        _generateChartDataFromGraphList();
-
-                        notifyListeners();
-                        Navigator.pop(context);
-                      },
-                      child: AppButtons().filledButton(true, AppStrings.confirm, context),
-                    ),
-                  ],
+                      // Day Picker
+                      Expanded(
+                        child: CupertinoPicker(
+                          scrollController: FixedExtentScrollController(initialItem: selectedDay - 1),
+                          itemExtent: 40,
+                          onSelectedItemChanged: (index) {
+                            setState(() {
+                              selectedDay = dayList[index];
+                            });
+                          },
+                          children: dayList.map((d) => Center(child: Text(d.toString()))).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+
+                // Buttons
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: AppButtons().filledButton(true, AppStrings.cancel, context),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+                          final DateTime selectedDate = DateTime(year, selectedMonth, selectedDay);
+                          prdate = DateFormat('yyyy-MM-dd').format(selectedDate);
+
+                          await getGraphCodesByClassAndRegion(context: context, loader: true);
+                          graphData(context: context, loader: false);
+                          getAllPriceData(context: context, loader: false);
+
+                          final DateTime startDate = DateTime(selectedDate.year - 1, selectedDate.month, selectedDate.day);
+                          final DateTime endDate = selectedDate;
+
+                          graphList = graphList.where((e) {
+                            final DateTime? dt = DateTime.tryParse(e.pRDATE ?? '');
+                            return dt != null && !dt.isBefore(startDate) && !dt.isAfter(endDate);
+                          }).toList();
+
+                          _generateChartDataFromGraphList();
+                          notifyListeners();
+                          Navigator.pop(context);
+                        },
+                        child: AppButtons().filledButton(true, AppStrings.confirm, context),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -470,6 +498,10 @@ class PricesProvider extends ChangeNotifier {
   }
 
   Future<void> graphData({required BuildContext context, required bool loader}) async {
+    graphList = [];
+    chartData = [];
+    notifyListeners();
+
     if ((grphcode ?? "").isEmpty || (prdate ?? "").isEmpty) return;
 
     final data = {"grphcode": grphcode ?? "", "prdate": prdate ?? ""};
@@ -483,17 +515,21 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (response != null) {
-      debugPrint(response.body.toString(), wrapWidth: 1024);
       final body = json.decode(response.body);
       if (body is List && body.isNotEmpty) {
         graphList = body.map((e) => GraphDataModal.fromJson(e)).toList();
       } else {
         graphList = [];
       }
+
       _generateChartDataFromGraphList();
       notifyListeners();
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(graphCacheKey, jsonEncode(graphList.map((e) => e.toJson()).toList()));
     }
   }
+
 
   Future<void> getGraphCodesByClassAndRegion({
     required BuildContext context,

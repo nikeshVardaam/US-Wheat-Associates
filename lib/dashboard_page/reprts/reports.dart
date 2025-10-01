@@ -234,33 +234,31 @@ class _ReportsState extends State<Reports> {
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Transform.scale(
-                    scale: 0.6,
-                    child: Switch(
-                      activeColor: AppColors.c5B8EDC,
-                      inactiveThumbColor: AppColors.c353d4a.withOpacity(0.7),
-                      value: rp.isFilterCleared,
-                      onChanged: (value) {
-                        rp.isFilterCleared = value;
-                        if (value) {
-                          rp.backupFilter();
-                          rp.selectedReportType = null;
-                          rp.selectedYear = null;
-                          rp.selectedCategory = null;
-                          rp.resetPagination();
-                          rp.getDefaultReports(context: context);
-                        } else {
-                          rp.resetFilter();
-                          rp.resetPagination();
-                          rp.getReports(context: context);
-                        }
-                      },
-                    ),
+              GestureDetector(
+                onTap: () {
+                  rp.clearFilterAndReload(context: context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: AppBoxDecoration.greyBorder(context),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
+                          child: Text(
+                            AppStrings.clear,
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.c353d4a.withOpacity(0.7),
+                                ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -298,7 +296,7 @@ class _ReportsState extends State<Reports> {
                                           child: Text(
                                             report.title ?? "",
                                             overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
+                                            maxLines: 3,
                                             style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                                           ),
                                         ),

@@ -5,6 +5,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
+import 'package:uswheat/utils/app_widgets.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
 import '../modal/sales_modal.dart';
 import '../utils/app_assets.dart';
@@ -698,12 +699,11 @@ class _PricesState extends State<Prices> {
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                             fontWeight: FontWeight.w900,
                                                             color: AppColors.c353d4a.withOpacity(0.7),
-
                                                           ),
                                                     ),
                                                     const SizedBox(width: 4),
-                                                     Text(
-                                                      data?.cASHMT?.toDouble().toStringAsFixed(2)?? '--',
+                                                    Text(
+                                                      data?.cASHMT?.toDouble().toStringAsFixed(2) ?? '--',
                                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                             fontWeight: FontWeight.w900,
                                                             color: AppColors.c353d4a.withOpacity(0.7),

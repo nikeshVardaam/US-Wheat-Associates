@@ -22,8 +22,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
   WebViewController? _webController;
   bool _isLoading = true;
 
-  bool get _isPdf =>
-      widget.reportDetailArg.pdfUrl.toLowerCase().endsWith('.pdf');
+  bool get _isPdf => widget.reportDetailArg.pdfUrl.toLowerCase().endsWith('.pdf');
 
   @override
   void initState() {
@@ -69,32 +68,32 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
             padding: const EdgeInsets.all(16.0),
             child: url.isNotEmpty
                 ? _isPdf
-                ? SfPdfViewer.network(
-              url,
-              key: ValueKey(url),
-              controller: _pdfViewerController,
-              onDocumentLoaded: (details) {
-                setState(() => _isLoading = false);
-              },
-              onDocumentLoadFailed: (details) {
-                setState(() => _isLoading = false);
-              },
-            )
-                : _webController != null
-                ? WebViewWidget(controller: _webController!)
-                : const SizedBox()
+                    ? SfPdfViewer.network(
+                        url,
+                        key: ValueKey(url),
+                        controller: _pdfViewerController,
+                        onDocumentLoaded: (details) {
+                          setState(() => _isLoading = false);
+                        },
+                        onDocumentLoadFailed: (details) {
+                          setState(() => _isLoading = false);
+                        },
+                      )
+                    : _webController != null
+                        ? WebViewWidget(controller: _webController!)
+                        : const SizedBox()
                 : Center(
-              child: Text(
-                AppStrings.noData,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+                    child: Text(
+                      AppStrings.noData,
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                  ),
           ),
           if (_isLoading)
-             Center(
-              child:AppWidgets.loading(),
+            Center(
+              child: AppWidgets.loading(),
             ),
         ],
       ),
