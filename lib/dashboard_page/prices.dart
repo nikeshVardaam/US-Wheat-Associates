@@ -269,15 +269,17 @@ class _PricesState extends State<Prices> {
                     child: SizedBox(
                       height: MediaQuery.of(context).size.width / 2,
                       child: pp.loading
-                          ? const Center(
-                              child: Text(
-                                'No data found',
-                                style: TextStyle(fontSize: 16, color: Colors.grey),
-                              ),
-                            )
+                          ? AppWidgets.loader()
+                          : pp.chartLoading
+                          ? AppWidgets.loader()
                           : pp.chartData.isEmpty
-                              ? AppWidgets.loader()
-                              : Container(
+                          ? const Center(
+                        child: Text(
+                          'No data found',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      )
+                          : Container(
                                   height: 1,
                                   decoration: BoxDecoration(
                                     border: Border(
@@ -498,73 +500,73 @@ class _PricesState extends State<Prices> {
                                 Text(
                                   AppStrings.weekChange,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.cab865a,
-                                  ),
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.cab865a,
+                                      ),
                                 ),
                               ],
                             ),
                           ),
                           pp.allPriceDataModal?.weekly?.cASHBU != null && pp.allPriceDataModal?.weekly?.cASHMT != null
                               ? Row(
-                            children: [
-                              Text(
-                                pp.allPriceDataModal?.weekly?.cASHBU?.toDouble().toStringAsFixed(2) ?? "--",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.cd63a3a,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              if (pp.allPriceDataModal?.weekly?.cASHBU != null)
-                                Text(
-                                  "FOB \$/BU",
-                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                    fontWeight: FontWeight.w900,
-                                    color: AppColors.cd63a3a,
-                                  ),
-                                ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Container(
-                                  height: 16,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                  width: 2,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  if (pp.allPriceDataModal?.weekly?.cASHMT != null)
+                                  children: [
                                     Text(
-                                      "\$/MT",
+                                      pp.allPriceDataModal?.weekly?.cASHBU?.toDouble().toStringAsFixed(2) ?? "--",
                                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                        fontWeight: FontWeight.w900,
-                                        color: AppColors.cd63a3a,
+                                            fontWeight: FontWeight.w900,
+                                            color: AppColors.cd63a3a,
+                                          ),
+                                    ),
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                    if (pp.allPriceDataModal?.weekly?.cASHBU != null)
+                                      Text(
+                                        "FOB \$/BU",
+                                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                              fontWeight: FontWeight.w900,
+                                              color: AppColors.cd63a3a,
+                                            ),
+                                      ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Container(
+                                        height: 16,
+                                        color: AppColors.c353d4a.withOpacity(0.7),
+                                        width: 2,
                                       ),
                                     ),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    pp.allPriceDataModal?.weekly?.cASHMT?.toDouble().toStringAsFixed(2) ?? "--",
-                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.cd63a3a,
+                                    Row(
+                                      children: [
+                                        if (pp.allPriceDataModal?.weekly?.cASHMT != null)
+                                          Text(
+                                            "\$/MT",
+                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                  fontWeight: FontWeight.w900,
+                                                  color: AppColors.cd63a3a,
+                                                ),
+                                          ),
+                                        const SizedBox(
+                                          width: 4,
+                                        ),
+                                        Text(
+                                          pp.allPriceDataModal?.weekly?.cASHMT?.toDouble().toStringAsFixed(2) ?? "--",
+                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                color: AppColors.cd63a3a,
+                                              ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
+                                  ],
+                                )
                               : Text(
-                            "--",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.c353d4a.withOpacity(0.7),
-                            ),
-                          ),
+                                  "--",
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        color: AppColors.c353d4a.withOpacity(0.7),
+                                      ),
+                                ),
                         ],
                       ),
                     ),

@@ -27,6 +27,7 @@ class PricesProvider extends ChangeNotifier {
   String? prdate;
   String? graphDate;
   String? selectedYears;
+  bool chartLoading = true;
 
   AllPriceDataModal? allPriceDataModal;
   List<GraphDataModal> graphList = [];
@@ -506,11 +507,16 @@ class PricesProvider extends ChangeNotifier {
   }
 
   Future<void> graphData({required BuildContext context, required bool loader}) async {
+    chartLoading = true;
     graphList = [];
     chartData = [];
     notifyListeners();
 
-    if ((grphcode ?? "").isEmpty || (prdate ?? "").isEmpty) return;
+    if ((grphcode ?? "").isEmpty || (prdate ?? "").isEmpty){
+      chartLoading = false;
+      notifyListeners();
+      return;
+    }
 
     final data = {"grphcode": grphcode ?? "", "prdate": prdate ?? ""};
 
@@ -536,6 +542,10 @@ class PricesProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(graphCacheKey, jsonEncode(graphList.map((e) => e.toJson()).toList()));
     }
+    Future.delayed(const Duration(milliseconds: 400), () {
+      chartLoading = false;
+      notifyListeners();
+    });
   }
 
 
