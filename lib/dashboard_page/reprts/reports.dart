@@ -298,7 +298,7 @@ class _ReportsState extends State<Reports> {
                                             report.title ?? "",
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 3,
-                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
+                                            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.c000000),
                                           ),
                                         ),
                                       ],
