@@ -89,6 +89,7 @@ class ReportsProvider extends ChangeNotifier {
     if (_isLoading || !hasMoreData) return;
 
     _isLoading = true;
+    reports.clear();
     notifyListeners();
 
     const url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data";
