@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart' show PdfViewerController;
 import 'package:webview_flutter/webview_flutter.dart';
 import '../modal/repots_modal.dart';
@@ -87,18 +89,19 @@ class ReportsProvider extends ChangeNotifier {
     if (_isLoading || !hasMoreData) return;
 
     _isLoading = true;
-    reports.clear();
     notifyListeners();
 
     const url = "https://uswheat.org/wp-json/uswheat/v1/post-type-data";
+    final prefs = await SharedPreferences.getInstance();
 
     try {
-      final response = await http.get(Uri.parse(url));
+      // Attempt network request with retries
+      final response = await _getWithRetry(Uri.parse(url));
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body) as List<dynamic>;
-
         final List<Map<String, dynamic>> allPosts = [];
+
         for (var item in decoded) {
           final posts = item['posts'] as List<dynamic>? ?? [];
           for (var post in posts) {
@@ -108,18 +111,88 @@ class ReportsProvider extends ChangeNotifier {
             });
           }
         }
+
+        // Take first 10 posts
         final chunk = allPosts.take(10).toList();
-        _reports.clear();
-        _reports.addAll(chunk.map((e) => ReportModel.fromJson(e)).toList());
+
+        _reports
+          ..clear()
+          ..addAll(chunk.map((e) => ReportModel.fromJson(e)).toList());
 
         hasMoreData = false;
+
+        // Cache the response for offline use
+        await prefs.setString('cached_reports', response.body);
+      } else {
+        print('Server error: ${response.statusCode}');
+        await _loadFromCache(prefs);
       }
+    } on TimeoutException {
+      print('Request timed out');
+      await _loadFromCache(prefs);
+    } on SocketException catch (e) {
+      print('Network error: $e');
+      await _loadFromCache(prefs);
     } catch (e) {
-      print("Error: $e");
+      print('Unexpected error: $e');
+      await _loadFromCache(prefs);
     }
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  /// Retry logic for network requests
+  Future<http.Response> _getWithRetry(Uri uri, {int retries = 2}) async {
+    int attempt = 0;
+    while (attempt <= retries) {
+      try {
+        return await http
+            .get(uri, headers: {
+          'User-Agent': 'FlutterApp/1.0 (https://uswheat.org)',
+          'Accept': 'application/json',
+        })
+            .timeout(const Duration(seconds: 15));
+      } on SocketException catch (e) {
+        attempt++;
+        if (attempt > retries) rethrow;
+        await Future.delayed(const Duration(seconds: 2));
+      } on TimeoutException {
+        attempt++;
+        if (attempt > retries) rethrow;
+        await Future.delayed(const Duration(seconds: 2));
+      }
+    }
+    throw Exception('Failed after $retries retries');
+  }
+
+  /// Load cached reports in case of network failure
+  Future<void> _loadFromCache(SharedPreferences prefs) async {
+    final cachedData = prefs.getString('cached_reports');
+    if (cachedData != null) {
+      final decoded = jsonDecode(cachedData) as List<dynamic>;
+      final List<Map<String, dynamic>> allPosts = [];
+
+      for (var item in decoded) {
+        final posts = item['posts'] as List<dynamic>? ?? [];
+        for (var post in posts) {
+          allPosts.add({
+            'title': post['title'] ?? '',
+            'url': post['url'] ?? '',
+          });
+        }
+      }
+
+      final chunk = allPosts.take(10).toList();
+      _reports
+        ..clear()
+        ..addAll(chunk.map((e) => ReportModel.fromJson(e)).toList());
+
+      hasMoreData = false;
+      print('Loaded reports from cache');
+    } else {
+      print('No cached reports available');
+    }
   }
 
   Future<void> getReports({required BuildContext context}) async {

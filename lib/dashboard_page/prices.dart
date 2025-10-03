@@ -271,128 +271,128 @@ class _PricesState extends State<Prices> {
                       child: pp.loading
                           ? AppWidgets.loader()
                           : pp.chartLoading
-                          ? AppWidgets.loader()
-                          : pp.chartData.isEmpty
-                          ? const Center(
-                        child: Text(
-                          'No data found',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                      )
-                          : Container(
-                                  height: 1,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      top: BorderSide(
-                                        width: 0.4,
-                                        color: AppColors.cB6B6B6,
+                              ? AppWidgets.loader()
+                              : pp.chartData.isEmpty
+                                  ? const Center(
+                                      child: Text(
+                                        'No data found',
+                                        style: TextStyle(fontSize: 16, color: Colors.grey),
                                       ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
-                                    child: SfCartesianChart(
-                                      borderColor: Colors.white,
-                                      tooltipBehavior: TooltipBehavior(
-                                        enable: true,
-                                        activationMode: ActivationMode.singleTap,
-                                        tooltipPosition: TooltipPosition.pointer,
-                                      ),
-                                      zoomPanBehavior: ZoomPanBehavior(
-                                        enablePanning: true,
-                                        zoomMode: ZoomMode.xy,
-                                      ),
-                                      plotAreaBorderWidth: 0,
-                                      margin: const EdgeInsets.all(0),
-                                      backgroundColor: Colors.white,
-                                      annotations: <CartesianChartAnnotation>[
-                                        CartesianChartAnnotation(
-                                          widget: Container(
-                                            width: MediaQuery.of(context).size.width / 2.4,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.c3d3934,
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    pp.selectedPrevYearDate,
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      color: AppColors.cFFFFFF,
-                                                      fontFamily: 'proximanovaexcn',
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 4,
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                                    child: Text(
-                                                      "-",
-                                                      style: TextStyle(
-                                                        fontSize: 8,
-                                                        color: AppColors.cFFFFFF,
-                                                        fontWeight: FontWeight.w500,
-                                                        fontFamily: '',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Text(pp.selectedFullDate,
-                                                      style: TextStyle(
-                                                        fontSize: 10,
-                                                        color: AppColors.cFFFFFF,
-                                                        fontFamily: 'proximanovaexcn',
-                                                      )),
-                                                ],
-                                              ),
-                                            ),
+                                    )
+                                  : Container(
+                                      height: 1,
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          top: BorderSide(
+                                            width: 0.4,
+                                            color: AppColors.cB6B6B6,
                                           ),
-                                          coordinateUnit: CoordinateUnit.logicalPixel,
-                                          region: AnnotationRegion.plotArea,
-                                          x: MediaQuery.of(context).size.width / 3,
-                                          y: MediaQuery.of(context).size.width / 2.5,
                                         ),
-                                      ],
-                                      primaryXAxis: CategoryAxis(
-                                        isVisible: true,
-                                        majorGridLines: MajorGridLines(
-                                          width: 0.1,
-                                          color: AppColors.cab865a.withOpacity(0.6),
-                                        ),
-                                        axisLine: const AxisLine(width: 0),
-                                        //if i want months back then only set font size 10
-                                        labelStyle: const TextStyle(fontSize: 0),
-                                        tickPosition: TickPosition.inside,
-                                        majorTickLines: const MajorTickLines(width: 0),
                                       ),
-                                      primaryYAxis: const NumericAxis(
-                                        interval: 10,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
+                                        child: SfCartesianChart(
+                                          borderColor: Colors.white,
+                                          tooltipBehavior: TooltipBehavior(
+                                            enable: true,
+                                            activationMode: ActivationMode.singleTap,
+                                            tooltipPosition: TooltipPosition.pointer,
+                                          ),
+                                          zoomPanBehavior: ZoomPanBehavior(
+                                            enablePanning: true,
+                                            zoomMode: ZoomMode.xy,
+                                          ),
+                                          plotAreaBorderWidth: 0,
+                                          margin: const EdgeInsets.all(0),
+                                          backgroundColor: Colors.white,
+                                          annotations: <CartesianChartAnnotation>[
+                                            CartesianChartAnnotation(
+                                              widget: Container(
+                                                width: MediaQuery.of(context).size.width / 2.4,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.c3d3934,
+                                                  borderRadius: BorderRadius.circular(12),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        pp.selectedPrevYearDate,
+                                                        style: TextStyle(
+                                                          fontSize: 10,
+                                                          color: AppColors.cFFFFFF,
+                                                          fontFamily: 'proximanovaexcn',
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 4,
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                        child: Text(
+                                                          "-",
+                                                          style: TextStyle(
+                                                            fontSize: 8,
+                                                            color: AppColors.cFFFFFF,
+                                                            fontWeight: FontWeight.w500,
+                                                            fontFamily: '',
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(pp.selectedFullDate,
+                                                          style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: AppColors.cFFFFFF,
+                                                            fontFamily: 'proximanovaexcn',
+                                                          )),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              coordinateUnit: CoordinateUnit.logicalPixel,
+                                              region: AnnotationRegion.plotArea,
+                                              x: MediaQuery.of(context).size.width / 3,
+                                              y: MediaQuery.of(context).size.width / 2.5,
+                                            ),
+                                          ],
+                                          primaryXAxis: CategoryAxis(
+                                            isVisible: true,
+                                            majorGridLines: MajorGridLines(
+                                              width: 0.1,
+                                              color: AppColors.cab865a.withOpacity(0.6),
+                                            ),
+                                            axisLine: const AxisLine(width: 0),
+                                            //if i want months back then only set font size 10
+                                            labelStyle: const TextStyle(fontSize: 0),
+                                            tickPosition: TickPosition.inside,
+                                            majorTickLines: const MajorTickLines(width: 0),
+                                          ),
+                                          primaryYAxis: const NumericAxis(
+                                            interval: 10,
 
-                                        isVisible: true,
+                                            isVisible: true,
 
-                                        majorGridLines: MajorGridLines(width: 1),
-                                        axisLine: AxisLine(width: 0.1),
-                                        majorTickLines: MajorTickLines(width: 0),
-                                        minorTickLines: MinorTickLines(width: 0),
-                                        rangePadding: ChartRangePadding.round, // optional
-                                      ),
-                                      series: <CartesianSeries>[
-                                        LineSeries<SalesData, String>(
-                                          dataSource: pp.chartData,
-                                          xValueMapper: (SalesData data, _) => data.month,
-                                          yValueMapper: (SalesData data, _) => data.sales,
-                                          color: AppColors.c000000,
-                                          width: 0.5,
-                                          dataLabelSettings: const DataLabelSettings(isVisible: false),
+                                            majorGridLines: MajorGridLines(width: 1),
+                                            axisLine: AxisLine(width: 0.1),
+                                            majorTickLines: MajorTickLines(width: 0),
+                                            minorTickLines: MinorTickLines(width: 0),
+                                            rangePadding: ChartRangePadding.round, // optional
+                                          ),
+                                          series: <CartesianSeries>[
+                                            LineSeries<SalesData, String>(
+                                              dataSource: pp.chartData,
+                                              xValueMapper: (SalesData data, _) => data.month,
+                                              yValueMapper: (SalesData data, _) => data.sales,
+                                              color: AppColors.c000000,
+                                              width: 0.5,
+                                              dataLabelSettings: const DataLabelSettings(isVisible: false),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
                     ),
                   ),
                   Divider(
