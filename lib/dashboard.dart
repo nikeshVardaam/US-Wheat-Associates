@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/dashboard_page/watchList.dart';
-import 'package:uswheat/dashboard_page/prices.dart';
+import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/utils/app_assets.dart';

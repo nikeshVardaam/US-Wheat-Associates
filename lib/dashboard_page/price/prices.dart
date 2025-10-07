@@ -1,21 +1,29 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:uswheat/dashboard_page/price/class_selector.dart';
+import 'package:uswheat/dashboard_page/price/region_selector.dart';
 import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
-import '../modal/sales_modal.dart';
-import '../utils/app_assets.dart';
+import '../../modal/sales_modal.dart';
+import '../../utils/app_assets.dart';
 
 class Prices extends StatefulWidget {
+  const Prices(
+      {super.key,
+      required this.region,
+      required this.classs,
+      required this.year});
+
   final String? region;
   final String? classs;
   final String? year;
-
-  const Prices({super.key, required this.region, required this.classs, required this.year});
 
   @override
   State<Prices> createState() => _PricesState();
@@ -25,8 +33,9 @@ class _PricesState extends State<Prices> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final pp = Provider.of<PricesProvider>(context, listen: false);
+
       if (widget.region != null && widget.region!.isNotEmpty) {
         pp.setRegion(context, widget.region);
       }
@@ -36,8 +45,6 @@ class _PricesState extends State<Prices> {
       if (widget.year != null && widget.year!.isNotEmpty) {
         pp.setYear(context, widget.year!);
       }
-
-      await Future.delayed(const Duration(milliseconds: 50));
 
       await pp.fetchData(
         context: context,
@@ -60,7 +67,8 @@ class _PricesState extends State<Prices> {
               Container(
                 color: AppColors.cab865a,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -68,7 +76,12 @@ class _PricesState extends State<Prices> {
                         children: [
                           Text(
                             AppStrings.pricess,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                    color: AppColors.cFFFFFF,
+                                    fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
@@ -77,21 +90,29 @@ class _PricesState extends State<Prices> {
                           children: [
                             Text(
                               AppStrings.addToWatchlist,
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                      color: AppColors.cFFFFFF,
+                                      fontWeight: FontWeight.w500),
                             ),
                             const SizedBox(
                               width: 8,
                             ),
                             GestureDetector(
-                              onTap: (pp.selectedRegion != null && pp.selectedClasses != null && pp.selectedYears != null)
+                              onTap: (pp.selectedRegion != null &&
+                                      pp.classs != null &&
+                                      pp.selectedYears != null)
                                   ? () async {
-                                      await pp.storeWatchList(context: context, loader: true);
+                                      await pp.storeWatchList(
+                                          context: context, loader: true);
                                     }
                                   : null,
                               child: SvgPicture.asset(
                                 pp.isInWatchlist(
                                   pp.selectedRegion ?? '',
-                                  pp.selectedClasses ?? '',
+                                  pp.classs ?? '',
                                   pp.selectedYears ?? '',
                                 )
                                     ? AppAssets.fillStar
@@ -112,25 +133,39 @@ class _PricesState extends State<Prices> {
                 children: [
                   Row(
                     children: [
+                      // selecting the region
                       Container(
                         width: MediaQuery.of(context).size.width / 3.6,
                         color: AppColors.c95795d.withOpacity(0.1),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 8),
                           child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              pp.showFilterDropdown(
+                            onTap: () async {
+                              await showCupertinoModalPopup(
                                 context: context,
-                                details: details,
-                                onSelect: (selectedRegion) {},
+                                builder: (context) {
+                                  return RegionSelector(
+                                    regionList: pp.regionsList,
+                                  );
+                                },
+                              ).then(
+                                (value) {
+                                  if (value != null) {
+                                    pp.setSelectedRegion(value);
+                                  }
+                                },
                               );
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  AppStrings.region,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  AppStrings.region.toUpperCase(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.cab865a,
                                       ),
@@ -147,11 +182,12 @@ class _PricesState extends State<Prices> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          pp.selectedRegion ?? "Select Region",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
+                          pp.region?.region ?? "Select Region",
+                          style:
+                              Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
                         ),
                       ),
                     ],
@@ -163,25 +199,36 @@ class _PricesState extends State<Prices> {
                   ),
                   Row(
                     children: [
+                      //selecting the class
                       Container(
                         width: MediaQuery.of(context).size.width / 3.6,
                         color: AppColors.c95795d.withOpacity(0.1),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 8),
                           child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              pp.showClassesDropdown(
+                            onTap: () async {
+                              await showCupertinoModalPopup(
                                 context: context,
-                                details: details,
-                                onSelect: (selectedClasses) {},
-                              );
+                                builder: (context) {
+                                  return ClassSelector(
+                                      classList: pp.region?.classes ?? []);
+                                },
+                              ).then((value) {
+                                if (value != null) {
+                                  pp.setSelectedClass(value);
+                                }
+                              });
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  AppStrings.classs,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  AppStrings.classs.toUpperCase(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.cab865a,
                                       ),
@@ -198,11 +245,12 @@ class _PricesState extends State<Prices> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          pp.selectedClasses ?? "Select Classes",
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.c353d4a.withOpacity(0.7),
-                              ),
+                          pp.classs ?? "Select Classes",
+                          style:
+                              Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.c353d4a.withOpacity(0.7),
+                                  ),
                         ),
                       ),
                     ],
@@ -225,13 +273,17 @@ class _PricesState extends State<Prices> {
                           width: MediaQuery.of(context).size.width / 3.6,
                           color: AppColors.c95795d.withOpacity(0.1),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   AppStrings.date,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.cab865a,
                                       ),
@@ -251,7 +303,10 @@ class _PricesState extends State<Prices> {
                           children: [
                             Text(
                               pp.selectedPrevYearDate,
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
                                     fontWeight: FontWeight.w900,
                                     color: AppColors.c353d4a.withOpacity(0.7),
                                   ),
@@ -259,7 +314,10 @@ class _PricesState extends State<Prices> {
                             const SizedBox(width: 8),
                             Text(
                               "/",
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
                                     fontWeight: FontWeight.w900,
                                     color: AppColors.c353d4a.withOpacity(0.7),
                                   ),
@@ -267,7 +325,10 @@ class _PricesState extends State<Prices> {
                             const SizedBox(width: 10),
                             Text(
                               pp.selectedFullDate,
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
                                     fontWeight: FontWeight.w900,
                                     color: AppColors.c353d4a.withOpacity(0.7),
                                   ),
@@ -285,7 +346,8 @@ class _PricesState extends State<Prices> {
                           ? const Center(
                               child: Text(
                                 'No data found',
-                                style: TextStyle(fontSize: 16, color: Colors.grey),
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.grey),
                               ),
                             )
                           : Container(
@@ -299,7 +361,8 @@ class _PricesState extends State<Prices> {
                                 ),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 8),
                                 child: SfCartesianChart(
                                   borderColor: Colors.white,
                                   tooltipBehavior: TooltipBehavior(
@@ -317,15 +380,20 @@ class _PricesState extends State<Prices> {
                                   annotations: <CartesianChartAnnotation>[
                                     CartesianChartAnnotation(
                                       widget: Container(
-                                        width: MediaQuery.of(context).size.width / 2.4,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.4,
                                         decoration: BoxDecoration(
                                           color: AppColors.c3d3934,
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 2.0, horizontal: 4),
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 pp.selectedPrevYearDate,
@@ -339,7 +407,9 @@ class _PricesState extends State<Prices> {
                                                 width: 4,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 4.0),
                                                 child: Text(
                                                   "/",
                                                   style: TextStyle(
@@ -354,16 +424,19 @@ class _PricesState extends State<Prices> {
                                                   style: TextStyle(
                                                     fontSize: 10,
                                                     color: AppColors.cFFFFFF,
-                                                    fontFamily: 'proximanovaexcn',
+                                                    fontFamily:
+                                                        'proximanovaexcn',
                                                   )),
                                             ],
                                           ),
                                         ),
                                       ),
-                                      coordinateUnit: CoordinateUnit.logicalPixel,
+                                      coordinateUnit:
+                                          CoordinateUnit.logicalPixel,
                                       region: AnnotationRegion.plotArea,
                                       x: MediaQuery.of(context).size.width / 3,
-                                      y: MediaQuery.of(context).size.width / 2.5,
+                                      y: MediaQuery.of(context).size.width /
+                                          2.5,
                                     ),
                                   ],
                                   primaryXAxis: CategoryAxis(
@@ -376,7 +449,8 @@ class _PricesState extends State<Prices> {
                                     //if i want months back then only set font size 10
                                     labelStyle: const TextStyle(fontSize: 0),
                                     tickPosition: TickPosition.inside,
-                                    majorTickLines: const MajorTickLines(width: 0),
+                                    majorTickLines:
+                                        const MajorTickLines(width: 0),
                                   ),
                                   primaryYAxis: const NumericAxis(
                                     interval: 10,
@@ -387,16 +461,21 @@ class _PricesState extends State<Prices> {
                                     axisLine: AxisLine(width: 0.1),
                                     majorTickLines: MajorTickLines(width: 0),
                                     minorTickLines: MinorTickLines(width: 0),
-                                    rangePadding: ChartRangePadding.round, // optional
+                                    rangePadding:
+                                        ChartRangePadding.round, // optional
                                   ),
                                   series: <CartesianSeries>[
                                     LineSeries<SalesData, String>(
                                       dataSource: pp.chartData,
-                                      xValueMapper: (SalesData data, _) => data.month,
-                                      yValueMapper: (SalesData data, _) => data.sales,
+                                      xValueMapper: (SalesData data, _) =>
+                                          data.month,
+                                      yValueMapper: (SalesData data, _) =>
+                                          data.sales,
                                       color: AppColors.c000000,
                                       width: 0.5,
-                                      dataLabelSettings: const DataLabelSettings(isVisible: false),
+                                      dataLabelSettings:
+                                          const DataLabelSettings(
+                                              isVisible: false),
                                     ),
                                   ],
                                 ),
@@ -412,7 +491,8 @@ class _PricesState extends State<Prices> {
                   Container(
                     color: AppColors.c95795d.withOpacity(0.1),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 8),
                       child: Row(
                         children: [
                           Expanded(
@@ -420,7 +500,10 @@ class _PricesState extends State<Prices> {
                               children: [
                                 Text(
                                   AppStrings.nearby,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.cab865a,
                                       ),
@@ -429,8 +512,14 @@ class _PricesState extends State<Prices> {
                             ),
                           ),
                           Text(
-                            pp.allPriceDataModal?.nearby?.cASHBU.toString().substring(0, 3) ?? "--",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            pp.allPriceDataModal?.nearby?.cASHBU
+                                    .toString()
+                                    .substring(0, 3) ??
+                                "--",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),
                                 ),
@@ -440,13 +529,17 @@ class _PricesState extends State<Prices> {
                           ),
                           Text(
                             "FOB \$/BU ",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),
                                 ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Container(
                               height: 16,
                               color: AppColors.c353d4a.withOpacity(0.7),
@@ -457,7 +550,10 @@ class _PricesState extends State<Prices> {
                             children: [
                               Text(
                                 "\$/MT -",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.c353d4a.withOpacity(0.7),
                                     ),
@@ -466,8 +562,14 @@ class _PricesState extends State<Prices> {
                                 width: 4,
                               ),
                               Text(
-                                pp.allPriceDataModal?.nearby?.cASHMT.toString().substring(0, 6) ?? "",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                pp.allPriceDataModal?.nearby?.cASHMT
+                                        .toString()
+                                        .substring(0, 6) ??
+                                    "",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.c353d4a.withOpacity(0.7),
                                     ),
@@ -486,7 +588,8 @@ class _PricesState extends State<Prices> {
                   Container(
                     color: AppColors.c95795d.withOpacity(0.1),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 8),
                       child: Row(
                         children: [
                           Expanded(
@@ -494,7 +597,10 @@ class _PricesState extends State<Prices> {
                               children: [
                                 Text(
                                   AppStrings.weekChange,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.cab865a,
                                       ),
@@ -505,8 +611,14 @@ class _PricesState extends State<Prices> {
                           Row(
                             children: [
                               Text(
-                                pp.allPriceDataModal?.weekly?.cASHBU.toString().substring(0, 3) ?? "--",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                pp.allPriceDataModal?.weekly?.cASHBU
+                                        .toString()
+                                        .substring(0, 3) ??
+                                    "--",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.cd63a3a,
                                     ),
@@ -516,7 +628,10 @@ class _PricesState extends State<Prices> {
                               ),
                               Text(
                                 "FOB \$/BU ",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.cd63a3a,
                                     ),
@@ -524,7 +639,8 @@ class _PricesState extends State<Prices> {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Container(
                               height: 16,
                               color: AppColors.c353d4a.withOpacity(0.7),
@@ -535,7 +651,10 @@ class _PricesState extends State<Prices> {
                             children: [
                               Text(
                                 "\$/MT -",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.cd63a3a,
                                     ),
@@ -544,8 +663,13 @@ class _PricesState extends State<Prices> {
                                 width: 4,
                               ),
                               Text(
-                                pp.allPriceDataModal?.weekly?.cASHMT.toString().substring(0, 2) ?? "--",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                pp.allPriceDataModal?.weekly?.cASHMT
+                                        ?.toStringAsFixed(2) ??
+                                    "--",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.cd63a3a,
                                     ),
@@ -564,7 +688,8 @@ class _PricesState extends State<Prices> {
                   Container(
                     color: AppColors.c95795d.withOpacity(0.1),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 8),
                       child: Row(
                         children: [
                           Expanded(
@@ -572,7 +697,10 @@ class _PricesState extends State<Prices> {
                               children: [
                                 Text(
                                   AppStrings.oneYearAgo,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.cab865a,
                                       ),
@@ -582,7 +710,10 @@ class _PricesState extends State<Prices> {
                           ),
                           Text(
                             "\$/MT",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),
                                 ),
@@ -591,12 +722,17 @@ class _PricesState extends State<Prices> {
                             width: 4,
                           ),
                           Text(
-                            pp.allPriceDataModal?.yearly?.cASHMT.toString().substring(0, 6) ?? "--",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            pp.allPriceDataModal?.yearly?.cASHMT
+                                    ?.toStringAsFixed(2) ??
+                                "--",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),
                                 ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -609,7 +745,8 @@ class _PricesState extends State<Prices> {
                   Container(
                     color: AppColors.c95795d.withOpacity(0.1),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 8),
                       child: Row(
                         children: [
                           Expanded(
@@ -617,7 +754,10 @@ class _PricesState extends State<Prices> {
                               children: [
                                 Text(
                                   AppStrings.lastPrDate,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.cab865a,
                                       ),
@@ -626,8 +766,12 @@ class _PricesState extends State<Prices> {
                             ),
                           ),
                           Text(
-                            Miscellaneous.formatPrDate(pp.allPriceDataModal?.prdate ?? ""),
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            Miscellaneous.formatPrDate(
+                                pp.allPriceDataModal?.prdate ?? ""),
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),
                                 ),
@@ -644,7 +788,8 @@ class _PricesState extends State<Prices> {
                   Container(
                     color: AppColors.c95795d.withOpacity(0.1),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -652,7 +797,10 @@ class _PricesState extends State<Prices> {
                             children: [
                               Text(
                                 AppStrings.fwdPrice,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.cab865a,
                                     ),
@@ -668,30 +816,54 @@ class _PricesState extends State<Prices> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  pp.allPriceDataModal?.forward?.isNotEmpty ?? false
+                                  pp.allPriceDataModal?.forward?.isNotEmpty ??
+                                          false
                                       ? Row(
                                           children: List.generate(
-                                            pp.allPriceDataModal?.forward?.length ?? 0,
+                                            pp.allPriceDataModal?.forward
+                                                    ?.length ??
+                                                0,
                                             (index) {
-                                              var data = pp.allPriceDataModal?.forward?[index];
+                                              var data = pp.allPriceDataModal
+                                                  ?.forward?[index];
 
                                               return Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 12.0),
                                                 child: Row(
                                                   children: [
                                                     Text(
                                                       "${pp.fixedMonths[index]}:",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            fontWeight: FontWeight.w900,
-                                                            color: AppColors.c353d4a.withOpacity(0.7),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            color: AppColors
+                                                                .c353d4a
+                                                                .withOpacity(
+                                                                    0.7),
                                                           ),
                                                     ),
                                                     const SizedBox(width: 4),
                                                     Text(
-                                                      data?.cASHMT.toString().substring(0, 6) ?? '--',
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            fontWeight: FontWeight.w900,
-                                                            color: AppColors.c353d4a.withOpacity(0.7),
+                                                      data?.cASHMT
+                                                              .toString()
+                                                              .substring(
+                                                                  0, 6) ??
+                                                          '--',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            color: AppColors
+                                                                .c353d4a
+                                                                .withOpacity(
+                                                                    0.7),
                                                           ),
                                                     ),
                                                   ],
@@ -701,10 +873,14 @@ class _PricesState extends State<Prices> {
                                           ),
                                         )
                                       : Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 18.0),
                                           child: Text(
                                             "--",
-                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge
+                                                ?.copyWith(
                                                   fontWeight: FontWeight.w900,
                                                   color: AppColors.cd4582d,
                                                 ),

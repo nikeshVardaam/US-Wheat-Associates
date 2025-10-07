@@ -10,7 +10,9 @@ class AppWidgets {
     Color color,
   ) {
     // return Consumer<BaseActivityProvider>(builder: (context, bap, child) {
-    final initials = title.isNotEmpty ? Miscellaneous.getInitials(title) : Miscellaneous.getInitials("");
+    final initials = title.isNotEmpty
+        ? Miscellaneous.getInitials(title)
+        : Miscellaneous.getInitials("");
 
     return CircleAvatar(
       maxRadius: 18,
@@ -33,8 +35,8 @@ class AppWidgets {
         children: [
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: CupertinoActivityIndicator(
-              color: Colors.grey,
+            child: CircularProgressIndicator(
+              color: Colors.black54,
             ),
           ),
         ],
@@ -50,19 +52,28 @@ class AppWidgets {
     );
   }
 
-  static appSnackBar({required BuildContext context, required String text, required Color color}) {
+  static appSnackBar(
+      {required BuildContext context,
+      required String text,
+      required Color color}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         text,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
+        style: Theme.of(context)
+            .textTheme
+            .labelLarge
+            ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
       ),
       backgroundColor: color,
     ));
   }
 
-  static topSnackBar({required BuildContext context, required String message, required Color color}) {
+  static topSnackBar(
+      {required BuildContext context,
+      required String message,
+      required Color color}) {
     final overlay = Overlay.of(context);
     final overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -79,7 +90,10 @@ class AppWidgets {
               message,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+              style: Theme.of(context)
+                  .textTheme
+                  .labelLarge
+                  ?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
         ),
@@ -91,4 +105,6 @@ class AppWidgets {
       overlayEntry.remove();
     });
   }
+
+  Widget? filledButton(bool bool, String s, BuildContext context) {}
 }

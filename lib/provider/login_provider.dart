@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/modal/login_modal.dart';
@@ -15,8 +14,8 @@ class LoginProvider extends ChangeNotifier {
   SharedPreferences? sp;
   bool passwordIsVisible = false;
   bool rememberMe = false;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController(text:"shrey@gmail.com");
+  TextEditingController passwordController = TextEditingController(text: "shrey@123");
 
   void cleanData() {
     emailController.clear();
@@ -33,29 +32,7 @@ class LoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // getPrefData() async {
-  //   sp = await SharedPreferences.getInstance();
-  //   String loginCredential = sp?.getString(PrefKeys.loginCredential) ?? "";
-  //
-  //   if (loginCredential.isNotEmpty) {
-  //     rememberMe = true;
-  //     LoginCredential lc = LoginCredential.fromJson(json.decode(loginCredential));
-  //
-  //     companyController.text = lc.company ?? "";
-  //     emailController.text = lc.email ?? "";
-  //     passwordController.text = lc.password ?? "";
-  //   }
-  //   notifyListeners();
-  // }
-  // setRemember() {
-  //   if (rememberMe) {
-  //     rememberMe = false;
-  //     notifyListeners();
-  //   } else {
-  //     rememberMe = true;
-  //     notifyListeners();
-  //   }
-  // }
+
 
   checkLogin({required BuildContext context}) async {
     sp = await SharedPreferences.getInstance();
@@ -92,8 +69,6 @@ class LoginProvider extends ChangeNotifier {
 
   logIn({required BuildContext context}) async {
     if (validation(context)) {
-      print(validation(context));
-
       var data = {
         "email": emailController.text.trim(),
         "password": passwordController.text.trim(),

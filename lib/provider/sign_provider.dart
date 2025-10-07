@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/service/post_services.dart';
@@ -98,7 +97,7 @@ class SignUpProvider extends ChangeNotifier {
           }
         } else {
           AppWidgets.appSnackBar(
-            context: context,
+            context:context,
             text: "Something went wrong",
             color: Colors.redAccent,
           );

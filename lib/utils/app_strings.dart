@@ -1,6 +1,7 @@
 class AppStrings {
   static const logIn = "Login";
   static const delete = "Delete";
+  static const done = "Done";
   static const deleteUser = "Delete User";
   static const noWatchlistAdded = "No Watchlist Added";
   static const yesDeleteMyAccount = "Yes, delete my account";
@@ -64,7 +65,8 @@ class AppStrings {
   static const reportsTypes = "Reports Types";
   static const read = "Read";
   static const view = "View";
-  static const region = "REGION";
+  static const region = "Region";
+  static const select = "Select";
   static const wheatData = "WHEAT DATA";
   static const currentAverage = "Current Avg";
   static const finalAverage = "2024 Final Avg";
@@ -85,7 +87,7 @@ class AppStrings {
   static const fwdPrice = "FWD PRICE";
   static const account = "ACCOUNT";
   static const pages = "PAGES";
-  static const classs = "CLASS";
+  static const classs = "Class";
   static const testWtkghl = "TW kg/hl";
   static const testWtbbu = "TW lb/bu";
   static const moisture = "Moisture";

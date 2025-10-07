@@ -19,7 +19,7 @@ class PostServices {
     required String endpoint,
     required Map<String, dynamic> requestData,
     required BuildContext context,
-    required isBottomSheet,
+    required bool isBottomSheet,
     required bool loader,
   }) async {
     sp = await SharedPreferences.getInstance();
@@ -33,9 +33,11 @@ class PostServices {
 
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
-print(bearerToken);
-print(url);
-print(requestData);
+
+    print(url);
+
+    print("Request data$requestData");
+    print("Token $bearerToken");
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -50,7 +52,13 @@ print(requestData);
       if (loader) {
         Navigator.pop(context);
       }
-      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 409) {
+
+      print(response.statusCode);
+      print(jsonData);
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 409) {
         return response;
       } else if (response.statusCode == 401) {
         ExceptionDialogs.networkDialog(
@@ -93,10 +101,10 @@ print(requestData);
         Navigator.pop(context);
         ExceptionDialogs.networkDialog(
           context: context,
-          message:  "Request timed out. Please check your internet and try again.",
+          message:
+              "Request timed out. Please check your internet and try again.",
           onPressed: () {},
         );
-        // show dialog
       }
       return null;
     } on HttpException catch (e) {

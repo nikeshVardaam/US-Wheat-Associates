@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/dashboard_page/calculator.dart';
-import 'package:uswheat/dashboard_page/prices.dart';
+import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/dashboard_page/reprts/reports.dart';
 import 'package:uswheat/dashboard_page/watchList.dart';
@@ -62,7 +62,7 @@ class DashboardProvider extends ChangeNotifier {
   }
 
   deleteUser({required BuildContext context}) {
-    DeleteService().delete(endpoint: ApiEndpoint.deleteUser, context: context).then(
+    DeleteService().delete(endpoint: ApiEndpoint.deleteAccount, context: context).then(
       (value) async {
         if (value != null) {
           sp = await SharedPreferences.getInstance();

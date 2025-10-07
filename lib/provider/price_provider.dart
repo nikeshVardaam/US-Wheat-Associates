@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uswheat/dashboard_page/price/custome_date_picker.dart';
 import 'package:uswheat/modal/all_price_data_modal.dart';
+import 'package:uswheat/modal/model_region.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
@@ -17,17 +19,20 @@ import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 
 class PricesProvider extends ChangeNotifier {
-  List<String> uniqueRegion = [];
-  List<String> uniqueClasses = [];
+  List<RegionAndClasses> regionsList = [];
+  RegionAndClasses? region;
+  List<String> classes = [];
   List<num> uniqueYears = [];
   bool _isGraphUpdating = false;
 
+
   String? selectedRegion;
-  String? selectedClasses;
+  String? classs;
+  String? selectedYears;
+
   String? grphcode;
   String? prdate;
   String? graphDate;
-  String? selectedYears;
 
   AllPriceDataModal? allPriceDataModal;
   List<GraphDataModal> graphList = [];
@@ -40,11 +45,26 @@ class PricesProvider extends ChangeNotifier {
   int selectedMonth = DateTime.now().month;
   int selectedDay = DateTime.now().day;
 
-  final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  final List<String> fixedMonths = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
 
-  String get graphCacheKey => 'graph_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
+  String get graphCacheKey =>
+      'graph_${selectedRegion ?? ""}_${classs ?? ""}_${selectedYears ?? ""}';
 
-  String get allPriceDataCacheKey => 'allPriceData_${selectedRegion ?? ""}_${selectedClasses ?? ""}_${selectedYears ?? ""}';
+  String get allPriceDataCacheKey =>
+      'allPriceData_${selectedRegion ?? ""}_${classs ?? ""}_${selectedYears ?? ""}';
 
   String get selectedFullDate {
     final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
@@ -63,14 +83,25 @@ class PricesProvider extends ChangeNotifier {
     if (region == null || region.isEmpty) return;
     selectedRegion = region;
     upDateGraphData(context);
-    saveFiltersLocally();
+    // saveFiltersLocally();
   }
 
   void setClass(BuildContext context, String? classs) {
     if (classs == null || classs.isEmpty) return;
-    selectedClasses = classs;
+    this.classs = classs;
     upDateGraphData(context);
-    saveFiltersLocally();
+    // saveFiltersLocally();
+  }
+
+  setSelectedRegion(RegionAndClasses region) {
+    this.region = region;
+    notifyListeners();
+  }
+
+  setSelectedClass(String classs)
+  {
+    this.classs=classs;
+    notifyListeners();
   }
 
   void setYear(BuildContext context, String? yearOrDate) {
@@ -98,11 +129,12 @@ class PricesProvider extends ChangeNotifier {
     ));
 
     upDateGraphData(context);
-    saveFiltersLocally();
+    // saveFiltersLocally();
   }
 
   void updateSelectedDate({int? year, int? month, int? day}) {
-    final int y = year ?? int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+    final int y =
+        year ?? int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
     final int m = month ?? selectedMonth;
     final int d = day ?? selectedDay;
 
@@ -137,6 +169,8 @@ class PricesProvider extends ChangeNotifier {
     final hasCachedGraph = prefs.getString(graphCacheKey)?.isNotEmpty ?? false;
 
     if (hasCachedGraph && graphList.isNotEmpty && allPriceDataModal != null) {
+      notifyListeners();
+
       return;
     }
 
@@ -146,36 +180,62 @@ class PricesProvider extends ChangeNotifier {
       builder: (context) => AppWidgets.loading(),
     );
 
-    await getRegionsAndClasses(context: context, loader: false);
-    await getYears(context: context, loader: false);
-    await getGraphCodesByClassAndRegion(context: context, loader: false);
-    await graphData(context: context, loader: false);
-    await getAllPriceData(context: context, loader: false);
+    try {
+      await Future.wait([
+        getRegionsAndClasses(context: context, loader: false),
+        getYears(context: context, loader: false),
+      ]);
 
-    await saveFiltersLocally();
+      //selectedRegion ??= (region.isNotEmpty ? region.first : null);
+      // if (selectedRegion != null) {
+      //   uniqueClasses =
+      //       regionsAndClasses?.toJson()[selected
+      //
+      //
+      //       ]?.cast<String>() ?? [];
+      //   selectedClasses ??=
+      //       (uniqueClasses.isNotEmpty ? uniqueClasses.first : null);
+      // }
+      //
+      // prdate ??= DateFormat('yyyy-MM-dd').format(DateTime(
+      //   int.tryParse(selectedYears ?? '') ?? DateTime.now().year,
+      //   selectedMonth,
+      //   selectedDay,
+      // ));
 
-    Navigator.pop(context);
-    notifyListeners();
+      await getGraphCodesByClassAndRegion(context: context, loader: true);
+
+      await Future.wait([
+        graphData(context: context, loader: false),
+        getAllPriceData(context: context, loader: false),
+      ]);
+
+      // await saveFiltersLocally();
+    } finally {
+      Navigator.pop(context);
+      notifyListeners();
+    }
   }
 
   Future<void> saveFiltersLocally() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("selectedRegion", selectedRegion ?? "");
-    await prefs.setString("selectedClass", selectedClasses ?? "");
+    await prefs.setString("selectedClass", classs ?? "");
     await prefs.setString("selectedYear", selectedYears ?? "");
 
     final graphJson = jsonEncode(graphList.map((e) => e.toJson()).toList());
     await prefs.setString(graphCacheKey, graphJson);
 
     if (allPriceDataModal != null) {
-      await prefs.setString(allPriceDataCacheKey, jsonEncode(allPriceDataModal!.toJson()));
+      await prefs.setString(
+          allPriceDataCacheKey, jsonEncode(allPriceDataModal!.toJson()));
     }
   }
 
   Future<void> loadFiltersLocally() async {
     final sp = await SharedPreferences.getInstance();
     selectedRegion = sp.getString("selectedRegion") ?? "";
-    selectedClasses = sp.getString("selectedClass") ?? "";
+    classs = sp.getString("selectedClass") ?? "";
     selectedYears = sp.getString("selectedYear") ?? "";
     loader = sp.getBool("isDataFetched") ?? false;
 
@@ -202,7 +262,10 @@ class PricesProvider extends ChangeNotifier {
         }
       }).toList();
 
-      final avg = entries.isNotEmpty ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length : 0.0;
+      final avg = entries.isNotEmpty
+          ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) /
+              entries.length
+          : 0.0;
 
       return SalesData(month: month, sales: avg);
     }).toList();
@@ -212,25 +275,30 @@ class PricesProvider extends ChangeNotifier {
 
   Future<void> upDateGraphData(BuildContext context) async {
     if (_isGraphUpdating) return;
+
     _isGraphUpdating = true;
-
-    final sp = await SharedPreferences.getInstance();
-    int apiCount = 0;
-
-    await getGraphCodesByClassAndRegion(context: context, loader: true);
-
-    apiCount++;
-    await graphData(context: context, loader: true);
-    await getAllPriceData(context: context, loader: true);
-
-    await saveFiltersLocally();
-    _isGraphUpdating = false;
     notifyListeners();
+
+    try {
+      await getGraphCodesByClassAndRegion(context: context, loader: true);
+
+      await Future.wait([
+        graphData(context: context, loader: true),
+        getAllPriceData(context: context, loader: true),
+      ]);
+
+      await saveFiltersLocally();
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isGraphUpdating = false;
+      notifyListeners();
+    }
   }
 
   void updateFilter({String? region, String? className, String? year}) {
     selectedRegion = region;
-    selectedClasses = className;
+    classs = className;
     selectedYears = year;
     loader = false;
     notifyListeners();
@@ -246,7 +314,9 @@ class PricesProvider extends ChangeNotifier {
     required BuildContext context,
     required bool loader,
   }) async {
-    if (selectedRegion == null || selectedClasses == null || graphList.isEmpty) {
+    if (selectedRegion == null ||
+        classs == null ||
+        graphList.isEmpty) {
       AppWidgets.appSnackBar(
         context: context,
         text: "Please select all fields",
@@ -255,13 +325,14 @@ class PricesProvider extends ChangeNotifier {
       return false;
     }
 
-    final fullDate = DateFormat('yyyy-MM-dd').format(DateTime(int.parse(selectedYears!), selectedMonth, selectedDay));
+    final fullDate = DateFormat('yyyy-MM-dd').format(
+        DateTime(int.parse(selectedYears!), selectedMonth, selectedDay));
 
     final data = {
       "type": "price",
       "filterdata": {
         "region": selectedRegion ?? "",
-        "class": selectedClasses ?? "",
+        "class": classs ?? "",
         "date": fullDate,
         "color": "ffab865a",
       }
@@ -280,7 +351,8 @@ class PricesProvider extends ChangeNotifier {
       final added = body['isInWatchlist'] ?? true;
 
       if (added) {
-        WatchlistState.watchlistKeys.add("$selectedRegion|$selectedClasses|$selectedYears");
+        WatchlistState.watchlistKeys
+            .add("$selectedRegion|$classs|$selectedYears");
         notifyListeners();
 
         AppWidgets.appSnackBar(
@@ -295,27 +367,32 @@ class PricesProvider extends ChangeNotifier {
     return false;
   }
 
-  Future<void> getRegionsAndClasses({required BuildContext context, required bool loader}) async {
-    final response = await GetApiServices().get(
+  Future<void> getRegionsAndClasses(
+      {required BuildContext context, required bool loader}) async {
+
+    regionsList.clear();
+    await GetApiServices()
+        .get(
       endpoint: ApiEndpoint.getRegionsAndClasses,
       context: context,
       loader: loader,
-    );
-
-    if (response != null) {
-      regionsAndClasses = RegionsAndClassesModal.fromJson(json.decode(response.body));
-      uniqueRegion = regionsAndClasses?.toJson().keys.toList() ?? [];
-      if (uniqueRegion.isNotEmpty) {
-        selectedRegion = uniqueRegion.first;
-        uniqueClasses = regionsAndClasses?.toJson()[selectedRegion]?.cast<String>() ?? [];
-        if (uniqueClasses.isNotEmpty) {
-          selectedClasses = uniqueClasses.first;
+    )
+        .then(
+      (value) {
+        if (value != null) {
+          final modelRegion = ModelRegion.fromJson(jsonDecode(value.body));
+          modelRegion.regions.forEach((key, list) {
+            final RegionAndClasses regionAndClasses =
+                RegionAndClasses(region: key, classes: list);
+            regionsList.add(regionAndClasses);
+          });
         }
-      }
-    }
+      },
+    );
   }
 
-  Future<void> getYears({required BuildContext context, required bool loader}) async {
+  Future<void> getYears(
+      {required BuildContext context, required bool loader}) async {
     final response = await GetApiServices().get(
       endpoint: ApiEndpoint.getYears,
       context: context,
@@ -334,7 +411,7 @@ class PricesProvider extends ChangeNotifier {
           .toString();
       prdate = DateFormat('yyyy-MM-dd').format(
         DateTime(
-          int.parse(selectedYears ?? "") ?? currentYear,
+          int.parse(selectedYears ?? ""),
           DateTime.now().month,
           DateTime.now().day,
         ),
@@ -348,20 +425,22 @@ class PricesProvider extends ChangeNotifier {
 
     if (uniqueYears.isEmpty) {
       getYears(context: context, loader: false).then((_) {
-        Future.delayed(Duration(milliseconds: 100), () {
+        Future.delayed(const Duration(milliseconds: 100), () {
           _openPicker(context, wheatClass);
         });
       });
     } else {
-      Future.delayed(Duration(milliseconds: 100), () {
+      Future.delayed(const Duration(milliseconds: 100), () {
         _openPicker(context, wheatClass);
       });
     }
   }
 
+
   void _openPicker(BuildContext context, String wheatClass) {
     _isPickerOpen = true;
-    int initialYearIndex = uniqueYears.indexOf(int.tryParse(selectedYears ?? '') ?? uniqueYears.first);
+    int initialYearIndex = uniqueYears
+        .indexOf(int.tryParse(selectedYears ?? '') ?? uniqueYears.first);
 
     int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
     int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
@@ -370,88 +449,113 @@ class PricesProvider extends ChangeNotifier {
       context: context,
       builder: (_) => SafeArea(
         child: Container(
-          height: MediaQuery.of(context).size.height / 2.5,
-          color: AppColors.cFFFFFF,
-          child: Column(
-            children: [
-              // Pickers
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 4,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CupertinoPicker(
-                        scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
-                        itemExtent: 40,
-                        onSelectedItemChanged: (index) {
-                          selectedYears = uniqueYears[index].toString();
-                        },
-                        children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
+          decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          height: MediaQuery.of(context).size.height / 3.2,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                // Year Month and Date picker
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 4,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CupertinoPicker(
+                          scrollController: FixedExtentScrollController(
+                              initialItem: initialYearIndex),
+                          itemExtent: 40,
+                          onSelectedItemChanged: (index) {
+                            selectedYears = uniqueYears[index].toString();
+                          },
+                          children: uniqueYears
+                              .map((y) => Center(child: Text(y.toString())))
+                              .toList(),
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: CupertinoPicker(
-                        scrollController: FixedExtentScrollController(initialItem: selectedMonth - 1),
-                        itemExtent: 40,
-                        onSelectedItemChanged: (index) {
-                          selectedMonth = index + 1;
-                        },
-                        children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
+                      Expanded(
+                        child: CupertinoPicker(
+                          scrollController: FixedExtentScrollController(
+                              initialItem: selectedMonth - 1),
+                          itemExtent: 40,
+                          onSelectedItemChanged: (index) {
+                            selectedMonth = index + 1;
+                            notifyListeners();
+                          },
+                          children: fixedMonths
+                              .map((m) => Center(child: Text(m)))
+                              .toList(),
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: CupertinoPicker(
-                        scrollController: FixedExtentScrollController(initialItem: selectedDay - 1),
-                        itemExtent: 40,
-                        onSelectedItemChanged: (index) {
-                          selectedDay = index + 1;
-                        },
-                        children: List.generate(daysInMonth, (i) => Center(child: Text((i + 1).toString()))),
+                      Expanded(
+                        child: CupertinoPicker(
+                          scrollController: FixedExtentScrollController(
+                              initialItem: selectedDay - 1),
+                          itemExtent: 40,
+                          onSelectedItemChanged: (index) {
+                            selectedDay = index + 1;
+                          },
+                          children: List.generate(daysInMonth,
+                              (i) => Center(child: Text((i + 1).toString()))),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              // Buttons
-              Padding(
-                padding: const EdgeInsets.only(right: 8, left: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: AppButtons().filledButton(true, AppStrings.cancel, context),
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
-                        final DateTime selectedDate = DateTime(year, selectedMonth, selectedDay);
-                        final DateTime endDate = selectedDate;
-                        final DateTime startDate = DateTime(selectedDate.year - 1, selectedDate.month, selectedDate.day);
+                // Buttons
+                Padding(
+                  padding: const EdgeInsets.only(right: 8, left: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: AppButtons()
+                            .filledButton(true, AppStrings.cancel, context),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          final int year = int.tryParse(selectedYears ?? '') ??
+                              DateTime.now().year;
+                          final DateTime selectedDate =
+                              DateTime(year, selectedMonth, selectedDay);
+                          final DateTime endDate = selectedDate;
+                          final DateTime startDate = DateTime(
+                              selectedDate.year - 1,
+                              selectedDate.month,
+                              selectedDate.day);
 
-                        prdate = DateFormat('yyyy-MM-dd').format(selectedDate);
+                          prdate =
+                              DateFormat('yyyy-MM-dd').format(selectedDate);
 
-                        await upDateGraphData(context);
+                          await upDateGraphData(context);
 
-                        final filteredList = graphList.where((e) {
-                          final DateTime? dt = DateTime.tryParse(e.pRDATE ?? '');
-                          if (dt == null) return false;
-                          return !dt.isBefore(startDate) && !dt.isAfter(endDate);
-                        }).toList();
+                          final filteredList = graphList.where((e) {
+                            final DateTime? dt =
+                                DateTime.tryParse(e.pRDATE ?? '');
+                            if (dt == null) return false;
+                            return !dt.isBefore(startDate) &&
+                                !dt.isAfter(endDate);
+                          }).toList();
 
-                        graphList = filteredList;
+                          graphList = filteredList;
 
-                        _generateChartDataFromGraphList();
+                          _generateChartDataFromGraphList();
 
-                        notifyListeners();
-                        Navigator.pop(context);
-                      },
-                      child: AppButtons().filledButton(true, AppStrings.confirm, context),
-                    ),
-                  ],
+                          notifyListeners();
+                          Navigator.pop(context);
+                        },
+                        child: AppButtons()
+                            .filledButton(true, AppStrings.confirm, context),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -465,7 +569,7 @@ class PricesProvider extends ChangeNotifier {
     required bool loader,
   }) async {
     final data = {
-      "class": selectedClasses ?? "",
+      "class": classs ?? "",
       "region": selectedRegion ?? "",
     };
 
@@ -477,6 +581,7 @@ class PricesProvider extends ChangeNotifier {
       loader: loader,
     );
 
+    print("getGraphCodesByClassAndRegion called");
     if (value != null) {
       final body = json.decode(value.body);
       if (body is List && body.isNotEmpty) {
@@ -501,9 +606,9 @@ class PricesProvider extends ChangeNotifier {
       loader: loader,
     );
 
+    print(" graphData called");
     if (response != null) {
       final list = json.decode(response.body) as List;
-      // debugPrint(response.body.toString(), wrapWidth: 1024);
 
       graphList = list.map((e) => GraphDataModal.fromJson(e)).toList();
       _generateChartDataFromGraphList();
@@ -529,72 +634,16 @@ class PricesProvider extends ChangeNotifier {
       loader: loader,
     );
 
+    print("getAllPriceData called");
+
     if (response != null) {
       final body = json.decode(response.body);
       allPriceDataModal = AllPriceDataModal.fromJson(
-        body is Map ? body : (body is List && body.isNotEmpty ? body.first : {}),
+        body is Map
+            ? body
+            : (body is List && body.isNotEmpty ? body.first : {}),
       );
       notifyListeners();
-    }
-  }
-
-  Future<void> showFilterDropdown({
-    required BuildContext context,
-    required TapDownDetails details,
-    required Function(String region) onSelect,
-  }) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-
-    if (uniqueRegion.isEmpty) return;
-
-    final selected = await showMenu<String>(
-      context: context,
-      position: RelativeRect.fromRect(
-        details.globalPosition & const Size(0, 0),
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        PopupMenuItem<String>(
-          enabled: false,
-          padding: EdgeInsets.zero,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height / 6,
-            width: MediaQuery.of(context).size.width / 2,
-            child: Scrollbar(
-              child: ListView.builder(
-                itemCount: uniqueRegion.length,
-                itemBuilder: (context, index) {
-                  final region = uniqueRegion[index];
-                  return ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        region,
-                        maxLines: 4,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context, region);
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-
-    if (selected != null) {
-      selectedRegion = selected;
-      uniqueClasses = regionsAndClasses?.toJson()[selectedRegion]?.cast<String>() ?? [];
-      if (uniqueClasses.isNotEmpty) {
-        selectedClasses = uniqueClasses.first;
-      }
-
-      await upDateGraphData(context);
-      notifyListeners();
-      onSelect(selected);
     }
   }
 
@@ -603,15 +652,18 @@ class PricesProvider extends ChangeNotifier {
     required TapDownDetails details,
     required Function(String region) onSelect,
   }) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
     if (selectedRegion == null) return;
 
-    uniqueClasses = regionsAndClasses?.toJson()[selectedRegion]?.cast<String>() ?? [];
+    this.classes =
+        regionsAndClasses?.toJson()[selectedRegion]?.cast<String>() ?? [];
 
-    if (uniqueClasses.isEmpty) {
+    if (this.classes.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("No classes available for selected region")),
+        const SnackBar(
+            content: Text("No classes available for selected region")),
       );
       return;
     }
@@ -631,9 +683,9 @@ class PricesProvider extends ChangeNotifier {
             width: MediaQuery.of(context).size.width / 2,
             child: Scrollbar(
               child: ListView.builder(
-                itemCount: uniqueClasses.length,
+                itemCount: this.classes.length,
                 itemBuilder: (context, index) {
-                  final classes = uniqueClasses[index];
+                  final classes = this.classes[index];
                   return ListTile(
                     title: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -652,7 +704,7 @@ class PricesProvider extends ChangeNotifier {
     );
 
     if (selected != null) {
-      selectedClasses = selected;
+      classs = selected;
       await upDateGraphData(context);
       notifyListeners();
       onSelect(selected);
@@ -664,7 +716,8 @@ class PricesProvider extends ChangeNotifier {
     required TapDownDetails details,
     required Function(num region) onSelect,
   }) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
     if (uniqueYears.isEmpty) return;
 
