@@ -425,9 +425,7 @@ class PricesProvider extends ChangeNotifier {
 
     if (uniqueYears.isEmpty) {
       getYears(context: context, loader: false).then((_) {
-        Future.delayed(const Duration(milliseconds: 100), () {
-          _openPicker(context, wheatClass);
-        });
+
       });
     } else {
       Future.delayed(const Duration(milliseconds: 100), () {
