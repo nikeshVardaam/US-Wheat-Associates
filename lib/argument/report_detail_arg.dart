@@ -1,5 +1,4 @@
 class ReportDetailArg {
-
   final String title;
   final String pdfUrl;
 
@@ -7,4 +6,5 @@ class ReportDetailArg {
     required this.title,
     required this.pdfUrl,
   });
+
 }

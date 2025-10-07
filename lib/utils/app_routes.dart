@@ -21,5 +21,5 @@ class AppRoutes {
   static const temperatureConverterPage = '/temperatureConverterPage';
   static const reportDetailPage = '/reportDetailPage';
   static const wheatPage = '/wheatPage';
-
+  static const newsFeed = '/newsFeed';
 }

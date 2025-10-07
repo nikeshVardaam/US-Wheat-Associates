@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +40,7 @@ class _MetricTonsCwtState extends State<MetricTonsCwt> {
       body: Consumer<CalculatorProvider>(
         builder: (context, cp, child) {
           return SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
 
             child: Padding(
               padding: const EdgeInsets.all(16.0),
