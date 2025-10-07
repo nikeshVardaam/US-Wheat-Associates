@@ -33,9 +33,9 @@ class PostServices {
 
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
-print(bearerToken);
-print(url);
-print(requestData);
+    // print(bearerToken);
+    // print(url);
+    print(requestData);
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -93,10 +93,9 @@ print(requestData);
         Navigator.pop(context);
         ExceptionDialogs.networkDialog(
           context: context,
-          message:  "Request timed out. Please check your internet and try again.",
+          message: "Request timed out. Please check your internet and try again.",
           onPressed: () {},
         );
-        // show dialog
       }
       return null;
     } on HttpException catch (e) {
@@ -117,7 +116,6 @@ print(requestData);
           message: "No Internet connection.",
           onPressed: () {},
         );
-        // show dialog
       }
       return null;
     } on FormatException catch (e) {
@@ -128,7 +126,6 @@ print(requestData);
           message: e.message ?? "",
           onPressed: () {},
         );
-        // show dialog
       }
       return null;
     } on Exception catch (e) {
@@ -139,7 +136,6 @@ print(requestData);
           message: e.toString() ?? "",
           onPressed: () {},
         );
-        // show dialog
       }
       return null;
     }

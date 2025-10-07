@@ -506,14 +506,17 @@ class CalculatorProvider extends ChangeNotifier {
   final TextEditingController mbController = TextEditingController(); // Moisture Basis
   final TextEditingController dbController = TextEditingController(); // Dry Basis
 
+  double moistureFraction = 0.12; // 12% moisture
+
   /// MB → DB
   void convertMbToDb(String val) {
     if (val.isEmpty) {
       dbController.clear();
       return;
     }
+
     double mb = double.tryParse(val) ?? 0;
-    double db = mb / 0.88;
+    double db = mb / (1 - moistureFraction); // Correct formula
     dbController.text = db.toStringAsFixed(2);
     notifyListeners();
   }
@@ -524,8 +527,9 @@ class CalculatorProvider extends ChangeNotifier {
       mbController.clear();
       return;
     }
+
     double db = double.tryParse(val) ?? 0;
-    double mb = db * 0.88;
+    double mb = db * (1 - moistureFraction); // Correct formula
     mbController.text = mb.toStringAsFixed(2);
     notifyListeners();
   }

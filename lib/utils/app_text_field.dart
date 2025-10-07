@@ -308,7 +308,7 @@ class AppTextField {
       scrollPadding: scrollPadding,
       dragStartBehavior: dragStartBehavior,
       decoration: InputDecoration(
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         filled: true,
         fillColor: (Theme.of(context).brightness == Brightness.light) ? AppColors.cFFFFFF : AppColors.c353d4a,
         contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),

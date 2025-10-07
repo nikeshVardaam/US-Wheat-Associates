@@ -35,14 +35,14 @@ class ShortTonToPoundPage extends StatelessWidget {
       body: Consumer<CalculatorProvider>(
         builder: (context, cp, child) {
           return SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("SHORT TONS (US)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  Text("SHORT TONS (US)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(
                     height: 6,
                   ),
                   Row(
@@ -51,14 +51,19 @@ class ShortTonToPoundPage extends StatelessWidget {
                         child: AppTextField.textField(
                           context,
                           controller: cp.shortTonToPoundController,
-                          onChanged: (val) => cp.convertShortTonToPound(val),keyboardType: TextInputType.number,
+                          onChanged: (val) => cp.convertShortTonToPound(val),
+                          keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
                           ],
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: cp.shortTonToPoundController.text));
                         },
@@ -68,11 +73,12 @@ class ShortTonToPoundPage extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(AppStrings.equals,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.c656e79,
-                        fontStyle: FontStyle.italic,
-                      )),
+                            color: AppColors.c656e79,
+                            fontStyle: FontStyle.italic,
+                          )),
                   const SizedBox(height: 8),
-                  Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),const SizedBox(
+                  Text("POUNDS (lbs)", style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(
                     height: 6,
                   ),
                   Row(
@@ -88,7 +94,11 @@ class ShortTonToPoundPage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: cp.poundResultController.text));
                         },
@@ -112,7 +122,11 @@ class ShortTonToPoundPage extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                          icon: Icon(
+                            Icons.copy,
+                            color: AppColors.c656e79,
+                            size: 18,
+                          ),
                           onPressed: () {
                             Clipboard.setData(const ClipboardData(
                               text: "1 short ton = 2000 pounds\n1 pound = 0.0005 short tons",
@@ -126,7 +140,9 @@ class ShortTonToPoundPage extends StatelessWidget {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => cp.clearShortTonToPound(),
+                        onTap: () {
+                          cp.clearShortTonToPound();
+                        },
                         child: AppButtons().outLineMiniButton(false, AppStrings.clear, context),
                       ),
                     ],

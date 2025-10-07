@@ -8,8 +8,6 @@ import 'package:uswheat/utils/app_text_field.dart';
 import '../../provider/calculator_provider.dart';
 import '../../utils/app_colors.dart';
 
-
-
 class SquareFeetToSquareMeter extends StatelessWidget {
   const SquareFeetToSquareMeter({super.key});
 
@@ -21,26 +19,26 @@ class SquareFeetToSquareMeter extends StatelessWidget {
         title: Text(
           "Square Feet = Square Meters",
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: AppColors.cFFFFFF,
-          ),
+                color: AppColors.cFFFFFF,
+              ),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(30),
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 8.0,left: 16),
+            padding: const EdgeInsets.only(bottom: 8.0, left: 16),
             child: Text(
               "Input and convert values between Square Feet and Square Meters.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.cFFFFFF,
-              ),
+                    color: AppColors.cFFFFFF,
+                  ),
             ),
           ),
         ),
       ),
       body: Consumer<CalculatorProvider>(builder: (context, cp, child) {
         return SingleChildScrollView(
-         physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -52,12 +50,11 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                   child: Text(
                     "SQUARE FEET (ft²)",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.c000000,
-                    ),
+                          color: AppColors.c000000,
+                        ),
                   ),
                 ),
 
-                // Square Feet Input
                 Row(
                   children: [
                     Expanded(
@@ -65,7 +62,6 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                         context,
                         controller: cp.sqFeetController,
                         onChanged: (val) => cp.convertFromSqFeet(val),
-
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
@@ -73,22 +69,24 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.sqFeetController.text));
                       },
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 12),
-
                 Text(
                   AppStrings.equals,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.c656e79,
-                    fontStyle: FontStyle.italic,
-                  ),
+                        color: AppColors.c656e79,
+                        fontStyle: FontStyle.italic,
+                      ),
                 ),
 
                 // Square Meter Label
@@ -97,8 +95,8 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                   child: Text(
                     "SQUARE METERS (m²)",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.c000000,
-                    ),
+                          color: AppColors.c000000,
+                        ),
                   ),
                 ),
 
@@ -117,7 +115,11 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                      icon: Icon(
+                        Icons.copy,
+                        color: AppColors.c656e79,
+                        size: 18,
+                      ),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: cp.sqMeterController.text));
                       },
@@ -141,12 +143,16 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                         child: Text(
                           "Calculation:\n1 ft² = 0.092903 m²",
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppColors.c000000,
-                          ),
+                                color: AppColors.c000000,
+                              ),
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.c656e79,size: 18,),
+                        icon: Icon(
+                          Icons.copy,
+                          color: AppColors.c656e79,
+                          size: 18,
+                        ),
                         onPressed: () {
                           Clipboard.setData(const ClipboardData(text: "1 ft² = 0.092903 m²"));
                         },
