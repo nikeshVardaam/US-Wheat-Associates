@@ -20,7 +20,7 @@ class _RegionSelectorState extends State<RegionSelector> {
   Widget build(BuildContext context) {
     final bgColor = CupertinoColors.systemGrey6.resolveFrom(context);
     return Container(
-      height: 250,
+      height: MediaQuery.of(context).size.height/ 5,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),

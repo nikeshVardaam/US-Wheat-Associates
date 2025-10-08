@@ -50,7 +50,7 @@ class _WatchlistState extends State<Watchlist> {
                                       context: context,
                                       region: data.filterdata.region,
                                       classs: data.filterdata.classs,
-                                      year: data.filterdata.date,
+                                      date: data.filterdata.date,
                                     );
                                   },
                                   child: Container(

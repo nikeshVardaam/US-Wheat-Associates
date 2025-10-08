@@ -7,6 +7,7 @@ import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
+import 'package:uswheat/utils/app_delete_dialog.dart';
 import 'package:uswheat/utils/app_logout_dialog.dart' show AppLogoutDialogs;
 import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/app_strings.dart';
@@ -171,7 +172,7 @@ class _DashboardState extends State<Dashboard> {
                                 dp.setChangeActivity(
                                     activity: const Prices(
                                       region: '',
-                                      classs: '',
+                                      cls: '',
                                       year: '',
                                     ),
                                     pageName: AppStrings.price);
@@ -293,49 +294,49 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ],
                         ),
-                        // const Spacer(),
-                        // Divider(
-                        //   color: AppColors.cAB865A,
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(
-                        //     horizontal: 16,
-                        //   ),
-                        //   child: GestureDetector(
-                        //     onTap: () {
-                        //       showDialog(
-                        //         context: context,
-                        //         builder: (context) {
-                        //           return Dialog(
-                        //             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                        //             child: const AppDeleteDialog(),
-                        //           );
-                        //         },
-                        //       );
-                        //     },
-                        //     child: Row(
-                        //       children: [
-                        //         SvgPicture.asset(
-                        //           AppAssets.delete,
-                        //           height: 14,
-                        //           color: AppColors.cFFFFFF,
-                        //         ),
-                        //         const SizedBox(
-                        //           width: 16,
-                        //         ),
-                        //         Text(
-                        //           AppStrings.deleteUser,
-                        //           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        //                 color: AppColors.cFFFFFF,
-                        //               ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
-                        // Divider(
-                        //   color: AppColors.cAB865A,
-                        // ),
+                        const Spacer(),
+                        Divider(
+                          color: AppColors.cAB865A,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                    child: const AppDeleteDialog(),
+                                  );
+                                },
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.delete,
+                                  height: 14,
+                                  color: AppColors.cFFFFFF,
+                                ),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                Text(
+                                  AppStrings.deleteUser,
+                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                        color: AppColors.cFFFFFF,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Divider(
+                          color: AppColors.cAB865A,
+                        ),
                       ],
                     ),
                   );

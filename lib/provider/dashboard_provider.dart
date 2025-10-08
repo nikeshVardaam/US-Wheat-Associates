@@ -24,7 +24,7 @@ class DashboardProvider extends ChangeNotifier {
   TextEditingController deleteController = TextEditingController();
   Widget selectActivity = const Prices(
     region: '',
-    classs: '',
+    cls: '',
     year: '',
   );
   String selectMenu = AppStrings.pricess;
@@ -111,7 +111,7 @@ class DashboardProvider extends ChangeNotifier {
         setChangeActivity(
             activity: const Prices(
               region: '',
-              classs: '',
+              cls: '',
               year: '',
             ),
             pageName: AppStrings.price,

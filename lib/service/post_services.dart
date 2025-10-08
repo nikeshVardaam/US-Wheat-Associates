@@ -34,10 +34,7 @@ class PostServices {
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
 
-    print(url);
 
-    print("Request data$requestData");
-    print("Token $bearerToken");
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -53,8 +50,7 @@ class PostServices {
         Navigator.pop(context);
       }
 
-      print(response.statusCode);
-      print(jsonData);
+
 
       if (response.statusCode == 200 ||
           response.statusCode == 201 ||

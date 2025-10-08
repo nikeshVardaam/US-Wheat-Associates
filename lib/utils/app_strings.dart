@@ -10,6 +10,9 @@ class AppStrings {
   static const accountDeletion = "Account Deletion";
   static const taxonomy = "Taxonomy";
   static const year = "Year";
+  static const noDataAvailable = "No Data Available";
+  static const month = "Month";
+  static const day = "Day";
   static const ye = "YEAR";
   static const category = "Category";
   static const newPassword = "New Password";
@@ -97,16 +100,16 @@ class AppStrings {
   static const proteinMb = "Protein 12% mb";
   static const dryBasisProt = "DryBasisProt";
   static const proteinDryBasis = "Protein dry basis";
-  static const proDb= "Pro-db";
-  static const date = "DATE";
-  static const data = "Wheat Data";
+  static const proDb = "Pro-db";
+  static const date = "Date";
+  static const data = "Data";
   static const news = "News";
   static const settings = "SETTINGS";
   static const search = "Search";
   static const gulfOfMexico = "Gulf of Mexico";
   static const calculator = "Calculator";
   static const newFeed = "News Feed";
-  static const changePassword  = "Change Password ";
+  static const changePassword = "Change Password ";
   static const noDataFound = "No data found";
   static const wheatAssociates = "U.S. Wheat Associates";
   static const error500 = "We are working on server, Please try again later.";
@@ -130,12 +133,8 @@ class AppStrings {
   static const temperature = "TEMPERATURE";
   static const removedFromWatchlist = "Removed from watchlist";
   static const failedToRemove = "Failed to remove";
-  static const fahrenheitCelsius =  "FAHRENHEIT = CELSIUS";
-  static const alreadyAddedToWatchlist =  "This date is already in your watchlist.";
-  static const watchlistAddedSuccessfully =  "Watchlist Added Successfully";
-  static const pleaseSelectDateBeforeAddingToWatchlist =  "Please select a date before adding to watchlist";
-
-
-
-
+  static const fahrenheitCelsius = "FAHRENHEIT = CELSIUS";
+  static const alreadyAddedToWatchlist = "This date is already in your watchlist.";
+  static const watchlistAddedSuccessfully = "Watchlist Added Successfully";
+  static const pleaseSelectDateBeforeAddingToWatchlist = "Please select a date before adding to watchlist";
 }

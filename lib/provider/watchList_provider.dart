@@ -31,13 +31,13 @@ class WatchlistProvider extends ChangeNotifier {
     required BuildContext context,
     required String region,
     required String classs,
-    required String year,
+    required String date,
   }) {
     Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
       activity: Prices(
-        classs: classs,
+        cls: classs,
         region: region,
-        year: year,
+        year: date,
       ),
       pageName: AppStrings.price,
     );
