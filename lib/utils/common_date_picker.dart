@@ -1,6 +1,52 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:uswheat/utils/app_buttons.dart';
+import 'package:uswheat/utils/app_strings.dart';
+
+class DatePicker extends StatefulWidget {
+  BuildContext context;
+  List<int> uniqueYears;
+  List<String> fixedMonths; // length 12 expected
+  int? initialYear;
+  int? initialMonth;
+  int? initialDay;
+
+  DatePicker({
+    super.key,
+    required this.context,
+    required this.uniqueYears,
+    required this.fixedMonths,
+    required this.initialYear,
+    required this.initialMonth,
+    required this.initialDay,
+  });
+
+  @override
+  State<DatePicker> createState() => _DatePickerState();
+}
+
+class _DatePickerState extends State<DatePicker> {
+
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [],
+      ),
+    );
+  }
+}
 
 class CommonDatePicker {
   /// Opens a 3-column Cupertino picker (year, month, day).
@@ -17,28 +63,19 @@ class CommonDatePicker {
     // Safety defaults
     if (uniqueYears.isEmpty) uniqueYears = [DateTime.now().year];
     if (fixedMonths.length < 12) {
-      fixedMonths = const [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-      ];
+      fixedMonths = const ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     }
 
     int selectedYear = initialYear ?? DateTime.now().year;
     // if selectedYear not present in list, fallback to closest (or first)
     if (!uniqueYears.contains(selectedYear)) {
-      selectedYear = uniqueYears.contains(DateTime.now().year)
-          ? DateTime.now().year
-          : uniqueYears.first;
+      selectedYear = uniqueYears.contains(DateTime.now().year) ? DateTime.now().year : uniqueYears.first;
     }
 
-    int selectedMonth = (initialMonth != null && initialMonth >= 1 && initialMonth <= 12)
-        ? initialMonth
-        : DateTime.now().month;
+    int selectedMonth = (initialMonth != null && initialMonth >= 1 && initialMonth <= 12) ? initialMonth : DateTime.now().month;
 
     int daysInMonth = DateTime(selectedYear, selectedMonth + 1, 0).day;
-    int selectedDay = (initialDay != null && initialDay >= 1 && initialDay <= daysInMonth)
-        ? initialDay
-        : (DateTime.now().day <= daysInMonth ? DateTime.now().day : daysInMonth);
+    int selectedDay = (initialDay != null && initialDay >= 1 && initialDay <= daysInMonth) ? initialDay : (DateTime.now().day <= daysInMonth ? DateTime.now().day : daysInMonth);
 
     List<int> dayList = List.generate(daysInMonth, (i) => i + 1);
 
@@ -134,17 +171,19 @@ class CommonDatePicker {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CupertinoButton(
-                            child: const Text("Cancel"),
-                            onPressed: () => Navigator.pop(context, null),
+                          GestureDetector(
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context, null);
+                                },
+                                child: AppButtons().filledButton(true, AppStrings.cancel, context)),
                           ),
-                          CupertinoButton(
-                            child: const Text("Confirm"),
-                            onPressed: () {
-                              final picked = DateTime(selectedYear, selectedMonth, selectedDay);
-                              Navigator.pop(context, picked);
-                            },
-                          ),
+                          GestureDetector(
+                              onTap: () {
+                                final picked = DateTime(selectedYear, selectedMonth, selectedDay);
+                                Navigator.pop(context, picked);
+                              },
+                              child: AppButtons().filledButton(true, AppStrings.confirm, context))
                         ],
                       ),
                     ),
