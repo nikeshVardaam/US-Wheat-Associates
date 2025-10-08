@@ -45,11 +45,26 @@ class PricesProvider extends ChangeNotifier {
   int selectedMonth = DateTime.now().month;
   int selectedDay = DateTime.now().day;
 
-  final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  final List<String> fixedMonths = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
 
-  String get graphCacheKey => 'graph_${selectedRegion ?? ""}_${classs ?? ""}_${selectedYears ?? ""}';
+  String get graphCacheKey =>
+      'graph_${selectedRegion ?? ""}_${classs ?? ""}_${selectedYears ?? ""}';
 
-  String get allPriceDataCacheKey => 'allPriceData_${selectedRegion ?? ""}_${classs ?? ""}_${selectedYears ?? ""}';
+  String get allPriceDataCacheKey =>
+      'allPriceData_${selectedRegion ?? ""}_${classs ?? ""}_${selectedYears ?? ""}';
 
   String get selectedFullDate {
     final int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
@@ -117,7 +132,8 @@ class PricesProvider extends ChangeNotifier {
   }
 
   void updateSelectedDate({int? year, int? month, int? day}) {
-    final int y = year ?? int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
+    final int y =
+        year ?? int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
     final int m = month ?? selectedMonth;
     final int d = day ?? selectedDay;
 
@@ -210,7 +226,8 @@ class PricesProvider extends ChangeNotifier {
     await prefs.setString(graphCacheKey, graphJson);
 
     if (allPriceDataModal != null) {
-      await prefs.setString(allPriceDataCacheKey, jsonEncode(allPriceDataModal!.toJson()));
+      await prefs.setString(
+          allPriceDataCacheKey, jsonEncode(allPriceDataModal!.toJson()));
     }
   }
 
@@ -244,7 +261,10 @@ class PricesProvider extends ChangeNotifier {
         }
       }).toList();
 
-      final avg = entries.isNotEmpty ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / entries.length : 0.0;
+      final avg = entries.isNotEmpty
+          ? entries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) /
+              entries.length
+          : 0.0;
 
       return SalesData(month: month, sales: avg);
     }).toList();
@@ -302,7 +322,8 @@ class PricesProvider extends ChangeNotifier {
       return false;
     }
 
-    final fullDate = DateFormat('yyyy-MM-dd').format(DateTime(int.parse(selectedYears!), selectedMonth, selectedDay));
+    final fullDate = DateFormat('yyyy-MM-dd').format(
+        DateTime(int.parse(selectedYears!), selectedMonth, selectedDay));
 
     final data = {
       "type": "price",
@@ -327,7 +348,8 @@ class PricesProvider extends ChangeNotifier {
       final added = body['isInWatchlist'] ?? true;
 
       if (added) {
-        WatchlistState.watchlistKeys.add("$selectedRegion|$classs|$selectedYears");
+        WatchlistState.watchlistKeys
+            .add("$selectedRegion|$classs|$selectedYears");
         notifyListeners();
 
         AppWidgets.appSnackBar(
@@ -342,7 +364,8 @@ class PricesProvider extends ChangeNotifier {
     return false;
   }
 
-  Future<void> getRegionsAndClasses({required BuildContext context, required bool loader}) async {
+  Future<void> getRegionsAndClasses(
+      {required BuildContext context, required bool loader}) async {
     regionsList.clear();
     await GetApiServices()
         .get(
@@ -355,7 +378,8 @@ class PricesProvider extends ChangeNotifier {
         if (value != null) {
           final modelRegion = ModelRegion.fromJson(jsonDecode(value.body));
           modelRegion.regions.forEach((key, list) {
-            final RegionAndClasses regionAndClasses = RegionAndClasses(region: key, classes: list);
+            final RegionAndClasses regionAndClasses =
+                RegionAndClasses(region: key, classes: list);
             regionsList.add(regionAndClasses);
           });
         }
@@ -363,7 +387,8 @@ class PricesProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> getYears({required BuildContext context, required bool loader}) async {
+  Future<void> getYears(
+      {required BuildContext context, required bool loader}) async {
     final response = await GetApiServices().get(
       endpoint: ApiEndpoint.getYears,
       context: context,
@@ -390,13 +415,12 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> showYearPicker(BuildContext context, {required String wheatClass}) async {
+  Future<void> showYearPicker(BuildContext context,
+      {required String wheatClass}) async {
     if (_isPickerOpen) return;
     _isPickerOpen = true;
 
     if (uniqueYears.isEmpty) {
-
-
       // getYears(context: context, loader: false).then((_) async {
       //   await CommonDatePicker.open(
       //     context: context,
@@ -432,8 +456,6 @@ class PricesProvider extends ChangeNotifier {
       //   );
       // });
     } else {
-
-
       // await CommonDatePicker.open(
       //   context: context,
       //   uniqueYears: uniqueYears,
@@ -544,7 +566,9 @@ class PricesProvider extends ChangeNotifier {
     if (response != null) {
       final body = json.decode(response.body);
       allPriceDataModal = AllPriceDataModal.fromJson(
-        body is Map ? body : (body is List && body.isNotEmpty ? body.first : {}),
+        body is Map
+            ? body
+            : (body is List && body.isNotEmpty ? body.first : {}),
       );
       notifyListeners();
     }
@@ -555,15 +579,18 @@ class PricesProvider extends ChangeNotifier {
     required TapDownDetails details,
     required Function(String region) onSelect,
   }) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
     if (selectedRegion == null) return;
 
-    this.classes = regionsAndClasses?.toJson()[selectedRegion]?.cast<String>() ?? [];
+    this.classes =
+        regionsAndClasses?.toJson()[selectedRegion]?.cast<String>() ?? [];
 
     if (this.classes.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No classes available for selected region")),
+        const SnackBar(
+            content: Text("No classes available for selected region")),
       );
       return;
     }
@@ -616,7 +643,8 @@ class PricesProvider extends ChangeNotifier {
     required TapDownDetails details,
     required Function(num region) onSelect,
   }) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
     if (uniqueYears.isEmpty) return;
 

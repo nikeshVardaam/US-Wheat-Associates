@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:uswheat/dashboard_page/price/class_selector.dart';
+import 'package:uswheat/dashboard_page/price/date_picker_bottom_sheet.dart';
 import 'package:uswheat/dashboard_page/price/region_selector.dart';
 import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
@@ -264,10 +265,14 @@ class _PricesState extends State<Prices> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          pp.showYearPicker(
-                            context,
-                            wheatClass: '',
+                          DatePickerBottomSheet(
+                            uniqueYears: pp.uniqueYears,
+                            fixedMonths: pp.fixedMonths,
                           );
+                          // pp.showYearPicker(
+                          //   context,
+                          //   wheatClass: '',
+                          // );
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width / 3.6,
