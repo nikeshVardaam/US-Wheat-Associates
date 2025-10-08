@@ -45,7 +45,7 @@ class DeleteService {
           'Authorization': bearerToken,
           'Accept': 'application/json',
         },
-      ).timeout(const Duration(seconds: 5));
+      );
       var data = json.decode(response.body);
       Navigator.pop(context);
       if (response.statusCode == 200 || response.statusCode == 201) {

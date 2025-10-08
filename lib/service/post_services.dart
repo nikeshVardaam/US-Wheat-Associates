@@ -19,7 +19,7 @@ class PostServices {
     required String endpoint,
     required Map<String, dynamic> requestData,
     required BuildContext context,
-    required isBottomSheet,
+    required bool isBottomSheet,
     required bool loader,
   }) async {
     sp = await SharedPreferences.getInstance();
@@ -33,9 +33,11 @@ class PostServices {
 
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
-    // print(bearerToken);
-    // print(url);
-    print(requestData);
+
+    print(url);
+
+    print("Request data$requestData");
+    print("Token $bearerToken");
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -45,12 +47,18 @@ class PostServices {
           'Authorization': bearerToken,
           'Accept': 'application/json',
         },
-      ).timeout(const Duration(seconds: 5));
+     );
       var jsonData = json.decode(response.body);
       if (loader) {
         Navigator.pop(context);
       }
-      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 409) {
+
+      print(response.statusCode);
+      print(jsonData);
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 409) {
         return response;
       } else if (response.statusCode == 401) {
         ExceptionDialogs.networkDialog(
@@ -93,7 +101,8 @@ class PostServices {
         Navigator.pop(context);
         ExceptionDialogs.networkDialog(
           context: context,
-          message: "Request timed out. Please check your internet and try again.",
+          message:
+              "Request timed out. Please check your internet and try again.",
           onPressed: () {},
         );
       }
@@ -116,6 +125,7 @@ class PostServices {
           message: "No Internet connection.",
           onPressed: () {},
         );
+        // show dialog
       }
       return null;
     } on FormatException catch (e) {
@@ -126,6 +136,7 @@ class PostServices {
           message: e.message ?? "",
           onPressed: () {},
         );
+        // show dialog
       }
       return null;
     } on Exception catch (e) {
@@ -136,6 +147,7 @@ class PostServices {
           message: e.toString() ?? "",
           onPressed: () {},
         );
+        // show dialog
       }
       return null;
     }

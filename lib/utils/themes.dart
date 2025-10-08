@@ -32,6 +32,8 @@ class ThemeClass {
         color: AppColors.c666666,
       ),
     ),
+    textSelectionTheme:
+        TextSelectionThemeData(selectionHandleColor: AppColors.c000000),
     textTheme: TextTheme(
       labelLarge: const TextStyle().copyWith(
         fontWeight: FontWeight.w400,

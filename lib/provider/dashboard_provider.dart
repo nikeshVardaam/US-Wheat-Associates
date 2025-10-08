@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/dashboard_page/calculator.dart';
-import 'package:uswheat/dashboard_page/prices.dart';
+import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/dashboard_page/reprts/reports.dart';
 import 'package:uswheat/dashboard_page/watchList.dart';
@@ -32,9 +32,8 @@ class DashboardProvider extends ChangeNotifier {
   SharedPreferences? sp;
   User? user;
 
-  void confirmDelete({required BuildContext context}) {
+  confirmDelete({required BuildContext context}) {
     final text = deleteController.text.trim();
-
     if (text.isEmpty) {
       AppWidgets.topSnackBar(
         context: context,
@@ -44,46 +43,36 @@ class DashboardProvider extends ChangeNotifier {
       return;
     }
 
-    if (text.toUpperCase() != "DELETE") {
+    final delete = text.toUpperCase();
+
+    if (delete != "DELETE") {
       AppWidgets.topSnackBar(
         context: context,
         message: "Please type DELETE in capital letters",
         color: AppColors.cd63a3a,
       );
-      return;
-    }
-
-    deleteUser(context: context);
-  }
-
-
-  logOut(BuildContext context) async {
-    sp = await SharedPreferences.getInstance();
-    sp?.clear();
-    Provider.of<LoginProvider>(context, listen: false).cleanData();
-    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
-  }
-
-  Future<void> deleteUser({required BuildContext context}) async {
-    final response = await DeleteService().delete(
-      endpoint: ApiEndpoint.deleteUser,
-      context: context,
-    );
-
-    if (response != null) {
-      final sp = await SharedPreferences.getInstance();
-      await sp.clear();
-
-      Provider.of<LoginProvider>(context, listen: false).cleanData();
-
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppRoutes.login,
-            (Route<dynamic> route) => false,
+    } else {
+      AppWidgets.topSnackBar(
+        context: context,
+        message: "Account deleted successfully",
+        color: AppColors.c2a8741,
       );
+      deleteUser(context: context);
     }
   }
 
+  deleteUser({required BuildContext context}) {
+    DeleteService().delete(endpoint: ApiEndpoint.deleteAccount, context: context).then(
+      (value) async {
+        if (value != null) {
+          sp = await SharedPreferences.getInstance();
+          sp?.clear();
+          Provider.of<LoginProvider>(context, listen: false).cleanData();
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
+        }
+      },
+    );
+  }
 
   getPrefData() async {
     sp = await SharedPreferences.getInstance();
@@ -109,6 +98,7 @@ class DashboardProvider extends ChangeNotifier {
     selectActivity = activity;
     selectMenu = pageName;
 
+    // pageName ke hisaab se currentIndex set karo
     currentIndex = _getIndexFromPageName(pageName);
 
     notifyListeners();
@@ -142,6 +132,12 @@ class DashboardProvider extends ChangeNotifier {
     }
   }
 
+  logOut(BuildContext context) async {
+    sp = await SharedPreferences.getInstance();
+    sp?.clear();
+    Provider.of<LoginProvider>(context, listen: false).cleanData();
+    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
+  }
 
   int _getIndexFromPageName(String pageName) {
     switch (pageName) {

@@ -74,35 +74,36 @@ class SignUpProvider extends ChangeNotifier {
         isBottomSheet: false,
         loader: true,
       )
-          .then(
-        (value) async {
-          if (value != null && value.body.isNotEmpty) {
-            final response = json.decode(value.body);
+          .then((value) async {
+        if (value != null && value.body.isNotEmpty) {
+          final response = json.decode(value.body);
 
-            if (response["success"] == true) {
-              LoginModal loginModel = LoginModal.fromJson(response);
-              sp = await SharedPreferences.getInstance();
-              await sp?.setString(PrefKeys.token, loginModel.token ?? "");
-              await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
-              Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
-            } else {
-              String errorMsg = response["errors"]?["email"]?.first ?? response["message"] ?? "Something went wrong";
-
-              AppWidgets.appSnackBar(
-                context: context,
-                text: errorMsg,
-                color: Colors.redAccent,
-              );
-            }
+          if (response["success"] == true) {
+            LoginModal loginModel = LoginModal.fromJson(response);
+            sp = await SharedPreferences.getInstance();
+            await sp?.setString(PrefKeys.token, loginModel.token ?? "");
+            await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
+            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
           } else {
+            String errorMsg = response["errors"]?["email"]?.first
+                ?? response["message"]
+                ?? "Something went wrong";
+
             AppWidgets.appSnackBar(
               context: context,
-              text: "Something went wrong",
+              text: errorMsg,
               color: Colors.redAccent,
             );
           }
-        },
-      );
+        } else {
+          AppWidgets.appSnackBar(
+            context:context,
+            text: "Something went wrong",
+            color: Colors.redAccent,
+          );
+        }
+      });
+
     }
   }
 }

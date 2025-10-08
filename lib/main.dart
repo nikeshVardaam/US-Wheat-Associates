@@ -54,6 +54,7 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.system,
           theme: ThemeClass.lightTheme,
+
           home: const SplashScreen(),
           onGenerateRoute: RouteGenerator.generateRoute,
         ));

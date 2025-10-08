@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:uswheat/dashboard_page/prices.dart';
+import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/modal/watchlist_modal.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
