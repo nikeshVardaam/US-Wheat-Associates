@@ -4,9 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart'
-    show PdfViewerController;
-import 'package:uswheat/modal/model_report.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart' show PdfViewerController;
 import 'package:uswheat/service/get_api_services.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
@@ -16,13 +14,25 @@ class ReportsProvider extends ChangeNotifier {
   final PdfViewerController pdfController = PdfViewerController();
   WebViewController? webController;
 
-  List<ReportType> reportTypeList = [];
-  List<Terms> termsList = [];
-
   bool isRecentMode = false;
   bool isFilterCleared = false;
   String? backupReportType;
-  late List<Report> rootItems;
+
+  List<dynamic> reportsOptions = [];
+  late var selectedReportOption;
+  late var selectedCategory;
+
+  setSelectedReportOption(var r) {
+    selectedReportOption = r;
+    selectedCategory = null;
+    notifyListeners();
+  }
+
+  setSelectedCategory(var c) {
+    selectedCategory = c;
+    notifyListeners();
+  }
+
   String? backupCategory;
   late List<String> reportList;
   final List<Map<String, String>> reportTypes = [
@@ -39,7 +49,6 @@ class ReportsProvider extends ChangeNotifier {
   String? selectedReportType;
   String? selectedYear;
 
-  String? selectedCategory;
   late List<int> yearList;
 
   final List<ReportModel> _reports = [];
@@ -206,69 +215,41 @@ class ReportsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getCategory(
-      {required BuildContext context, required String name}) async {
-    final resp = await GetApiServices().getWithDynamicUrl(
-      url: "https://uswheat.org/wp-json/uswheat/v1/get-report-options",
-      loader: true,
-      context: context,
-    );
-    if (resp == null) return;
-
-    final decoded = jsonDecode(resp.body);
-
-    if (decoded is Map<String, dynamic>) {
-      final report = Report.fromJson(decoded);
-      for (final rt in report.reportType) {
-        debugPrint(rt.name);
-        debugPrint(rt.slug);
-      }
-      return;
-    }
-
-    if (decoded is List) {
-      final List<dynamic> reportTypeBlocks = decoded
-          .map((e) => (e as Map<String, dynamic>)['report_type'])
-          .where((x) => x is List)
-          .toList();
-
-      final List<dynamic> flattened =
-          reportTypeBlocks.expand((e) => e as List).toList();
-
-      final names = flattened
-          .map((e) => (e as Map<String, dynamic>)['name'] as String?)
-          .where((n) => n != null && n.trim().isNotEmpty)
-          .map((n) => n!)
-          .toList();
-
-      for (final n in names) {
-        reportTypeNames.add(n);
-        debugPrint(n);
-      }
-      return;
-    }
-
-    throw Exception('Unexpected JSON shape for get-report-options');
-  }
-
-  Future<void> getReports(
-      {required BuildContext context, required bool loader}) async {
+  Future<void> getReportsOptions({required BuildContext context}) async {
     await GetApiServices()
         .getWithDynamicUrl(
       url: "https://uswheat.org/wp-json/uswheat/v1/get-report-options",
-      loader: loader,
+      loader: true,
       context: context,
     )
-        .then((value) {
-      if (value != null) {
-        final report = Report.fromJson(jsonDecode(value.body));
-        for (var name in report.reportType) {
-          reportTypeNames.add(name.name ?? "");
+        .then(
+      (value) {
+        if (value != null) {
+          var data = jsonDecode(value.body);
+          reportsOptions.addAll(data);
         }
 
-        print(reportTypeNames);
-        print(reportTypeNames);
-      }
-    });
+        notifyListeners();
+      },
+    );
+  }
+}
+
+class ReportType {
+  String? name;
+  String? slug;
+
+  ReportType({this.name, this.slug});
+
+  ReportType.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    slug = json['slug'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['slug'] = slug;
+    return data;
   }
 }

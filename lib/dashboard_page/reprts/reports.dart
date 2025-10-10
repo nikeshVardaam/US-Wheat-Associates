@@ -28,21 +28,15 @@ class _ReportsState extends State<Reports> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ReportsProvider prov =
-          Provider.of<ReportsProvider>(context, listen: false);
-      prov.getDefaultReports(context: context);
-      prov.getReports(context: context, loader: false);
+      ReportsProvider prov = Provider.of<ReportsProvider>(context, listen: false);
+      prov.getReportsOptions(context: context);
     });
     scrollController.addListener(() {
       final rp = Provider.of<ReportsProvider>(context, listen: false);
 
-      if (scrollController.position.pixels >=
-          scrollController.position.maxScrollExtent - 200) {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
         if (!rp.isLoading && rp.hasMoreData) {
-          if (rp.isRecentMode ||
-              (rp.selectedReportType == null &&
-                  rp.selectedYear == null &&
-                  rp.selectedCategory == null)) {
+          if (rp.isRecentMode || (rp.selectedReportType == null && rp.selectedYear == null && rp.selectedCategory == null)) {
             rp.getDefaultReports(context: context);
           } else {
             // rp.getReports(context: context);
@@ -70,158 +64,181 @@ class _ReportsState extends State<Reports> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 3.6,
-                          color: AppColors.c95795d.withOpacity(0.1),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 8),
-                            child: GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) {
-                                    return SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              3,
-                                      child: ReportsSelector(
-                                        reportList: rp.reportTypeNames,
-                                      ),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return SizedBox(
+                              height: MediaQuery.of(context).size.height / 3,
+                              child: ReportsSelector(
+                                reportList: rp.reportsOptions,
+                              ),
+                            );
+                          },
+                        ).then(
+                          (value) {
+                            if (value != null) {
+                              rp.setSelectedReportOption(value);
+                            }
+                          },
+                        );
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width / 3.6,
+                              color: AppColors.c95795d.withOpacity(0.1),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return SizedBox(
+                                          height: MediaQuery.of(context).size.height / 3,
+                                          child: ReportsSelector(
+                                            reportList: rp.reportsOptions,
+                                          ),
+                                        );
+                                      },
+                                    ).then(
+                                      (value) {
+                                        if (value != null) {
+                                          rp.setSelectedReportOption(value);
+                                        }
+                                      },
                                     );
                                   },
-                                ).then(
-                                  (value) {
-                                    if (value != null) {
-                                      rp.getCategory(
-                                          context: context, name: value);
-                                    }
-                                  },
-                                );
-                              },
-                              onTapDown: (TapDownDetails details) {},
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      AppStrings.rep,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w700,
-                                            color: AppColors.cab865a,
-                                          ),
-                                    ),
+                                  onTapDown: (TapDownDetails details) {},
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          AppStrings.reports.toUpperCase(),
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.cab865a,
+                                              ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: AppColors.cab865a,
+                                      ),
+                                    ],
                                   ),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: AppColors.cab865a,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                rp.selectedReportOption != null ? rp.selectedReportOption["report_type"][0]["name"] : "Select Report Type",
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.c353d4a.withOpacity(0.7),
+                                    ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            rp.selectedReportType != null
-                                ? rp.selectedReportType![0].toUpperCase() +
-                                    rp.selectedReportType!.substring(1)
-                                : "Select Report Type",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Divider(
                       thickness: 0.5,
                       height: 1,
                       color: AppColors.cB6B6B6,
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 3.6,
-                          color: AppColors.c95795d.withOpacity(0.1),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 8),
-                            child: GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) {
-                                    return SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              3,
-                                      child: const CategorySelector(
-                                        categoryList: [],
-                                      ),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return SizedBox(
+                              height: MediaQuery.of(context).size.height / 3,
+                              child: CategorySelector(
+                                categoryList: rp.selectedReportOption["terms"],
+                              ),
+                            );
+                          },
+                        ).then(
+                          (value) {
+                            if (value != null) {
+                              rp.setSelectedCategory(value);
+                            }
+                          },
+                        );
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width / 3.6,
+                              color: AppColors.c95795d.withOpacity(0.1),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return SizedBox(
+                                          height: MediaQuery.of(context).size.height / 3,
+                                          child: CategorySelector(
+                                            categoryList: rp.selectedReportOption["terms"],
+                                          ),
+                                        );
+                                      },
+                                    ).then(
+                                      (value) {
+                                        if (value != null) {
+                                          rp.setSelectedCategory(value);
+                                        }
+                                      },
                                     );
                                   },
-                                ).then(
-                                  (value) {
-                                    if (value != null) {}
-                                  },
-                                );
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      AppStrings.cat,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w700,
-                                            color: AppColors.cab865a,
-                                          ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          AppStrings.category.toUpperCase(),
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.cab865a,
+                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: AppColors.cab865a,
+                                      ),
+                                    ],
                                   ),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: AppColors.cab865a,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                rp.selectedCategory != null ? rp.selectedCategory["name"] : "Select Category Type",
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.c353d4a.withOpacity(0.7),
+                                    ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            rp.selectedCategory != null
-                                ? rp.selectedCategory![0].toUpperCase() +
-                                    rp.selectedCategory!.substring(1)
-                                : "Select Category Type",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Divider(
                       thickness: 0.5,
@@ -236,22 +253,17 @@ class _ReportsState extends State<Reports> {
                   rp.clearFilterAndReload(context: context);
                 },
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
                         decoration: AppBoxDecoration.greyBorder(context),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
                           child: Text(
                             AppStrings.clear,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.c353d4a.withOpacity(0.7),
                                 ),
@@ -300,11 +312,7 @@ class _ReportsState extends State<Reports> {
                                             report.title ?? "",
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 3,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelSmall
-                                                ?.copyWith(
-                                                    color: AppColors.c000000),
+                                            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.c000000),
                                           ),
                                         ),
                                       ],
@@ -314,11 +322,7 @@ class _ReportsState extends State<Reports> {
                                     children: [
                                       Text(
                                         AppStrings.view,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                                color: AppColors.cB6B6B6),
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cB6B6B6),
                                       ),
                                       Icon(
                                         Icons.arrow_forward_ios_rounded,
@@ -334,8 +338,7 @@ class _ReportsState extends State<Reports> {
                         } else {
                           return rp.isLoading && rp.hasMoreData
                               ? Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
                                   child: AppWidgets.loading(),
                                 )
                               : const SizedBox.shrink();

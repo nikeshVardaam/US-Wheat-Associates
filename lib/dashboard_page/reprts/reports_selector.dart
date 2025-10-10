@@ -5,7 +5,7 @@ import '../../../../utils/app_strings.dart';
 import '../../modal/model_region.dart';
 
 class ReportsSelector extends StatefulWidget {
-  final List<String> reportList;
+  final List<dynamic> reportList;
 
   const ReportsSelector({super.key, required this.reportList});
 
@@ -57,16 +57,17 @@ class _ReportsSelectorState extends State<ReportsSelector> {
             child: CupertinoPicker(
                 backgroundColor: bgColor,
                 itemExtent: 32,
-                scrollController:
-                    FixedExtentScrollController(initialItem: selectedIndex),
+                scrollController: FixedExtentScrollController(initialItem: selectedIndex),
                 onSelectedItemChanged: (index) {
                   setState(() => selectedIndex = index);
                 },
                 children: List.generate(
                   widget.reportList.length,
                   (index) {
+                    var data = widget.reportList[index];
+
                     return Text(
-                      widget.reportList[index] as String,
+                      data["report_type"][0]["name"],
                       style: Theme.of(context).textTheme.labelLarge,
                     );
                   },

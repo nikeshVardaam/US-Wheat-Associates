@@ -148,34 +148,26 @@ class GetApiServices {
       );
 
       var data = json.decode(response.body);
+
       if (loader) {
         Navigator.pop(context);
       }
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
       } else if (response.statusCode == 401) {
-        AppWidgets.appSnackBar(
-            context: context, text: data["message"], color: Colors.redAccent);
+        AppWidgets.appSnackBar(context: context, text: data["message"], color: Colors.redAccent);
         return null;
       } else if (response.statusCode == 404) {
-        AppWidgets.appSnackBar(
-            context: context, text: data["message"], color: Colors.redAccent);
+        AppWidgets.appSnackBar(context: context, text: data["message"], color: Colors.redAccent);
         return null;
       } else if (response.statusCode == 422) {
-        AppWidgets.appSnackBar(
-            context: context, text: data["message"], color: Colors.redAccent);
+        AppWidgets.appSnackBar(context: context, text: data["message"], color: Colors.redAccent);
         return null;
       } else if (response.statusCode == 500) {
-        AppWidgets.appSnackBar(
-            context: context,
-            text: AppStrings.error500,
-            color: Colors.redAccent);
+        AppWidgets.appSnackBar(context: context, text: AppStrings.error500, color: Colors.redAccent);
         return null;
       } else if (response.statusCode == 503) {
-        AppWidgets.appSnackBar(
-            context: context,
-            text: AppStrings.error503,
-            color: Colors.redAccent);
+        AppWidgets.appSnackBar(context: context, text: AppStrings.error503, color: Colors.redAccent);
         return null;
       }
     } on TimeoutException catch (e) {

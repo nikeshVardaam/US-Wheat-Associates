@@ -19,7 +19,6 @@ class AppStrings {
   static const passwordChangedSuccessfully = "Password changed successfully";
   static const newPasswordHint = "Your new password must be different from previous used passwords";
   static const bothPasswordsMustMatch = "Both passwords must match";
-  static const cat = "CATEGORY";
   static const logout = "Logout";
   static const signInToYourAccount = "Sign in to your account";
   static const createNewPassword = "Create New Password";
@@ -65,7 +64,6 @@ class AppStrings {
   static const quality = "Quality";
   static const qua = "QUALITY";
   static const reports = "Reports";
-  static const rep = "REPORTS";
   static const reportsTypes = "Reports Types";
   static const read = "Read";
   static const view = "View";

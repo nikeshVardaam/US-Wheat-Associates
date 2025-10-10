@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../utils/app_strings.dart';
 
 class CategorySelector extends StatefulWidget {
-  final List<String> categoryList;
+  final List<dynamic> categoryList;
 
   const CategorySelector({super.key, required this.categoryList});
 
@@ -56,16 +56,17 @@ class _CategorySelectorState extends State<CategorySelector> {
             child: CupertinoPicker(
                 backgroundColor: bgColor,
                 itemExtent: 32,
-                scrollController:
-                    FixedExtentScrollController(initialItem: selectedIndex),
+                scrollController: FixedExtentScrollController(initialItem: selectedIndex),
                 onSelectedItemChanged: (index) {
                   setState(() => selectedIndex = index);
                 },
                 children: List.generate(
                   widget.categoryList.length,
                   (index) {
+                    var data = widget.categoryList[index];
+
                     return Text(
-                      widget.categoryList[index] as String,
+                      data["name"],
                       style: Theme.of(context).textTheme.labelLarge,
                     );
                   },
