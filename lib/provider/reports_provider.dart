@@ -267,6 +267,7 @@ class ReportsProvider extends ChangeNotifier {
         }
 
         print(reportTypeNames);
+        print(reportTypeNames);
       }
     });
   }
