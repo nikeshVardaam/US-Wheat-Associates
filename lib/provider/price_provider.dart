@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:uswheat/modal/all_price_data_modal.dart';
@@ -25,7 +24,8 @@ class PricesProvider extends ChangeNotifier {
   ZoomPanBehavior? zoomPanBehavior;
   AllPriceDataModal? allPriceDataModal;
 
-  setSelectedRegion({required RegionAndClasses rg, required BuildContext context}) async {
+  setSelectedRegion(
+      {required RegionAndClasses rg, required BuildContext context}) async {
     selectedRegion = rg;
     if (selectedClass != null && pRDate != null) {
       await getGraphCodesByClassAndRegion(context: context).then(
@@ -65,14 +65,19 @@ class PricesProvider extends ChangeNotifier {
   String getLastOneYearRange(String? date) {
     if (date?.isNotEmpty ?? false) {
       DateTime endDate = DateTime.parse(date ?? "");
-      DateTime startDate = DateTime(endDate.year - 1, endDate.month, endDate.day);
+      DateTime startDate =
+          DateTime(endDate.year - 1, endDate.month, endDate.day);
       return "${Miscellaneous.ymd(startDate.toString())} To ${Miscellaneous.ymd(endDate.toString())}";
     } else {
       return "";
     }
   }
 
-  Future<void> initCallFromWatchList({required BuildContext context, required String? region, required String? cls, required String? year}) async {
+  Future<void> initCallFromWatchList(
+      {required BuildContext context,
+      required String? region,
+      required String? cls,
+      required String? year}) async {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
@@ -177,7 +182,8 @@ class PricesProvider extends ChangeNotifier {
         if (value != null) {
           final modelRegion = ModelRegion.fromJson(jsonDecode(value.body));
           modelRegion.regions.forEach((key, list) {
-            final RegionAndClasses regionAndClasses = RegionAndClasses(region: key, classes: list);
+            final RegionAndClasses regionAndClasses =
+                RegionAndClasses(region: key, classes: list);
             regionsList.add(regionAndClasses);
           });
 
@@ -228,7 +234,8 @@ class PricesProvider extends ChangeNotifier {
     );
   }
 
-  setSelectedPrDate({required String date, required BuildContext context}) async {
+  setSelectedPrDate(
+      {required String date, required BuildContext context}) async {
     pRDate = date;
     await getGraphCodesByClassAndRegion(context: context).then(
       (value) async {
@@ -294,7 +301,8 @@ class PricesProvider extends ChangeNotifier {
           var data = jsonDecode(value.body);
 
           for (var i = 0; i < data.length; ++i) {
-            GraphDataModal gl = GraphDataModal(cASHMT: data[i]["CASHMT"], pRDATE: data[i]["PRDATE"]);
+            GraphDataModal gl = GraphDataModal(
+                cASHMT: data[i]["CASHMT"], pRDATE: data[i]["PRDATE"]);
             graphDataList.add(gl);
           }
         }
@@ -319,7 +327,8 @@ class PricesProvider extends ChangeNotifier {
         .then(
       (value) {
         if (value != null) {
-          allPriceDataModal = AllPriceDataModal.fromJson(json.decode(value.body));
+          allPriceDataModal =
+              AllPriceDataModal.fromJson(json.decode(value.body));
           notifyListeners();
         }
       },

@@ -4,7 +4,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart' show PdfViewerController;
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart'
+    show PdfViewerController;
+import 'package:uswheat/modal/model_report.dart';
+import 'package:uswheat/service/get_api_services.dart';
+
 import 'package:webview_flutter/webview_flutter.dart';
 import '../modal/repots_modal.dart';
 
@@ -12,11 +16,15 @@ class ReportsProvider extends ChangeNotifier {
   final PdfViewerController pdfController = PdfViewerController();
   WebViewController? webController;
 
+  List<ReportType> reportTypeList = [];
+  List<Terms> termsList = [];
+
   bool isRecentMode = false;
   bool isFilterCleared = false;
   String? backupReportType;
-  String? backupYear;
+  late List<Report> rootItems;
   String? backupCategory;
+  late List<String> reportList;
   final List<Map<String, String>> reportTypes = [
     {'name': 'Commercial Sales Report', 'value': 'commercial-sales'},
     {'name': 'Crop Quality Report', 'value': 'crop-quality'},
@@ -26,20 +34,23 @@ class ReportsProvider extends ChangeNotifier {
     {'name': 'Supply and Demand Report', 'value': 'supply-and-demand'},
   ];
 
-  final List<String> years = List.generate(DateTime.now().year - 2015 + 1, (index) => (2015 + index).toString());
-
   final List<String> languages = ['english'];
 
   String? selectedReportType;
   String? selectedYear;
 
   String? selectedCategory;
+  late List<int> yearList;
 
   final List<ReportModel> _reports = [];
 
   List<ReportModel> get reports => _reports;
 
   bool _isLoading = false;
+
+  // late List<Terms> reportTypeList = [];
+  late List<String> reportTypeNames = [];
+  late List<String> reportTypeSlugs = [];
 
   bool get isLoading => _isLoading;
 
@@ -66,7 +77,7 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String getTaxonomy() {
+  String getTaxonomy(String selectedTaxonomy) {
     switch (selectedReportType) {
       case 'commercial-sales':
         return 'commercial-sales-category';
@@ -85,6 +96,10 @@ class ReportsProvider extends ChangeNotifier {
     }
   }
 
+  List<String> getReportNames() {
+    return reportTypes.map((report) => report['name'] ?? '').toList();
+  }
+
   Future<void> getDefaultReports({required BuildContext context}) async {
     if (_isLoading || !hasMoreData) return;
 
@@ -95,7 +110,6 @@ class ReportsProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     try {
-      // Attempt network request with retries
       final response = await _getWithRetry(Uri.parse(url));
 
       if (response.statusCode == 200) {
@@ -142,17 +156,14 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Retry logic for network requests
   Future<http.Response> _getWithRetry(Uri uri, {int retries = 2}) async {
     int attempt = 0;
     while (attempt <= retries) {
       try {
-        return await http
-            .get(uri, headers: {
+        return await http.get(uri, headers: {
           'User-Agent': 'FlutterApp/1.0 (https://uswheat.org)',
           'Accept': 'application/json',
-        })
-            .timeout(const Duration(seconds: 15));
+        }).timeout(const Duration(seconds: 15));
       } on SocketException catch (e) {
         attempt++;
         if (attempt > retries) rethrow;
@@ -195,208 +206,68 @@ class ReportsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getReports({required BuildContext context}) async {
-    if (_isLoading || !hasMoreData) return;
+  Future<void> getCategory(
+      {required BuildContext context, required String name}) async {
+    final resp = await GetApiServices().getWithDynamicUrl(
+      url: "https://uswheat.org/wp-json/uswheat/v1/get-report-options",
+      loader: true,
+      context: context,
+    );
+    if (resp == null) return;
 
-    _isLoading = true;
-    notifyListeners();
+    final decoded = jsonDecode(resp.body);
 
-    final int maxRetries = 3;
-    int retryCount = 0;
-
-    while (retryCount < maxRetries) {
-      try {
-        String url;
-        if (isRecentMode) {
-          url = "https://uswheat.org/wp-json/uswheat/v1/reports"
-              "?per_page=20&page=$currentPage"
-              "&report_type=all";
-        } else {
-          if (selectedReportType == null || selectedYear == null || selectedCategory == null) {
-            _isLoading = false;
-            notifyListeners();
-            return;
-          }
-
-          url =
-              "https://uswheat.org/wp-json/uswheat/v1/reports?per_page=20&page=$currentPage&year=$selectedYear&category=$selectedCategory&report_type=$selectedReportType&taxonomy=${getTaxonomy()}";
-        }
-
-        final response = await http.get(
-          Uri.parse(url),
-          headers: {
-            'User-Agent': 'FlutterApp',
-          },
-        );
-
-        if (response.statusCode == 200) {
-          final decoded = jsonDecode(response.body);
-          final List<dynamic> data = decoded['data'] ?? [];
-
-          if (data.isEmpty) {
-            hasMoreData = false;
-          } else {
-            if (currentPage == 1) _reports.clear();
-            currentPage++;
-            _reports.addAll(data.map((e) => ReportModel.fromJson(e)).toList());
-          }
-          break;
-        } else {
-          print("Failed: ${response.statusCode}");
-          break;
-        }
-      } on SocketException catch (e) {
-        retryCount++;
-        print("SocketException, retrying $retryCount/$maxRetries: $e");
-        await Future.delayed(const Duration(seconds: 2));
-      } catch (e) {
-        print("Other error: $e");
-        break;
+    if (decoded is Map<String, dynamic>) {
+      final report = Report.fromJson(decoded);
+      for (final rt in report.reportType) {
+        debugPrint(rt.name);
+        debugPrint(rt.slug);
       }
+      return;
     }
 
-    _isLoading = false;
-    notifyListeners();
+    if (decoded is List) {
+      final List<dynamic> reportTypeBlocks = decoded
+          .map((e) => (e as Map<String, dynamic>)['report_type'])
+          .where((x) => x is List)
+          .toList();
+
+      final List<dynamic> flattened =
+          reportTypeBlocks.expand((e) => e as List).toList();
+
+      final names = flattened
+          .map((e) => (e as Map<String, dynamic>)['name'] as String?)
+          .where((n) => n != null && n.trim().isNotEmpty)
+          .map((n) => n!)
+          .toList();
+
+      for (final n in names) {
+        reportTypeNames.add(n);
+        debugPrint(n);
+      }
+      return;
+    }
+
+    throw Exception('Unexpected JSON shape for get-report-options');
   }
 
-  Future<void> showFilterDropdown({
-    required BuildContext context,
-    required TapDownDetails details,
-    required Function(String selectedReportType) onSelect,
-  }) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-
-    final selected = await showMenu<String>(
+  Future<void> getReports(
+      {required BuildContext context, required bool loader}) async {
+    await GetApiServices()
+        .getWithDynamicUrl(
+      url: "https://uswheat.org/wp-json/uswheat/v1/get-report-options",
+      loader: loader,
       context: context,
-      position: RelativeRect.fromRect(
-        details.globalPosition & const Size(0, 0),
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        PopupMenuItem<String>(
-          enabled: false,
-          padding: EdgeInsets.zero,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height / 4,
-            width: MediaQuery.of(context).size.width / 2,
-            child: Scrollbar(
-              child: ListView.builder(
-                itemCount: reportTypes.length,
-                itemBuilder: (context, index) {
-                  final reportType = reportTypes[index];
-                  return ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(reportType['name'] ?? ''),
-                    ),
-                    onTap: () => Navigator.pop(context, reportType['value']),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    )
+        .then((value) {
+      if (value != null) {
+        final report = Report.fromJson(jsonDecode(value.body));
+        for (var name in report.reportType) {
+          reportTypeNames.add(name.name ?? "");
+        }
 
-    if (selected != null && selected.isNotEmpty) {
-      selectedReportType = selected;
-      onSelect(selected);
-      notifyListeners();
-    }
-  }
-
-  Future<void> showFilterYearDropdown({
-    required BuildContext context,
-    required TapDownDetails details,
-    required Function(String selectedYear) onSelect,
-  }) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-
-    final selected = await showMenu<String>(
-      context: context,
-      position: RelativeRect.fromRect(
-        details.globalPosition & const Size(0, 0),
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        PopupMenuItem<String>(
-          enabled: false,
-          padding: EdgeInsets.zero,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height / 4,
-            width: MediaQuery.of(context).size.width / 2,
-            child: Scrollbar(
-              child: ListView.builder(
-                itemCount: years.length,
-                itemBuilder: (context, index) {
-                  final year = years[index];
-                  return ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(year),
-                    ),
-                    onTap: () => Navigator.pop(context, year),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-
-    if (selected != null) {
-      selectedYear = selected;
-      onSelect(selected);
-      notifyListeners();
-    }
-  }
-
-  Future<void> showLanguageDropdown({
-    required BuildContext context,
-    required TapDownDetails details,
-    required Function(String selectedLang) onSelect,
-  }) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-
-    final selected = await showMenu<String>(
-      context: context,
-      position: RelativeRect.fromRect(
-        details.globalPosition & const Size(0, 0),
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        PopupMenuItem<String>(
-          enabled: false,
-          padding: EdgeInsets.zero,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height / 14,
-            width: MediaQuery.of(context).size.width / 2,
-            child: Scrollbar(
-              child: ListView.builder(
-                itemCount: languages.length,
-                itemBuilder: (context, index) {
-                  final lang = languages[index];
-                  return ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(lang[0].toUpperCase() + lang.substring(1)),
-                    ),
-                    onTap: () => Navigator.pop(context, lang),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-
-    if (selected != null) {
-      selectedCategory = selected;
-      onSelect(selected);
-      notifyListeners();
-    }
+        print(reportTypeNames);
+      }
+    });
   }
 }
