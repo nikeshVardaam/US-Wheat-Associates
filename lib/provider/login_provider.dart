@@ -85,7 +85,6 @@ class LoginProvider extends ChangeNotifier {
           .then(
         (value) async {
           if (value != null) {
-            debugPrint(value.body);
             LoginModal loginModel = LoginModal.fromJson(json.decode(value.body));
             sp = await SharedPreferences.getInstance();
             await sp?.setString(PrefKeys.token, loginModel.token ?? "");

@@ -56,7 +56,8 @@ class _CategorySelectorState extends State<CategorySelector> {
             child: CupertinoPicker(
                 backgroundColor: bgColor,
                 itemExtent: 32,
-                scrollController: FixedExtentScrollController(initialItem: selectedIndex),
+                scrollController:
+                    FixedExtentScrollController(initialItem: selectedIndex),
                 onSelectedItemChanged: (index) {
                   setState(() => selectedIndex = index);
                 },
@@ -66,7 +67,7 @@ class _CategorySelectorState extends State<CategorySelector> {
                     var data = widget.categoryList[index];
 
                     return Text(
-                      data["name"],
+                      data["name"] ?? [],
                       style: Theme.of(context).textTheme.labelLarge,
                     );
                   },

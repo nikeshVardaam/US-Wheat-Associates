@@ -6,18 +6,22 @@ class AppStrings {
   static const noWatchlistAdded = "No Watchlist Added";
   static const uSWheatNewsFeed = "US Wheat News Feed";
   static const yesDeleteMyAccount = "Yes, delete my account";
-  static const onceYouDeleteYourAccountThereIsNoWayBackMakeSureYouWantToDoThis = "Once you delete your account, there is no getting it back. Make sure you want to do this.";
+  static const onceYouDeleteYourAccountThereIsNoWayBackMakeSureYouWantToDoThis =
+      "Once you delete your account, there is no getting it back. Make sure you want to do this.";
   static const accountDeletion = "Account Deletion";
   static const taxonomy = "Taxonomy";
   static const year = "Year";
   static const noDataAvailable = "No Data Available";
   static const month = "Month";
   static const day = "Day";
+  static const next = "Next";
+  static const back = "Back";
   static const ye = "YEAR";
   static const category = "Category";
   static const newPassword = "New Password";
   static const passwordChangedSuccessfully = "Password changed successfully";
-  static const newPasswordHint = "Your new password must be different from previous used passwords";
+  static const newPasswordHint =
+      "Your new password must be different from previous used passwords";
   static const bothPasswordsMustMatch = "Both passwords must match";
   static const logout = "Logout";
   static const signInToYourAccount = "Sign in to your account";
@@ -50,7 +54,8 @@ class AppStrings {
   static const favoritePrices = "FAVORITE PRICE";
   static const addToWatchlist = "ADD TO WATCHLIST";
   static const bushelsMetricTons = "Bushels = Metric Tons";
-  static const inputAndConvertValues = "Input And Convert Values Between Bushels And Metric Tons.";
+  static const inputAndConvertValues =
+      "Input And Convert Values Between Bushels And Metric Tons.";
   static const bushels = "BUSHELS: (bu)";
   static const equals = "equals....";
   static const noData = "No data ....";
@@ -111,10 +116,13 @@ class AppStrings {
   static const noDataFound = "No data found";
   static const wheatAssociates = "U.S. Wheat Associates";
   static const error500 = "We are working on server, Please try again later.";
-  static const error503 = "Server is under maintenance, Please try again later.";
+  static const error503 =
+      "Server is under maintenance, Please try again later.";
   static const subscriberConsent = "Subscriber consent";
-  static const iConsentToReceivingEmail = "I consent to receiving email communications. ";
-  static const iConsentToHavingMySubscriber = "I consent to having my subscriber engagement tracked and analyzed.";
+  static const iConsentToReceivingEmail =
+      "I consent to receiving email communications. ";
+  static const iConsentToHavingMySubscriber =
+      "I consent to having my subscriber engagement tracked and analyzed.";
   static const milesKilometer = "MILES = KILOMETERS";
   static const squareFeetSquareMeters = "SQUARE FEET = SQUARE METERS";
   static const metersYardsFeet = "METERS = YARDS = FEET";
@@ -132,7 +140,9 @@ class AppStrings {
   static const removedFromWatchlist = "Removed from watchlist";
   static const failedToRemove = "Failed to remove";
   static const fahrenheitCelsius = "FAHRENHEIT = CELSIUS";
-  static const alreadyAddedToWatchlist = "This date is already in your watchlist.";
+  static const alreadyAddedToWatchlist =
+      "This date is already in your watchlist.";
   static const watchlistAddedSuccessfully = "Watchlist Added Successfully";
-  static const pleaseSelectDateBeforeAddingToWatchlist = "Please select a date before adding to watchlist";
+  static const pleaseSelectDateBeforeAddingToWatchlist =
+      "Please select a date before adding to watchlist";
 }
