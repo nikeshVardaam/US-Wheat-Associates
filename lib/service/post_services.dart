@@ -34,7 +34,6 @@ class PostServices {
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
 
-
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -44,13 +43,12 @@ class PostServices {
           'Authorization': bearerToken,
           'Accept': 'application/json',
         },
-     );
+      );
       var jsonData = json.decode(response.body);
+
       if (loader) {
         Navigator.pop(context);
       }
-
-
 
       if (response.statusCode == 200 ||
           response.statusCode == 201 ||

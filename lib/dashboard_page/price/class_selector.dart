@@ -17,8 +17,8 @@ class _ClassSelectorState extends State<ClassSelector> {
   int selectedIndex = 0;
 
   @override
-  Widget build(BuildContext context) {
-    final bgColor = CupertinoColors.systemGrey6.resolveFrom(context);
+  Widget build(BuildContext perentContext) {
+    final bgColor = CupertinoColors.systemGrey6.resolveFrom(perentContext);
     return Container(
       height: 250,
       decoration: BoxDecoration(
@@ -34,14 +34,14 @@ class _ClassSelectorState extends State<ClassSelector> {
               children: [
                 Text(
                   "${AppStrings.select} ${AppStrings.classs}",
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(perentContext).textTheme.labelLarge,
                 ),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
 
 
-                    Navigator.pop(context, widget.classList[selectedIndex]);
+                    Navigator.pop(perentContext, widget.classList[selectedIndex]);
                   },
                   child: const Text(
                     AppStrings.done,
@@ -69,7 +69,7 @@ class _ClassSelectorState extends State<ClassSelector> {
                   (index) {
                     return Text(
                       widget.classList[index] ?? "",
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: Theme.of(perentContext).textTheme.labelLarge,
                     );
                   },
                 )),

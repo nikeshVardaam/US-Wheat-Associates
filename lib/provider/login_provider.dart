@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uswheat/auth/SyncData.dart';
 import 'package:uswheat/modal/login_modal.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
@@ -14,8 +15,10 @@ class LoginProvider extends ChangeNotifier {
   SharedPreferences? sp;
   bool passwordIsVisible = false;
   bool rememberMe = false;
-  TextEditingController emailController = TextEditingController(text:"shrey@gmail.com");
-  TextEditingController passwordController = TextEditingController(text: "shrey@123");
+  TextEditingController emailController =
+      TextEditingController(text: "shrey@gmail.com");
+  TextEditingController passwordController =
+      TextEditingController(text: "shrey@123");
 
   void cleanData() {
     emailController.clear();
@@ -31,8 +34,6 @@ class LoginProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-
 
   checkLogin({required BuildContext context}) async {
     sp = await SharedPreferences.getInstance();
@@ -51,7 +52,8 @@ class LoginProvider extends ChangeNotifier {
   bool validation(BuildContext context) {
     RegExp regex = RegExp(Miscellaneous.emailPattern);
     if (emailController.text.trim().isEmpty) {
-      AppWidgets.appSnackBar(context: context, text: "Enter email Id", color: Colors.redAccent);
+      AppWidgets.appSnackBar(
+          context: context, text: "Enter email Id", color: Colors.redAccent);
       return false;
     } else if (!regex.hasMatch(emailController.text.trim())) {
       AppWidgets.appSnackBar(
@@ -61,13 +63,16 @@ class LoginProvider extends ChangeNotifier {
       );
       return false;
     } else if (passwordController.text.trim().isEmpty) {
-      AppWidgets.appSnackBar(context: context, text: "Enter password", color: Colors.redAccent);
+      AppWidgets.appSnackBar(
+          context: context, text: "Enter password", color: Colors.redAccent);
       return false;
     }
     return true;
   }
 
   logIn({required BuildContext context}) async {
+    print("login method called");
+
     if (validation(context)) {
       var data = {
         "email": emailController.text.trim(),
@@ -85,17 +90,25 @@ class LoginProvider extends ChangeNotifier {
           .then(
         (value) async {
           if (value != null) {
-            debugPrint(value.body);
-            LoginModal loginModel = LoginModal.fromJson(json.decode(value.body));
+            print(value.body.runtimeType);
+            print(value.statusCode.toString());
+            print("login provider called");
+
+            LoginModal loginModel = LoginModal.fromJson(jsonDecode(value.body));
+
             sp = await SharedPreferences.getInstance();
             await sp?.setString(PrefKeys.token, loginModel.token ?? "");
-            await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
-
-            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+            await sp?.setString(
+                PrefKeys.user, jsonEncode(loginModel.user ?? ""));
+            await SyncData().syncData(context: context).then((value) {
+                   Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+               
+            });
+          } else {
+            print("else part");
           }
         },
       );
-
       notifyListeners();
     }
   }

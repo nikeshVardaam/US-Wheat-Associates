@@ -30,8 +30,7 @@ class GetApiServices {
     }
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
-    // print("Bearer Token: $bearerToken");
-    // print(url);
+
     try {
       final response = await http.get(
         Uri.parse(url),
@@ -115,6 +114,212 @@ class GetApiServices {
         message: e.toString() ?? "",
         onPressed: () {},
       );
+      return null;
+    }
+    return null;
+  }
+
+  Future<http.Response?> getApiWithParams({
+    required String endpoint,
+    required String params,
+    required bool loader,
+    required BuildContext context,
+  }) async {
+    sp = await SharedPreferences.getInstance();
+
+    if (loader) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AppWidgets.loading(),
+      );
+    }
+
+    String url = "${sp?.getString(PrefKeys.baseUrl)}$endpoint$params";
+    String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': bearerToken,
+          'Accept': 'application/json',
+          'X-Inertia-Platform': "mobile",
+        },
+      );
+
+      var data = json.decode(response.body);
+      if (loader) {
+        Navigator.pop(context);
+      }
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response;
+      } else if (response.statusCode == 401) {
+        AppWidgets.appSnackBar(
+            context: context, text: data["message"], color: Colors.redAccent);
+        return null;
+      } else if (response.statusCode == 404) {
+        AppWidgets.appSnackBar(
+            context: context, text: data["message"], color: Colors.redAccent);
+        return null;
+      } else if (response.statusCode == 422) {
+        AppWidgets.appSnackBar(
+            context: context, text: data["message"], color: Colors.redAccent);
+        return null;
+      } else if (response.statusCode == 500) {
+        AppWidgets.appSnackBar(
+            context: context,
+            text: AppStrings.error500,
+            color: Colors.redAccent);
+        return null;
+      } else if (response.statusCode == 503) {
+        AppWidgets.appSnackBar(
+            context: context,
+            text: AppStrings.error503,
+            color: Colors.redAccent);
+        return null;
+      }
+    } on TimeoutException catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+        // show dialog
+      }
+      return null;
+    } on HttpException catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+      }
+      return null;
+    } on SocketException catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+      }
+      // show dialog
+      ExceptionDialogs.networkDialog(
+        context: context,
+        message: AppStrings.error500,
+        onPressed: () {
+          Navigator.pop(context);
+          getApiWithParams(
+              endpoint: endpoint,
+              params: params,
+              context: context,
+              loader: loader);
+        },
+      );
+      return null;
+    } on FormatException catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+        // show dialog
+      }
+      return null;
+    } on Exception catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+        // show dialog
+      }
+      return null;
+    }
+    return null;
+  }
+
+  Future<http.Response?> getWithDynamicUrl({
+    required String url,
+    required bool loader,
+    required BuildContext context,
+  }) async {
+    sp = await SharedPreferences.getInstance();
+
+    if (loader) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AppWidgets.loading(),
+      );
+    }
+
+    String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': bearerToken,
+          'Accept': 'application/json',
+        },
+      );
+
+      var data = json.decode(response.body);
+
+      if (loader) {
+        Navigator.pop(context);
+      }
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response;
+      } else if (response.statusCode == 401) {
+        AppWidgets.appSnackBar(
+            context: context, text: data["message"], color: Colors.redAccent);
+        return null;
+      } else if (response.statusCode == 404) {
+        AppWidgets.appSnackBar(
+            context: context, text: data["message"], color: Colors.redAccent);
+        return null;
+      } else if (response.statusCode == 422) {
+        AppWidgets.appSnackBar(
+            context: context, text: data["message"], color: Colors.redAccent);
+        return null;
+      } else if (response.statusCode == 500) {
+        AppWidgets.appSnackBar(
+            context: context,
+            text: AppStrings.error500,
+            color: Colors.redAccent);
+        return null;
+      } else if (response.statusCode == 503) {
+        AppWidgets.appSnackBar(
+            context: context,
+            text: AppStrings.error503,
+            color: Colors.redAccent);
+        return null;
+      }
+    } on TimeoutException catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+        // show dialog
+      }
+      return null;
+    } on HttpException catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+      }
+      return null;
+    } on SocketException catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+      }
+      // show dialog
+      ExceptionDialogs.networkDialog(
+        context: context,
+        message: AppStrings.error503,
+        onPressed: () {
+          Navigator.pop(context);
+          getWithDynamicUrl(url: url, context: context, loader: loader);
+        },
+      );
+      return null;
+    } on FormatException catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+        // show dialog
+      }
+      return null;
+    } on Exception catch (e) {
+      if (loader) {
+        Navigator.pop(context);
+        // show dialog
+      }
       return null;
     }
     return null;

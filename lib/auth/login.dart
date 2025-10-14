@@ -17,7 +17,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -133,21 +133,7 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        // GestureDetector(
-                        //   onTap: () {},
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.end,
-                        //     children: [
-                        //       Text(
-                        //         AppStrings.forgotPassword,
-                        //         style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c666666),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
+
                       ],
                     ),
                   ),

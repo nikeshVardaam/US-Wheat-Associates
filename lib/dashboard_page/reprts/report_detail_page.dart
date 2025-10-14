@@ -69,7 +69,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.reportDetailArg.title),
@@ -82,7 +82,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
                 ? Center(
               child: Text(
                 AppStrings.noData,
-                style: Theme.of(context)
+                style: Theme.of(perentContext)
                     .textTheme
                     .labelLarge
                     ?.copyWith(fontWeight: FontWeight.w600),
@@ -96,7 +96,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
                   setState(() => isLoading = false),
               onDocumentLoadFailed: (details) {
                 setState(() => isLoading = false);
-                ScaffoldMessenger.of(context).showSnackBar(
+                ScaffoldMessenger.of(perentContext).showSnackBar(
                     const SnackBar(
                         content: Text("Failed to load PDF")));
               },
@@ -106,7 +106,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
                 : Center(
               child: Text(
                 AppStrings.noData,
-                style: Theme.of(context)
+                style: Theme.of(perentContext)
                     .textTheme
                     .labelLarge
                     ?.copyWith(fontWeight: FontWeight.w600),

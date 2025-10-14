@@ -16,13 +16,13 @@ class MetricTonToKgPoundPage extends StatefulWidget {
 
 class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
           "Metric Ton = Kg = Pounds",
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+          style: Theme.of(perentContext).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -31,7 +31,7 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
               "Convert Metric Tons to Kilograms and Pounds.",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+              style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
         ),

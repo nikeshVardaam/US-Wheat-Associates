@@ -41,7 +41,7 @@ class _NewsFeedState extends State<NewsFeed> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(AppStrings.uSWheatNewsFeed),

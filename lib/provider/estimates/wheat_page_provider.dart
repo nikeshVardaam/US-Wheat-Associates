@@ -1,28 +1,25 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/service/post_services.dart';
-import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_strings.dart';
-import '../../modal/watch_list_state.dart';
 import '../../modal/watchlist_modal.dart';
-import '../../service/get_api_services.dart';
 import '../../utils/app_widgets.dart';
+import '../../utils/pref_keys.dart';
 
 class WheatPageProvider extends ChangeNotifier {
-  List<num> uniqueYears = [];
-  String? selectedYears;
-  int selectedMonth = DateTime.now().month;
-  int selectedDay = DateTime.now().day;
-  String? finalDate;
-  String? prdate;
+  List<int>? uniqueYears = [];
+
+  String? selectedDate;
   WheatData? current;
+  SharedPreferences? sp;
+
   WheatData? yearAverage;
   WheatData? fiveYearAverage;
-  final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
   bool isLoading = false;
-  bool _isPickerOpen = false;
 
   void clearData() {
     current = null;
@@ -30,61 +27,79 @@ class WheatPageProvider extends ChangeNotifier {
     fiveYearAverage = null;
   }
 
-  Future<void> getYears({required BuildContext context, required bool loader}) async {
-    final response = await GetApiServices().get(
-      endpoint: ApiEndpoint.getYears,
-      context: context,
-      loader: loader,
-    );
+  Future<void> loadYear({required BuildContext context}) async {
+    sp = await SharedPreferences.getInstance();
 
-    if (response != null) {
-      uniqueYears = List<num>.from(json.decode(response.body));
-      uniqueYears.sort((a, b) => b.compareTo(a));
-      selectedYears = uniqueYears.contains(DateTime.now().year) ? DateTime.now().year.toString() : uniqueYears.first.toString();
-      //updateFinalDate(prDate: "", context: context, wClass: wheatClass);
-      notifyListeners();
+    final stored = sp?.getStringList(PrefKeys.yearList) ?? const <String>[];
+
+    final parsed = <int>[];
+    for (final s in stored) {
+      final v = int.tryParse(s);
+      if (v != null) parsed.add(v);
     }
+
+    if (parsed.isEmpty) {
+      parsed.add(DateTime.now().year);
+    }
+
+    final sorted = List<int>.from(parsed)..sort((a, b) => b.compareTo(a));
+    uniqueYears = sorted;
+    notifyListeners();
   }
 
-  bool isInWatchlist(String wheatClass, String? date) {
-    if (date == null) return false;
-    String key = "$wheatClass|$date";
-    return WatchlistState.watchlistKeys.contains(key);
+  void updatedDate({required String date}) {
+    selectedDate = date;
+    notifyListeners();
   }
 
-  void getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
+  void getQualityReport(
+      {required BuildContext context,
+      required String wheatClass,
+      required String date}) async {
     var data = {
       "class": wheatClass,
       "date": date ?? "",
     };
+    print(data);
 
-    final response = await PostServices().post(
+    await PostServices()
+        .post(
       endpoint: ApiEndpoint.qualityReport,
       requestData: data,
       context: context,
       isBottomSheet: false,
       loader: true,
-    );
+    )
+        .then((value) {
+      if (value != null) {
+        print(value.body.toString());
 
-    if (response != null) {
-      // debugPrint(response.body,wrapWidth: 1024);
-      final decoded = json.decode(response.body);
+        final decoded = json.decode(value.body);
 
-      if (decoded['data'] != null) {
-        final data = decoded['data'];
+        if (decoded['data'] != null) {
+          final data = decoded['data'];
 
-        current = data['current'] != null ? WheatData.fromJson(data['current']) : null;
-        yearAverage = data['year_average'] != null ? WheatData.fromJson(data['year_average']) : null;
-        fiveYearAverage = data['five_year_average'] != null ? WheatData.fromJson(data['five_year_average']) : null;
+          current = data['current'] != null
+              ? WheatData.fromJson(data['current'])
+              : null;
+          yearAverage = data['year_average'] != null
+              ? WheatData.fromJson(data['year_average'])
+              : null;
+          fiveYearAverage = data['five_year_average'] != null
+              ? WheatData.fromJson(data['five_year_average'])
+              : null;
 
-        notifyListeners();
+          notifyListeners();
+        }
       }
-
-    }
+    });
   }
 
-  void addWatchList({required BuildContext context, required String wheatClass, required String color}) {
-    if (prdate == null || prdate!.isEmpty) {
+  void addWatchList(
+      {required BuildContext context,
+      required String wheatClass,
+      required String color}) {
+    if (selectedDate == null || selectedDate!.isEmpty) {
       AppWidgets.appSnackBar(
         context: context,
         text: AppStrings.pleaseSelectDateBeforeAddingToWatchlist,
@@ -93,20 +108,15 @@ class WheatPageProvider extends ChangeNotifier {
       return;
     }
 
-    String key = "$wheatClass|$prdate";
-
-    if (WatchlistState.watchlistKeys.contains(key)) {
-      return;
-    }
-
     var data = {
       "type": "quality",
       "filterdata": {
         "class": wheatClass,
-        "date": prdate,
+        "date": selectedDate,
         "color": color,
       }
     };
+    print(data);
 
     PostServices()
         .post(
@@ -118,7 +128,6 @@ class WheatPageProvider extends ChangeNotifier {
     )
         .then((value) {
       if (value != null) {
-        WatchlistState.watchlistKeys.add(key);
         AppWidgets.appSnackBar(
           context: context,
           text: AppStrings.watchlistAddedSuccessfully,
@@ -129,121 +138,19 @@ class WheatPageProvider extends ChangeNotifier {
     });
   }
 
-  void updateFinalDate({required String prDate, required BuildContext context, required String wClass}) {
+  void updateFinalDate(
+      {required String prDate,
+      required BuildContext context,
+      required String wClass}) {
     clearData();
-    if (prDate.isNotEmpty) {
-      finalDate = prDate;
+    if (selectedDate != null) {
       prDate = prDate;
-      getQualityReport(context: context, wheatClass: wClass, date: prDate);
+      getQualityReport(
+          context: context, wheatClass: wClass, date: selectedDate.toString());
     } else {
-      if (selectedYears != null) {
-        final year = int.parse(selectedYears!);
-        int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
-        if (selectedDay > daysInMonth) selectedDay = daysInMonth;
-        finalDate = "$year-${selectedMonth.toString().padLeft(2, "0")}-${selectedDay.toString().padLeft(2, "0")}";
-        prdate = finalDate;
-
-        getQualityReport(context: context, wheatClass: wClass, date: finalDate ?? "");
-      } else {
-        finalDate = "";
-        prdate = "";
-      }
-      notifyListeners();
+      getQualityReport(
+          context: context, wheatClass: wClass, date: selectedDate ?? "");
     }
-  }
-
-  void showYearPicker(BuildContext context, {required String wheatClass}) {
-    if (_isPickerOpen) return;
-    _isPickerOpen = true;
-
-    if (uniqueYears.isEmpty) {
-      getYears(context: context, loader: false).then((_) {
-        Future.delayed(const Duration(milliseconds: 100), () {
-          _openPicker(context, wheatClass);
-        });
-      });
-    } else {
-      Future.delayed(const Duration(milliseconds: 100), () {
-        _openPicker(context, wheatClass);
-      });
-    }
-  }
-
-  void _openPicker(BuildContext context, String wheatClass) {
-    _isPickerOpen = true;
-    int initialYearIndex = uniqueYears.indexOf(int.tryParse(selectedYears ?? '') ?? uniqueYears.first);
-
-    int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
-    int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
-
-    showCupertinoModalPopup(
-      context: context,
-      builder: (_) => SafeArea(
-        child: Container(
-            height: MediaQuery.of(context).size.height / 2.5,
-            color: AppColors.cFFFFFF,
-            child: Column(
-              children: [
-                // Pickers
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: CupertinoPicker(
-                          scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
-                          itemExtent: 40,
-                          onSelectedItemChanged: (index) {
-                            selectedYears = uniqueYears[index].toString();
-                          },
-                          children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
-                        ),
-                      ),
-                      Expanded(
-                        child: CupertinoPicker(
-                          scrollController: FixedExtentScrollController(initialItem: selectedMonth - 1),
-                          itemExtent: 40,
-                          onSelectedItemChanged: (index) {
-                            selectedMonth = index + 1;
-                          },
-                          children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
-                        ),
-                      ),
-                      Expanded(
-                        child: CupertinoPicker(
-                          scrollController: FixedExtentScrollController(initialItem: selectedDay - 1),
-                          itemExtent: 40,
-                          onSelectedItemChanged: (index) {
-                            selectedDay = index + 1;
-                          },
-                          children: List.generate(daysInMonth, (i) => Center(child: Text((i + 1).toString()))),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Buttons
-                Padding(
-                  padding: const EdgeInsets.only(right: 8, left: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(onTap: () => Navigator.pop(context), child: AppButtons().filledButton(true, AppStrings.cancel, context)),
-                      GestureDetector(
-                          onTap: () {
-                            updateFinalDate(prDate: "", context: context, wClass: wheatClass);
-                            getQualityReport(context: context, wheatClass: wheatClass, date: prdate ?? "");
-                            Navigator.pop(context);
-                          },
-                          child: AppButtons().filledButton(true, AppStrings.confirm, context)),
-                    ],
-                  ),
-                ),
-              ],
-            )),
-      ),
-    ).whenComplete(() {
-      _isPickerOpen = false;
-    });
+    notifyListeners();
   }
 }

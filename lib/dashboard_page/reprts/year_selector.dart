@@ -1,45 +1,19 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../utils/app_strings.dart';
-import '../../modal/model_region.dart';
 
-class RegionSelector extends StatefulWidget {
-  final List<RegionAndClasses> regionList;
+class YearSelector extends StatefulWidget {
+  final List<int> yearList;
 
-  const RegionSelector({super.key, required this.regionList});
+  const YearSelector({super.key, required this.yearList});
 
   @override
-  State<RegionSelector> createState() => _RegionSelectorState();
+  State<YearSelector> createState() => _YearSelectorState();
 }
 
-class _RegionSelectorState extends State<RegionSelector> {
+class _YearSelectorState extends State<YearSelector> {
   int selectedIndex = 0;
-  SharedPreferences? sp;
-
-  Future<void> loadRegionAndClasses({required BuildContext context}) async {
-    widget.regionList.clear();
-    sp = await SharedPreferences.getInstance();
-
-    var value = sp?.getString("region");
-
-    final modelRegion = ModelRegion.fromJson(jsonDecode(value.toString()));
-    modelRegion.regions.forEach((key, list) {
-      final RegionAndClasses regionAndClasses =
-          RegionAndClasses(region: key, classes: list);
-      widget.regionList.add(regionAndClasses);
-    });
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    loadRegionAndClasses(context: context);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext perentContext) {
@@ -58,14 +32,13 @@ class _RegionSelectorState extends State<RegionSelector> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${AppStrings.select} ${AppStrings.region}",
+                  "${AppStrings.select} ${AppStrings.year}",
                   style: Theme.of(perentContext).textTheme.labelLarge,
                 ),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    Navigator.pop(
-                        perentContext, widget.regionList[selectedIndex]);
+                    Navigator.pop(perentContext, widget.yearList[selectedIndex]);
                   },
                   child: const Text(
                     AppStrings.done,
@@ -89,10 +62,11 @@ class _RegionSelectorState extends State<RegionSelector> {
                   setState(() => selectedIndex = index);
                 },
                 children: List.generate(
-                  widget.regionList.length,
+                  widget.yearList.length,
                   (index) {
+                    final text = widget.yearList[index].toString() ?? '';
                     return Text(
-                      widget.regionList[index].region ?? "",
+                      text,
                       style: Theme.of(perentContext).textTheme.labelLarge,
                     );
                   },
