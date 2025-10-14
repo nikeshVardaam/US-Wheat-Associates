@@ -27,26 +27,6 @@ class WheatPageProvider extends ChangeNotifier {
     fiveYearAverage = null;
   }
 
-  Future<void> loadYear({required BuildContext context}) async {
-    sp = await SharedPreferences.getInstance();
-
-    final stored = sp?.getStringList(PrefKeys.yearList) ?? const <String>[];
-
-    final parsed = <int>[];
-    for (final s in stored) {
-      final v = int.tryParse(s);
-      if (v != null) parsed.add(v);
-    }
-
-    if (parsed.isEmpty) {
-      parsed.add(DateTime.now().year);
-    }
-
-    final sorted = List<int>.from(parsed)..sort((a, b) => b.compareTo(a));
-    uniqueYears = sorted;
-    notifyListeners();
-  }
-
   void updatedDate({required String date}) {
     selectedDate = date;
     notifyListeners();
