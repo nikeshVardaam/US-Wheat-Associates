@@ -22,5 +22,7 @@ class AppAssets {
   static const hardRedWinter = "assets/images/hard_red_winter.jpg";
   static const passwordChange = "assets/images/password_change.svg";
   static const news = "assets/images/news.svg";
+  static const sync ="assets/images/sync.png";
+
 
 }

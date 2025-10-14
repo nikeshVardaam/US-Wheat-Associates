@@ -17,7 +17,7 @@ class AppDeleteDialog extends StatefulWidget {
 
 class _AppDeleteDialogState extends State<AppDeleteDialog> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Consumer<DashboardProvider>(builder: (context, dp, child) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),

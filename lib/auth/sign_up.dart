@@ -17,7 +17,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Consumer<SignUpProvider>(builder: (context, sup, child) {

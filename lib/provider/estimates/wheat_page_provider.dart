@@ -1,19 +1,20 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_strings.dart';
-import '../../modal/watch_list_state.dart';
 import '../../modal/watchlist_modal.dart';
-import '../../service/get_api_services.dart';
 import '../../utils/app_widgets.dart';
+import '../../utils/pref_keys.dart';
 
 class WheatPageProvider extends ChangeNotifier {
   List<int>? uniqueYears = [];
 
   String? selectedDate;
   WheatData? current;
+  SharedPreferences? sp;
 
   WheatData? yearAverage;
   WheatData? fiveYearAverage;
@@ -26,27 +27,24 @@ class WheatPageProvider extends ChangeNotifier {
     fiveYearAverage = null;
   }
 
-  Future<void> getYearList(
-      {required BuildContext context, required bool loader}) async {
-    uniqueYears?.clear();
-    await GetApiServices()
-        .get(
-      endpoint: ApiEndpoint.getYears,
-      context: context,
-      loader: loader,
-    )
-        .then((value) {
-      if (value != null) {
-        var data = jsonDecode(value.body);
+  Future<void> loadYear({required BuildContext context}) async {
+    sp = await SharedPreferences.getInstance();
 
-        for (var i = 0; i < data.length; ++i) {
-          uniqueYears?.add(data[i]);
-        }
-        uniqueYears?.sort((a, b) => b.compareTo(a));
+    final stored = sp?.getStringList(PrefKeys.yearList) ?? const <String>[];
 
-        notifyListeners();
-      }
-    });
+    final parsed = <int>[];
+    for (final s in stored) {
+      final v = int.tryParse(s);
+      if (v != null) parsed.add(v);
+    }
+
+    if (parsed.isEmpty) {
+      parsed.add(DateTime.now().year);
+    }
+
+    final sorted = List<int>.from(parsed)..sort((a, b) => b.compareTo(a));
+    uniqueYears = sorted;
+    notifyListeners();
   }
 
   void updatedDate({required String date}) {
@@ -62,6 +60,8 @@ class WheatPageProvider extends ChangeNotifier {
       "class": wheatClass,
       "date": date ?? "",
     };
+    print(data);
+
     await PostServices()
         .post(
       endpoint: ApiEndpoint.qualityReport,
@@ -72,6 +72,8 @@ class WheatPageProvider extends ChangeNotifier {
     )
         .then((value) {
       if (value != null) {
+        print(value.body.toString());
+
         final decoded = json.decode(value.body);
 
         if (decoded['data'] != null) {
@@ -114,6 +116,7 @@ class WheatPageProvider extends ChangeNotifier {
         "color": color,
       }
     };
+    print(data);
 
     PostServices()
         .post(

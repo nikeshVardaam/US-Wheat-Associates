@@ -16,6 +16,7 @@ import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import 'package:uswheat/utils/pref_keys.dart';
 
+import '../auth/SyncData.dart';
 import '../utils/app_routes.dart';
 import 'login_provider.dart';
 
@@ -31,6 +32,10 @@ class DashboardProvider extends ChangeNotifier {
   int currentIndex = 0;
   SharedPreferences? sp;
   User? user;
+
+  Future<void> syncData(BuildContext context) async {
+    await SyncData().syncData(context: context);
+  }
 
   confirmDelete({required BuildContext context}) {
     final text = deleteController.text.trim();
@@ -62,13 +67,16 @@ class DashboardProvider extends ChangeNotifier {
   }
 
   deleteUser({required BuildContext context}) {
-    DeleteService().delete(endpoint: ApiEndpoint.deleteAccount, context: context).then(
+    DeleteService()
+        .delete(endpoint: ApiEndpoint.deleteAccount, context: context)
+        .then(
       (value) async {
         if (value != null) {
           sp = await SharedPreferences.getInstance();
           sp?.clear();
           Provider.of<LoginProvider>(context, listen: false).cleanData();
-          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.login, (Route<dynamic> route) => false);
         }
       },
     );
@@ -94,7 +102,10 @@ class DashboardProvider extends ChangeNotifier {
     );
   }
 
-  setChangeActivity({required Widget activity, required String pageName, bool isBottomTab = false}) {
+  setChangeActivity(
+      {required Widget activity,
+      required String pageName,
+      bool isBottomTab = false}) {
     selectActivity = activity;
     selectMenu = pageName;
 
@@ -118,16 +129,28 @@ class DashboardProvider extends ChangeNotifier {
             isBottomTab: true);
         break;
       case 1:
-        setChangeActivity(activity: const Quality(), pageName: AppStrings.quality, isBottomTab: true);
+        setChangeActivity(
+            activity: const Quality(),
+            pageName: AppStrings.quality,
+            isBottomTab: true);
         break;
       case 2:
-        setChangeActivity(activity: const Watchlist(), pageName: AppStrings.watchlist, isBottomTab: true);
+        setChangeActivity(
+            activity: const Watchlist(),
+            pageName: AppStrings.watchlist,
+            isBottomTab: true);
         break;
       case 3:
-        setChangeActivity(activity: const Reports(), pageName: AppStrings.reports, isBottomTab: true);
+        setChangeActivity(
+            activity: const Reports(),
+            pageName: AppStrings.reports,
+            isBottomTab: true);
         break;
       case 4:
-        setChangeActivity(activity: const Calculator(), pageName: AppStrings.calculator, isBottomTab: true);
+        setChangeActivity(
+            activity: const Calculator(),
+            pageName: AppStrings.calculator,
+            isBottomTab: true);
         break;
     }
   }
@@ -136,7 +159,8 @@ class DashboardProvider extends ChangeNotifier {
     sp = await SharedPreferences.getInstance();
     sp?.clear();
     Provider.of<LoginProvider>(context, listen: false).cleanData();
-    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (Route<dynamic> route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, AppRoutes.login, (Route<dynamic> route) => false);
   }
 
   int _getIndexFromPageName(String pageName) {

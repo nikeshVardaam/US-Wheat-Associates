@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:uswheat/auth/SyncData.dart';
 import 'package:uswheat/modal/all_price_data_modal.dart';
 import 'package:uswheat/modal/model_region.dart';
 import 'package:uswheat/service/get_api_services.dart';
@@ -10,19 +12,21 @@ import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
 import '../modal/graph_modal.dart';
+import '../utils/pref_keys.dart';
 
 class PricesProvider extends ChangeNotifier {
   List<RegionAndClasses> regionsList = [];
   RegionAndClasses? selectedRegion;
-  List<String> classes = [];
+
   String? selectedClass;
-  List<int> yearsList = [];
+
   String? selectedYear;
   List<GraphDataModal> graphDataList = [];
   String? selectedGRPHCode;
   String? pRDate;
   ZoomPanBehavior? zoomPanBehavior;
   AllPriceDataModal? allPriceDataModal;
+  SharedPreferences? sp;
 
   setSelectedRegion(
       {required RegionAndClasses rg, required BuildContext context}) async {
@@ -112,21 +116,18 @@ class PricesProvider extends ChangeNotifier {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
-      zoomMode: ZoomMode.x, // horizontal scroll only
+      zoomMode: ZoomMode.x,
     );
 
-    await getRegionsAndClasses(context: context).then(
+    getCurrentDate();
+    await loadRegionAndClasses(context: context).then(
       (value) async {
-        await getYears(context: context).then(
+        await getGraphCodesByClassAndRegion(context: context).then(
           (value) async {
-            await getGraphCodesByClassAndRegion(context: context).then(
+            await getGraphData(context: context).then(
               (value) async {
-                await getGraphData(context: context).then(
-                  (value) async {
-                    await getAllPriceData(context: context).then(
-                      (value) {},
-                    );
-                  },
+                await getAllPriceData(context: context).then(
+                  (value) {},
                 );
               },
             );
@@ -169,6 +170,23 @@ class PricesProvider extends ChangeNotifier {
     );
   }
 
+  Future<void> loadRegionAndClasses({required BuildContext context}) async {
+    regionsList.clear();
+    sp = await SharedPreferences.getInstance();
+
+    var value = sp?.getString("region");
+
+    final modelRegion = ModelRegion.fromJson(jsonDecode(value.toString()));
+    modelRegion.regions.forEach((key, list) {
+      final RegionAndClasses regionAndClasses =
+          RegionAndClasses(region: key, classes: list);
+      regionsList.add(regionAndClasses);
+    });
+    selectedRegion = regionsList[0];
+    selectedClass = selectedRegion?.classes?[0] ?? "";
+    notifyListeners();
+  }
+
   Future<void> getRegionsAndClasses({required BuildContext context}) async {
     regionsList.clear();
     await GetApiServices()
@@ -186,7 +204,6 @@ class PricesProvider extends ChangeNotifier {
                 RegionAndClasses(region: key, classes: list);
             regionsList.add(regionAndClasses);
           });
-
           selectedRegion = regionsList[0];
           selectedClass = selectedRegion?.classes?[0] ?? "";
         }
@@ -194,44 +211,34 @@ class PricesProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> getYears({required BuildContext context}) async {
-    await GetApiServices()
-        .get(
-      endpoint: ApiEndpoint.getYears,
-      context: context,
-      loader: true,
-    )
-        .then(
-      (value) {
-        if (value != null) {
-          yearsList.clear();
-          var data = jsonDecode(value.body);
+  getCurrentDate() async {
+    List<int> yearsList = [];
 
-          for (var i = 0; i < data.length; ++i) {
-            yearsList.add(data[i]);
-          }
+    sp = await SharedPreferences.getInstance();
+    final stored = sp?.getStringList(PrefKeys.yearList) ?? const <String>[];
 
-          yearsList.sort((a, b) => b.compareTo(a));
+    for (var i = 0; i < stored.length; ++i) {
+      yearsList.add(int.parse(stored[i]));
+    }
 
-          selectedYear = yearsList[0].toString();
+    yearsList.sort((a, b) => b.compareTo(a));
 
-          for (var i = 0; i < yearsList.length; ++i) {
-            if (yearsList[i].toString() == DateTime.now().year.toString()) {
-              selectedYear = yearsList[i].toString();
-              break;
-            } else {
-              selectedYear = yearsList[0].toString();
-            }
-          }
+    selectedYear = yearsList[0].toString();
 
-          pRDate = Miscellaneous.ymd(DateTime(
-            int.parse(selectedYear ?? ""),
-            DateTime.now().month,
-            DateTime.now().day,
-          ).toString());
-        }
-      },
-    );
+    for (var i = 0; i < yearsList.length; ++i) {
+      if (yearsList[i].toString() == DateTime.now().year.toString()) {
+        selectedYear = yearsList[i].toString();
+        break;
+      } else {
+        selectedYear = yearsList[0].toString();
+      }
+    }
+
+    pRDate = Miscellaneous.ymd(DateTime(
+      int.parse(selectedYear ?? ""),
+      DateTime.now().month,
+      DateTime.now().day,
+    ).toString());
   }
 
   setSelectedPrDate(
@@ -259,22 +266,40 @@ class PricesProvider extends ChangeNotifier {
       "region": selectedRegion?.region ?? "",
     };
 
-    await PostServices()
-        .post(
+    final value = await PostServices().post(
       endpoint: ApiEndpoint.getGraphCodesByClassAndRegion,
       requestData: data,
       context: context,
       isBottomSheet: false,
       loader: true,
-    )
-        .then(
-      (value) {
-        if (value != null) {
-          final body = json.decode(value.body);
-          selectedGRPHCode = body[0].toString();
-        }
-      },
     );
+
+    if (value == null) {
+      return;
+    }
+
+    if (value.statusCode < 200 || value.statusCode >= 300) {
+      return;
+    }
+
+    try {
+      final decoded = json.decode(value.body);
+
+      if (decoded is List && decoded.isNotEmpty) {
+        selectedGRPHCode = decoded.first.toString();
+        return;
+      }
+
+      if (decoded is Map<String, dynamic>) {
+        final codes = decoded['codes'];
+        if (codes is List && codes.isNotEmpty) {
+          selectedGRPHCode = codes.first.toString();
+          return;
+        }
+      }
+    } on FormatException catch (e) {
+      return;
+    }
   }
 
   Future<void> getGraphData({

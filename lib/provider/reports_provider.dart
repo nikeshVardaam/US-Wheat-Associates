@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/service/get_api_services.dart';
+import 'package:uswheat/utils/api_endpoint.dart';
+import 'package:uswheat/utils/pref_keys.dart';
 
 class ReportsProvider extends ChangeNotifier {
   List<dynamic> reportsOptions = [];
   List<dynamic> reports = [];
+  List<int> yearList = [];
 
+  SharedPreferences? sp;
   int pageNumber = 1;
   String reportTypeNameParam = "";
   String termParam = "";
@@ -15,6 +20,7 @@ class ReportsProvider extends ChangeNotifier {
 
   var selectedReportOption;
   var selectedCategory;
+  var selectedYear;
 
   setSelectedReportOption(var r) {
     selectedReportOption = r;
@@ -22,8 +28,17 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setSelectedCategory(var c) {
+  setSelectedCategory({required var c, required BuildContext context}) {
     selectedCategory = c;
+    getFilterReport(context: context);
+    notifyListeners();
+  }
+
+  setSelectedYear({required var y, required BuildContext context}) {
+    selectedYear = y;
+    if (selectedCategory != null) {
+      getFilterReport(context: context);
+    }
     notifyListeners();
   }
 
@@ -41,11 +56,51 @@ class ReportsProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> loadYear({required BuildContext context}) async {
+    sp = await SharedPreferences.getInstance();
+
+    final stored = sp?.getStringList(PrefKeys.yearList) ?? const <String>[];
+
+    final parsed = <int>[];
+    for (final s in stored) {
+      final v = int.tryParse(s);
+      if (v != null) parsed.add(v);
+    }
+
+    if (parsed.isEmpty) {
+      parsed.add(DateTime.now().year);
+    }
+
+    final sorted = List<int>.from(parsed)..sort((a, b) => b.compareTo(a));
+
+    yearList = sorted;
+    notifyListeners();
+  }
+
+  Future<void> getYearList({required BuildContext context}) async {
+    GetApiServices()
+        .get(endpoint: ApiEndpoint.getYears, context: context, loader: true)
+        .then(
+      (value) {
+        if (value != null) {
+          yearList.clear();
+          var data = jsonDecode(value.body);
+
+          for (var i = 0; i < data.length; ++i) {
+            yearList.add(data[i]);
+          }
+          yearList.sort((a, b) => b.compareTo(a));
+        }
+      },
+    );
+    notifyListeners();
+  }
+
   Future<void> getFilterReport({required BuildContext context}) async {
     reportTypeNameParam = selectedReportOption["report_type"][0]['slug'];
     termParam = selectedCategory['slug'];
     String url =
-        "https://uswheat.org/wp-json/uswheat/v1/get-reports?report_type_name=$reportTypeNameParam&term=$termParam&per_page=$perPage&page=$pageNumber";
+        "https://uswheat.org/wp-json/uswheat/v1/get-reports?report_type_name=$reportTypeNameParam&term=$termParam&per_page=$perPage&page=$pageNumber&year=$selectedYear";
 
     await GetApiServices()
         .getWithDynamicUrl(url: url, loader: true, context: context)

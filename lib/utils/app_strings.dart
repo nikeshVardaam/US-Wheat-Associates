@@ -145,4 +145,7 @@ class AppStrings {
   static const watchlistAddedSuccessfully = "Watchlist Added Successfully";
   static const pleaseSelectDateBeforeAddingToWatchlist =
       "Please select a date before adding to watchlist";
+
+  static const syncNewData = "Sync New Data";
+  static const dataNotAvailable = "Data Not Available";
 }

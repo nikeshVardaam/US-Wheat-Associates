@@ -7,7 +7,6 @@ import 'package:uswheat/dashboard_page/reprts/year_selector.dart';
 import 'package:uswheat/provider/reports_provider.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_box_decoration.dart';
-import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/app_strings.dart';
@@ -26,14 +25,14 @@ class _ReportsState extends State<Reports> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ReportsProvider prov =
           Provider.of<ReportsProvider>(context, listen: false);
-      prov.getReportsOptions(context: context);
       prov.getReports(context: context);
-      prov.pageNumber = 1;
+      prov.getReportsOptions(context: context);
+      prov.loadYear(context: context);
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       body: Consumer<ReportsProvider>(
         builder: (context, rp, child) {
@@ -97,7 +96,6 @@ class _ReportsState extends State<Reports> {
                                       },
                                     );
                                   },
-                                  onTapDown: (TapDownDetails details) {},
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -156,14 +154,16 @@ class _ReportsState extends State<Reports> {
                           builder: (context) {
                             return SizedBox(
                               height: MediaQuery.of(context).size.height / 3,
-                              child: const YearSelector(
-                                yearList: [],
+                              child: YearSelector(
+                                yearList: rp.yearList,
                               ),
                             );
                           },
                         ).then(
                           (value) {
-                            if (value != null) {}
+                            if (value != null) {
+                              rp.setSelectedYear(y: value, context: context);
+                            }
                           },
                         );
                       },
@@ -187,14 +187,17 @@ class _ReportsState extends State<Reports> {
                                                   .size
                                                   .height /
                                               3,
-                                          child: const YearSelector(
-                                            yearList: [],
+                                          child: YearSelector(
+                                            yearList: rp.yearList,
                                           ),
                                         );
                                       },
                                     ).then(
                                       (value) {
-                                        if (value != null) {}
+                                        if (value != null) {
+                                          rp.setSelectedYear(
+                                              y: value, context: context);
+                                        }
                                       },
                                     );
                                   },
@@ -228,7 +231,9 @@ class _ReportsState extends State<Reports> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
-                                "Select Year",
+                                (rp.selectedYear?.toString().isNotEmpty == true)
+                                    ? rp.selectedYear.toString()
+                                    : "Select Year",
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelLarge
@@ -264,7 +269,8 @@ class _ReportsState extends State<Reports> {
                           ).then(
                             (value) {
                               if (value != null) {
-                                rp.setSelectedCategory(value);
+                                rp.setSelectedCategory(
+                                    c: value, context: context);
                               }
                             },
                           );
@@ -302,9 +308,8 @@ class _ReportsState extends State<Reports> {
                                       ).then(
                                         (value) {
                                           if (value != null) {
-                                            rp.setSelectedCategory(value);
-                                            rp.getFilterReport(
-                                                context: context);
+                                            rp.setSelectedCategory(
+                                                c: value, context: context);
                                           }
                                         },
                                       );

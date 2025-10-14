@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_strings.dart';
+import 'package:uswheat/utils/pref_keys.dart';
 
 class DatePickerSheet extends StatefulWidget {
-  final List<int> yearsList;
-
-  const DatePickerSheet({
+  DatePickerSheet({
     super.key,
-    required this.yearsList,
   });
 
   @override
@@ -17,6 +18,8 @@ class DatePickerSheet extends StatefulWidget {
 
 class _DatePickerSheetState extends State<DatePickerSheet> {
   String? selectedYear;
+  List<int> yearsList = [];
+  SharedPreferences? sp;
   String? selectedMonth;
   String? selectedDay;
   int initialYearIndex = 0;
@@ -39,18 +42,43 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
     "Dec"
   ];
 
+  Future<void> loadYear({required BuildContext context}) async {
+    sp = await SharedPreferences.getInstance();
+
+    final stored = sp?.getStringList(PrefKeys.yearList) ?? const <String>[];
+
+    final parsed = <int>[];
+    for (final s in stored) {
+      final v = int.tryParse(s);
+      if (v != null) parsed.add(v);
+    }
+
+    if (parsed.isEmpty) {
+      final nowYear = DateTime.now().year;
+      parsed.add(nowYear);
+    }
+
+    final sortedYears = List<int>.from(parsed)..sort((a, b) => b.compareTo(a));
+    final currentYear = DateTime.now().year;
+    final chosenYear =
+        sortedYears.contains(currentYear) ? currentYear : sortedYears.first;
+
+    yearsList = sortedYears;
+
+    initData();
+    setState(() {});
+  }
+
   @override
   void initState() {
-    initData();
+    loadYear(context: context);
     super.initState();
   }
 
   initData() {
-    print("year list in picker :${widget.yearsList}");
-
-    for (var i = 0; i < widget.yearsList.length; ++i) {
-      if (DateTime.now().year.toString() == widget.yearsList[i].toString()) {
-        selectedYear = widget.yearsList[i].toString();
+    for (var i = 0; i < yearsList.length; ++i) {
+      if (DateTime.now().year.toString() == yearsList[i].toString()) {
+        selectedYear = yearsList[i].toString();
         initialYearIndex = i;
         break;
       }
@@ -92,7 +120,6 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
   }
 
   DateTime createDate(int year, String month, int day) {
-    // Map month name to month number
     final months = {
       'Jan': 1,
       'Feb': 2,
@@ -143,12 +170,12 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return SafeArea(
       bottom: false,
       child: Scaffold(
         body: SizedBox(
-          height: MediaQuery.of(context).size.height / 3,
+          height: MediaQuery.of(perentContext).size.height / 3,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -158,12 +185,12 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                   children: [
                     Text(
                       "${AppStrings.select} ${AppStrings.date}",
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(perentContext).textTheme.bodyLarge,
                     ),
                     const Spacer(),
                     GestureDetector(
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.pop(perentContext);
                         },
                         child: const Icon(Icons.clear))
                   ],
@@ -179,7 +206,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                           children: [
                             Text(
                               AppStrings.year,
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: Theme.of(perentContext).textTheme.bodyMedium,
                             ),
                             Expanded(
                               child: CupertinoPicker(
@@ -188,17 +215,17 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                                       initialItem: initialYearIndex),
                                   onSelectedItemChanged: (index) {
                                     setState(() => selectedYear =
-                                        widget.yearsList[index].toString());
+                                        yearsList[index].toString());
                                   },
                                   children: List.generate(
-                                    widget.yearsList.length,
+                                    yearsList.length,
                                     (index) {
-                                      var data = widget.yearsList[index];
+                                      var data = yearsList[index];
                                       return Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           data.toString() ?? "",
-                                          style: Theme.of(context)
+                                          style: Theme.of(perentContext)
                                               .textTheme
                                               .labelLarge,
                                         ),
@@ -214,7 +241,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                           children: [
                             Text(
                               AppStrings.month,
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: Theme.of(perentContext).textTheme.bodyMedium,
                             ),
                             Expanded(
                               child: CupertinoPicker(
@@ -238,7 +265,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           data.toString() ?? "",
-                                          style: Theme.of(context)
+                                          style: Theme.of(perentContext)
                                               .textTheme
                                               .labelLarge,
                                         ),
@@ -254,7 +281,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                           children: [
                             Text(
                               AppStrings.day,
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: Theme.of(perentContext).textTheme.bodyMedium,
                             ),
                             Expanded(
                               child: CupertinoPicker(
@@ -273,7 +300,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           data.toString(),
-                                          style: Theme.of(context)
+                                          style: Theme.of(perentContext)
                                               .textTheme
                                               .labelLarge,
                                         ),
@@ -293,14 +320,14 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                 GestureDetector(
                   onTap: () {
                     Navigator.pop(
-                        context,
+                        perentContext,
                         createDate(int.parse(selectedYear.toString()),
                             selectedMonth ?? "", int.parse(selectedDay ?? "")));
                   },
                   child: AppButtons().filledButton(
                     true,
                     AppStrings.confirm,
-                    context,
+                    perentContext,
                   ),
                 ),
                 const SizedBox(

@@ -20,13 +20,14 @@ class _WatchlistState extends State<Watchlist> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<WatchlistProvider>(context, listen: false).fetchData(context: context);
+      Provider.of<WatchlistProvider>(context, listen: false)
+          .fetchData(context: context);
     });
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Consumer<WatchlistProvider>(
       builder: (context, wp, child) {
         return SingleChildScrollView(
@@ -59,38 +60,55 @@ class _WatchlistState extends State<Watchlist> {
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         // Header
                                         Container(
                                           decoration: BoxDecoration(
                                             color: AppColors.cab865a,
-                                            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                                            borderRadius:
+                                                const BorderRadius.vertical(
+                                                    top: Radius.circular(16)),
                                           ),
-                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
                                           child: Row(
                                             children: [
                                               Expanded(
                                                 child: Row(
                                                   children: [
                                                     Text(
-                                                      AppStrings.wheatAssociates,
-                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                            color: AppColors.cFFFFFF,
+                                                      AppStrings
+                                                          .wheatAssociates,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall
+                                                          ?.copyWith(
+                                                            color: AppColors
+                                                                .cFFFFFF,
                                                           ),
                                                     ),
                                                     Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 4.0),
                                                       child: Container(
                                                         height: 12,
                                                         width: 2,
-                                                        color: AppColors.cFFFFFF,
+                                                        color:
+                                                            AppColors.cFFFFFF,
                                                       ),
                                                     ),
                                                     Text(
-                                                      data.filterdata.region ?? "",
-                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                            color: AppColors.cFFFFFF,
+                                                      data.filterdata.region ??
+                                                          "",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall
+                                                          ?.copyWith(
+                                                            color: AppColors
+                                                                .cFFFFFF,
                                                           ),
                                                     ),
                                                   ],
@@ -101,7 +119,8 @@ class _WatchlistState extends State<Watchlist> {
                                                   wp.deleteWatchList(
                                                     context: context,
                                                     id: data.id ?? "",
-                                                    wheatClass: data.filterdata.classs,
+                                                    wheatClass:
+                                                        data.filterdata.classs,
                                                     date: data.filterdata.date,
                                                   );
                                                 },
@@ -115,75 +134,160 @@ class _WatchlistState extends State<Watchlist> {
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               flex: 2,
                                               child: SizedBox(
-                                                height: MediaQuery.of(context).size.width / 3,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    3,
                                                 child: Container(
                                                   margin: EdgeInsets.zero,
                                                   padding: EdgeInsets.zero,
-                                                  decoration: const BoxDecoration(),
+                                                  decoration:
+                                                      const BoxDecoration(),
                                                   child: FutureBuilder(
-                                                    future: wp.fetchChartDataForItem(context, data),
-                                                    builder: (context, snapshot) {
-                                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                                    future: wp
+                                                        .fetchChartDataForItem(
+                                                            context, data),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .waiting) {
                                                         return const Center(
                                                           child: Padding(
-                                                            padding: EdgeInsets.all(8.0),
-                                                            child: CupertinoActivityIndicator(
-                                                              color: Colors.black,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    8.0),
+                                                            child:
+                                                                CupertinoActivityIndicator(
+                                                              color:
+                                                                  Colors.black,
                                                             ),
                                                           ),
                                                         );
                                                       }
 
-                                                      return data.chartData.isEmpty ?? true
+                                                      return data.chartData
+                                                                  .isEmpty ??
+                                                              true
                                                           ? Center(
                                                               child: Text(
-                                                                AppStrings.noDataFound,
-                                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c464646),
+                                                                AppStrings
+                                                                    .noDataFound,
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodySmall
+                                                                    ?.copyWith(
+                                                                        color: AppColors
+                                                                            .c464646),
                                                               ),
                                                             )
                                                           : Padding(
-                                                              padding: const EdgeInsets.only(bottom: 6, left: 8),
-                                                              child: SfCartesianChart(
-                                                                margin: EdgeInsets.zero,
-                                                                plotAreaBorderWidth: 0,
-                                                                backgroundColor: AppColors.cAB865A.withOpacity(0.0),
-                                                                plotAreaBackgroundColor: AppColors.cAB865A.withOpacity(0.0),
-                                                                primaryXAxis: CategoryAxis(
-                                                                  isVisible: true,
-                                                                  majorGridLines: MajorGridLines(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      bottom: 6,
+                                                                      left: 8),
+                                                              child:
+                                                                  SfCartesianChart(
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                plotAreaBorderWidth:
+                                                                    0,
+                                                                backgroundColor:
+                                                                    AppColors
+                                                                        .cAB865A
+                                                                        .withOpacity(
+                                                                            0.0),
+                                                                plotAreaBackgroundColor:
+                                                                    AppColors
+                                                                        .cAB865A
+                                                                        .withOpacity(
+                                                                            0.0),
+                                                                primaryXAxis:
+                                                                    CategoryAxis(
+                                                                  isVisible:
+                                                                      true,
+                                                                  majorGridLines:
+                                                                      MajorGridLines(
                                                                     width: 0.1,
-                                                                    color: AppColors.cab865a.withOpacity(0.6),
+                                                                    color: AppColors
+                                                                        .cab865a
+                                                                        .withOpacity(
+                                                                            0.6),
                                                                   ),
-                                                                  axisLine: const AxisLine(width: 0),
+                                                                  axisLine:
+                                                                      const AxisLine(
+                                                                          width:
+                                                                              0),
                                                                   interval: 1,
-                                                                  labelStyle: Theme.of(context).textTheme.labelSmall,
-                                                                  tickPosition: TickPosition.inside,
-                                                                  labelPlacement: LabelPlacement.betweenTicks,
+                                                                  labelStyle: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .labelSmall,
+                                                                  tickPosition:
+                                                                      TickPosition
+                                                                          .inside,
+                                                                  labelPlacement:
+                                                                      LabelPlacement
+                                                                          .betweenTicks,
                                                                   // ← important
-                                                                  edgeLabelPlacement: EdgeLabelPlacement.shift,
+                                                                  edgeLabelPlacement:
+                                                                      EdgeLabelPlacement
+                                                                          .shift,
                                                                   // ← prevents clipping
-                                                                  majorTickLines: const MajorTickLines(width: 0),
+                                                                  majorTickLines:
+                                                                      const MajorTickLines(
+                                                                          width:
+                                                                              0),
                                                                 ),
-                                                                primaryYAxis: const NumericAxis(
-                                                                  isVisible: false,
-                                                                  majorGridLines: MajorGridLines(width: 0),
-                                                                  axisLine: AxisLine(width: 0),
-                                                                  rangePadding: ChartRangePadding.round,
+                                                                primaryYAxis:
+                                                                    const NumericAxis(
+                                                                  isVisible:
+                                                                      false,
+                                                                  majorGridLines:
+                                                                      MajorGridLines(
+                                                                          width:
+                                                                              0),
+                                                                  axisLine:
+                                                                      AxisLine(
+                                                                          width:
+                                                                              0),
+                                                                  rangePadding:
+                                                                      ChartRangePadding
+                                                                          .round,
                                                                 ),
                                                                 series: <CartesianSeries>[
-                                                                  LineSeries<SalesData, String>(
-                                                                    dataSource: data.chartData,
-                                                                    xValueMapper: (SalesData d, _) => d.month,
-                                                                    yValueMapper: (SalesData d, _) => d.sales,
-                                                                    color: AppColors.c000000,
+                                                                  LineSeries<
+                                                                      SalesData,
+                                                                      String>(
+                                                                    dataSource:
+                                                                        data.chartData,
+                                                                    xValueMapper:
+                                                                        (SalesData d,
+                                                                                _) =>
+                                                                            d.month,
+                                                                    yValueMapper:
+                                                                        (SalesData d,
+                                                                                _) =>
+                                                                            d.sales,
+                                                                    color: AppColors
+                                                                        .c000000,
                                                                     width: 0.5,
-                                                                    dataLabelSettings: const DataLabelSettings(isVisible: false),
+                                                                    dataLabelSettings:
+                                                                        const DataLabelSettings(
+                                                                            isVisible:
+                                                                                false),
                                                                   ),
                                                                 ],
                                                               ),
@@ -197,43 +301,69 @@ class _WatchlistState extends State<Watchlist> {
                                             Expanded(
                                               flex: 2,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
                                                       Text(
-                                                        data.filterdata.region ?? "",
-                                                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                              color: AppColors.cab865a,
-                                                              fontWeight: FontWeight.w900,
+                                                        data.filterdata
+                                                                .region ??
+                                                            "",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .labelLarge
+                                                            ?.copyWith(
+                                                              color: AppColors
+                                                                  .cab865a,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w900,
                                                             ),
                                                       ),
                                                     ],
                                                   ),
                                                   Text(
                                                     "(${data.filterdata.classs ?? ""})",
-                                                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                          color: AppColors.c656e79,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelSmall
+                                                        ?.copyWith(
+                                                          color:
+                                                              AppColors.c656e79,
                                                         ),
                                                     maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                   const SizedBox(
                                                     height: 16,
                                                   ),
                                                   Container(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 12,
+                                                        vertical: 4),
                                                     decoration: BoxDecoration(
                                                       color: AppColors.c45413b,
-                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
                                                     ),
                                                     child: Text(
-                                                      data.filterdata.formattedDate ?? " ",
-                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                            color: AppColors.cFFFFFF,
+                                                      data.filterdata
+                                                              .formattedDate ??
+                                                          " ",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall
+                                                          ?.copyWith(
+                                                            color: AppColors
+                                                                .cFFFFFF,
                                                           ),
                                                       maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                 ],
@@ -251,7 +381,10 @@ class _WatchlistState extends State<Watchlist> {
                               ],
                             );
                           } else if (data.type == "quality") {
-                            Color c = Color(int.parse(data.filterdata.color, radix: 16));
+                            wp.fetchData(context: context);
+
+                            Color c = Color(
+                                int.parse(data.filterdata.color, radix: 16));
                             return Column(
                               children: [
                                 GestureDetector(
@@ -268,46 +401,73 @@ class _WatchlistState extends State<Watchlist> {
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.only(bottom: 40.0),
+                                      padding:
+                                          const EdgeInsets.only(bottom: 40.0),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           // Header
                                           Container(
                                             decoration: BoxDecoration(
                                               color: c,
-                                              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                                              borderRadius:
+                                                  const BorderRadius.vertical(
+                                                      top: Radius.circular(16)),
                                             ),
-                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 8),
                                             child: Row(
                                               children: [
                                                 Expanded(
                                                   child: Row(
                                                     children: [
                                                       Text(
-                                                        AppStrings.wheatAssociates,
-                                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                              color: AppColors.cFFFFFF,
+                                                        AppStrings
+                                                            .wheatAssociates,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall
+                                                            ?.copyWith(
+                                                              color: AppColors
+                                                                  .cFFFFFF,
                                                             ),
                                                       ),
                                                       Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal:
+                                                                    4.0),
                                                         child: Container(
                                                           height: 12,
                                                           width: 2,
-                                                          color: AppColors.cFFFFFF,
+                                                          color:
+                                                              AppColors.cFFFFFF,
                                                         ),
                                                       ),
                                                       Text(
-                                                        data.filterdata.region ?? "",
-                                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                              color: AppColors.cFFFFFF,
+                                                        data.filterdata
+                                                                .region ??
+                                                            "",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall
+                                                            ?.copyWith(
+                                                              color: AppColors
+                                                                  .cFFFFFF,
                                                             ),
                                                       ),
                                                       Text(
-                                                        data.filterdata.classs ?? "",
-                                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                              color: AppColors.cFFFFFF,
+                                                        data.filterdata
+                                                                .classs ??
+                                                            "",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall
+                                                            ?.copyWith(
+                                                              color: AppColors
+                                                                  .cFFFFFF,
                                                             ),
                                                       ),
                                                     ],
@@ -318,8 +478,10 @@ class _WatchlistState extends State<Watchlist> {
                                                       wp.deleteWatchList(
                                                         context: context,
                                                         id: data.id ?? "",
-                                                        wheatClass: data.filterdata.classs,
-                                                        date: data.filterdata.date,
+                                                        wheatClass: data
+                                                            .filterdata.classs,
+                                                        date: data
+                                                            .filterdata.date,
                                                       );
                                                     },
                                                     child: SvgPicture.asset(
@@ -331,38 +493,67 @@ class _WatchlistState extends State<Watchlist> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0, horizontal: 16),
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   AppStrings.data,
-                                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelLarge
+                                                      ?.copyWith(
                                                         color: c,
-                                                        fontWeight: FontWeight.w900,
+                                                        fontWeight:
+                                                            FontWeight.w900,
                                                       ),
                                                 ),
                                                 const SizedBox(height: 8),
                                                 SingleChildScrollView(
-                                                  scrollDirection: Axis.horizontal,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
                                                   child: Row(
                                                     children: [
                                                       // Moisture
                                                       Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Text(
-                                                            AppStrings.testWtbbu,
-                                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                  color: AppColors.c737373,
+                                                            AppStrings
+                                                                .testWtbbu,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall
+                                                                ?.copyWith(
+                                                                  color: AppColors
+                                                                      .c737373,
                                                                 ),
                                                           ),
-                                                          const SizedBox(height: 4),
+                                                          const SizedBox(
+                                                              height: 4),
                                                           Text(
-                                                            (data.wheatData?.testWtlbbu != null && data.wheatData!.testWtlbbu!.isNotEmpty) ? "${data.wheatData!.testWtlbbu}" : "--",
-                                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            (data.wheatData?.testWtlbbu !=
+                                                                        null &&
+                                                                    data
+                                                                        .wheatData!
+                                                                        .testWtlbbu!
+                                                                        .isNotEmpty)
+                                                                ? "${data.wheatData!.testWtlbbu}"
+                                                                : "--",
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .labelLarge
+                                                                ?.copyWith(
                                                                   color: c,
-                                                                  fontWeight: FontWeight.w900,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
                                                                 ),
                                                           )
                                                         ],
@@ -370,22 +561,42 @@ class _WatchlistState extends State<Watchlist> {
                                                       const SizedBox(width: 16),
                                                       // Prot12%mb
                                                       Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Text(
-                                                            AppStrings.testWtkghl,
-                                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                  color: AppColors.c737373,
+                                                            AppStrings
+                                                                .testWtkghl,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall
+                                                                ?.copyWith(
+                                                                  color: AppColors
+                                                                      .c737373,
                                                                 ),
                                                           ),
-                                                          const SizedBox(height: 4),
+                                                          const SizedBox(
+                                                              height: 4),
                                                           Text(
-                                                            (data.wheatData?.testWtkghl != null && data.wheatData!.testWtkghl!.isNotEmpty)
+                                                            (data.wheatData?.testWtkghl !=
+                                                                        null &&
+                                                                    data
+                                                                        .wheatData!
+                                                                        .testWtkghl!
+                                                                        .isNotEmpty)
                                                                 ? "${data.wheatData!.testWtkghl} "
                                                                 : "--",
-                                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .labelLarge
+                                                                ?.copyWith(
                                                                   color: c,
-                                                                  fontWeight: FontWeight.w900,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
                                                                 ),
                                                           )
                                                         ],
@@ -393,20 +604,41 @@ class _WatchlistState extends State<Watchlist> {
                                                       const SizedBox(width: 16),
                                                       // DryBasisProt%
                                                       Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Text(
                                                             AppStrings.moist,
-                                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                  color: AppColors.c737373,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall
+                                                                ?.copyWith(
+                                                                  color: AppColors
+                                                                      .c737373,
                                                                 ),
                                                           ),
-                                                          const SizedBox(height: 4),
+                                                          const SizedBox(
+                                                              height: 4),
                                                           Text(
-                                                            (data.wheatData?.moisture != null && data.wheatData!.moisture!.isNotEmpty) ? "${data.wheatData!.moisture}%" : "--",
-                                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            (data.wheatData?.moisture !=
+                                                                        null &&
+                                                                    data
+                                                                        .wheatData!
+                                                                        .moisture!
+                                                                        .isNotEmpty)
+                                                                ? "${data.wheatData!.moisture}%"
+                                                                : "--",
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .labelLarge
+                                                                ?.copyWith(
                                                                   color: c,
-                                                                  fontWeight: FontWeight.w900,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
                                                                 ),
                                                           )
                                                         ],
@@ -414,42 +646,82 @@ class _WatchlistState extends State<Watchlist> {
                                                       const SizedBox(width: 16),
                                                       // DryBasisProt%
                                                       Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Text(
                                                             AppStrings.prot12,
-                                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                  color: AppColors.c737373,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall
+                                                                ?.copyWith(
+                                                                  color: AppColors
+                                                                      .c737373,
                                                                 ),
                                                           ),
-                                                          const SizedBox(height: 4),
+                                                          const SizedBox(
+                                                              height: 4),
                                                           Text(
-                                                            (data.wheatData?.prot12Mb != null && data.wheatData!.prot12Mb!.isNotEmpty) ? "${data.wheatData!.prot12Mb}%" : "--",
-                                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            (data.wheatData?.prot12Mb !=
+                                                                        null &&
+                                                                    data
+                                                                        .wheatData!
+                                                                        .prot12Mb!
+                                                                        .isNotEmpty)
+                                                                ? "${data.wheatData!.prot12Mb}%"
+                                                                : "--",
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .labelLarge
+                                                                ?.copyWith(
                                                                   color: c,
-                                                                  fontWeight: FontWeight.w900,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
                                                                 ),
                                                           )
                                                         ],
                                                       ),
                                                       const SizedBox(width: 16),
                                                       Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Text(
                                                             AppStrings.proDb,
-                                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                  color: AppColors.c737373,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodySmall
+                                                                ?.copyWith(
+                                                                  color: AppColors
+                                                                      .c737373,
                                                                 ),
                                                           ),
-                                                          const SizedBox(height: 4),
+                                                          const SizedBox(
+                                                              height: 4),
                                                           Text(
-                                                            (data.wheatData?.dryBasisProt != null && data.wheatData!.dryBasisProt!.isNotEmpty)
+                                                            (data.wheatData?.dryBasisProt !=
+                                                                        null &&
+                                                                    data
+                                                                        .wheatData!
+                                                                        .dryBasisProt!
+                                                                        .isNotEmpty)
                                                                 ? "${data.wheatData!.dryBasisProt}%"
                                                                 : "--",
-                                                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .labelLarge
+                                                                ?.copyWith(
                                                                   color: c,
-                                                                  fontWeight: FontWeight.w900,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
                                                                 ),
                                                           ),
                                                         ],

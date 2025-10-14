@@ -6,6 +6,7 @@ import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/provider/estimates/wheat_page_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
+import 'package:uswheat/utils/app_widgets.dart';
 import '../../../utils/app_box_decoration.dart';
 import '../../../utils/common_date_picker.dart';
 import '../../../utils/miscellaneous.dart';
@@ -36,13 +37,13 @@ class _WheatPagesState extends State<WheatPages> {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         final prov = Provider.of<WheatPageProvider>(context, listen: false);
-        prov.getYearList(context: context, loader: true);
+        prov.loadYear(context: context);
       },
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Consumer<WheatPageProvider>(
       builder: (context, wpp, child) {
         return Column(
@@ -91,15 +92,24 @@ class _WheatPagesState extends State<WheatPages> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        String hexCode =
-                            '${widget.appBarColor.alpha.toRadixString(16).padLeft(2, '0')}'
-                            '${widget.appBarColor.red.toRadixString(16).padLeft(2, '0')}'
-                            '${widget.appBarColor.green.toRadixString(16).padLeft(2, '0')}'
-                            '${widget.appBarColor.blue.toRadixString(16).padLeft(2, '0')}';
-                        wpp.addWatchList(
-                            context: context,
-                            wheatClass: widget.selectedClass,
-                            color: hexCode);
+                        if (wpp.current == null &&
+                            wpp.yearAverage == null &&
+                            wpp.fiveYearAverage == null) {
+                          AppWidgets.appSnackBar(
+                              context: context,
+                              text: AppStrings.dataNotAvailable,
+                              color: AppColors.cb01c32);
+                        } else {
+                          String hexCode =
+                              '${widget.appBarColor.alpha.toRadixString(16).padLeft(2, '0')}'
+                              '${widget.appBarColor.red.toRadixString(16).padLeft(2, '0')}'
+                              '${widget.appBarColor.green.toRadixString(16).padLeft(2, '0')}'
+                              '${widget.appBarColor.blue.toRadixString(16).padLeft(2, '0')}';
+                          wpp.addWatchList(
+                              context: context,
+                              wheatClass: widget.selectedClass,
+                              color: hexCode);
+                        }
                       },
                       child: Row(
                         children: [
@@ -147,9 +157,7 @@ class _WheatPagesState extends State<WheatPages> {
                                   return SizedBox(
                                     height:
                                         MediaQuery.of(context).size.height / 3,
-                                    child: DatePickerSheet(
-                                      yearsList: wpp.uniqueYears ?? [],
-                                    ),
+                                    child: DatePickerSheet(),
                                   );
                                 },
                               ).then(

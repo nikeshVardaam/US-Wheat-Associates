@@ -16,10 +16,10 @@ class _YearSelectorState extends State<YearSelector> {
   int selectedIndex = 0;
 
   @override
-  Widget build(BuildContext context) {
-    final bgColor = CupertinoColors.systemGrey6.resolveFrom(context);
+  Widget build(BuildContext perentContext) {
+    final bgColor = CupertinoColors.systemGrey6.resolveFrom(perentContext);
     return Container(
-      height: MediaQuery.of(context).size.height / 5,
+      height: MediaQuery.of(perentContext).size.height / 5,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
@@ -33,12 +33,12 @@ class _YearSelectorState extends State<YearSelector> {
               children: [
                 Text(
                   "${AppStrings.select} ${AppStrings.year}",
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(perentContext).textTheme.labelLarge,
                 ),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    Navigator.pop(context, widget.yearList[selectedIndex]);
+                    Navigator.pop(perentContext, widget.yearList[selectedIndex]);
                   },
                   child: const Text(
                     AppStrings.done,
@@ -64,9 +64,10 @@ class _YearSelectorState extends State<YearSelector> {
                 children: List.generate(
                   widget.yearList.length,
                   (index) {
+                    final text = widget.yearList[index].toString() ?? '';
                     return Text(
-                      widget.yearList[index] as String,
-                      style: Theme.of(context).textTheme.labelLarge,
+                      text,
+                      style: Theme.of(perentContext).textTheme.labelLarge,
                     );
                   },
                 )),

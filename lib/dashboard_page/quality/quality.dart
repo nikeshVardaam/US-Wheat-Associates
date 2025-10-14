@@ -17,7 +17,7 @@ class Quality extends StatefulWidget {
 
 class _QualityState extends State<Quality> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Column(
       children: [
         Container(
@@ -51,7 +51,7 @@ class _QualityState extends State<Quality> {
                       ),
                       Text(
                         AppStrings.qua,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                        style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
                       ),
                     ],
                   ),
@@ -92,7 +92,7 @@ class _QualityState extends State<Quality> {
                               const SizedBox(width: 8),
                               Text(
                                 "",
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(
                                       color: AppColors.c464646,
                                     ),
                               ),
