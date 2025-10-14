@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/dashboard_page/price/prices.dart';
-import 'package:uswheat/modal/watchlist_modal.dart';
+import 'package:uswheat/modal/quality_report_modal.dart';
+import 'package:uswheat/modal/watchlist_modal.dart' hide YearAverage;
+import 'package:uswheat/service/delete_service.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_colors.dart';
@@ -12,30 +14,16 @@ import 'package:uswheat/utils/app_widgets.dart';
 import '../dashboard_page/quality/estimates/wheat_pages.dart';
 import '../modal/graph_modal.dart';
 import '../modal/sales_modal.dart';
-import '../modal/watch_list_state.dart';
-import '../service/delete_service.dart';
 import '../service/post_services.dart';
 import '../utils/app_assets.dart';
 import 'dashboard_provider.dart';
 
 class WatchlistProvider extends ChangeNotifier {
-  List<WatchlistItem> watchlist = [];
+  List<QualityWatchListModel> qList = [];
+
   String? grphcode;
 
-  final List<String> fixedMonths = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ];
+  final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   final Map<String, bool> _chartLoadingMap = {};
 
   final Map<String, List<SalesData>> _localChartCache = {};
@@ -64,8 +52,7 @@ class WatchlistProvider extends ChangeNotifier {
     String pageName = AppStrings.quality;
     switch (wheatClass) {
       case "HRW":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.hardRedWinter,
@@ -77,8 +64,7 @@ class WatchlistProvider extends ChangeNotifier {
         );
         break;
       case "SRW":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.softRedWinter,
@@ -90,8 +76,7 @@ class WatchlistProvider extends ChangeNotifier {
         );
         break;
       case "SW":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.softWhite,
@@ -103,8 +88,7 @@ class WatchlistProvider extends ChangeNotifier {
         );
         break;
       case "HRS":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.hardRedSpring,
@@ -116,8 +100,7 @@ class WatchlistProvider extends ChangeNotifier {
         );
         break;
       case "durum":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.northernDurum,
@@ -131,131 +114,92 @@ class WatchlistProvider extends ChangeNotifier {
     }
   }
 
-  Future<WheatData?> fetchQualityReport({
+  Future<QualityReport?> fetchQualityReport({
     required BuildContext context,
     required String wheatClass,
     required String date,
   }) async {
-    if (date.isEmpty) return null;
+    QualityReport? qualityReport;
 
     final data = {"class": wheatClass, "date": date};
 
-    final response = await PostServices().post(
+    await PostServices()
+        .post(
       endpoint: ApiEndpoint.qualityReport,
       requestData: data,
       context: context,
       isBottomSheet: false,
       loader: false,
+    )
+        .then(
+      (value) {
+        qualityReport = QualityReport.fromJson(jsonDecode(value?.body ?? ""));
+      },
     );
 
-    if (response != null) {
-      final decoded = json.decode(response.body);
-      if (decoded['data'] != null) {
-        var currentList = decoded['data']['current'] as List<dynamic>?;
-        print(currentList);
-
-        if (currentList != null) {
-          final current = (currentList.isNotEmpty)
-              ? WheatData.fromJson(currentList[0])
-              : null;
-          return current;
-        }
-      }
-    }
-    return null;
+    return qualityReport;
   }
 
   void setChartLoadingForItem(String itemId, bool isLoading) {
     _chartLoadingMap[itemId] = isLoading;
   }
 
-  Future<void> fetchData({required BuildContext context}) async {
-    watchlist.clear();
-    notifyListeners();
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AppWidgets.loading(),
-    );
-
-    await getWatchList(context: context, loader: true);
-
-    Navigator.pop(context);
-    notifyListeners();
-  }
-
-  getWatchList({required BuildContext context, required bool loader}) async {
+  getWatchList({required BuildContext context}) async {
     final response = await GetApiServices().get(
       endpoint: ApiEndpoint.getWatchlist,
       context: context,
-      loader: false,
+      loader: true,
     );
 
     if (response != null) {
+      qList.clear();
       final data = jsonDecode(response.body)['data'];
-      watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
-      print(watchlist);
+      List<WatchlistItem> watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
 
-      List<Future> futures = [];
-      for (var item in watchlist) {
-        if (item.type == 'quality') {
-          futures.add(
-            fetchQualityReport(
-              context: context,
-              wheatClass: item.filterdata.classs,
-              date: item.filterdata.date,
-            ).then(
-              (currentData) {
-                item.wheatData = currentData;
-              },
-            ),
+      for (var i = 0; i < watchlist.length; ++i) {
+        if (watchlist[i].type.toLowerCase() == "quality") {
+          await fetchQualityReport(context: context, wheatClass: watchlist[i].filterdata.classs, date: watchlist[i].filterdata.date).then(
+            (value) {
+              QualityWatchListModel qualityWatchListModel = QualityWatchListModel(
+                filterData: watchlist[i].filterdata,
+                current: value?.data?.current,
+                yearAverage: value?.data?.yearAverage,
+                fiveYearAverage: value?.data?.fiveYearAverage,
+                id: watchlist[i].id,
+              );
+              qList.add(qualityWatchListModel);
+            },
           );
         }
       }
-
-      await Future.wait(futures);
-
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void deleteWatchList({
     required BuildContext context,
     required String id,
-    required String wheatClass,
-    required String date,
   }) async {
-    final index = watchlist.indexWhere((item) => item.id == id);
-    if (index != -1) {
-      watchlist.removeAt(index);
-      notifyListeners();
-    }
-
-    String key = "$wheatClass|$date";
-    WatchlistState.watchlistKeys.remove(key);
-
-    try {
-      await DeleteService().deleteWithId(
-        endpoint: ApiEndpoint.removeWatchlist,
-        context: context,
-        id: id,
-      );
-      AppWidgets.appSnackBar(
-        context: context,
-        text: AppStrings.removedFromWatchlist,
-        color: AppColors.c2a8741,
-      );
-    } catch (e) {
-      AppWidgets.appSnackBar(
-        context: context,
-        text: AppStrings.failedToRemove,
-        color: AppColors.cd63a3a,
-      );
-    }
+    await DeleteService()
+        .deleteWithId(
+      endpoint: ApiEndpoint.removeWatchlist,
+      context: context,
+      id: id,
+    )
+        .then(
+      (value) {
+        if (value != null) {
+          AppWidgets.appSnackBar(
+            context: context,
+            text: value.body,
+            color: AppColors.c2a8741,
+          );
+        }
+      },
+    );
   }
 
-  Future<void> fetchChartDataForItem(
-      BuildContext context, WatchlistItem item) async {
+  Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem item) async {
     try {
       if (item.chartData.isNotEmpty) return;
 
@@ -299,8 +243,7 @@ class WatchlistProvider extends ChangeNotifier {
 
       if (graphRes != null) {
         final jsonList = json.decode(graphRes.body) as List;
-        final graphList =
-            jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
+        final graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
 
         final tempChartData = fixedMonths.map((month) {
           final monthEntries = graphList.where((e) {
@@ -314,10 +257,7 @@ class WatchlistProvider extends ChangeNotifier {
             }
           }).toList();
 
-          final avgSales = monthEntries.isNotEmpty
-              ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) /
-                  monthEntries.length
-              : 0.0;
+          final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
 
           return SalesData(month: month, sales: avgSales);
         }).toList();
@@ -330,4 +270,20 @@ class WatchlistProvider extends ChangeNotifier {
       debugPrint('❌ Error fetching chart data for item: $e');
     }
   }
+}
+
+class QualityWatchListModel {
+  final String? id;
+  final FilterData? filterData;
+  final YearAverage? current;
+  final YearAverage? yearAverage;
+  final YearAverage? fiveYearAverage;
+
+  QualityWatchListModel({
+    required this.id,
+    required this.filterData,
+    required this.current,
+    required this.yearAverage,
+    required this.fiveYearAverage,
+  });
 }
