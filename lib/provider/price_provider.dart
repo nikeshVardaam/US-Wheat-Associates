@@ -85,7 +85,11 @@ class PricesProvider extends ChangeNotifier {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
-      zoomMode: ZoomMode.x, // horizontal scroll only
+      maximumZoomLevel: 0.5,        // must be double
+      enableDoubleTapZooming: true,
+      enableDirectionalZooming: true,
+      enableSelectionZooming: true,
+      zoomMode: ZoomMode.xy,
     );
 
     for (var i = 0; i < regionsList.length; ++i) {

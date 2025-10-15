@@ -7,7 +7,6 @@ import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 
-
 class Quality extends StatefulWidget {
   const Quality({super.key});
 
@@ -51,7 +50,12 @@ class _QualityState extends State<Quality> {
                       ),
                       Text(
                         AppStrings.qua,
-                        style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                        style: Theme.of(perentContext)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(
+                                color: AppColors.cFFFFFF,
+                                fontWeight: FontWeight.w800),
                       ),
                     ],
                   ),
@@ -81,7 +85,8 @@ class _QualityState extends State<Quality> {
                         },
                         child: Container(
                           padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(color: Colors.transparent),
+                          decoration:
+                              const BoxDecoration(color: Colors.transparent),
                           child: Row(
                             children: [
                               const Icon(
@@ -92,7 +97,10 @@ class _QualityState extends State<Quality> {
                               const SizedBox(width: 8),
                               Text(
                                 "",
-                                style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(perentContext)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
                                       color: AppColors.c464646,
                                     ),
                               ),
@@ -134,13 +142,17 @@ class _QualityState extends State<Quality> {
                         width: double.infinity,
                         color: AppColors.c95795d.withOpacity(0.1),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 AppStrings.hardRedWinter,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.c2a8741,
                                     ),
@@ -180,13 +192,17 @@ class _QualityState extends State<Quality> {
                         width: double.infinity,
                         color: AppColors.c95795d.withOpacity(0.1),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 AppStrings.softRedWinter,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.c603c16,
                                     ),
@@ -224,13 +240,17 @@ class _QualityState extends State<Quality> {
                       width: double.infinity,
                       color: AppColors.c95795d.withOpacity(0.1),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               AppStrings.softWhite,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.c007aa6,
                                   ),
@@ -269,13 +289,17 @@ class _QualityState extends State<Quality> {
                         width: double.infinity,
                         color: AppColors.c95795d.withOpacity(0.1),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 AppStrings.hardRedSpring,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.cb86a29,
                                     ),
@@ -313,13 +337,17 @@ class _QualityState extends State<Quality> {
                       width: double.infinity,
                       color: AppColors.c95795d.withOpacity(0.1),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               AppStrings.northernDurum,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.cb01c32,
                                   ),
