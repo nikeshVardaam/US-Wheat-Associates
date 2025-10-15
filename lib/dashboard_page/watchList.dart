@@ -20,8 +20,7 @@ class _WatchlistState extends State<Watchlist> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<WatchlistProvider>(context, listen: false)
-          .getWatchList(context: context);
+      Provider.of<WatchlistProvider>(context, listen: false).getWatchList(context: context);
     });
     super.initState();
   }
@@ -479,24 +478,16 @@ class _WatchlistState extends State<Watchlist> {
                         wp.qList.length,
                         (index) {
                           var data = wp.qList[index];
-                          Color c = Color(int.parse(
-                              data.filterData?.color ?? "",
-                              radix: 16));
+                          Color c = Color(int.parse(data.filterData?.color ?? "", radix: 16));
                           return Column(
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  print(index);
-                                  print(wp.watchlist[index].filterdata.date);
-                                  print(wp.watchlist[index].filterdata.classs);
                                   wp.navigateToQualityReport(
-                                      context: context,
-                                      dateTime: wp
-                                          .watchlist[index].filterdata.date
-                                          .toString(),
-                                      wheatClass: wp
-                                          .watchlist[index].filterdata.classs
-                                          .toString());
+                                    context: context,
+                                    dateTime: data.filterData?.date ?? "",
+                                    wheatClass: data.filterData?.classs ?? "",
+                                  );
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -504,69 +495,46 @@ class _WatchlistState extends State<Watchlist> {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 40.0),
+                                    padding: const EdgeInsets.only(bottom: 40.0),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         // Header
                                         Container(
                                           decoration: BoxDecoration(
                                             color: c,
-                                            borderRadius:
-                                                const BorderRadius.vertical(
-                                                    top: Radius.circular(16)),
+                                            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                                           ),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                           child: Row(
                                             children: [
                                               Expanded(
                                                 child: Row(
                                                   children: [
                                                     Text(
-                                                      AppStrings
-                                                          .wheatAssociates,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall
-                                                          ?.copyWith(
-                                                            color: AppColors
-                                                                .cFFFFFF,
+                                                      AppStrings.wheatAssociates,
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                            color: AppColors.cFFFFFF,
                                                           ),
                                                     ),
                                                     Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 4.0),
+                                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                                       child: Container(
                                                         height: 12,
                                                         width: 2,
-                                                        color:
-                                                            AppColors.cFFFFFF,
+                                                        color: AppColors.cFFFFFF,
                                                       ),
                                                     ),
                                                     Text(
-                                                      data.filterData?.region ??
-                                                          "",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall
-                                                          ?.copyWith(
-                                                            color: AppColors
-                                                                .cFFFFFF,
+                                                      data.filterData?.region ?? "",
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                            color: AppColors.cFFFFFF,
                                                           ),
                                                     ),
                                                     Text(
-                                                      data.filterData?.classs ??
-                                                          "",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall
-                                                          ?.copyWith(
-                                                            color: AppColors
-                                                                .cFFFFFF,
+                                                      data.filterData?.classs ?? "",
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                            color: AppColors.cFFFFFF,
                                                           ),
                                                     ),
                                                   ],
@@ -574,9 +542,7 @@ class _WatchlistState extends State<Watchlist> {
                                               ),
                                               GestureDetector(
                                                   onTap: () {
-                                                    wp.deleteWatchList(
-                                                        context: context,
-                                                        id: data.id ?? "");
+                                                    wp.deleteWatchList(context: context, id: data.id ?? "");
                                                   },
                                                   child: SvgPicture.asset(
                                                     AppAssets.fillStar,
@@ -587,201 +553,114 @@ class _WatchlistState extends State<Watchlist> {
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 16),
+                                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
                                           child: Column(
                                             children: [
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     "${AppStrings.currentAverage} :",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .labelSmall
-                                                        ?.copyWith(color: c),
+                                                    style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
                                                   ),
                                                   const SizedBox(height: 8),
                                                   SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
+                                                    scrollDirection: Axis.horizontal,
                                                     child: Row(
                                                       children: [
                                                         // Moisture
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
-                                                              AppStrings
-                                                                  .testWtbbu,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              AppStrings.testWtbbu,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.current
-                                                                      ?.testWtlbbu
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.current?.testWtlbbu.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         // Prot12%mb
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
-                                                              AppStrings
-                                                                  .testWtkghl,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              AppStrings.testWtkghl,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.current
-                                                                      ?.testWtkghl
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.current?.testWtkghl.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         // DryBasisProt%
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
                                                               AppStrings.moist,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.current
-                                                                      ?.moisture
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.current?.moisture.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         // DryBasisProt%
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
                                                               AppStrings.prot12,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.current
-                                                                      ?.prot12Mb
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.current?.prot12Mb.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
                                                               AppStrings.proDb,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.current
-                                                                      ?.dryBasisProt
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.current?.dryBasisProt.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
@@ -796,196 +675,110 @@ class _WatchlistState extends State<Watchlist> {
                                                 height: 4,
                                               ),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     "${AppStrings.fiveYearAverage} :",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .labelSmall
-                                                        ?.copyWith(color: c),
+                                                    style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
                                                   ),
                                                   const SizedBox(height: 8),
                                                   SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
+                                                    scrollDirection: Axis.horizontal,
                                                     child: Row(
                                                       children: [
                                                         // Moisture
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
-                                                              AppStrings
-                                                                  .testWtbbu,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              AppStrings.testWtbbu,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.yearAverage
-                                                                      ?.testWtlbbu
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.yearAverage?.testWtlbbu.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         // Prot12%mb
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
-                                                              AppStrings
-                                                                  .testWtkghl,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              AppStrings.testWtkghl,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.yearAverage
-                                                                      ?.testWtkghl
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.yearAverage?.testWtkghl.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         // DryBasisProt%
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
                                                               AppStrings.moist,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.yearAverage
-                                                                      ?.moisture
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.yearAverage?.moisture.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         // DryBasisProt%
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
                                                               AppStrings.prot12,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.yearAverage
-                                                                      ?.prot12Mb
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.yearAverage?.prot12Mb.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
                                                               AppStrings.proDb,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.yearAverage
-                                                                      ?.dryBasisProt
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.yearAverage?.dryBasisProt.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
@@ -1000,196 +793,110 @@ class _WatchlistState extends State<Watchlist> {
                                                 height: 4,
                                               ),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     "${AppStrings.finalAverage} :",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .labelSmall
-                                                        ?.copyWith(color: c),
+                                                    style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
                                                   ),
                                                   const SizedBox(height: 8),
                                                   SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
+                                                    scrollDirection: Axis.horizontal,
                                                     child: Row(
                                                       children: [
                                                         // Moisture
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
-                                                              AppStrings
-                                                                  .testWtbbu,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              AppStrings.testWtbbu,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.fiveYearAverage
-                                                                      ?.testWtlbbu
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.fiveYearAverage?.testWtlbbu.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         // Prot12%mb
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
-                                                              AppStrings
-                                                                  .testWtkghl,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              AppStrings.testWtkghl,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.fiveYearAverage
-                                                                      ?.testWtkghl
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.fiveYearAverage?.testWtkghl.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         // DryBasisProt%
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
                                                               AppStrings.moist,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.fiveYearAverage
-                                                                      ?.moisture
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.fiveYearAverage?.moisture.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         // DryBasisProt%
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
                                                               AppStrings.prot12,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.fiveYearAverage
-                                                                      ?.prot12Mb
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.fiveYearAverage?.prot12Mb.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )
                                                           ],
                                                         ),
-                                                        const SizedBox(
-                                                            width: 16),
+                                                        const SizedBox(width: 16),
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
                                                               AppStrings.proDb,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: AppColors
-                                                                        .c737373,
+                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                    color: AppColors.c737373,
                                                                   ),
                                                             ),
-                                                            const SizedBox(
-                                                                height: 4),
+                                                            const SizedBox(height: 4),
                                                             Text(
-                                                              data.fiveYearAverage
-                                                                      ?.dryBasisProt
-                                                                      .toString() ??
-                                                                  "--",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge
-                                                                  ?.copyWith(
+                                                              data.fiveYearAverage?.dryBasisProt.toString() ?? "--",
+                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
                                                             )

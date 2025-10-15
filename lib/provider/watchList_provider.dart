@@ -10,7 +10,6 @@ import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
-import 'package:uswheat/utils/app_widgets.dart';
 import '../dashboard_page/quality/estimates/wheat_pages.dart';
 import '../modal/graph_modal.dart';
 import '../modal/sales_modal.dart';
@@ -20,29 +19,16 @@ import 'dashboard_provider.dart';
 
 class WatchlistProvider extends ChangeNotifier {
   List<QualityWatchListModel> qList = [];
+  List<QualityWatchListModel> pList = [];
 
   String? grphcode;
   String? wheatClass;
   String? wheatDate;
 
-  final List<String> fixedMonths = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ];
+  final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   final Map<String, bool> _chartLoadingMap = {};
 
   final Map<String, List<SalesData>> _localChartCache = {};
-  List<WatchlistItem> watchlist = [];
 
   navigateToPriceReport({
     required BuildContext context,
@@ -70,8 +56,7 @@ class WatchlistProvider extends ChangeNotifier {
     String pageName = AppStrings.quality;
     switch (wheatClass) {
       case "HRW":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.hardRedWinter,
@@ -83,8 +68,7 @@ class WatchlistProvider extends ChangeNotifier {
         );
         break;
       case "SRW":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.softRedWinter,
@@ -96,8 +80,7 @@ class WatchlistProvider extends ChangeNotifier {
         );
         break;
       case "SW":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.softWhite,
@@ -109,8 +92,7 @@ class WatchlistProvider extends ChangeNotifier {
         );
         break;
       case "HRS":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.hardRedSpring,
@@ -122,8 +104,7 @@ class WatchlistProvider extends ChangeNotifier {
         );
         break;
       case "durum":
-        Provider.of<DashboardProvider>(context, listen: false)
-            .setChangeActivity(
+        Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             date: dateTime,
             title: AppStrings.northernDurum,
@@ -169,7 +150,6 @@ class WatchlistProvider extends ChangeNotifier {
   }
 
   getWatchList({required BuildContext context}) async {
-    watchlist.clear();
     qList.clear();
     final response = await GetApiServices().get(
       endpoint: ApiEndpoint.getWatchlist,
@@ -179,19 +159,14 @@ class WatchlistProvider extends ChangeNotifier {
 
     if (response != null) {
       final data = jsonDecode(response.body)['data'];
-      watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
+      List<WatchlistItem> watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
       print(watchlist);
 
       for (var i = 0; i < watchlist.length; ++i) {
         if (watchlist[i].type.toLowerCase() == "quality") {
-          await fetchQualityReport(
-                  context: context,
-                  wheatClass: watchlist[i].filterdata.classs,
-                  date: watchlist[i].filterdata.date)
-              .then(
+          await fetchQualityReport(context: context, wheatClass: watchlist[i].filterdata.classs, date: watchlist[i].filterdata.date).then(
             (value) {
-              QualityWatchListModel qualityWatchListModel =
-                  QualityWatchListModel(
+              QualityWatchListModel qualityWatchListModel = QualityWatchListModel(
                 filterData: watchlist[i].filterdata,
                 current: value?.data?.current,
                 yearAverage: value?.data?.yearAverage,
@@ -199,18 +174,9 @@ class WatchlistProvider extends ChangeNotifier {
                 id: watchlist[i].id,
               );
               qList.add(qualityWatchListModel);
-
-              print(watchlist[i].filterdata.classs);
-              print("index $i");
-              print(watchlist[i].filterdata.date);
-              print(watchlist[i].filterdata);
-              print(value?.data?.current);
-              print(value?.data?.yearAverage);
-              print(watchlist[i].id);
-
             },
           );
-        }
+        } else if (watchlist[i].type.toLowerCase() == "price") {}
       }
     }
     notifyListeners();
@@ -236,8 +202,7 @@ class WatchlistProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchChartDataForItem(
-      BuildContext context, WatchlistItem item) async {
+  Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem item) async {
     try {
       if (item.chartData.isNotEmpty) return;
 
@@ -281,8 +246,7 @@ class WatchlistProvider extends ChangeNotifier {
 
       if (graphRes != null) {
         final jsonList = json.decode(graphRes.body) as List;
-        final graphList =
-            jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
+        final graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
 
         final tempChartData = fixedMonths.map((month) {
           final monthEntries = graphList.where((e) {
@@ -296,10 +260,7 @@ class WatchlistProvider extends ChangeNotifier {
             }
           }).toList();
 
-          final avgSales = monthEntries.isNotEmpty
-              ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) /
-                  monthEntries.length
-              : 0.0;
+          final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
 
           return SalesData(month: month, sales: avgSales);
         }).toList();
@@ -327,5 +288,17 @@ class QualityWatchListModel {
     required this.current,
     required this.yearAverage,
     required this.fiveYearAverage,
+  });
+}
+
+class PriceWatchListModel {
+  final String? id;
+  final FilterData? filterData;
+  final List<GraphDataModal>? graphDataList;
+
+  PriceWatchListModel({
+    required this.id,
+    required this.filterData,
+    required this.graphDataList,
   });
 }
