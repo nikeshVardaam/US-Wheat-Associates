@@ -206,7 +206,8 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                           children: [
                             Text(
                               AppStrings.year,
-                              style: Theme.of(perentContext).textTheme.bodyMedium,
+                              style:
+                                  Theme.of(perentContext).textTheme.bodyMedium,
                             ),
                             Expanded(
                               child: CupertinoPicker(
@@ -241,7 +242,8 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                           children: [
                             Text(
                               AppStrings.month,
-                              style: Theme.of(perentContext).textTheme.bodyMedium,
+                              style:
+                                  Theme.of(perentContext).textTheme.bodyMedium,
                             ),
                             Expanded(
                               child: CupertinoPicker(
@@ -281,7 +283,8 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                           children: [
                             Text(
                               AppStrings.day,
-                              style: Theme.of(perentContext).textTheme.bodyMedium,
+                              style:
+                                  Theme.of(perentContext).textTheme.bodyMedium,
                             ),
                             Expanded(
                               child: CupertinoPicker(

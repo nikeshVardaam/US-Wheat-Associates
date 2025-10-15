@@ -55,16 +55,16 @@ class Data {
 class YearAverage {
   String? yearsRange;
   String? yearAverageClass;
-  double? testWtlbbu;
-  double? testWtkghl;
-  double? moisture;
-  double? prot12Mb;
-  double? dryBasisProt;
-  int? dhv;
-  int? hvac;
-  double? fallingNum;
-  int? totalRecords;
-  int? year;
+  num? testWtlbbu;
+  num? testWtkghl;
+  num? moisture;
+  num? prot12Mb;
+  num? dryBasisProt;
+  num? dhv;
+  num? hvac;
+  num? fallingNum;
+  num? totalRecords;
+  num? year;
 
   YearAverage({
     this.yearsRange,

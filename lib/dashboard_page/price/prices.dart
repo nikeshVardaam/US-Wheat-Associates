@@ -377,10 +377,17 @@ class _PricesState extends State<Prices> {
                       ),
                     ),
                   ),
+                  Divider(
+                    thickness: 0.5,
+                    height: 1,
+                    color: AppColors.cB6B6B6,
+                  ),
                   pp.graphDataList.isNotEmpty
                       ? SfCartesianChart(
+
                           tooltipBehavior: TooltipBehavior(enable: true),
                           zoomPanBehavior: pp.zoomPanBehavior,
+                          enableAxisAnimation: true,
                           primaryXAxis: DateTimeAxis(
                             dateFormat: DateFormat('MMM-dd'),
                             intervalType: DateTimeIntervalType.hours,
