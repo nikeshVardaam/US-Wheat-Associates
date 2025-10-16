@@ -10,10 +10,7 @@ class WatchlistModel {
   factory WatchlistModel.fromJson(Map<String, dynamic> json) {
     return WatchlistModel(
       success: json['success'] ?? false,
-      data: (json['data'] as List<dynamic>?)
-              ?.map((e) => WatchlistItem.fromJson(e))
-              .toList() ??
-          [],
+      data: (json['data'] as List<dynamic>?)?.map((e) => WatchlistItem.fromJson(e)).toList() ?? [],
     );
   }
 }
@@ -26,14 +23,9 @@ class Data {
   Data({this.current, this.yearAverage, this.fiveYearAverage});
 
   Data.fromJson(Map<String, dynamic> json) {
-    current =
-        json['current'] != null ? new Current.fromJson(json['current']) : null;
-    yearAverage = json['year_average'] != null
-        ? new YearAverage.fromJson(json['year_average'])
-        : null;
-    fiveYearAverage = json['five_year_average'] != null
-        ? new FiveYearAverage.fromJson(json['five_year_average'])
-        : null;
+    current = json['current'] != null ? new Current.fromJson(json['current']) : null;
+    yearAverage = json['year_average'] != null ? new YearAverage.fromJson(json['year_average']) : null;
+    fiveYearAverage = json['five_year_average'] != null ? new FiveYearAverage.fromJson(json['five_year_average']) : null;
   }
 
   Map<String, dynamic> toJson() {

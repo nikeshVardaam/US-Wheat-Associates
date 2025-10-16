@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uswheat/modal/model_local_watchList.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import '../../modal/watchlist_modal.dart';
 import '../../utils/app_widgets.dart';
-import '../../utils/pref_keys.dart';
 
 class WheatPageProvider extends ChangeNotifier {
   List<int>? uniqueYears = [];
@@ -15,6 +15,8 @@ class WheatPageProvider extends ChangeNotifier {
   String? selectedDate;
   WheatData? current;
   SharedPreferences? sp;
+  String? defaultDate;
+  String? defaultClass;
 
   WheatData? yearAverage;
   WheatData? fiveYearAverage;
@@ -32,16 +34,28 @@ class WheatPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getQualityReport(
-      {required BuildContext context,
-      required String wheatClass,
-      required String date}) async {
+  Future<void> getDefaultDate({required BuildContext context, required String wheatClass}) async {
+    await PostServices().post(endpoint: ApiEndpoint.lastDate, context: context, loader: true, requestData: {"class": wheatClass}, isBottomSheet: false).then(
+      (value) {
+        if (value != null) {
+          var response = jsonDecode(value.body);
+          var data = response["data"];
+          selectedDate = data["last_available_date"].toString();
+          defaultClass = data["class"];
+        }
+      },
+    );
+    notifyListeners();
+  }
+
+  void getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
+    print(date.runtimeType);
     var data = {
       "class": wheatClass,
-      "date": date ?? "",
+      "date": date,
     };
-    print(data);
 
+    print(data);
     await PostServices()
         .post(
       endpoint: ApiEndpoint.qualityReport,
@@ -52,22 +66,14 @@ class WheatPageProvider extends ChangeNotifier {
     )
         .then((value) {
       if (value != null) {
-        print(value.body.toString());
-
         final decoded = json.decode(value.body);
 
         if (decoded['data'] != null) {
           final data = decoded['data'];
 
-          current = data['current'] != null
-              ? WheatData.fromJson(data['current'])
-              : null;
-          yearAverage = data['year_average'] != null
-              ? WheatData.fromJson(data['year_average'])
-              : null;
-          fiveYearAverage = data['five_year_average'] != null
-              ? WheatData.fromJson(data['five_year_average'])
-              : null;
+          current = data['current'] != null ? WheatData.fromJson(data['current']) : null;
+          yearAverage = data['year_average'] != null ? WheatData.fromJson(data['year_average']) : null;
+          fiveYearAverage = data['five_year_average'] != null ? WheatData.fromJson(data['five_year_average']) : null;
 
           notifyListeners();
         }
@@ -75,10 +81,7 @@ class WheatPageProvider extends ChangeNotifier {
     });
   }
 
-  void addWatchList(
-      {required BuildContext context,
-      required String wheatClass,
-      required String color}) {
+  void addWatchList({required BuildContext context, required String wheatClass, required String color}) {
     if (selectedDate == null || selectedDate!.isEmpty) {
       AppWidgets.appSnackBar(
         context: context,
@@ -96,7 +99,6 @@ class WheatPageProvider extends ChangeNotifier {
         "color": color,
       }
     };
-    print(data);
 
     PostServices()
         .post(
@@ -106,8 +108,30 @@ class WheatPageProvider extends ChangeNotifier {
       isBottomSheet: false,
       loader: true,
     )
-        .then((value) {
+        .then((value) async {
       if (value != null) {
+        List<ModelLocalWatchlist> modelLocalWatchList = [];
+        sp = await SharedPreferences.getInstance();
+
+        ModelLocalWatchlist localWatchlist = [] as ModelLocalWatchlist;
+        modelLocalWatchList.add(localWatchlist);
+        sp?.setString(AppStrings.localWatchlist, modelLocalWatchList.toString());
+
+        var strData = sp?.getString(AppStrings.localWatchlist);
+        print(strData.runtimeType);
+        print("tsdbnkfj");
+        List<ModelLocalWatchlist> list = [];
+        list = jsonDecode(strData ?? "");
+        print(list.runtimeType);
+        print(list[0].cls);
+        print(list[0].date);
+        for (var i = 0; i < list.length; ++i) {
+          if (list[i].date != selectedDate && list[i].cls != wheatClass) {
+            localWatchlist =
+                ModelLocalWatchlist(type: "quality", date: selectedDate, cls: wheatClass, yearAverage: current, finalAverage: yearAverage, currentAverage: fiveYearAverage);
+          }
+        }
+
         AppWidgets.appSnackBar(
           context: context,
           text: AppStrings.watchlistAddedSuccessfully,
@@ -118,18 +142,13 @@ class WheatPageProvider extends ChangeNotifier {
     });
   }
 
-  void updateFinalDate(
-      {required String prDate,
-      required BuildContext context,
-      required String wClass}) {
+  void updateFinalDate({required String prDate, required BuildContext context, required String wClass}) {
     clearData();
     if (selectedDate != null) {
       prDate = prDate;
-      getQualityReport(
-          context: context, wheatClass: wClass, date: selectedDate.toString());
+      getQualityReport(context: context, wheatClass: wClass, date: selectedDate.toString());
     } else {
-      getQualityReport(
-          context: context, wheatClass: wClass, date: selectedDate ?? "");
+      getQualityReport(context: context, wheatClass: wClass, date: selectedDate ?? "");
     }
     notifyListeners();
   }

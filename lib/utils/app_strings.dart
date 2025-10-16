@@ -76,7 +76,7 @@ class AppStrings {
   static const select = "Select";
   static const wheatData = "WHEAT DATA";
   static const currentAverage = "Current Avg";
-  static const finalAverage = "Final Avg";
+  static const finalAverage = "Avg";
   static const fiveYearAverage = "5-Year Avg";
   static const lbBu = "TW (lb/bu)";
   static const kgHl = "TW (kg/hl)";
@@ -148,4 +148,5 @@ class AppStrings {
 
   static const syncNewData = "Sync New Data";
   static const dataNotAvailable = "Data Not Available";
+  static const localWatchlist= "LocalWatchlist";
 }

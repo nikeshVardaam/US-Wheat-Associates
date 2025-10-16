@@ -7,7 +7,7 @@ import 'package:uswheat/dashboard_page/calculator.dart';
 import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/dashboard_page/reprts/reports.dart';
-import 'package:uswheat/dashboard_page/watchList.dart';
+import 'package:uswheat/dashboard_page/watch_list/watchList.dart';
 import 'package:uswheat/modal/login_modal.dart';
 import 'package:uswheat/service/delete_service.dart';
 import 'package:uswheat/utils/api_endpoint.dart';

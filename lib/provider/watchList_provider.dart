@@ -19,11 +19,9 @@ import 'dashboard_provider.dart';
 
 class WatchlistProvider extends ChangeNotifier {
   List<QualityWatchListModel> qList = [];
-  List<QualityWatchListModel> pList = [];
+  List<PriceWatchListModel> pList = [];
 
   String? grphcode;
-  String? wheatClass;
-  String? wheatDate;
 
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   final Map<String, bool> _chartLoadingMap = {};
@@ -141,7 +139,6 @@ class WatchlistProvider extends ChangeNotifier {
         qualityReport = QualityReport.fromJson(jsonDecode(value?.body ?? ""));
       },
     );
-
     return qualityReport;
   }
 
@@ -151,6 +148,8 @@ class WatchlistProvider extends ChangeNotifier {
 
   getWatchList({required BuildContext context}) async {
     qList.clear();
+    pList.clear();
+
     final response = await GetApiServices().get(
       endpoint: ApiEndpoint.getWatchlist,
       context: context,
@@ -160,23 +159,37 @@ class WatchlistProvider extends ChangeNotifier {
     if (response != null) {
       final data = jsonDecode(response.body)['data'];
       List<WatchlistItem> watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
-      print(watchlist);
 
       for (var i = 0; i < watchlist.length; ++i) {
         if (watchlist[i].type.toLowerCase() == "quality") {
-          await fetchQualityReport(context: context, wheatClass: watchlist[i].filterdata.classs, date: watchlist[i].filterdata.date).then(
-            (value) {
-              QualityWatchListModel qualityWatchListModel = QualityWatchListModel(
-                filterData: watchlist[i].filterdata,
-                current: value?.data?.current,
-                yearAverage: value?.data?.yearAverage,
-                fiveYearAverage: value?.data?.fiveYearAverage,
-                id: watchlist[i].id,
-              );
-              qList.add(qualityWatchListModel);
-            },
+          // final value = await fetchQualityReport(
+          //   context: context,
+          //   wheatClass: watchlist[i].filterdata.classs.toString(),
+          //   date: watchlist[i].filterdata.date.toString(),
+          // );
+
+          // if (value != null) {
+          final qualityWatchListModel = QualityWatchListModel(
+            current: null,
+            fiveYearAverage: null,
+            yearAverage: null,
+            filterData: watchlist[i].filterdata,
+            // current: value.data?.current,
+            // yearAverage: value.data?.yearAverage,
+            // fiveYearAverage: value.data?.fiveYearAverage,
+            id: watchlist[i].id,
           );
-        } else if (watchlist[i].type.toLowerCase() == "price") {}
+          qList.add(qualityWatchListModel);
+          //}
+          // } else if (watchlist[i].type.toLowerCase() == "price") {
+          final priceWatchListModel = PriceWatchListModel(
+            id: watchlist[i].id,
+            filterData: watchlist[i].filterdata,
+            graphDataList: [],
+          );
+
+          pList.add(priceWatchListModel);
+        }
       }
     }
     notifyListeners();
@@ -202,75 +215,77 @@ class WatchlistProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem item) async {
-    try {
-      if (item.chartData.isNotEmpty) return;
+  Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem? item) async {
+    if (item != null) {
+      try {
+        if (item.chartData.isNotEmpty) return;
 
-      String region = item.filterdata.region;
-      String wclass = item.filterdata.classs;
-      String date = item.filterdata.date;
+        String region = item.filterdata.region;
+        String wclass = item.filterdata.classs;
+        String date = item.filterdata.date;
 
-      if (date.length == 4) date = "$date-01-01";
+        if (date.length == 4) date = "$date-01-01";
 
-      final String cacheKey = "$region|$wclass|$date";
+        final String cacheKey = "$region|$wclass|$date";
 
-      if (_localChartCache.containsKey(cacheKey)) {
-        item.chartData = _localChartCache[cacheKey]!;
-        return;
-      }
-
-      final graphCodeRes = await PostServices().post(
-        endpoint: ApiEndpoint.getGraphCodesByClassAndRegion,
-        requestData: {"class": wclass, "region": region},
-        context: context,
-        isBottomSheet: false,
-        loader: false,
-      );
-
-      if (graphCodeRes != null) {
-        final body = json.decode(graphCodeRes.body);
-        if (body is List && body.isNotEmpty) {
-          grphcode = body.last.toString();
+        if (_localChartCache.containsKey(cacheKey)) {
+          item.chartData = _localChartCache[cacheKey]!;
+          return;
         }
-      }
 
-      if (grphcode == null) return;
+        final graphCodeRes = await PostServices().post(
+          endpoint: ApiEndpoint.getGraphCodesByClassAndRegion,
+          requestData: {"class": wclass, "region": region},
+          context: context,
+          isBottomSheet: false,
+          loader: false,
+        );
 
-      final graphRes = await PostServices().post(
-        endpoint: ApiEndpoint.getGraphData,
-        requestData: {"grphcode": grphcode, "prdate": date},
-        context: context,
-        isBottomSheet: false,
-        loader: false,
-      );
+        if (graphCodeRes != null) {
+          final body = json.decode(graphCodeRes.body);
+          if (body is List && body.isNotEmpty) {
+            grphcode = body.last.toString();
+          }
+        }
 
-      if (graphRes != null) {
-        final jsonList = json.decode(graphRes.body) as List;
-        final graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
+        if (grphcode == null) return;
 
-        final tempChartData = fixedMonths.map((month) {
-          final monthEntries = graphList.where((e) {
-            try {
-              final dateString = e.pRDATE;
-              if (dateString == null || dateString.isEmpty) return false;
-              final d = DateTime.parse(dateString);
-              return DateFormat('MMM').format(d) == month;
-            } catch (_) {
-              return false;
-            }
+        final graphRes = await PostServices().post(
+          endpoint: ApiEndpoint.getGraphData,
+          requestData: {"grphcode": grphcode, "prdate": date},
+          context: context,
+          isBottomSheet: false,
+          loader: false,
+        );
+
+        if (graphRes != null) {
+          final jsonList = json.decode(graphRes.body) as List;
+          final graphList = jsonList.map((e) => GraphDataModal.fromJson(e)).toList();
+
+          final tempChartData = fixedMonths.map((month) {
+            final monthEntries = graphList.where((e) {
+              try {
+                final dateString = e.pRDATE;
+                if (dateString == null || dateString.isEmpty) return false;
+                final d = DateTime.parse(dateString);
+                return DateFormat('MMM').format(d) == month;
+              } catch (_) {
+                return false;
+              }
+            }).toList();
+
+            final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
+
+            return SalesData(month: month, sales: avgSales);
           }).toList();
 
-          final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
+          item.chartData = tempChartData;
 
-          return SalesData(month: month, sales: avgSales);
-        }).toList();
-
-        item.chartData = tempChartData;
-
-        _localChartCache[cacheKey] = tempChartData;
+          _localChartCache[cacheKey] = tempChartData;
+        }
+      } catch (e) {
+        debugPrint('❌ Error fetching chart data for item: $e');
       }
-    } catch (e) {
-      debugPrint('❌ Error fetching chart data for item: $e');
     }
   }
 }
