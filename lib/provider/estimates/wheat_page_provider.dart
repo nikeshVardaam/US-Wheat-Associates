@@ -97,8 +97,8 @@ class WheatPageProvider extends ChangeNotifier {
     if (selectedDate == null || selectedDate!.isEmpty) {
       AppWidgets.appSnackBar(
         context: context,
-        text: AppStrings.pleaseSelectDateBeforeAddingToWatchlist,
         color: AppColors.cd63a3a,
+        text: AppStrings.pleaseSelectDateBeforeAddingToWatchlist,
       );
       return;
     }
@@ -140,6 +140,7 @@ class WheatPageProvider extends ChangeNotifier {
 
           for (var i = 0; i < localWatchList.length; ++i) {
             if (localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
+              print(localWatchList[i].cls);
               ifModalHasInList = true;
               break;
             }

@@ -24,6 +24,7 @@ class WatchlistProvider extends ChangeNotifier {
   List<QualityWatchListModel> qList = [];
   List<PriceWatchListModel> pList = [];
   SharedPreferences? sp;
+  List<ModelLocalWatchlistData> localList = [];
 
   String? grphcode;
 
@@ -46,6 +47,20 @@ class WatchlistProvider extends ChangeNotifier {
       ),
       pageName: AppStrings.price,
     );
+  }
+
+  getPrefData() async {
+    localList.clear();
+    sp = await SharedPreferences.getInstance();
+
+    var data = sp?.getString(PrefKeys.watchList);
+
+    List<dynamic> list = jsonDecode(data.toString()) ?? [];
+    for (var i = 0; i < list.length; ++i) {
+      ModelLocalWatchlistData m = ModelLocalWatchlistData.fromJson(list[i]);
+      localList.add(m);
+    }
+    notifyListeners();
   }
 
   navigateToQualityReport({
@@ -126,49 +141,16 @@ class WatchlistProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<QualityReport?> fetchQualityReport({
-    required BuildContext context,
-    required String wheatClass,
-    required String date,
-  }) async {
-    QualityReport? qualityReport;
-
-    final data = {"class": wheatClass, "date": date};
-
-    await PostServices()
-        .post(
-      endpoint: ApiEndpoint.qualityReport,
-      requestData: data,
-      context: context,
-      isBottomSheet: false,
-      loader: false,
-    )
-        .then(
-      (value) {
-        qualityReport = QualityReport.fromJson(jsonDecode(value?.body ?? ""));
-      },
-    );
-    return qualityReport;
-  }
-
   void setChartLoadingForItem(String itemId, bool isLoading) {
     _chartLoadingMap[itemId] = isLoading;
   }
 
-  Future<ModelLocalWatchlistData?> getDataFromPrefData({required String date, required String cls, required String type}) async {
+  getDataFromPrefData({required String date, required String cls, required String type}) async {
     ModelLocalWatchlistData? modelLocalWatchlistData;
-    sp = await SharedPreferences.getInstance();
-    var data = sp?.getString(PrefKeys.watchList);
 
-    List<dynamic> list = jsonDecode(data ?? "");
-
-    for (var i = 0; i < list.length; ++i) {
-      ModelLocalWatchlistData m = ModelLocalWatchlistData.fromJson(list[i]);
-
-      print(m.toJson());
-
-      if (m.type == type && m.date == date && m.cls == cls) {
-        modelLocalWatchlistData = m;
+    for (var i = 0; i < localList.length; ++i) {
+      if (localList[i].type == type && localList[i].date == date && localList[i].cls == cls) {
+        modelLocalWatchlistData = localList[i];
       }
     }
     return modelLocalWatchlistData;
@@ -177,7 +159,7 @@ class WatchlistProvider extends ChangeNotifier {
   deleteFromPrefData({required String date, required String cls, required String type}) async {
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.watchList);
-    List<dynamic> list = jsonDecode(data ?? "");
+    List<dynamic> list = jsonDecode(data.toString());
     for (var i = 0; i < list.length; ++i) {
       ModelLocalWatchlistData m = ModelLocalWatchlistData.fromJson(list[i]);
       if (m.type == type && m.date == date && m.cls == cls) {
@@ -188,6 +170,8 @@ class WatchlistProvider extends ChangeNotifier {
   }
 
   getWatchList({required BuildContext context}) async {
+    sp = await SharedPreferences.getInstance();
+
     qList.clear();
     pList.clear();
 
@@ -216,7 +200,7 @@ class WatchlistProvider extends ChangeNotifier {
               qList.add(q);
             },
           );
-        } else {}
+        }
       }
     }
     notifyListeners();
