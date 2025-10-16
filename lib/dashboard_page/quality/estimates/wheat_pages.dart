@@ -31,10 +31,7 @@ class WheatPages extends StatefulWidget {
 class _WheatPagesState extends State<WheatPages> {
   defaultData() async {
     final wp = context.read<WheatPageProvider>();
-
-    if (widget.fromWatchList) {
-      wp.getPrefData();
-    }
+    ;
     await wp.getDefaultDate(context: context, wheatClass: widget.selectedClass).then(
       (value) {
         wp.updateFinalDate(prDate: wp.defaultDate.toString(), context: context, wClass: wp.defaultClass.toString());
@@ -44,9 +41,9 @@ class _WheatPagesState extends State<WheatPages> {
 
   @override
   void initState() {
-    final wp = context.read<WheatPageProvider>();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final wp = context.read<WheatPageProvider>();
+      wp.getPrefData();
       if (widget.selectedClass.isEmpty && widget.date.isEmpty) {
         defaultData();
       } else {

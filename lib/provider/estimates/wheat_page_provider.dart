@@ -54,8 +54,6 @@ class WheatPageProvider extends ChangeNotifier {
       "class": wheatClass,
       "date": date,
     };
-
-    print(data);
     await PostServices()
         .post(
       endpoint: ApiEndpoint.qualityReport,
@@ -82,14 +80,16 @@ class WheatPageProvider extends ChangeNotifier {
   }
 
   getPrefData() async {
+    localWatchList.clear();
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.watchList);
+    if (data != null) {
+      List<dynamic> list = jsonDecode(data ?? "");
 
-    List<dynamic> list = jsonDecode(data ?? "");
-
-    for (var i = 0; i < list.length; ++i) {
-      ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
-      localWatchList.add(modelLocalWatchlistData);
+      for (var i = 0; i < list.length; ++i) {
+        ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
+        localWatchList.add(modelLocalWatchlistData);
+      }
     }
   }
 
@@ -145,6 +145,8 @@ class WheatPageProvider extends ChangeNotifier {
               break;
             }
           }
+
+          print(ifModalHasInList);
 
           if (ifModalHasInList) {
             for (var i = 0; i < localWatchList.length; ++i) {

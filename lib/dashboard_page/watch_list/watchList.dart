@@ -20,7 +20,6 @@ class Watchlist extends StatefulWidget {
 class _WatchlistState extends State<Watchlist> {
   @override
   void initState() {
-    Provider.of<WatchlistProvider>(context, listen: false).getPrefData();
     Provider.of<WatchlistProvider>(context, listen: false).getWatchList(context: context);
     super.initState();
   }
