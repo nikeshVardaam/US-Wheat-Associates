@@ -1,6 +1,26 @@
 import 'package:uswheat/modal/watchlist_modal.dart';
 
 class ModelLocalWatchlist {
+  List<ModelLocalWatchlistData>? list;
+
+  ModelLocalWatchlist.fromJson(Map<String, dynamic> json) {
+    if (json['list'] != null && json['list'] is List) {
+      list = (json['list'] as List).map((v) => ModelLocalWatchlistData.fromJson(v)).toList();
+    } else {
+      list = [];
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (list != null) {
+      data['list'] = list!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class ModelLocalWatchlistData {
   String? type;
   String? date;
   String? cls;
@@ -8,7 +28,7 @@ class ModelLocalWatchlist {
   WheatData? finalAverage;
   WheatData? currentAverage;
 
-  ModelLocalWatchlist({
+  ModelLocalWatchlistData({
     required this.type,
     required this.date,
     required this.cls,
@@ -17,8 +37,8 @@ class ModelLocalWatchlist {
     required this.currentAverage,
   });
 
-  factory ModelLocalWatchlist.fromJson(Map<String, dynamic> json) {
-    return ModelLocalWatchlist(
+  factory ModelLocalWatchlistData.fromJson(Map<String, dynamic> json) {
+    return ModelLocalWatchlistData(
       type: json['type'] as String?,
       date: json['date'] as String?,
       cls: json['cls'] as String?,

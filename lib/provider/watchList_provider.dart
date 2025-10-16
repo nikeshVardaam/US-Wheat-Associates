@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/dashboard_page/price/prices.dart';
+import 'package:uswheat/modal/model_local_watchList.dart';
 import 'package:uswheat/modal/quality_report_modal.dart';
 import 'package:uswheat/modal/watchlist_modal.dart' hide YearAverage;
 import 'package:uswheat/service/delete_service.dart';
@@ -10,6 +12,7 @@ import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
+import 'package:uswheat/utils/pref_keys.dart';
 import '../dashboard_page/quality/estimates/wheat_pages.dart';
 import '../modal/graph_modal.dart';
 import '../modal/sales_modal.dart';
@@ -20,6 +23,7 @@ import 'dashboard_provider.dart';
 class WatchlistProvider extends ChangeNotifier {
   List<QualityWatchListModel> qList = [];
   List<PriceWatchListModel> pList = [];
+  SharedPreferences? sp;
 
   String? grphcode;
 
@@ -56,6 +60,7 @@ class WatchlistProvider extends ChangeNotifier {
       case "HRW":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
+            fromWatchList: true,
             date: dateTime,
             title: AppStrings.hardRedWinter,
             appBarColor: AppColors.c2a8741,
@@ -68,6 +73,7 @@ class WatchlistProvider extends ChangeNotifier {
       case "SRW":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
+            fromWatchList: true,
             date: dateTime,
             title: AppStrings.softRedWinter,
             appBarColor: AppColors.c603c16,
@@ -80,6 +86,7 @@ class WatchlistProvider extends ChangeNotifier {
       case "SW":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
+            fromWatchList: true,
             date: dateTime,
             title: AppStrings.softWhite,
             appBarColor: AppColors.c007aa6,
@@ -92,6 +99,7 @@ class WatchlistProvider extends ChangeNotifier {
       case "HRS":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
+            fromWatchList: true,
             date: dateTime,
             title: AppStrings.hardRedSpring,
             appBarColor: AppColors.cb86a29,
@@ -104,6 +112,7 @@ class WatchlistProvider extends ChangeNotifier {
       case "durum":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
+            fromWatchList: true,
             date: dateTime,
             title: AppStrings.northernDurum,
             appBarColor: AppColors.cb01c32,
@@ -146,6 +155,38 @@ class WatchlistProvider extends ChangeNotifier {
     _chartLoadingMap[itemId] = isLoading;
   }
 
+  Future<ModelLocalWatchlistData?> getDataFromPrefData({required String date, required String cls, required String type}) async {
+    ModelLocalWatchlistData? modelLocalWatchlistData;
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+
+    List<dynamic> list = jsonDecode(data ?? "");
+
+    for (var i = 0; i < list.length; ++i) {
+      ModelLocalWatchlistData m = ModelLocalWatchlistData.fromJson(list[i]);
+
+      print(m.toJson());
+
+      if (m.type == type && m.date == date && m.cls == cls) {
+        modelLocalWatchlistData = m;
+      }
+    }
+    return modelLocalWatchlistData;
+  }
+
+  deleteFromPrefData({required String date, required String cls, required String type}) async {
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+    List<dynamic> list = jsonDecode(data ?? "");
+    for (var i = 0; i < list.length; ++i) {
+      ModelLocalWatchlistData m = ModelLocalWatchlistData.fromJson(list[i]);
+      if (m.type == type && m.date == date && m.cls == cls) {
+        list.removeAt(i);
+        break;
+      }
+    }
+  }
+
   getWatchList({required BuildContext context}) async {
     qList.clear();
     pList.clear();
@@ -162,34 +203,20 @@ class WatchlistProvider extends ChangeNotifier {
 
       for (var i = 0; i < watchlist.length; ++i) {
         if (watchlist[i].type.toLowerCase() == "quality") {
-          // final value = await fetchQualityReport(
-          //   context: context,
-          //   wheatClass: watchlist[i].filterdata.classs.toString(),
-          //   date: watchlist[i].filterdata.date.toString(),
-          // );
+          await getDataFromPrefData(date: watchlist[i].filterdata.date, cls: watchlist[i].filterdata.classs, type: "quality").then(
+            (value) {
+              QualityWatchListModel q = QualityWatchListModel(
+                id: watchlist[i].id,
+                filterData: watchlist[i].filterdata,
+                current: value?.currentAverage,
+                yearAverage: value?.yearAverage,
+                fiveYearAverage: value?.finalAverage,
+              );
 
-          // if (value != null) {
-          final qualityWatchListModel = QualityWatchListModel(
-            current: null,
-            fiveYearAverage: null,
-            yearAverage: null,
-            filterData: watchlist[i].filterdata,
-            // current: value.data?.current,
-            // yearAverage: value.data?.yearAverage,
-            // fiveYearAverage: value.data?.fiveYearAverage,
-            id: watchlist[i].id,
+              qList.add(q);
+            },
           );
-          qList.add(qualityWatchListModel);
-          //}
-          // } else if (watchlist[i].type.toLowerCase() == "price") {
-          final priceWatchListModel = PriceWatchListModel(
-            id: watchlist[i].id,
-            filterData: watchlist[i].filterdata,
-            graphDataList: [],
-          );
-
-          pList.add(priceWatchListModel);
-        }
+        } else {}
       }
     }
     notifyListeners();
@@ -198,6 +225,9 @@ class WatchlistProvider extends ChangeNotifier {
   void deleteWatchList({
     required BuildContext context,
     required String id,
+    required String date,
+    required String cls,
+    required String type,
   }) async {
     await DeleteService()
         .deleteWithId(
@@ -208,6 +238,8 @@ class WatchlistProvider extends ChangeNotifier {
         .then(
       (value) {
         if (value != null) {
+          deleteFromPrefData(date: date, cls: cls, type: type);
+
           getWatchList(context: context);
         }
       },
@@ -293,9 +325,9 @@ class WatchlistProvider extends ChangeNotifier {
 class QualityWatchListModel {
   final String? id;
   final FilterData? filterData;
-  final YearAverage? current;
-  final YearAverage? yearAverage;
-  final YearAverage? fiveYearAverage;
+  final WheatData? current;
+  final WheatData? yearAverage;
+  final WheatData? fiveYearAverage;
 
   QualityWatchListModel({
     required this.id,

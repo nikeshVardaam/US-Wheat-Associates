@@ -324,4 +324,17 @@ class WheatData {
       fallingNumber: json['FallingNumber']?.toString(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'testWtlbbu': testWtlbbu,
+      'testWtkghl': testWtkghl,
+      'Moisture%': moisture,
+      'Prot12%mb': prot12Mb,
+      'DryBasisProt%': dryBasisProt,
+      'DHV': dhv,
+      'HVAC': hvac,
+      'FallingNumber': fallingNumber,
+    };
+  }
 }

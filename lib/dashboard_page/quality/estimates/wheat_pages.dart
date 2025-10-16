@@ -17,10 +17,12 @@ class WheatPages extends StatefulWidget {
   final String title;
   final Color appBarColor;
   final String imageAsset;
-  String selectedClass;
-  String date;
+  final String selectedClass;
+  final String date;
+  final bool fromWatchList;
 
-  WheatPages({super.key, required this.title, required this.appBarColor, required this.date, required this.imageAsset, required this.selectedClass});
+  const WheatPages(
+      {super.key, required this.title, required this.fromWatchList, required this.appBarColor, required this.date, required this.imageAsset, required this.selectedClass});
 
   @override
   State<WheatPages> createState() => _WheatPagesState();
@@ -29,6 +31,10 @@ class WheatPages extends StatefulWidget {
 class _WheatPagesState extends State<WheatPages> {
   defaultData() async {
     final wp = context.read<WheatPageProvider>();
+
+    if (widget.fromWatchList) {
+      wp.getPrefData();
+    }
     await wp.getDefaultDate(context: context, wheatClass: widget.selectedClass).then(
       (value) {
         wp.updateFinalDate(prDate: wp.defaultDate.toString(), context: context, wClass: wp.defaultClass.toString());

@@ -6,6 +6,7 @@ import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_strings.dart';
+import 'package:uswheat/utils/pref_keys.dart';
 import '../../modal/watchlist_modal.dart';
 import '../../utils/app_widgets.dart';
 
@@ -17,7 +18,7 @@ class WheatPageProvider extends ChangeNotifier {
   SharedPreferences? sp;
   String? defaultDate;
   String? defaultClass;
-
+  List<ModelLocalWatchlistData> localWatchList = [];
   WheatData? yearAverage;
   WheatData? fiveYearAverage;
 
@@ -49,7 +50,6 @@ class WheatPageProvider extends ChangeNotifier {
   }
 
   void getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
-    print(date.runtimeType);
     var data = {
       "class": wheatClass,
       "date": date,
@@ -81,6 +81,18 @@ class WheatPageProvider extends ChangeNotifier {
     });
   }
 
+  getPrefData() async {
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+
+    List<dynamic> list = jsonDecode(data ?? "");
+
+    for (var i = 0; i < list.length; ++i) {
+      ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
+      localWatchList.add(modelLocalWatchlistData);
+    }
+  }
+
   void addWatchList({required BuildContext context, required String wheatClass, required String color}) {
     if (selectedDate == null || selectedDate!.isEmpty) {
       AppWidgets.appSnackBar(
@@ -110,34 +122,61 @@ class WheatPageProvider extends ChangeNotifier {
     )
         .then((value) async {
       if (value != null) {
-        List<ModelLocalWatchlist> modelLocalWatchList = [];
-        sp = await SharedPreferences.getInstance();
+        if (localWatchList.isEmpty) {
+          ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+            type: "quality",
+            date: selectedDate,
+            cls: wheatClass,
+            yearAverage: yearAverage,
+            finalAverage: fiveYearAverage,
+            currentAverage: current,
+          );
 
-        ModelLocalWatchlist localWatchlist = [] as ModelLocalWatchlist;
-        modelLocalWatchList.add(localWatchlist);
-        sp?.setString(AppStrings.localWatchlist, modelLocalWatchList.toString());
+          localWatchList.add(modelLocalWatchlist);
 
-        var strData = sp?.getString(AppStrings.localWatchlist);
-        print(strData.runtimeType);
-        print("tsdbnkfj");
-        List<ModelLocalWatchlist> list = [];
-        list = jsonDecode(strData ?? "");
-        print(list.runtimeType);
-        print(list[0].cls);
-        print(list[0].date);
-        for (var i = 0; i < list.length; ++i) {
-          if (list[i].date != selectedDate && list[i].cls != wheatClass) {
-            localWatchlist =
-                ModelLocalWatchlist(type: "quality", date: selectedDate, cls: wheatClass, yearAverage: current, finalAverage: yearAverage, currentAverage: fiveYearAverage);
+          sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+        } else {
+          bool ifModalHasInList = false;
+
+          for (var i = 0; i < localWatchList.length; ++i) {
+            if (localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
+              ifModalHasInList = true;
+              break;
+            }
           }
+
+          if (ifModalHasInList) {
+            for (var i = 0; i < localWatchList.length; ++i) {
+              if (localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
+                ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+                  type: "quality",
+                  date: selectedDate,
+                  cls: wheatClass,
+                  yearAverage: yearAverage,
+                  finalAverage: fiveYearAverage,
+                  currentAverage: current,
+                );
+                localWatchList[i] = modelLocalWatchlist;
+                notifyListeners();
+                break;
+              }
+            }
+          } else {
+            ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+              type: "quality",
+              date: selectedDate,
+              cls: wheatClass,
+              yearAverage: yearAverage,
+              finalAverage: fiveYearAverage,
+              currentAverage: current,
+            );
+            localWatchList.add(modelLocalWatchlist);
+          }
+
+          sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
         }
 
-        AppWidgets.appSnackBar(
-          context: context,
-          text: AppStrings.watchlistAddedSuccessfully,
-          color: AppColors.c2a8741,
-        );
-        notifyListeners();
+        AppWidgets.appSnackBar(context: context, text: AppStrings.added, color: AppColors.c2a8741);
       }
     });
   }

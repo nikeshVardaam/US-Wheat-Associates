@@ -93,6 +93,7 @@ class AppStrings {
   static const lastPrDate = "LAST PR DATE:";
   static const fwdPrice = "FWD PRICE";
   static const account = "ACCOUNT";
+  static const added = "Added";
   static const pages = "PAGES";
   static const classs = "Class";
   static const testWtkghl = "TW kg/hl";

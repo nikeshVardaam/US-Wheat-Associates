@@ -477,7 +477,6 @@ class _WatchlistState extends State<Watchlist> {
                           children: List.generate(
                         wp.qList.length,
                         (index) {
-                          print(index);
                           var data = wp.qList[index];
                           Color c = Color(int.parse(data.filterData?.color ?? "", radix: 16));
                           return Column(
@@ -543,7 +542,13 @@ class _WatchlistState extends State<Watchlist> {
                                               ),
                                               GestureDetector(
                                                   onTap: () {
-                                                    wp.deleteWatchList(context: context, id: data.id ?? "");
+                                                    wp.deleteWatchList(
+                                                      context: context,
+                                                      id: data.id ?? "",
+                                                      date: data.filterData?.date ?? "",
+                                                      cls: data.filterData?.classs ?? "",
+                                                      type: "quality",
+                                                    );
                                                   },
                                                   child: SvgPicture.asset(
                                                     AppAssets.fillStar,
@@ -973,14 +978,7 @@ class _WatchlistState extends State<Watchlist> {
                                               ),
                                             ),
                                             GestureDetector(
-                                              onTap: () {
-                                                wp.deleteWatchList(
-                                                  context: context,
-                                                  id: data.id ?? "",
-                                                  // wheatClass: data.filterData?.classs,
-                                                  // date: data.filterdata.date,
-                                                );
-                                              },
+                                              onTap: () {},
                                               child: SvgPicture.asset(
                                                 AppAssets.fillStar,
                                                 height: 30,
