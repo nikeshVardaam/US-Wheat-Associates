@@ -207,22 +207,27 @@ class WatchlistProvider extends ChangeNotifier {
       final data = jsonDecode(response.body)['data'];
       List<WatchlistItem> watchlist = (data as List).map((e) => WatchlistItem.fromJson(e)).toList();
 
-      for (var i = 0; i < watchlist.length; ++i) {
-        if (watchlist[i].type.toLowerCase() == "quality") {
-          await getDataFromLocalList(date: watchlist[i].filterdata.date, cls: watchlist[i].filterdata.classs, type: "quality").then(
-            (value) {
-              QualityWatchListModel q = QualityWatchListModel(
-                id: watchlist[i].id,
-                filterData: watchlist[i].filterdata,
-                current: value?.currentAverage,
-                yearAverage: value?.yearAverage,
-                fiveYearAverage: value?.finalAverage,
-              );
+      if (watchlist.isNotEmpty) {
+        for (var i = 0; i < watchlist.length; ++i) {
+          if (watchlist[i].type.toLowerCase() == "quality") {
+            await getDataFromLocalList(date: watchlist[i].filterdata.date, cls: watchlist[i].filterdata.classs, type: "quality").then(
+              (value) {
+                QualityWatchListModel q = QualityWatchListModel(
+                  id: watchlist[i].id,
+                  filterData: watchlist[i].filterdata,
+                  current: value?.currentAverage,
+                  yearAverage: value?.yearAverage,
+                  fiveYearAverage: value?.finalAverage,
+                );
 
-              qList.add(q);
-            },
-          );
+                qList.add(q);
+              },
+            );
+          }
         }
+      } else {
+        localWatchList.clear();
+        sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
       }
     }
     notifyListeners();
