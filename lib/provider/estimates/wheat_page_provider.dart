@@ -35,6 +35,12 @@ class WheatPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  initFromWatchlist({required BuildContext context, required String date, required String cls}) {
+    getQualityReport(date: date, context: context, wheatClass: cls).then((value) {
+      updateLocalWatchlist(cls: cls, date: date, context: context);
+    });
+  }
+
   Future<void> getDefaultDate({required BuildContext context, required String wheatClass}) async {
     await PostServices().post(endpoint: ApiEndpoint.lastDate, context: context, loader: true, requestData: {"class": wheatClass}, isBottomSheet: false).then(
       (value) {
@@ -50,34 +56,44 @@ class WheatPageProvider extends ChangeNotifier {
   }
 
   Future<void> updateLocalWatchlist({required String cls, required String date, required BuildContext context}) async {
-    List<ModelLocalWatchlistData> localList = [];
-    sp = await SharedPreferences.getInstance();
-
-    var data = sp?.getString(PrefKeys.watchList);
-
-    List<dynamic> list = jsonDecode(data.toString()) ?? [];
-    for (var i = 0; i < list.length; ++i) {
-      ModelLocalWatchlistData m = ModelLocalWatchlistData.fromJson(list[i]);
-      localList.add(m);
-    }
-
-    for (var i = 0; i < localList.length; ++i) {
-      if (localList[i].type == "quality" && localList[i].date == date && localList[i].cls == cls) {
-        ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
-          type: "quality",
-          date: date,
-          cls: cls,
-          yearAverage: yearAverage,
-          finalAverage: fiveYearAverage,
-          currentAverage: current,
-        );
-        localList.add(modelLocalWatchlist);
-        break;
-      }else{
-        print("Nikesh Here");
+    if (localWatchList.isNotEmpty) {
+      for (var i = 0; i < localWatchList.length; ++i) {
+        if (localWatchList[i].type == "quality" && localWatchList[i].date == date && localWatchList[i].cls == cls) {
+          ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+            type: "quality",
+            date: date,
+            cls: cls,
+            yearAverage: yearAverage,
+            finalAverage: fiveYearAverage,
+            currentAverage: current,
+          );
+          localWatchList.add(modelLocalWatchlist);
+          break;
+        } else {
+          ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+            type: "quality",
+            date: date,
+            cls: cls,
+            yearAverage: yearAverage,
+            finalAverage: fiveYearAverage,
+            currentAverage: current,
+          );
+          localWatchList.add(modelLocalWatchlist);
+        }
       }
+    } else {
+      ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+        type: "quality",
+        date: date,
+        cls: cls,
+        yearAverage: yearAverage,
+        finalAverage: fiveYearAverage,
+        currentAverage: current,
+      );
+      localWatchList.add(modelLocalWatchlist);
     }
-    sp?.setString(PrefKeys.watchList, jsonEncode(localList));
+
+    sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
   }
 
   Future<void> getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
