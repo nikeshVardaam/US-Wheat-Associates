@@ -220,6 +220,7 @@ class WatchlistProvider extends ChangeNotifier {
                   fiveYearAverage: value?.finalAverage,
                 );
 
+
                 qList.add(q);
               },
             );
