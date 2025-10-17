@@ -48,16 +48,15 @@ class WatchlistProvider extends ChangeNotifier {
     );
   }
 
-
-
   navigateToQualityReport({
     required BuildContext context,
     required String dateTime,
     required String wheatClass,
-  }) {
+  }) async {
     String pageName = AppStrings.quality;
     switch (wheatClass) {
       case "HRW":
+        await updateInPref(cls: wheatClass, date: dateTime);
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             fromWatchList: true,
@@ -151,6 +150,7 @@ class WatchlistProvider extends ChangeNotifier {
   }
 
   deleteFromPrefData({required String date, required String cls, required String type}) async {
+    sp = await SharedPreferences.getInstance();
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.watchList);
     if (data != null) {
@@ -299,6 +299,12 @@ class WatchlistProvider extends ChangeNotifier {
         debugPrint('❌ Error fetching chart data for item: $e');
       }
     }
+  }
+
+  Future<void> updateInPref({required String cls, required String date}) async {
+
+
+
   }
 }
 

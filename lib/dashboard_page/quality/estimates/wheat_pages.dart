@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/provider/estimates/wheat_page_provider.dart';
@@ -8,6 +11,7 @@ import 'package:uswheat/provider/watchList_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
+import '../../../modal/model_local_watchList.dart';
 import '../../../provider/price_provider.dart';
 import '../../../utils/app_box_decoration.dart';
 import '../../../utils/common_date_picker.dart';
@@ -29,26 +33,22 @@ class WheatPages extends StatefulWidget {
 }
 
 class _WheatPagesState extends State<WheatPages> {
-  defaultData() async {
-    final wp = context.read<WheatPageProvider>();
-    ;
-    await wp.getDefaultDate(context: context, wheatClass: widget.selectedClass).then(
-      (value) {
-        wp.updateFinalDate(prDate: wp.defaultDate.toString(), context: context, wClass: wp.defaultClass.toString());
-      },
-    );
-  }
-
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final wp = context.read<WheatPageProvider>();
-      wp.getPrefData();
-      if (widget.selectedClass.isEmpty && widget.date.isEmpty) {
-        defaultData();
+      if (widget.fromWatchList) {
+        wp.getQualityReport(date: widget.date, context: context, wheatClass: widget.selectedClass).then((value) {
+          wp.updateLocalWatchlist(cls: widget.selectedClass, date: widget.date, context: context);
+        });
       } else {
-        // wp.(prDate: widget.date.toString(), context: context, wClass: widget.selectedClass);
+        wp.getDefaultDate(context: context, wheatClass: widget.selectedClass).then(
+          (value) {
+            wp.updateFinalDate(prDate: wp.selectedDate.toString(), context: context, wClass: wp.defaultClass.toString());
+          },
+        );
       }
+      wp.getPrefData();
     });
     super.initState();
   }

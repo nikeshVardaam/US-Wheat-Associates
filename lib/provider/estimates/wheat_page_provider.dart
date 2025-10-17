@@ -49,7 +49,38 @@ class WheatPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
+  Future<void> updateLocalWatchlist({required String cls, required String date, required BuildContext context}) async {
+    List<ModelLocalWatchlistData> localList = [];
+    sp = await SharedPreferences.getInstance();
+
+    var data = sp?.getString(PrefKeys.watchList);
+
+    List<dynamic> list = jsonDecode(data.toString()) ?? [];
+    for (var i = 0; i < list.length; ++i) {
+      ModelLocalWatchlistData m = ModelLocalWatchlistData.fromJson(list[i]);
+      localList.add(m);
+    }
+
+    for (var i = 0; i < localList.length; ++i) {
+      if (localList[i].type == "quality" && localList[i].date == date && localList[i].cls == cls) {
+        ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+          type: "quality",
+          date: date,
+          cls: cls,
+          yearAverage: yearAverage,
+          finalAverage: fiveYearAverage,
+          currentAverage: current,
+        );
+        localList.add(modelLocalWatchlist);
+        break;
+      }else{
+        print("Nikesh Here");
+      }
+    }
+    sp?.setString(PrefKeys.watchList, jsonEncode(localList));
+  }
+
+  Future<void> getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
     var data = {
       "class": wheatClass,
       "date": date,
@@ -140,13 +171,10 @@ class WheatPageProvider extends ChangeNotifier {
 
           for (var i = 0; i < localWatchList.length; ++i) {
             if (localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
-              print(localWatchList[i].cls);
               ifModalHasInList = true;
               break;
             }
           }
-
-          print(ifModalHasInList);
 
           if (ifModalHasInList) {
             for (var i = 0; i < localWatchList.length; ++i) {

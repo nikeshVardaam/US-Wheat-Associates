@@ -7,7 +7,6 @@ import 'package:uswheat/modal/graph_modal.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
-import '../../modal/sales_modal.dart';
 import '../../provider/watchList_provider.dart';
 
 class Watchlist extends StatefulWidget {
