@@ -20,7 +20,6 @@ class WheatPageProvider extends ChangeNotifier {
   List<ModelLocalWatchlistData> localWatchList = [];
   WheatData? yearAverage;
   WheatData? fiveYearAverage;
-
   bool isLoading = false;
 
   void clearData() {
@@ -29,20 +28,22 @@ class WheatPageProvider extends ChangeNotifier {
     fiveYearAverage = null;
   }
 
-  void updatedDate({required String date}) {
+  void updatedDate({required String date, required BuildContext context}) {
     selectedDate = date;
+    getQualityReport(context: context);
+    checkLocalWatchlist();
     notifyListeners();
   }
 
-  initFromWatchlist({required BuildContext context, required String date, required String cls}) {
-    getQualityReport(date: date, context: context, wheatClass: cls).then((value) {
-      updateLocalWatchlist(cls: cls, date: date, context: context);
+  initFromWatchlist({required BuildContext context}) {
+    getQualityReport(context: context).then((value) {
+      updateLocalWatchlist(context: context);
     });
     checkLocalWatchlist();
   }
 
-  Future<void> getDefaultDate({required BuildContext context, required String wheatClass}) async {
-    await PostServices().post(endpoint: ApiEndpoint.lastDate, context: context, loader: true, requestData: {"class": wheatClass}, isBottomSheet: false).then(
+  Future<void> getDefaultDate({required BuildContext context}) async {
+    await PostServices().post(endpoint: ApiEndpoint.lastDate, context: context, loader: true, requestData: {"class": selectedClass}, isBottomSheet: false).then(
       (value) {
         if (value != null) {
           var response = jsonDecode(value.body);
@@ -52,14 +53,35 @@ class WheatPageProvider extends ChangeNotifier {
         }
       },
     );
-    checkLocalWatchlist();
-    notifyListeners();
+
+    await getQualityReport(context: context).then(
+      (value) {
+        checkLocalWatchlist();
+        notifyListeners();
+      },
+    );
   }
 
   void checkLocalWatchlist() async {
-    alreadyHasInWatchlist=false;
-    for (var i = 0; i < localWatchList.length; ++i) {
-      if (localWatchList[i].type == "quality" && localWatchList[i].date == selectedDate && localWatchList[i].cls == selectedClass) {
+    alreadyHasInWatchlist = false;
+
+    List<ModelLocalWatchlistData> localList = [];
+
+    notifyListeners();
+
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+    if (data != null) {
+      List<dynamic> list = jsonDecode(data ?? "");
+
+      for (var i = 0; i < list.length; ++i) {
+        ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
+        localList.add(modelLocalWatchlistData);
+      }
+    }
+
+    for (var i = 0; i < localList.length; ++i) {
+      if (localList[i].type == "quality" && localList[i].date == selectedDate && localList[i].cls == selectedClass) {
         alreadyHasInWatchlist = true;
         break;
       }
@@ -67,51 +89,60 @@ class WheatPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateLocalWatchlist({required String cls, required String date, required BuildContext context}) async {
+  Future<void> updateLocalWatchlist({required BuildContext context}) async {
+    bool hasData = false;
     if (localWatchList.isNotEmpty) {
       for (var i = 0; i < localWatchList.length; ++i) {
-        if (localWatchList[i].type == "quality" && localWatchList[i].date == date && localWatchList[i].cls == cls) {
-          ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
-            type: "quality",
-            date: date,
-            cls: cls,
-            yearAverage: yearAverage,
-            finalAverage: fiveYearAverage,
-            currentAverage: current,
-          );
-          localWatchList.add(modelLocalWatchlist);
+        if (localWatchList[i].type == "quality" && localWatchList[i].date == selectedDate && localWatchList[i].cls == selectedClass) {
+          hasData = true;
           break;
-        } else {
-          ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
-            type: "quality",
-            date: date,
-            cls: cls,
-            yearAverage: yearAverage,
-            finalAverage: fiveYearAverage,
-            currentAverage: current,
-          );
-          localWatchList.add(modelLocalWatchlist);
         }
+      }
+      if (hasData) {
+        for (var i = 0; i < localWatchList.length; ++i) {
+          if (localWatchList[i].cls == selectedClass && localWatchList[i].date == selectedDate) {
+            ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+              type: "quality",
+              date: selectedDate,
+              cls: selectedClass,
+              yearAverage: yearAverage,
+              finalAverage: fiveYearAverage,
+              currentAverage: current,
+            );
+            localWatchList[i] = modelLocalWatchlist;
+            notifyListeners();
+            break;
+          }
+        }
+      } else {
+        ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+          type: "quality",
+          date: selectedDate,
+          cls: selectedClass,
+          yearAverage: yearAverage,
+          finalAverage: fiveYearAverage,
+          currentAverage: current,
+        );
+        localWatchList.add(modelLocalWatchlist);
       }
     } else {
       ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
         type: "quality",
-        date: date,
-        cls: cls,
+        date: selectedDate,
+        cls: selectedClass,
         yearAverage: yearAverage,
         finalAverage: fiveYearAverage,
         currentAverage: current,
       );
       localWatchList.add(modelLocalWatchlist);
     }
-
     sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
   }
 
-  Future<void> getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
+  Future<void> getQualityReport({required BuildContext context}) async {
     var data = {
-      "class": wheatClass,
-      "date": date,
+      "class": selectedClass,
+      "date": selectedDate,
     };
     await PostServices()
         .post(
@@ -138,9 +169,13 @@ class WheatPageProvider extends ChangeNotifier {
     });
   }
 
-  getPrefData({required String cls}) async {
+  getPrefData({required String cls, required String date}) async {
     selectedClass = cls;
+    selectedDate = date;
     localWatchList.clear();
+
+    notifyListeners();
+
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.watchList);
     if (data != null) {
@@ -151,7 +186,8 @@ class WheatPageProvider extends ChangeNotifier {
         localWatchList.add(modelLocalWatchlistData);
       }
     }
-    notifyListeners();
+
+    print(localWatchList.length);
   }
 
   void addWatchList({required BuildContext context, required String wheatClass, required String color}) {
@@ -184,6 +220,8 @@ class WheatPageProvider extends ChangeNotifier {
         .then((value) async {
       if (value != null) {
         if (localWatchList.isEmpty) {
+          print("Empty list");
+
           ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
             type: "quality",
             date: selectedDate,
@@ -234,22 +272,12 @@ class WheatPageProvider extends ChangeNotifier {
             localWatchList.add(modelLocalWatchlist);
           }
 
-          sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+          // sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
         }
+        print(localWatchList.length);
 
         AppWidgets.appSnackBar(context: context, text: AppStrings.added, color: AppColors.c2a8741);
       }
     });
-  }
-
-  void updateFinalDate({required String prDate, required BuildContext context, required String wClass}) {
-    clearData();
-    if (selectedDate != null) {
-      prDate = prDate;
-      getQualityReport(context: context, wheatClass: wClass, date: selectedDate.toString());
-    } else {
-      getQualityReport(context: context, wheatClass: wClass, date: selectedDate ?? "");
-    }
-    notifyListeners();
   }
 }

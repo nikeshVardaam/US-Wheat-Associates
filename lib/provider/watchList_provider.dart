@@ -23,6 +23,7 @@ class WatchlistProvider extends ChangeNotifier {
   List<QualityWatchListModel> qList = [];
   List<PriceWatchListModel> pList = [];
   SharedPreferences? sp;
+  List<ModelLocalWatchlistData> localWatchList = [];
 
   String? grphcode;
 
@@ -30,6 +31,23 @@ class WatchlistProvider extends ChangeNotifier {
   final Map<String, bool> _chartLoadingMap = {};
 
   final Map<String, List<SalesData>> _localChartCache = {};
+
+  getPrefData() async {
+    localWatchList.clear();
+
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+    if (data != null) {
+      List<dynamic> list = jsonDecode(data ?? "");
+
+      for (var i = 0; i < list.length; ++i) {
+        ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
+        localWatchList.add(modelLocalWatchlistData);
+      }
+    }
+
+    notifyListeners();
+  }
 
   navigateToPriceReport({
     required BuildContext context,
@@ -107,7 +125,7 @@ class WatchlistProvider extends ChangeNotifier {
           pageName: pageName,
         );
         break;
-      case "durum":
+      case "Durum":
         Provider.of<DashboardProvider>(context, listen: false).setChangeActivity(
           activity: WheatPages(
             fromWatchList: true,
@@ -149,19 +167,28 @@ class WatchlistProvider extends ChangeNotifier {
   }
 
   deleteFromPrefData({required String date, required String cls, required String type}) async {
-    sp = await SharedPreferences.getInstance();
-    var data = sp?.getString(PrefKeys.watchList);
-    if (data != null) {
-      List<dynamic> list = jsonDecode(data.toString());
-      for (var i = 0; i < list.length; ++i) {
-        ModelLocalWatchlistData m = ModelLocalWatchlistData.fromJson(list[i]);
-        if (m.type == type && m.date == date && m.cls == cls) {
-          list.removeAt(i);
+    bool hasData = false;
+
+    if (localWatchList.isNotEmpty) {
+      for (var i = 0; i < localWatchList.length; ++i) {
+        if (localWatchList[i].type == "quality" && localWatchList[i].date == date && localWatchList[i].cls == cls) {
+          hasData = true;
           break;
         }
       }
+      if (hasData) {
+        for (var i = 0; i < localWatchList.length; ++i) {
+          if (localWatchList[i].cls == cls && localWatchList[i].date == date) {
+            localWatchList.removeAt(i);
+            notifyListeners();
+            break;
+          }
+        }
+      }
     }
-    notifyListeners();
+
+    sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+    getPrefData();
   }
 
   getWatchList({required BuildContext context}) async {
@@ -300,11 +327,7 @@ class WatchlistProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateInPref({required String cls, required String date}) async {
-
-
-
-  }
+  Future<void> updateInPref({required String cls, required String date}) async {}
 }
 
 class QualityWatchListModel {

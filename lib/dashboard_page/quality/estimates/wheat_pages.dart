@@ -1,17 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/provider/estimates/wheat_page_provider.dart';
-import 'package:uswheat/provider/watchList_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
-import '../../../modal/model_local_watchList.dart';
-import '../../../provider/price_provider.dart';
 import '../../../utils/app_box_decoration.dart';
 import '../../../utils/common_date_picker.dart';
 import '../../../utils/miscellaneous.dart';
@@ -34,19 +28,15 @@ class WheatPages extends StatefulWidget {
 class _WheatPagesState extends State<WheatPages> {
   @override
   void initState() {
-    print(widget.selectedClass);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final wp = Provider.of<WheatPageProvider>(context, listen: false);
-      wp.getPrefData(cls: widget.selectedClass);
-      if (widget.fromWatchList) {
-        wp.initFromWatchlist(context: context, date: widget.date, cls: widget.selectedClass);
+      await Provider.of<WheatPageProvider>(context, listen: false).getPrefData(cls: widget.selectedClass, date: widget.date);
 
+      if (widget.fromWatchList) {
+        Provider.of<WheatPageProvider>(context, listen: false).initFromWatchlist(context: context);
       } else {
-        wp.getDefaultDate(context: context, wheatClass: widget.selectedClass).then(
-          (value) {
-            wp.updateFinalDate(prDate: wp.selectedDate.toString(), context: context, wClass: wp.selectedClass.toString());
-          },
-        );
+        Provider.of<WheatPageProvider>(context, listen: false).getDefaultDate(context: context).then(
+              (value) {},
+            );
       }
     });
     super.initState();
@@ -150,9 +140,8 @@ class _WheatPagesState extends State<WheatPages> {
                               ).then(
                                 (value) {
                                   if (value != null) {
-                                    wpp.updatedDate(date: Miscellaneous.ymd(value.toString()));
-                                    wpp.updateFinalDate(prDate: wpp.selectedDate ?? "", context: context, wClass: widget.selectedClass);
-                                   wpp.checkLocalWatchlist();
+                                    wpp.updatedDate(context: context, date: Miscellaneous.ymd(value.toString()));
+
                                   }
                                 },
                               );
