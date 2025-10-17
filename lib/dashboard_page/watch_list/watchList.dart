@@ -482,7 +482,7 @@ class _WatchlistState extends State<Watchlist> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  print(index);
+                                
                                   wp.navigateToQualityReport(
                                     context: context,
                                     dateTime: data.filterData?.date ?? "",

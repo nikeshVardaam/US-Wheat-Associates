@@ -150,7 +150,6 @@ class WatchlistProvider extends ChangeNotifier {
 
   deleteFromPrefData({required String date, required String cls, required String type}) async {
     sp = await SharedPreferences.getInstance();
-    sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.watchList);
     if (data != null) {
       List<dynamic> list = jsonDecode(data.toString());
@@ -162,6 +161,7 @@ class WatchlistProvider extends ChangeNotifier {
         }
       }
     }
+    notifyListeners();
   }
 
   getWatchList({required BuildContext context}) async {

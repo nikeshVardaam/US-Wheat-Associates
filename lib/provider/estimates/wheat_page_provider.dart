@@ -12,12 +12,11 @@ import '../../utils/app_widgets.dart';
 
 class WheatPageProvider extends ChangeNotifier {
   List<int>? uniqueYears = [];
-
+  bool alreadyHasInWatchlist = false;
   String? selectedDate;
   WheatData? current;
   SharedPreferences? sp;
-  String? defaultDate;
-  String? defaultClass;
+  String? selectedClass;
   List<ModelLocalWatchlistData> localWatchList = [];
   WheatData? yearAverage;
   WheatData? fiveYearAverage;
@@ -39,6 +38,7 @@ class WheatPageProvider extends ChangeNotifier {
     getQualityReport(date: date, context: context, wheatClass: cls).then((value) {
       updateLocalWatchlist(cls: cls, date: date, context: context);
     });
+    checkLocalWatchlist();
   }
 
   Future<void> getDefaultDate({required BuildContext context, required String wheatClass}) async {
@@ -48,10 +48,22 @@ class WheatPageProvider extends ChangeNotifier {
           var response = jsonDecode(value.body);
           var data = response["data"];
           selectedDate = data["last_available_date"].toString();
-          defaultClass = data["class"];
+          selectedClass = data["class"];
         }
       },
     );
+    checkLocalWatchlist();
+    notifyListeners();
+  }
+
+  void checkLocalWatchlist() async {
+    alreadyHasInWatchlist=false;
+    for (var i = 0; i < localWatchList.length; ++i) {
+      if (localWatchList[i].type == "quality" && localWatchList[i].date == selectedDate && localWatchList[i].cls == selectedClass) {
+        alreadyHasInWatchlist = true;
+        break;
+      }
+    }
     notifyListeners();
   }
 
@@ -126,7 +138,8 @@ class WheatPageProvider extends ChangeNotifier {
     });
   }
 
-  getPrefData() async {
+  getPrefData({required String cls}) async {
+    selectedClass = cls;
     localWatchList.clear();
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.watchList);
@@ -138,6 +151,7 @@ class WheatPageProvider extends ChangeNotifier {
         localWatchList.add(modelLocalWatchlistData);
       }
     }
+    notifyListeners();
   }
 
   void addWatchList({required BuildContext context, required String wheatClass, required String color}) {

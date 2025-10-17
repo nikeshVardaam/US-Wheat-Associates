@@ -34,19 +34,20 @@ class WheatPages extends StatefulWidget {
 class _WheatPagesState extends State<WheatPages> {
   @override
   void initState() {
+    print(widget.selectedClass);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final wp = Provider.of<WheatPageProvider>(context, listen: false);
-      wp.getPrefData();
+      wp.getPrefData(cls: widget.selectedClass);
       if (widget.fromWatchList) {
         wp.initFromWatchlist(context: context, date: widget.date, cls: widget.selectedClass);
+
       } else {
         wp.getDefaultDate(context: context, wheatClass: widget.selectedClass).then(
           (value) {
-            wp.updateFinalDate(prDate: wp.selectedDate.toString(), context: context, wClass: wp.defaultClass.toString());
+            wp.updateFinalDate(prDate: wp.selectedDate.toString(), context: context, wClass: wp.selectedClass.toString());
           },
         );
       }
-
     });
     super.initState();
   }
@@ -93,33 +94,35 @@ class _WheatPagesState extends State<WheatPages> {
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        if (wpp.current == null && wpp.yearAverage == null && wpp.fiveYearAverage == null) {
-                          AppWidgets.appSnackBar(context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
-                        } else {
-                          String hexCode = '${widget.appBarColor.alpha.toRadixString(16).padLeft(2, '0')}'
-                              '${widget.appBarColor.red.toRadixString(16).padLeft(2, '0')}'
-                              '${widget.appBarColor.green.toRadixString(16).padLeft(2, '0')}'
-                              '${widget.appBarColor.blue.toRadixString(16).padLeft(2, '0')}';
-                          wpp.addWatchList(context: context, wheatClass: widget.selectedClass, color: hexCode);
-                        }
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            decoration: AppBoxDecoration.filledContainer(AppColors.cEFEEED),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              child: Text(
-                                AppStrings.addToWatchlist,
-                                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w500),
-                              ),
+                    wpp.alreadyHasInWatchlist
+                        ? Container()
+                        : GestureDetector(
+                            onTap: () {
+                              if (wpp.current == null && wpp.yearAverage == null && wpp.fiveYearAverage == null) {
+                                AppWidgets.appSnackBar(context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
+                              } else {
+                                String hexCode = '${widget.appBarColor.alpha.toRadixString(16).padLeft(2, '0')}'
+                                    '${widget.appBarColor.red.toRadixString(16).padLeft(2, '0')}'
+                                    '${widget.appBarColor.green.toRadixString(16).padLeft(2, '0')}'
+                                    '${widget.appBarColor.blue.toRadixString(16).padLeft(2, '0')}';
+                                wpp.addWatchList(context: context, wheatClass: widget.selectedClass, color: hexCode);
+                              }
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  decoration: AppBoxDecoration.filledContainer(AppColors.cEFEEED),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    child: Text(
+                                      AppStrings.addToWatchlist,
+                                      style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    )
+                          )
                   ],
                 ),
               ),
@@ -149,6 +152,7 @@ class _WheatPagesState extends State<WheatPages> {
                                   if (value != null) {
                                     wpp.updatedDate(date: Miscellaneous.ymd(value.toString()));
                                     wpp.updateFinalDate(prDate: wpp.selectedDate ?? "", context: context, wClass: widget.selectedClass);
+                                   wpp.checkLocalWatchlist();
                                   }
                                 },
                               );
