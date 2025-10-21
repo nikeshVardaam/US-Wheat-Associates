@@ -210,7 +210,11 @@ class WatchlistProvider extends ChangeNotifier {
       if (watchlist.isNotEmpty) {
         for (var i = 0; i < watchlist.length; ++i) {
           if (watchlist[i].type.toLowerCase() == "quality") {
-            await getDataFromLocalList(date: watchlist[i].filterdata.date ?? "", cls: watchlist[i].filterdata.classs ?? "", type: "quality").then(
+            await getDataFromLocalList(
+                    date: watchlist[i].filterdata.date ?? "",
+                    cls: watchlist[i].filterdata.classs ?? "",
+                    type: "quality")
+                .then(
               (value) {
                 QualityWatchListModel q = QualityWatchListModel(
                   id: watchlist[i].id,
@@ -224,7 +228,8 @@ class WatchlistProvider extends ChangeNotifier {
             );
           } else {
             for (var j = 0; j < watchlist.length; ++j) {
-              PriceWatchListModel p = PriceWatchListModel(id: watchlist[i].id, filterData: watchlist[i].filterdata, graphData: []);
+              PriceWatchListModel p =
+                  PriceWatchListModel(id: watchlist[i].id, filterData: watchlist[i].filterdata, graphData: []);
               pList.add(p);
             }
           }
@@ -254,6 +259,7 @@ class WatchlistProvider extends ChangeNotifier {
       (value) {
         notifyListeners();
         if (value != null) {
+          getWatchList(context: context);
           if (type == "quality") {
             deleteFromPrefData(date: date, cls: cls, type: type);
           } else {}
@@ -321,7 +327,9 @@ class WatchlistProvider extends ChangeNotifier {
               }
             }).toList();
 
-            final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
+            final avgSales = monthEntries.isNotEmpty
+                ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length
+                : 0.0;
 
             return SalesData(month: month, sales: avgSales);
           }).toList();
