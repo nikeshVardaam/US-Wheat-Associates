@@ -27,7 +27,7 @@ class ModelLocalWatchlistData {
   String? type;
   String? date;
   String? cls;
-  RegionAndClasses? region;
+  String? region;
   String? gRPHCode;
   List<GraphDataModal>? graphData;
   WheatData? yearAverage;
@@ -54,7 +54,7 @@ class ModelLocalWatchlistData {
       yearAverage: json['yearAverage'] != null ? WheatData.fromJson(json['yearAverage']) : null,
       finalAverage: json['finalAverage'] != null ? WheatData.fromJson(json['finalAverage']) : null,
       currentAverage: json['currentAverage'] != null ? WheatData.fromJson(json['currentAverage']) : null,
-      region: json['region'] != null ? RegionAndClasses.fromJson(json['region']) : null,
+      region: json['region'] as String ?,
       graphData: (json['graphData'] as List?)?.map((e) => GraphDataModal.fromJson(e)).toList(),
       gRPHCode: json['gRPH_code'] as String?,
     );

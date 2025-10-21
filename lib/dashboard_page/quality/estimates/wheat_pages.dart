@@ -99,19 +99,9 @@ class _WheatPagesState extends State<WheatPages> {
                                 wpp.addWatchList(context: context, wheatClass: widget.selectedClass, color: hexCode);
                               }
                             },
-                            child: Row(
-                              children: [
-                                Container(
-                                  decoration: AppBoxDecoration.filledContainer(AppColors.cEFEEED),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    child: Text(
-                                      AppStrings.addToWatchlist,
-                                      style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Icon(Icons.star_border_rounded,color: Colors.white,),
                             ),
                           )
                   ],

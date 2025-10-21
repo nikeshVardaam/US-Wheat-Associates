@@ -124,417 +124,409 @@ class _WatchlistState extends State<Watchlist> {
                                             ],
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                                          child: Column(
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "${AppStrings.currentAverage} :",
-                                                    style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  SingleChildScrollView(
-                                                    scrollDirection: Axis.horizontal,
-                                                    child: Row(
+                                        (data.yearAverage == null && data.fiveYearAverage == null && data.current == null)
+                                            ? SizedBox(
+                                                width: double.infinity,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        wp.upDateQualityData(context: context, cls: data.filterData?.classs ?? "", date: data.filterData?.date ?? "");
+                                                      },
+                                                      icon: const Icon(Icons.refresh),
+                                                    ),
+                                                    Text(
+                                                      AppStrings.refresh,
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                            color: AppColors.c464646,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                                                child: Column(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        // Moisture
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.testWtbbu,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
-                                                                  ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.current?.testWtlbbu != null
-                                                                  ? double.parse(data.current!.testWtlbbu.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
-                                                                  ),
-                                                            )
-                                                          ],
+                                                        Text(
+                                                          "${AppStrings.currentAverage} :",
+                                                          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
                                                         ),
-                                                        const SizedBox(width: 16),
-                                                        // Prot12%mb
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.testWtkghl,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
+                                                        const SizedBox(height: 8),
+                                                        SingleChildScrollView(
+                                                          scrollDirection: Axis.horizontal,
+                                                          child: Row(
+                                                            children: [
+                                                              // Moisture
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.testWtbbu,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.current?.testWtkghl != null
-                                                                  ? double.parse(data.current!.testWtkghl.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.current?.testWtlbbu != null ? double.parse(data.current!.testWtlbbu.toString()).toStringAsFixed(2) : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              // Prot12%mb
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.testWtkghl,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(width: 16),
-                                                        // DryBasisProt%
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.moist,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.current?.testWtkghl != null ? double.parse(data.current!.testWtkghl.toString()).toStringAsFixed(2) : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              // DryBasisProt%
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.moist,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.current?.moisture != null
-                                                                  ? double.parse(data.current!.moisture.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.current?.moisture != null ? double.parse(data.current!.moisture.toString()).toStringAsFixed(2) : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              // DryBasisProt%
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.prot12,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(width: 16),
-                                                        // DryBasisProt%
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.prot12,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.current?.prot12Mb != null ? double.parse(data.current!.prot12Mb.toString()).toStringAsFixed(2) : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.proDb,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.current?.prot12Mb != null
-                                                                  ? double.parse(data.current!.prot12Mb.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
-                                                                  ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(width: 16),
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.proDb,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
-                                                                  ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.current?.dryBasisProt != null
-                                                                  ? double.parse(data.current!.dryBasisProt.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
-                                                                  ),
-                                                            )
-                                                          ],
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.current?.dryBasisProt != null
+                                                                        ? double.parse(data.current!.dryBasisProt.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "${AppStrings.fiveYearAverage} :",
-                                                    style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  SingleChildScrollView(
-                                                    scrollDirection: Axis.horizontal,
-                                                    child: Row(
+                                                    const SizedBox(
+                                                      height: 4,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        // Moisture
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.testWtbbu,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
-                                                                  ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.yearAverage?.testWtlbbu != null
-                                                                  ? double.parse(
-                                                                          data.yearAverage!.testWtlbbu.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
-                                                                  ),
-                                                            )
-                                                          ],
+                                                        Text(
+                                                          "${AppStrings.fiveYearAverage} :",
+                                                          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
                                                         ),
-                                                        const SizedBox(width: 16),
-                                                        // Prot12%mb
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.testWtkghl,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
+                                                        const SizedBox(height: 8),
+                                                        SingleChildScrollView(
+                                                          scrollDirection: Axis.horizontal,
+                                                          child: Row(
+                                                            children: [
+                                                              // Moisture
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.testWtbbu,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.yearAverage?.testWtkghl != null
-                                                                  ? double.parse(
-                                                                          data.yearAverage!.testWtkghl.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.yearAverage?.testWtlbbu != null
+                                                                        ? double.parse(data.yearAverage!.testWtlbbu.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              // Prot12%mb
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.testWtkghl,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(width: 16),
-                                                        // DryBasisProt%
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.moist,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.yearAverage?.testWtkghl != null
+                                                                        ? double.parse(data.yearAverage!.testWtkghl.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              // DryBasisProt%
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.moist,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.yearAverage?.moisture != null
-                                                                  ? double.parse(data.yearAverage!.moisture.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.yearAverage?.moisture != null
+                                                                        ? double.parse(data.yearAverage!.moisture.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              // DryBasisProt%
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.prot12,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(width: 16),
-                                                        // DryBasisProt%
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.prot12,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.yearAverage?.prot12Mb != null
+                                                                        ? double.parse(data.yearAverage!.prot12Mb.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.proDb,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.yearAverage?.prot12Mb != null
-                                                                  ? double.parse(data.yearAverage!.prot12Mb.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
-                                                                  ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(width: 16),
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.proDb,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
-                                                                  ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.yearAverage?.dryBasisProt != null
-                                                                  ? double.parse(
-                                                                          data.yearAverage!.dryBasisProt.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
-                                                                  ),
-                                                            )
-                                                          ],
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.yearAverage?.dryBasisProt != null
+                                                                        ? double.parse(data.yearAverage!.dryBasisProt.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "${AppStrings.finalAverage} :",
-                                                    style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  SingleChildScrollView(
-                                                    scrollDirection: Axis.horizontal,
-                                                    child: Row(
+                                                    const SizedBox(
+                                                      height: 4,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        // Moisture
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.testWtbbu,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
-                                                                  ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.fiveYearAverage?.testWtlbbu != null
-                                                                  ? double.parse(
-                                                                          data.fiveYearAverage!.testWtlbbu.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
-                                                                  ),
-                                                            )
-                                                          ],
+                                                        Text(
+                                                          "${AppStrings.finalAverage} :",
+                                                          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
                                                         ),
-                                                        const SizedBox(width: 16),
-                                                        // Prot12%mb
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.testWtkghl,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
+                                                        const SizedBox(height: 8),
+                                                        SingleChildScrollView(
+                                                          scrollDirection: Axis.horizontal,
+                                                          child: Row(
+                                                            children: [
+                                                              // Moisture
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.testWtbbu,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.fiveYearAverage?.testWtkghl != null
-                                                                  ? double.parse(
-                                                                          data.fiveYearAverage!.testWtkghl.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.fiveYearAverage?.testWtlbbu != null
+                                                                        ? double.parse(data.fiveYearAverage!.testWtlbbu.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              // Prot12%mb
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.testWtkghl,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(width: 16),
-                                                        // DryBasisProt%
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.moist,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.fiveYearAverage?.testWtkghl != null
+                                                                        ? double.parse(data.fiveYearAverage!.testWtkghl.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              // DryBasisProt%
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.moist,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.fiveYearAverage?.moisture != null
-                                                                  ? double.parse(
-                                                                          data.fiveYearAverage!.moisture.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.fiveYearAverage?.moisture != null
+                                                                        ? double.parse(data.fiveYearAverage!.moisture.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              // DryBasisProt%
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.prot12,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(width: 16),
-                                                        // DryBasisProt%
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.prot12,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.fiveYearAverage?.prot12Mb != null
+                                                                        ? double.parse(data.fiveYearAverage!.prot12Mb.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 16),
+                                                              Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    AppStrings.proDb,
+                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                          color: AppColors.c737373,
+                                                                        ),
                                                                   ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.fiveYearAverage?.prot12Mb != null
-                                                                  ? double.parse(
-                                                                          data.fiveYearAverage!.prot12Mb.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
-                                                                  ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        const SizedBox(width: 16),
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              AppStrings.proDb,
-                                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                    color: AppColors.c737373,
-                                                                  ),
-                                                            ),
-                                                            const SizedBox(height: 4),
-                                                            Text(
-                                                              data.fiveYearAverage?.dryBasisProt != null
-                                                                  ? double.parse(
-                                                                          data.fiveYearAverage!.dryBasisProt.toString())
-                                                                      .toStringAsFixed(2)
-                                                                  : "--",
-                                                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                                    color: c,
-                                                                  ),
-                                                            )
-                                                          ],
+                                                                  const SizedBox(height: 4),
+                                                                  Text(
+                                                                    data.fiveYearAverage?.dryBasisProt != null
+                                                                        ? double.parse(data.fiveYearAverage!.dryBasisProt.toString()).toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                          color: c,
+                                                                        ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ],
-                                          ),
-                                        ),
                                       ],
                                     ),
                                   ),
@@ -555,10 +547,7 @@ class _WatchlistState extends State<Watchlist> {
                               GestureDetector(
                                 onTap: () {
                                   wp.navigateToPriceReport(
-                                      context: context,
-                                      region: data.filterData?.region ?? "",
-                                      classs: data.filterData?.classs ?? "",
-                                      date: data.filterData?.date ?? "");
+                                      context: context, region: data.filterData?.region ?? "", classs: data.filterData?.classs ?? "", date: data.filterData?.date ?? "");
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -677,14 +666,23 @@ class _WatchlistState extends State<Watchlist> {
                                                       }
 
                                                       return data.graphData?.isEmpty ?? true
-                                                          ? Center(
-                                                              child: Text(
-                                                                AppStrings.noDataFound,
-                                                                style: Theme.of(context)
-                                                                    .textTheme
-                                                                    .bodySmall
-                                                                    ?.copyWith(color: AppColors.c464646),
-                                                              ),
+                                                          ? Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                IconButton(
+                                                                  onPressed: () {
+                                                                    wp.upDateGraphData(filterData: data.filterData, context: context);
+                                                                  },
+                                                                  icon: const Icon(Icons.refresh),
+                                                                ),
+                                                                Text(
+                                                                  AppStrings.refresh,
+                                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                        color: AppColors.c464646,
+                                                                        fontWeight: FontWeight.w500,
+                                                                      ),
+                                                                ),
+                                                              ],
                                                             )
                                                           : Padding(
                                                               padding: const EdgeInsets.only(bottom: 6, left: 16),
@@ -692,8 +690,7 @@ class _WatchlistState extends State<Watchlist> {
                                                                 margin: EdgeInsets.zero,
                                                                 plotAreaBorderWidth: 0,
                                                                 backgroundColor: AppColors.cAB865A.withOpacity(0.0),
-                                                                plotAreaBackgroundColor:
-                                                                    AppColors.cAB865A.withOpacity(0.0),
+                                                                plotAreaBackgroundColor: AppColors.cAB865A.withOpacity(0.0),
                                                                 primaryXAxis: DateTimeAxis(
                                                                   dateFormat: DateFormat('MM/dd'),
                                                                   intervalType: DateTimeIntervalType.hours,
@@ -708,15 +705,12 @@ class _WatchlistState extends State<Watchlist> {
                                                                 series: <CartesianSeries>[
                                                                   LineSeries<GraphDataModal, DateTime>(
                                                                     dataSource: data.graphData,
-                                                                    xValueMapper: (GraphDataModal data, _) =>
-                                                                        DateTime.parse(data.pRDATE.toString()),
-                                                                    yValueMapper: (GraphDataModal data, _) =>
-                                                                        data.cASHMT,
+                                                                    xValueMapper: (GraphDataModal data, _) => DateTime.parse(data.pRDATE.toString()),
+                                                                    yValueMapper: (GraphDataModal data, _) => data.cASHMT,
                                                                     color: AppColors.c464646,
                                                                     width: 1,
                                                                     name: 'CASHMT',
-                                                                    markerSettings:
-                                                                        const MarkerSettings(isVisible: false),
+                                                                    markerSettings: const MarkerSettings(isVisible: false),
                                                                   ),
                                                                 ],
                                                               ),

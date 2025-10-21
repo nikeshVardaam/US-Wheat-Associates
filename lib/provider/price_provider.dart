@@ -94,8 +94,7 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> initCallFromWatchList(
-      {required BuildContext context, required String? region, required String? cls, required String? year}) async {
+  Future<void> initCallFromWatchList({required BuildContext context, required String? region, required String? cls, required String? year}) async {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
@@ -161,13 +160,7 @@ class PricesProvider extends ChangeNotifier {
     sp = await SharedPreferences.getInstance();
     final data = {
       "type": "price",
-      "filterdata": {
-        "region": selectedRegion?.region ?? "",
-        "class": selectedClass ?? "",
-        "date": pRDate,
-        "color": "ffab865a",
-        "grphcode": selectedGRPHCode ?? ""
-      }
+      "filterdata": {"region": selectedRegion?.region ?? "", "class": selectedClass ?? "", "date": pRDate, "color": "ffab865a", "grphcode": selectedGRPHCode ?? ""}
     };
     PostServices()
         .post(
@@ -188,12 +181,12 @@ class PricesProvider extends ChangeNotifier {
               yearAverage: null,
               finalAverage: null,
               currentAverage: null,
-              region: selectedRegion,
+              region: selectedRegion?.region,
               graphData: graphDataList,
               gRPHCode: selectedGRPHCode,
             );
 
-            localWatchList[0] = modelLocalWatchlist;
+            localWatchList.add(modelLocalWatchlist);
 
             sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
           } else {
@@ -222,7 +215,7 @@ class PricesProvider extends ChangeNotifier {
                     yearAverage: null,
                     finalAverage: null,
                     currentAverage: null,
-                    region: selectedRegion,
+                    region: selectedRegion?.region,
                     graphData: graphDataList,
                     gRPHCode: selectedGRPHCode,
                   );
@@ -239,7 +232,7 @@ class PricesProvider extends ChangeNotifier {
                 yearAverage: null,
                 finalAverage: null,
                 currentAverage: null,
-                region: selectedRegion,
+                region: selectedRegion?.region,
                 graphData: graphDataList,
                 gRPHCode: selectedGRPHCode,
               );

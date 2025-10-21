@@ -145,8 +145,7 @@ class WatchlistProvider extends ChangeNotifier {
     _chartLoadingMap[itemId] = isLoading;
   }
 
-  Future<ModelLocalWatchlistData?> getDataFromLocalList(
-      {required String date, required String cls, required String type}) async {
+  Future<ModelLocalWatchlistData?> getDataFromLocalList({required String date, required String cls, required String type}) async {
     List<ModelLocalWatchlistData> localList = [];
     sp = await SharedPreferences.getInstance();
 
@@ -166,8 +165,7 @@ class WatchlistProvider extends ChangeNotifier {
     return modelLocalWatchlistData;
   }
 
-  Future<ModelLocalWatchlistData?> getGraphDataFromLocalList(
-      {required String date, required String cls, required String gRPHCode, required String region}) async {
+  Future<ModelLocalWatchlistData?> getGraphDataFromLocalList({required String date, required String cls, required String gRPHCode, required String region}) async {
     List<ModelLocalWatchlistData> localList = [];
     sp = await SharedPreferences.getInstance();
 
@@ -180,11 +178,7 @@ class WatchlistProvider extends ChangeNotifier {
     }
     ModelLocalWatchlistData? modelLocalWatchlistData;
     for (var i = 0; i < localList.length; ++i) {
-      if (localList[i].type == "price" &&
-          localList[i].date == date &&
-          localList[i].cls == cls &&
-          localList[i].gRPHCode == gRPHCode &&
-          localList[i].region?.region == region) {
+      if (localList[i].type == "price" && localList[i].date == date && localList[i].cls == cls && localList[i].gRPHCode == gRPHCode && localList[i].region == region) {
         modelLocalWatchlistData = localList[i];
       }
     }
@@ -234,11 +228,7 @@ class WatchlistProvider extends ChangeNotifier {
       if (watchlist.isNotEmpty) {
         for (var i = 0; i < watchlist.length; ++i) {
           if (watchlist[i].type.toLowerCase() == "quality") {
-            await getDataFromLocalList(
-                    date: watchlist[i].filterdata.date ?? "",
-                    cls: watchlist[i].filterdata.classs ?? "",
-                    type: "quality")
-                .then(
+            await getDataFromLocalList(date: watchlist[i].filterdata.date ?? "", cls: watchlist[i].filterdata.classs ?? "", type: "quality").then(
               (value) {
                 QualityWatchListModel q = QualityWatchListModel(
                   id: watchlist[i].id,
@@ -302,6 +292,196 @@ class WatchlistProvider extends ChangeNotifier {
     );
   }
 
+  upDateQualityData({required BuildContext context, required String cls, required String date}) async {
+    getQualityReport(context: context, date: date, cls: cls).then((value) {});
+  }
+
+  Future<void> getQualityReport({required BuildContext context, required String cls, required String date}) async {
+    var data = {
+      "class": cls,
+      "date": date,
+    };
+    await PostServices()
+        .post(
+      endpoint: ApiEndpoint.qualityReport,
+      requestData: data,
+      context: context,
+      isBottomSheet: false,
+      loader: true,
+    )
+        .then((value) {
+      if (value != null) {
+        final decoded = json.decode(value.body);
+
+        if (decoded['data'] != null) {
+          final data = decoded['data'];
+
+          WheatData? current = data['current'] != null ? WheatData.fromJson(data['current']) : null;
+          WheatData? yearAverage = data['year_average'] != null ? WheatData.fromJson(data['year_average']) : null;
+          WheatData? fiveYearAverage = data['five_year_average'] != null ? WheatData.fromJson(data['five_year_average']) : null;
+
+          bool hasData = false;
+
+          if (localWatchList.isNotEmpty) {
+            for (var i = 0; i < localWatchList.length; ++i) {
+              if (localWatchList[i].type == "quality" && localWatchList[i].date == date && localWatchList[i].cls == cls) {
+                hasData = true;
+                break;
+              }
+            }
+            if (hasData) {
+              for (var i = 0; i < localWatchList.length; ++i) {
+                if (localWatchList[i].type == "quality" && localWatchList[i].cls == date && localWatchList[i].date == cls) {
+                  ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+                    type: "quality",
+                    date: date,
+                    cls: cls,
+                    yearAverage: yearAverage,
+                    finalAverage: fiveYearAverage,
+                    currentAverage: current,
+                    region: null,
+                    graphData: [],
+                    gRPHCode: '',
+                  );
+                  localWatchList[i] = modelLocalWatchlist;
+                  notifyListeners();
+                  break;
+                }
+              }
+            } else {
+              ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+                type: "quality",
+                date: date,
+                cls: cls,
+                yearAverage: yearAverage,
+                finalAverage: fiveYearAverage,
+                currentAverage: current,
+                region: null,
+                graphData: [],
+                gRPHCode: '',
+              );
+              localWatchList.add(modelLocalWatchlist);
+            }
+          } else {
+            ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+              type: "quality",
+              date: date,
+              cls: cls,
+              yearAverage: yearAverage,
+              finalAverage: fiveYearAverage,
+              currentAverage: current,
+              region: null,
+              graphData: [],
+              gRPHCode: '',
+            );
+            localWatchList.add(modelLocalWatchlist);
+          }
+          sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+        }
+
+        getWatchList(context: context);
+      }
+    });
+  }
+
+  upDateGraphData({required FilterData? filterData, required BuildContext context}) async {
+    final data = {
+      "grphcode": filterData?.graphCode ?? "",
+      "prdate": filterData?.date ?? "",
+    };
+    await PostServices()
+        .post(
+      endpoint: ApiEndpoint.getGraphData,
+      requestData: data,
+      context: context,
+      isBottomSheet: false,
+      loader: true,
+    )
+        .then(
+      (value) {
+        List<GraphDataModal> graphDataList = [];
+        if (value != null) {
+          var data = jsonDecode(value.body);
+
+          for (var i = 0; i < data.length; ++i) {
+            GraphDataModal gl = GraphDataModal(cASHMT: data[i]["CASHMT"], pRDATE: data[i]["PRDATE"]);
+            graphDataList.add(gl);
+          }
+        }
+
+        if (localWatchList.isEmpty) {
+          ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+            type: "price",
+            date: filterData?.date,
+            cls: filterData?.classs,
+            yearAverage: null,
+            finalAverage: null,
+            currentAverage: null,
+            region: filterData?.region,
+            graphData: graphDataList,
+            gRPHCode: filterData?.graphCode,
+          );
+
+          localWatchList.add(modelLocalWatchlist);
+
+          sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+        } else {
+          bool ifModalHasInList = false;
+
+          for (var i = 0; i < localWatchList.length; ++i) {
+            if (localWatchList[i].type == "price" &&
+                localWatchList[i].cls == filterData?.classs &&
+                localWatchList[i].date == filterData?.date &&
+                localWatchList[i].gRPHCode == filterData?.graphCode) {
+              ifModalHasInList = true;
+              break;
+            }
+          }
+
+          if (ifModalHasInList) {
+            for (var i = 0; i < localWatchList.length; ++i) {
+              if (localWatchList[i].type == "price" &&
+                  localWatchList[i].cls == filterData?.classs &&
+                  localWatchList[i].date == filterData?.date &&
+                  localWatchList[i].gRPHCode == filterData?.graphCode) {
+                ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+                  type: "price",
+                  date: filterData?.date,
+                  cls: filterData?.classs,
+                  yearAverage: null,
+                  finalAverage: null,
+                  currentAverage: null,
+                  region: filterData?.region,
+                  graphData: graphDataList,
+                  gRPHCode: filterData?.graphCode,
+                );
+                localWatchList[i] = modelLocalWatchlist;
+                notifyListeners();
+                break;
+              }
+            }
+          } else {
+            ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+              type: "price",
+              date: filterData?.date,
+              cls: filterData?.classs,
+              yearAverage: null,
+              finalAverage: null,
+              currentAverage: null,
+              region: filterData?.region,
+              graphData: graphDataList,
+              gRPHCode: filterData?.graphCode,
+            );
+            localWatchList.add(modelLocalWatchlist);
+          }
+
+          sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+        }
+        getWatchList(context: context);
+      },
+    );
+  }
+
   Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem? item) async {
     if (item != null) {
       try {
@@ -361,9 +541,7 @@ class WatchlistProvider extends ChangeNotifier {
               }
             }).toList();
 
-            final avgSales = monthEntries.isNotEmpty
-                ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length
-                : 0.0;
+            final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
 
             return SalesData(month: month, sales: avgSales);
           }).toList();

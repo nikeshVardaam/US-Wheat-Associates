@@ -115,6 +115,7 @@ class AppStrings {
   static const newFeed = "News Feed";
   static const changePassword = "Change Password ";
   static const noDataFound = "No data found";
+  static const refresh = "Refresh";
   static const wheatAssociates = "U.S. Wheat Associates";
   static const error500 = "We are working on server, Please try again later.";
   static const error503 =

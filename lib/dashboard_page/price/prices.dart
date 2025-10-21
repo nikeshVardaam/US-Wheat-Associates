@@ -71,15 +71,9 @@ class _PricesState extends State<Prices> {
                         onTap: () {
                           pp.addToWatchlist(context: context);
                         },
-                        child: Container(
-                          decoration: AppBoxDecoration.filledContainer(AppColors.c603c16),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            child: Text(
-                              AppStrings.addToWatchlist,
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
-                            ),
-                          ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Icon(Icons.star_border_rounded,color: Colors.white,),
                         ),
                       )
                     ],
