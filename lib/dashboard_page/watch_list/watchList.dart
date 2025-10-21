@@ -152,7 +152,10 @@ class _WatchlistState extends State<Watchlist> {
                                                             ),
                                                             const SizedBox(height: 4),
                                                             Text(
-                                                              data.current?.testWtlbbu != null ? double.parse(data.current!.testWtlbbu.toString()).toStringAsFixed(2) : "--",
+                                                              data.current?.testWtlbbu != null
+                                                                  ? double.parse(data.current!.testWtlbbu.toString())
+                                                                      .toStringAsFixed(2)
+                                                                  : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
@@ -172,7 +175,10 @@ class _WatchlistState extends State<Watchlist> {
                                                             ),
                                                             const SizedBox(height: 4),
                                                             Text(
-                                                              data.current?.testWtkghl != null ? double.parse(data.current!.testWtkghl.toString()).toStringAsFixed(2) : "--",
+                                                              data.current?.testWtkghl != null
+                                                                  ? double.parse(data.current!.testWtkghl.toString())
+                                                                      .toStringAsFixed(2)
+                                                                  : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
@@ -192,7 +198,10 @@ class _WatchlistState extends State<Watchlist> {
                                                             ),
                                                             const SizedBox(height: 4),
                                                             Text(
-                                                              data.current?.moisture != null ? double.parse(data.current!.moisture.toString()).toStringAsFixed(2) : "--",
+                                                              data.current?.moisture != null
+                                                                  ? double.parse(data.current!.moisture.toString())
+                                                                      .toStringAsFixed(2)
+                                                                  : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
@@ -212,7 +221,10 @@ class _WatchlistState extends State<Watchlist> {
                                                             ),
                                                             const SizedBox(height: 4),
                                                             Text(
-                                                              data.current?.prot12Mb != null ? double.parse(data.current!.prot12Mb.toString()).toStringAsFixed(2) : "--",
+                                                              data.current?.prot12Mb != null
+                                                                  ? double.parse(data.current!.prot12Mb.toString())
+                                                                      .toStringAsFixed(2)
+                                                                  : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
@@ -231,7 +243,10 @@ class _WatchlistState extends State<Watchlist> {
                                                             ),
                                                             const SizedBox(height: 4),
                                                             Text(
-                                                              data.current?.dryBasisProt != null ? double.parse(data.current!.dryBasisProt.toString()).toStringAsFixed(2) : "--",
+                                                              data.current?.dryBasisProt != null
+                                                                  ? double.parse(data.current!.dryBasisProt.toString())
+                                                                      .toStringAsFixed(2)
+                                                                  : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
@@ -271,7 +286,9 @@ class _WatchlistState extends State<Watchlist> {
                                                             const SizedBox(height: 4),
                                                             Text(
                                                               data.yearAverage?.testWtlbbu != null
-                                                                  ? double.parse(data.yearAverage!.testWtlbbu.toString()).toStringAsFixed(2)
+                                                                  ? double.parse(
+                                                                          data.yearAverage!.testWtlbbu.toString())
+                                                                      .toStringAsFixed(2)
                                                                   : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
@@ -293,7 +310,9 @@ class _WatchlistState extends State<Watchlist> {
                                                             const SizedBox(height: 4),
                                                             Text(
                                                               data.yearAverage?.testWtkghl != null
-                                                                  ? double.parse(data.yearAverage!.testWtkghl.toString()).toStringAsFixed(2)
+                                                                  ? double.parse(
+                                                                          data.yearAverage!.testWtkghl.toString())
+                                                                      .toStringAsFixed(2)
                                                                   : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
@@ -314,7 +333,10 @@ class _WatchlistState extends State<Watchlist> {
                                                             ),
                                                             const SizedBox(height: 4),
                                                             Text(
-                                                              data.yearAverage?.moisture != null ? double.parse(data.yearAverage!.moisture.toString()).toStringAsFixed(2) : "--",
+                                                              data.yearAverage?.moisture != null
+                                                                  ? double.parse(data.yearAverage!.moisture.toString())
+                                                                      .toStringAsFixed(2)
+                                                                  : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
@@ -334,7 +356,10 @@ class _WatchlistState extends State<Watchlist> {
                                                             ),
                                                             const SizedBox(height: 4),
                                                             Text(
-                                                              data.yearAverage?.prot12Mb != null ? double.parse(data.yearAverage!.prot12Mb.toString()).toStringAsFixed(2) : "--",
+                                                              data.yearAverage?.prot12Mb != null
+                                                                  ? double.parse(data.yearAverage!.prot12Mb.toString())
+                                                                      .toStringAsFixed(2)
+                                                                  : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
                                                                   ),
@@ -354,7 +379,9 @@ class _WatchlistState extends State<Watchlist> {
                                                             const SizedBox(height: 4),
                                                             Text(
                                                               data.yearAverage?.dryBasisProt != null
-                                                                  ? double.parse(data.yearAverage!.dryBasisProt.toString()).toStringAsFixed(2)
+                                                                  ? double.parse(
+                                                                          data.yearAverage!.dryBasisProt.toString())
+                                                                      .toStringAsFixed(2)
                                                                   : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
@@ -395,7 +422,9 @@ class _WatchlistState extends State<Watchlist> {
                                                             const SizedBox(height: 4),
                                                             Text(
                                                               data.fiveYearAverage?.testWtlbbu != null
-                                                                  ? double.parse(data.fiveYearAverage!.testWtlbbu.toString()).toStringAsFixed(2)
+                                                                  ? double.parse(
+                                                                          data.fiveYearAverage!.testWtlbbu.toString())
+                                                                      .toStringAsFixed(2)
                                                                   : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
@@ -417,7 +446,9 @@ class _WatchlistState extends State<Watchlist> {
                                                             const SizedBox(height: 4),
                                                             Text(
                                                               data.fiveYearAverage?.testWtkghl != null
-                                                                  ? double.parse(data.fiveYearAverage!.testWtkghl.toString()).toStringAsFixed(2)
+                                                                  ? double.parse(
+                                                                          data.fiveYearAverage!.testWtkghl.toString())
+                                                                      .toStringAsFixed(2)
                                                                   : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
@@ -439,7 +470,9 @@ class _WatchlistState extends State<Watchlist> {
                                                             const SizedBox(height: 4),
                                                             Text(
                                                               data.fiveYearAverage?.moisture != null
-                                                                  ? double.parse(data.fiveYearAverage!.moisture.toString()).toStringAsFixed(2)
+                                                                  ? double.parse(
+                                                                          data.fiveYearAverage!.moisture.toString())
+                                                                      .toStringAsFixed(2)
                                                                   : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
@@ -461,7 +494,9 @@ class _WatchlistState extends State<Watchlist> {
                                                             const SizedBox(height: 4),
                                                             Text(
                                                               data.fiveYearAverage?.prot12Mb != null
-                                                                  ? double.parse(data.fiveYearAverage!.prot12Mb.toString()).toStringAsFixed(2)
+                                                                  ? double.parse(
+                                                                          data.fiveYearAverage!.prot12Mb.toString())
+                                                                      .toStringAsFixed(2)
                                                                   : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
@@ -482,7 +517,9 @@ class _WatchlistState extends State<Watchlist> {
                                                             const SizedBox(height: 4),
                                                             Text(
                                                               data.fiveYearAverage?.dryBasisProt != null
-                                                                  ? double.parse(data.fiveYearAverage!.dryBasisProt.toString()).toStringAsFixed(2)
+                                                                  ? double.parse(
+                                                                          data.fiveYearAverage!.dryBasisProt.toString())
+                                                                      .toStringAsFixed(2)
                                                                   : "--",
                                                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                                     color: c,
@@ -516,7 +553,13 @@ class _WatchlistState extends State<Watchlist> {
                           return Column(
                             children: [
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  wp.navigateToPriceReport(
+                                      context: context,
+                                      region: data.filterData?.region ?? "",
+                                      classs: data.filterData?.classs ?? "",
+                                      date: data.filterData?.date ?? "");
+                                },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: AppColors.cAB865A.withOpacity(0.2),
@@ -552,6 +595,34 @@ class _WatchlistState extends State<Watchlist> {
                                                   ),
                                                   Text(
                                                     data.filterData?.region ?? "",
+                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                          color: AppColors.cFFFFFF,
+                                                        ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                    child: Container(
+                                                      height: 12,
+                                                      width: 2,
+                                                      color: AppColors.cFFFFFF,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    data.filterData?.classs ?? "",
+                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                          color: AppColors.cFFFFFF,
+                                                        ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                    child: Container(
+                                                      height: 12,
+                                                      width: 2,
+                                                      color: AppColors.cFFFFFF,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    data.filterData?.date ?? "",
                                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                           color: AppColors.cFFFFFF,
                                                         ),
@@ -609,7 +680,10 @@ class _WatchlistState extends State<Watchlist> {
                                                           ? Center(
                                                               child: Text(
                                                                 AppStrings.noDataFound,
-                                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c464646),
+                                                                style: Theme.of(context)
+                                                                    .textTheme
+                                                                    .bodySmall
+                                                                    ?.copyWith(color: AppColors.c464646),
                                                               ),
                                                             )
                                                           : Padding(
@@ -618,7 +692,8 @@ class _WatchlistState extends State<Watchlist> {
                                                                 margin: EdgeInsets.zero,
                                                                 plotAreaBorderWidth: 0,
                                                                 backgroundColor: AppColors.cAB865A.withOpacity(0.0),
-                                                                plotAreaBackgroundColor: AppColors.cAB865A.withOpacity(0.0),
+                                                                plotAreaBackgroundColor:
+                                                                    AppColors.cAB865A.withOpacity(0.0),
                                                                 primaryXAxis: DateTimeAxis(
                                                                   dateFormat: DateFormat('MM/dd'),
                                                                   intervalType: DateTimeIntervalType.hours,
@@ -626,7 +701,6 @@ class _WatchlistState extends State<Watchlist> {
                                                                 ),
                                                                 primaryYAxis: const NumericAxis(
                                                                   isVisible: false,
-
                                                                   majorGridLines: MajorGridLines(width: 0),
                                                                   axisLine: AxisLine(width: 0),
                                                                   rangePadding: ChartRangePadding.round,
@@ -634,12 +708,15 @@ class _WatchlistState extends State<Watchlist> {
                                                                 series: <CartesianSeries>[
                                                                   LineSeries<GraphDataModal, DateTime>(
                                                                     dataSource: data.graphData,
-                                                                    xValueMapper: (GraphDataModal data, _) => DateTime.parse(data.pRDATE.toString()),
-                                                                    yValueMapper: (GraphDataModal data, _) => data.cASHMT,
+                                                                    xValueMapper: (GraphDataModal data, _) =>
+                                                                        DateTime.parse(data.pRDATE.toString()),
+                                                                    yValueMapper: (GraphDataModal data, _) =>
+                                                                        data.cASHMT,
                                                                     color: AppColors.c464646,
                                                                     width: 1,
                                                                     name: 'CASHMT',
-                                                                    markerSettings: const MarkerSettings(isVisible: false),
+                                                                    markerSettings:
+                                                                        const MarkerSettings(isVisible: false),
                                                                   ),
                                                                 ],
                                                               ),
@@ -648,50 +725,6 @@ class _WatchlistState extends State<Watchlist> {
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      data.filterData?.region ?? "",
-                                                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                            color: AppColors.cab865a,
-                                                            fontWeight: FontWeight.w900,
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Text(
-                                                  "(${data.filterData?.classs ?? ""})",
-                                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                        color: AppColors.c656e79,
-                                                      ),
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                const SizedBox(
-                                                  height: 16,
-                                                ),
-                                                Container(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.c45413b,
-                                                    borderRadius: BorderRadius.circular(12),
-                                                  ),
-                                                  child: Text(
-                                                    data.filterData?.date ?? "",
-                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                          color: AppColors.cFFFFFF,
-                                                        ),
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
                                             ),
                                           ],
                                         ),

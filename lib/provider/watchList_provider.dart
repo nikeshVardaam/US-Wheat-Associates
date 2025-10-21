@@ -145,7 +145,8 @@ class WatchlistProvider extends ChangeNotifier {
     _chartLoadingMap[itemId] = isLoading;
   }
 
-  Future<ModelLocalWatchlistData?> getDataFromLocalList({required String date, required String cls, required String type}) async {
+  Future<ModelLocalWatchlistData?> getDataFromLocalList(
+      {required String date, required String cls, required String type}) async {
     List<ModelLocalWatchlistData> localList = [];
     sp = await SharedPreferences.getInstance();
 
@@ -165,7 +166,8 @@ class WatchlistProvider extends ChangeNotifier {
     return modelLocalWatchlistData;
   }
 
-  Future<ModelLocalWatchlistData?> getGraphDataFromLocalList({required String date, required String cls, required String gRPHCode, required String region}) async {
+  Future<ModelLocalWatchlistData?> getGraphDataFromLocalList(
+      {required String date, required String cls, required String gRPHCode, required String region}) async {
     List<ModelLocalWatchlistData> localList = [];
     sp = await SharedPreferences.getInstance();
 
@@ -178,7 +180,11 @@ class WatchlistProvider extends ChangeNotifier {
     }
     ModelLocalWatchlistData? modelLocalWatchlistData;
     for (var i = 0; i < localList.length; ++i) {
-      if (localList[i].type == "price" && localList[i].date == date && localList[i].cls == cls && localList[i].gRPHCode == gRPHCode && localList[i].region?.region == region) {
+      if (localList[i].type == "price" &&
+          localList[i].date == date &&
+          localList[i].cls == cls &&
+          localList[i].gRPHCode == gRPHCode &&
+          localList[i].region?.region == region) {
         modelLocalWatchlistData = localList[i];
       }
     }
@@ -228,7 +234,11 @@ class WatchlistProvider extends ChangeNotifier {
       if (watchlist.isNotEmpty) {
         for (var i = 0; i < watchlist.length; ++i) {
           if (watchlist[i].type.toLowerCase() == "quality") {
-            await getDataFromLocalList(date: watchlist[i].filterdata.date ?? "", cls: watchlist[i].filterdata.classs ?? "", type: "quality").then(
+            await getDataFromLocalList(
+                    date: watchlist[i].filterdata.date ?? "",
+                    cls: watchlist[i].filterdata.classs ?? "",
+                    type: "quality")
+                .then(
               (value) {
                 QualityWatchListModel q = QualityWatchListModel(
                   id: watchlist[i].id,
@@ -241,23 +251,21 @@ class WatchlistProvider extends ChangeNotifier {
               },
             );
           } else {
-            for (var j = 0; j < watchlist.length; ++j) {
-              getGraphDataFromLocalList(
-                date: watchlist[i].filterdata.date ?? "",
-                cls: watchlist[i].filterdata.classs ?? "",
-                gRPHCode: watchlist[i].filterdata.graphCode ?? "",
-                region: watchlist[i].filterdata.region ?? "",
-              ).then(
-                (value) {
-                  PriceWatchListModel p = PriceWatchListModel(
-                    id: watchlist[i].id,
-                    filterData: watchlist[i].filterdata,
-                    graphData: value?.graphData,
-                  );
-                  pList.add(p);
-                },
-              );
-            }
+            getGraphDataFromLocalList(
+              date: watchlist[i].filterdata.date ?? "",
+              cls: watchlist[i].filterdata.classs ?? "",
+              gRPHCode: watchlist[i].filterdata.graphCode ?? "",
+              region: watchlist[i].filterdata.region ?? "",
+            ).then(
+              (value) {
+                PriceWatchListModel p = PriceWatchListModel(
+                  id: watchlist[i].id,
+                  filterData: watchlist[i].filterdata,
+                  graphData: value?.graphData,
+                );
+                pList.add(p);
+              },
+            );
           }
         }
       } else {
@@ -353,7 +361,9 @@ class WatchlistProvider extends ChangeNotifier {
               }
             }).toList();
 
-            final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
+            final avgSales = monthEntries.isNotEmpty
+                ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length
+                : 0.0;
 
             return SalesData(month: month, sales: avgSales);
           }).toList();
