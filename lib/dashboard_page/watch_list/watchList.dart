@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:uswheat/modal/graph_modal.dart';
@@ -612,29 +613,20 @@ class _WatchlistState extends State<Watchlist> {
                                                               ),
                                                             )
                                                           : Padding(
-                                                              padding: const EdgeInsets.only(bottom: 6, left: 8),
+                                                              padding: const EdgeInsets.only(bottom: 6, left: 16),
                                                               child: SfCartesianChart(
                                                                 margin: EdgeInsets.zero,
                                                                 plotAreaBorderWidth: 0,
                                                                 backgroundColor: AppColors.cAB865A.withOpacity(0.0),
                                                                 plotAreaBackgroundColor: AppColors.cAB865A.withOpacity(0.0),
-                                                                primaryXAxis: CategoryAxis(
-                                                                  isVisible: true,
-                                                                  majorGridLines: MajorGridLines(
-                                                                    width: 0.1,
-                                                                    color: AppColors.cab865a.withOpacity(0.6),
-                                                                  ),
-                                                                  axisLine: const AxisLine(width: 0),
-                                                                  interval: 1,
-                                                                  labelStyle: Theme.of(context).textTheme.labelSmall,
-                                                                  tickPosition: TickPosition.inside,
-                                                                  labelPlacement: LabelPlacement.betweenTicks,
-                                                                  // ← important
-                                                                  edgeLabelPlacement: EdgeLabelPlacement.shift,
-                                                                  majorTickLines: const MajorTickLines(width: 0),
+                                                                primaryXAxis: DateTimeAxis(
+                                                                  dateFormat: DateFormat('MM/dd'),
+                                                                  intervalType: DateTimeIntervalType.hours,
+                                                                  majorGridLines: const MajorGridLines(width: 0),
                                                                 ),
                                                                 primaryYAxis: const NumericAxis(
                                                                   isVisible: false,
+
                                                                   majorGridLines: MajorGridLines(width: 0),
                                                                   axisLine: AxisLine(width: 0),
                                                                   rangePadding: ChartRangePadding.round,

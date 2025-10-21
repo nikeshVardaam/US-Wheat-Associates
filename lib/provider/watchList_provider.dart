@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/modal/model_local_watchList.dart';
-import 'package:uswheat/modal/model_region.dart';
 import 'package:uswheat/modal/watchlist_modal.dart';
 import 'package:uswheat/service/delete_service.dart';
 import 'package:uswheat/service/get_api_services.dart';
@@ -146,7 +145,7 @@ class WatchlistProvider extends ChangeNotifier {
     _chartLoadingMap[itemId] = isLoading;
   }
 
-  getDataFromLocalList({required String date, required String cls, required String type}) async {
+  Future<ModelLocalWatchlistData?> getDataFromLocalList({required String date, required String cls, required String type}) async {
     List<ModelLocalWatchlistData> localList = [];
     sp = await SharedPreferences.getInstance();
 
@@ -160,6 +159,26 @@ class WatchlistProvider extends ChangeNotifier {
     ModelLocalWatchlistData? modelLocalWatchlistData;
     for (var i = 0; i < localList.length; ++i) {
       if (localList[i].type == type && localList[i].date == date && localList[i].cls == cls) {
+        modelLocalWatchlistData = localList[i];
+      }
+    }
+    return modelLocalWatchlistData;
+  }
+
+  Future<ModelLocalWatchlistData?> getGraphDataFromLocalList({required String date, required String cls, required String gRPHCode, required String region}) async {
+    List<ModelLocalWatchlistData> localList = [];
+    sp = await SharedPreferences.getInstance();
+
+    var data = sp?.getString(PrefKeys.watchList);
+
+    List<dynamic> list = jsonDecode(data.toString()) ?? [];
+    for (var i = 0; i < list.length; ++i) {
+      ModelLocalWatchlistData m = ModelLocalWatchlistData.fromJson(list[i]);
+      localList.add(m);
+    }
+    ModelLocalWatchlistData? modelLocalWatchlistData;
+    for (var i = 0; i < localList.length; ++i) {
+      if (localList[i].type == "price" && localList[i].date == date && localList[i].cls == cls && localList[i].gRPHCode == gRPHCode && localList[i].region?.region == region) {
         modelLocalWatchlistData = localList[i];
       }
     }
@@ -193,7 +212,6 @@ class WatchlistProvider extends ChangeNotifier {
 
   getWatchList({required BuildContext context}) async {
     sp = await SharedPreferences.getInstance();
-
     qList.clear();
     pList.clear();
 
@@ -210,11 +228,7 @@ class WatchlistProvider extends ChangeNotifier {
       if (watchlist.isNotEmpty) {
         for (var i = 0; i < watchlist.length; ++i) {
           if (watchlist[i].type.toLowerCase() == "quality") {
-            await getDataFromLocalList(
-                    date: watchlist[i].filterdata.date ?? "",
-                    cls: watchlist[i].filterdata.classs ?? "",
-                    type: "quality")
-                .then(
+            await getDataFromLocalList(date: watchlist[i].filterdata.date ?? "", cls: watchlist[i].filterdata.classs ?? "", type: "quality").then(
               (value) {
                 QualityWatchListModel q = QualityWatchListModel(
                   id: watchlist[i].id,
@@ -228,9 +242,21 @@ class WatchlistProvider extends ChangeNotifier {
             );
           } else {
             for (var j = 0; j < watchlist.length; ++j) {
-              PriceWatchListModel p =
-                  PriceWatchListModel(id: watchlist[i].id, filterData: watchlist[i].filterdata, graphData: []);
-              pList.add(p);
+              getGraphDataFromLocalList(
+                date: watchlist[i].filterdata.date ?? "",
+                cls: watchlist[i].filterdata.classs ?? "",
+                gRPHCode: watchlist[i].filterdata.graphCode ?? "",
+                region: watchlist[i].filterdata.region ?? "",
+              ).then(
+                (value) {
+                  PriceWatchListModel p = PriceWatchListModel(
+                    id: watchlist[i].id,
+                    filterData: watchlist[i].filterdata,
+                    graphData: value?.graphData,
+                  );
+                  pList.add(p);
+                },
+              );
             }
           }
         }
@@ -327,9 +353,7 @@ class WatchlistProvider extends ChangeNotifier {
               }
             }).toList();
 
-            final avgSales = monthEntries.isNotEmpty
-                ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length
-                : 0.0;
+            final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
 
             return SalesData(month: month, sales: avgSales);
           }).toList();
