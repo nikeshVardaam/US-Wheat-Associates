@@ -30,15 +30,15 @@ class PricesModal {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dlymnth'] = this.dlymnth;
-    data['dlyyr'] = this.dlyyr;
-    data['prdate'] = this.prdate;
-    data['date'] = this.date;
-    data['portregn'] = this.portregn;
-    data['cashbu'] = this.cashbu;
-    data['cashmt'] = this.cashmt;
-    data['nrbyoffset'] = this.nrbyoffset;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['dlymnth'] = dlymnth;
+    data['dlyyr'] = dlyyr;
+    data['prdate'] = prdate;
+    data['date'] = date;
+    data['portregn'] = portregn;
+    data['cashbu'] = cashbu;
+    data['cashmt'] = cashmt;
+    data['nrbyoffset'] = nrbyoffset;
     return data;
   }
 }

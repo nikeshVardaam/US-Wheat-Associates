@@ -12,10 +12,10 @@ class ForwardPricesModal {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['CASHMT'] = this.cASHMT;
-    data['CASHBU'] = this.cASHBU;
-    data['NRBYOFFSET'] = this.nRBYOFFSET;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['CASHMT'] = cASHMT;
+    data['CASHBU'] = cASHBU;
+    data['NRBYOFFSET'] = nRBYOFFSET;
     return data;
   }
 }

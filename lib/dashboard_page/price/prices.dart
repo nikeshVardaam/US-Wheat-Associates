@@ -29,12 +29,16 @@ class _PricesState extends State<Prices> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final pp = Provider.of<PricesProvider>(context, listen: false);
-
+      Provider.of<PricesProvider>(context, listen: false).getPrefData();
       if ((widget.region?.isNotEmpty ?? false) && (widget.cls?.isNotEmpty ?? false) && (widget.year?.isNotEmpty ?? false)) {
-        pp.initCallFromWatchList(context: context, region: widget.region, cls: widget.cls, year: widget.year);
+        Provider.of<PricesProvider>(context, listen: false).initCallFromWatchList(
+          context: context,
+          region: widget.region,
+          cls: widget.cls,
+          year: widget.year,
+        );
       } else {
-        pp.initCall(context: context);
+        Provider.of<PricesProvider>(context, listen: false).initCall(context: context);
       }
     });
   }

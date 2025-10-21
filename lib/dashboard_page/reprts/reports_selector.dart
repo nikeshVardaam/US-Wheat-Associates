@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../utils/app_strings.dart';
-import '../../modal/model_region.dart';
 
 class ReportsSelector extends StatefulWidget {
   final List<dynamic> reportList;

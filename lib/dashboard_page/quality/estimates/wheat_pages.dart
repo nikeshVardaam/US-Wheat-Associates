@@ -18,6 +18,7 @@ class WheatPages extends StatefulWidget {
   final String date;
   final bool fromWatchList;
 
+
   const WheatPages(
       {super.key, required this.title, required this.fromWatchList, required this.appBarColor, required this.date, required this.imageAsset, required this.selectedClass});
 

@@ -100,7 +100,7 @@ class WheatPageProvider extends ChangeNotifier {
       }
       if (hasData) {
         for (var i = 0; i < localWatchList.length; ++i) {
-          if (localWatchList[i].cls == selectedClass && localWatchList[i].date == selectedDate) {
+          if (localWatchList[i].type == "quality" && localWatchList[i].cls == selectedClass && localWatchList[i].date == selectedDate) {
             ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
               type: "quality",
               date: selectedDate,
@@ -108,6 +108,9 @@ class WheatPageProvider extends ChangeNotifier {
               yearAverage: yearAverage,
               finalAverage: fiveYearAverage,
               currentAverage: current,
+              region: null,
+              graphData: [],
+              gRPHCode: '',
             );
             localWatchList[i] = modelLocalWatchlist;
             notifyListeners();
@@ -122,6 +125,9 @@ class WheatPageProvider extends ChangeNotifier {
           yearAverage: yearAverage,
           finalAverage: fiveYearAverage,
           currentAverage: current,
+          region: null,
+          graphData: [],
+          gRPHCode: '',
         );
         localWatchList.add(modelLocalWatchlist);
       }
@@ -133,6 +139,9 @@ class WheatPageProvider extends ChangeNotifier {
         yearAverage: yearAverage,
         finalAverage: fiveYearAverage,
         currentAverage: current,
+        region: null,
+        graphData: [],
+        gRPHCode: '',
       );
       localWatchList.add(modelLocalWatchlist);
     }
@@ -217,7 +226,7 @@ class WheatPageProvider extends ChangeNotifier {
     )
         .then((value) async {
       if (value != null) {
-        print(value.body);
+
         if (localWatchList.isEmpty) {
           ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
             type: "quality",
@@ -226,6 +235,9 @@ class WheatPageProvider extends ChangeNotifier {
             yearAverage: yearAverage,
             finalAverage: fiveYearAverage,
             currentAverage: current,
+            region: null,
+            graphData: [],
+            gRPHCode: '',
           );
 
           localWatchList.add(modelLocalWatchlist);
@@ -235,7 +247,7 @@ class WheatPageProvider extends ChangeNotifier {
           bool ifModalHasInList = false;
 
           for (var i = 0; i < localWatchList.length; ++i) {
-            if (localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
+            if (localWatchList[i].type == "quality" && localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
               ifModalHasInList = true;
               break;
             }
@@ -243,7 +255,7 @@ class WheatPageProvider extends ChangeNotifier {
 
           if (ifModalHasInList) {
             for (var i = 0; i < localWatchList.length; ++i) {
-              if (localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
+              if (localWatchList[i].type == "quality" && localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
                 ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
                   type: "quality",
                   date: selectedDate,
@@ -251,6 +263,9 @@ class WheatPageProvider extends ChangeNotifier {
                   yearAverage: yearAverage,
                   finalAverage: fiveYearAverage,
                   currentAverage: current,
+                  region: null,
+                  graphData: [],
+                  gRPHCode: '',
                 );
                 localWatchList[i] = modelLocalWatchlist;
                 notifyListeners();
@@ -265,6 +280,9 @@ class WheatPageProvider extends ChangeNotifier {
               yearAverage: yearAverage,
               finalAverage: fiveYearAverage,
               currentAverage: current,
+              region: null,
+              graphData: [],
+              gRPHCode: '',
             );
             localWatchList.add(modelLocalWatchlist);
           }

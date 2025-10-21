@@ -121,5 +121,7 @@ class AppWidgets {
     });
   }
 
-  Widget? filledButton(bool bool, String s, BuildContext context) {}
+  Widget? filledButton(bool bool, String s, BuildContext context) {
+    return null;
+  }
 }

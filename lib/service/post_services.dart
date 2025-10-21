@@ -90,7 +90,7 @@ class PostServices {
         );
         return null;
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       if (context.mounted && loader) {
         Navigator.pop(context);
         ExceptionDialogs.networkDialog(
@@ -111,7 +111,7 @@ class PostServices {
         );
       }
       return null;
-    } on SocketException catch (e) {
+    } on SocketException {
       if (context.mounted && loader) {
         Navigator.pop(context);
         ExceptionDialogs.networkDialog(

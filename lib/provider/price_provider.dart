@@ -3,25 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:uswheat/modal/all_price_data_modal.dart';
-import 'package:uswheat/modal/model_price_watchList.dart';
+import 'package:uswheat/modal/model_local_watchList.dart';
 import 'package:uswheat/modal/model_region.dart';
-
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_colors.dart';
+import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
 import '../modal/graph_modal.dart';
-import '../modal/watchlist_modal.dart';
 import '../utils/pref_keys.dart';
 
 class PricesProvider extends ChangeNotifier {
   List<RegionAndClasses> regionsList = [];
   RegionAndClasses? selectedRegion;
-
+  List<ModelLocalWatchlistData> localWatchList = [];
   String? selectedClass;
-
   String? selectedYear;
   List<GraphDataModal> graphDataList = [];
   String? selectedGRPHCode;
@@ -30,7 +28,7 @@ class PricesProvider extends ChangeNotifier {
   AllPriceDataModal? allPriceDataModal;
   SharedPreferences? sp;
 
-  List<ModelPriceWatchList> localPriceWatchList = [];
+  List<ModelLocalWatchlistData> localPriceWatchList = [];
 
   setSelectedRegion({required RegionAndClasses rg, required BuildContext context}) async {
     selectedRegion = rg;
@@ -76,6 +74,23 @@ class PricesProvider extends ChangeNotifier {
       return "${Miscellaneous.ymd(startDate.toString())} To ${Miscellaneous.ymd(endDate.toString())}";
     } else {
       return "";
+    }
+  }
+
+  getPrefData() async {
+    localWatchList.clear();
+
+    notifyListeners();
+
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+    if (data != null) {
+      List<dynamic> list = jsonDecode(data ?? "");
+
+      for (var i = 0; i < list.length; ++i) {
+        ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
+        localWatchList.add(modelLocalWatchlistData);
+      }
     }
   }
 
@@ -147,7 +162,6 @@ class PricesProvider extends ChangeNotifier {
       "type": "price",
       "filterdata": {"region": selectedRegion?.region ?? "", "class": selectedClass ?? "", "date": pRDate, "color": "ffab865a", "grphcode": selectedGRPHCode ?? ""}
     };
-    print(data);
     PostServices()
         .post(
       endpoint: ApiEndpoint.storeWatchlist,
@@ -159,74 +173,76 @@ class PricesProvider extends ChangeNotifier {
         .then(
       (value) {
         if (value != null) {
-          if (localPriceWatchList.isEmpty) {
-            ModelPriceWatchList priceWatchListModel = ModelPriceWatchList(
-                type: "price",
-                filterData: FilterData(
-                    region: selectedRegion?.region ?? "",
-                    classs: selectedClass.toString(),
-                    date: pRDate.toString(),
-                    color: "ffab865a",
-                    year: selectedYear.toString(),
-                    graphCode: selectedGRPHCode.toString()),
-                graphData: graphDataList);
-            localPriceWatchList.add(priceWatchListModel);
-            sp?.setString(PrefKeys.watchList, jsonEncode(localPriceWatchList));
+          if (localWatchList.isEmpty) {
+            ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+              type: "price",
+              date: pRDate,
+              cls: selectedClass,
+              yearAverage: null,
+              finalAverage: null,
+              currentAverage: null,
+              region: selectedRegion,
+              graphData: graphDataList,
+              gRPHCode: selectedGRPHCode,
+            );
+
+            localWatchList.add(modelLocalWatchlist);
+
+            sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
           } else {
             bool ifModalHasInList = false;
 
-            for (var i = 0; i < localPriceWatchList.length; ++i) {
-              if (localPriceWatchList[i].filterData.classs == selectedClass &&
-                  localPriceWatchList[i].filterData.date == pRDate &&
-                  localPriceWatchList[i].filterData.region == selectedRegion &&
-                  localPriceWatchList[i].filterData.graphCode == selectedGRPHCode) {
+            for (var i = 0; i < localWatchList.length; ++i) {
+              if (localWatchList[i].type == "price" &&
+                  localWatchList[i].cls == selectedClass &&
+                  localWatchList[i].date == pRDate &&
+                  localWatchList[i].gRPHCode == selectedGRPHCode) {
                 ifModalHasInList = true;
                 break;
               }
             }
+
             if (ifModalHasInList) {
-              for (var i = 0; i < localPriceWatchList.length; ++i) {
-                if (localPriceWatchList[i].filterData.classs == selectedClass && localPriceWatchList[i].filterData.date == pRDate) {
-                  ModelPriceWatchList localWatchlist = ModelPriceWatchList(
-                      type: "price",
-                      filterData: FilterData(
-                          region: selectedRegion.toString(),
-                          date: pRDate.toString(),
-                          color: "ffab865a",
-                          classs: selectedClass.toString(),
-                          year: selectedYear.toString(),
-                          graphCode: selectedGRPHCode.toString()),
-                      graphData: graphDataList);
-                  localPriceWatchList[i] = localWatchlist;
+              for (var i = 0; i < localWatchList.length; ++i) {
+                if (localWatchList[i].type == "price" &&
+                    localWatchList[i].cls == selectedClass &&
+                    localWatchList[i].date == pRDate &&
+                    localWatchList[i].gRPHCode == selectedGRPHCode) {
+                  ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+                    type: "price",
+                    date: pRDate,
+                    cls: selectedClass,
+                    yearAverage: null,
+                    finalAverage: null,
+                    currentAverage: null,
+                    region: selectedRegion,
+                    graphData: graphDataList,
+                    gRPHCode: selectedGRPHCode,
+                  );
+                  localWatchList[i] = modelLocalWatchlist;
                   notifyListeners();
                   break;
                 }
               }
             } else {
-              ModelPriceWatchList modelLocalWatchlist = ModelPriceWatchList(
-                  type: 'price',
-                  filterData: FilterData(
-                      region: selectedRegion.toString(),
-                      classs: selectedClass.toString(),
-                      date: pRDate.toString(),
-                      color: "ffab865a",
-                      graphCode: selectedGRPHCode.toString(),
-                      year: selectedYear.toString()),
-                  graphData: graphDataList);
-              localPriceWatchList.add(modelLocalWatchlist);
+              ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+                type: "price",
+                date: pRDate,
+                cls: selectedClass,
+                yearAverage: null,
+                finalAverage: null,
+                currentAverage: null,
+                region: selectedRegion,
+                graphData: graphDataList,
+                gRPHCode: selectedGRPHCode,
+              );
+              localWatchList.add(modelLocalWatchlist);
             }
 
-            print(localPriceWatchList.runtimeType);
-
-            String data = jsonEncode(localPriceWatchList);
-            print(data.toString());
-            sp?.setString(PrefKeys.watchList, data);
+            sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
           }
-          AppWidgets.appSnackBar(
-            context: context,
-            text: "Watchlist Added Successfully",
-            color: AppColors.c2a8741,
-          );
+
+          AppWidgets.appSnackBar(context: context, text: AppStrings.added, color: AppColors.c2a8741);
         }
       },
     );

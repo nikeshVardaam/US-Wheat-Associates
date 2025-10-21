@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/modal/model_local_watchList.dart';
-import 'package:uswheat/modal/model_price_watchList.dart';
+import 'package:uswheat/modal/model_region.dart';
 import 'package:uswheat/modal/watchlist_modal.dart';
 import 'package:uswheat/service/delete_service.dart';
 import 'package:uswheat/service/get_api_services.dart';
@@ -22,7 +22,7 @@ import 'dashboard_provider.dart';
 
 class WatchlistProvider extends ChangeNotifier {
   List<QualityWatchListModel> qList = [];
-  List<ModelPriceWatchList> pList = [];
+  List<PriceWatchListModel> pList = [];
   SharedPreferences? sp;
   List<ModelLocalWatchlistData> localWatchList = [];
 
@@ -166,28 +166,6 @@ class WatchlistProvider extends ChangeNotifier {
     return modelLocalWatchlistData;
   }
 
-  getPriceDataFromLocalList({required String date, required String region, required String cls, required String type, required String graphCode}) async {
-    List<ModelPriceWatchList> localList = [];
-    sp = await SharedPreferences.getInstance();
-
-    var data = sp?.getString(PrefKeys.watchList);
-
-    List<dynamic> list = jsonDecode(data.toString()) ?? [];
-    for (var i = 0; i < list.length; ++i) {
-      ModelPriceWatchList m = ModelPriceWatchList.fromJson(list[i]);
-      localList.add(m);
-    }
-    ModelPriceWatchList? modelPriceWatchList;
-    for (var i = 0; i < localList.length; ++i) {
-      if (localList[i].type == type && localList[i].filterData.date == date && localList[i].filterData.classs == cls) {
-        modelPriceWatchList = localList[i];
-      }
-    }
-    print("graph code :${modelPriceWatchList?.filterData.graphCode}");
-
-    return modelPriceWatchList;
-  }
-
   deleteFromPrefData({required String date, required String cls, required String type}) async {
     bool hasData = false;
 
@@ -232,7 +210,7 @@ class WatchlistProvider extends ChangeNotifier {
       if (watchlist.isNotEmpty) {
         for (var i = 0; i < watchlist.length; ++i) {
           if (watchlist[i].type.toLowerCase() == "quality") {
-            await getDataFromLocalList(date: watchlist[i].filterdata.date, cls: watchlist[i].filterdata.classs, type: "quality").then(
+            await getDataFromLocalList(date: watchlist[i].filterdata.date ?? "", cls: watchlist[i].filterdata.classs ?? "", type: "quality").then(
               (value) {
                 QualityWatchListModel q = QualityWatchListModel(
                   id: watchlist[i].id,
@@ -246,16 +224,8 @@ class WatchlistProvider extends ChangeNotifier {
             );
           } else {
             for (var j = 0; j < watchlist.length; ++j) {
-              await getPriceDataFromLocalList(
-                date: watchlist[j].filterdata.date,
-                region: watchlist[j].filterdata.region,
-                cls: watchlist[j].filterdata.classs,
-                type: watchlist[j].type,
-                graphCode: watchlist[j].filterdata.graphCode,
-              ).then((value) {
-                ModelPriceWatchList p = ModelPriceWatchList(type: watchlist[j].type, filterData: watchlist[j].filterdata, graphData: watchlist[j].graphDataList);
-                pList.add(p);
-              });
+              PriceWatchListModel p = PriceWatchListModel(id: watchlist[i].id, filterData: watchlist[i].filterdata, graphData: []);
+              pList.add(p);
             }
           }
         }
@@ -282,12 +252,14 @@ class WatchlistProvider extends ChangeNotifier {
     )
         .then(
       (value) {
+        notifyListeners();
         if (value != null) {
-          deleteFromPrefData(date: date, cls: cls, type: type);
+          if (type == "quality") {
+            deleteFromPrefData(date: date, cls: cls, type: type);
+          } else {}
         }
       },
     );
-    notifyListeners();
   }
 
   Future<void> fetchChartDataForItem(BuildContext context, WatchlistItem? item) async {
@@ -295,9 +267,9 @@ class WatchlistProvider extends ChangeNotifier {
       try {
         if (item.chartData.isNotEmpty) return;
 
-        String region = item.filterdata.region;
-        String wclass = item.filterdata.classs;
-        String date = item.filterdata.date;
+        String region = item.filterdata.region ?? "";
+        String wclass = item.filterdata.classs ?? "";
+        String date = item.filterdata.date ?? "";
 
         if (date.length == 4) date = "$date-01-01";
 
@@ -383,14 +355,14 @@ class QualityWatchListModel {
   });
 }
 
-// class PriceWatchListModel {
-//   final String? id;
-//   final FilterData? filterData;
-//   final List<GraphDataModal>? graphDataList;
-//
-//   PriceWatchListModel({
-//     required this.id,
-//     required this.filterData,
-//     required this.graphDataList,
-//   });
-// }
+class PriceWatchListModel {
+  final String? id;
+  final FilterData? filterData;
+  final List<GraphDataModal>? graphData;
+
+  PriceWatchListModel({
+    required this.id,
+    required this.filterData,
+    required this.graphData,
+  });
+}
