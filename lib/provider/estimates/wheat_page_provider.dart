@@ -186,8 +186,6 @@ class WheatPageProvider extends ChangeNotifier {
         localWatchList.add(modelLocalWatchlistData);
       }
     }
-
-    print(localWatchList.length);
   }
 
   void addWatchList({required BuildContext context, required String wheatClass, required String color}) {
@@ -219,9 +217,8 @@ class WheatPageProvider extends ChangeNotifier {
     )
         .then((value) async {
       if (value != null) {
+        print(value.body);
         if (localWatchList.isEmpty) {
-          print("Empty list");
-
           ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
             type: "quality",
             date: selectedDate,
@@ -272,9 +269,8 @@ class WheatPageProvider extends ChangeNotifier {
             localWatchList.add(modelLocalWatchlist);
           }
 
-          // sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+          sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
         }
-        print(localWatchList.length);
 
         AppWidgets.appSnackBar(context: context, text: AppStrings.added, color: AppColors.c2a8741);
       }

@@ -1,3 +1,4 @@
+import 'package:uswheat/modal/graph_modal.dart';
 import 'package:uswheat/modal/watchlist_modal.dart';
 
 class ModelLocalWatchlist {
@@ -58,4 +59,12 @@ class ModelLocalWatchlistData {
       'currentAverage': currentAverage,
     };
   }
+}
+
+class ModelLocalPriceWatchListData{
+  String? type;
+  String? date;
+  String? cls;
+  String? graphCode;
+
 }

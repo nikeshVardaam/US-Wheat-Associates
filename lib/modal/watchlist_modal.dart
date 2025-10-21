@@ -1,6 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:uswheat/modal/sales_modal.dart';
 
+import 'graph_modal.dart';
+
 class WatchlistModel {
   final bool success;
   final List<WatchlistItem> data;
@@ -225,17 +227,20 @@ class WatchlistItem {
   final String updatedAt;
   List<SalesData> chartData;
   WheatData? wheatData;
+  final String graphCode;
+  List<GraphDataModal> graphDataList = [];
 
-  WatchlistItem({
-    required this.id,
-    required this.userId,
-    required this.type,
-    required this.filterdata,
-    required this.createdAt,
-    required this.updatedAt,
-    this.chartData = const [],
-    this.wheatData,
-  });
+  WatchlistItem(
+      {required this.id,
+      required this.userId,
+      required this.type,
+      required this.filterdata,
+      required this.createdAt,
+      required this.updatedAt,
+      this.chartData = const [],
+      this.wheatData,
+      required this.graphCode,
+      required this.graphDataList});
 
   factory WatchlistItem.fromJson(Map<String, dynamic> json) {
     WheatData? wheat;
@@ -244,14 +249,15 @@ class WatchlistItem {
     }
 
     return WatchlistItem(
-      id: json['id'] ?? '',
-      userId: json['user_id'] ?? '',
-      type: json['type'] ?? '',
-      filterdata: FilterData.fromJson(json['filterdata'] ?? {}),
-      createdAt: json['created_at'] ?? '',
-      updatedAt: json['updated_at'] ?? '',
-      wheatData: wheat,
-    );
+        id: json['id'] ?? '',
+        userId: json['user_id'] ?? '',
+        type: json['type'] ?? '',
+        filterdata: FilterData.fromJson(json['filterdata'] ?? {}),
+        createdAt: json['created_at'] ?? '',
+        updatedAt: json['updated_at'] ?? '',
+        wheatData: wheat,
+        graphCode: json['grphcode'] ?? '',
+        graphDataList: []);
   }
 }
 
@@ -261,14 +267,9 @@ class FilterData {
   final String date;
   final String year;
   final String color;
+  final String graphCode;
 
-  FilterData({
-    required this.region,
-    required this.classs,
-    required this.date,
-    required this.year,
-    required this.color,
-  });
+  FilterData({required this.region, required this.classs, required this.date, required this.year, required this.color, required this.graphCode});
 
   factory FilterData.fromJson(Map<String, dynamic> json) {
     return FilterData(
@@ -277,6 +278,7 @@ class FilterData {
       date: json['date'] ?? '',
       year: json['year'] ?? '',
       color: json['color'] ?? '',
+      graphCode: json['grphcode'] ?? '',
     );
   }
 

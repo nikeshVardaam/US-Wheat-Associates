@@ -141,7 +141,6 @@ class _WheatPagesState extends State<WheatPages> {
                                 (value) {
                                   if (value != null) {
                                     wpp.updatedDate(context: context, date: Miscellaneous.ymd(value.toString()));
-
                                   }
                                 },
                               );
