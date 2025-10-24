@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:uswheat/auth/SyncData.dart';
 import 'package:uswheat/modal/all_price_data_modal.dart';
+import 'package:uswheat/modal/model_local_watchList.dart';
 import 'package:uswheat/modal/model_region.dart';
 import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_colors.dart';
+import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
 import '../modal/graph_modal.dart';
@@ -17,9 +18,8 @@ import '../utils/pref_keys.dart';
 class PricesProvider extends ChangeNotifier {
   List<RegionAndClasses> regionsList = [];
   RegionAndClasses? selectedRegion;
-
+  List<ModelLocalWatchlistData> localWatchList = [];
   String? selectedClass;
-
   String? selectedYear;
   List<GraphDataModal> graphDataList = [];
   String? selectedGRPHCode;
@@ -28,8 +28,9 @@ class PricesProvider extends ChangeNotifier {
   AllPriceDataModal? allPriceDataModal;
   SharedPreferences? sp;
 
-  setSelectedRegion(
-      {required RegionAndClasses rg, required BuildContext context}) async {
+  List<ModelLocalWatchlistData> localPriceWatchList = [];
+
+  setSelectedRegion({required RegionAndClasses rg, required BuildContext context}) async {
     selectedRegion = rg;
     if (selectedClass != null && pRDate != null) {
       await getGraphCodesByClassAndRegion(context: context).then(
@@ -69,23 +70,36 @@ class PricesProvider extends ChangeNotifier {
   String getLastOneYearRange(String? date) {
     if (date?.isNotEmpty ?? false) {
       DateTime endDate = DateTime.parse(date ?? "");
-      DateTime startDate =
-          DateTime(endDate.year - 1, endDate.month, endDate.day);
+      DateTime startDate = DateTime(endDate.year - 1, endDate.month, endDate.day);
       return "${Miscellaneous.ymd(startDate.toString())} To ${Miscellaneous.ymd(endDate.toString())}";
     } else {
       return "";
     }
   }
 
-  Future<void> initCallFromWatchList(
-      {required BuildContext context,
-      required String? region,
-      required String? cls,
-      required String? year}) async {
+  getPrefData() async {
+    localWatchList.clear();
+
+    notifyListeners();
+
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+    if (data != null) {
+      List<dynamic> list = jsonDecode(data ?? "");
+
+      for (var i = 0; i < list.length; ++i) {
+        ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
+        localWatchList.add(modelLocalWatchlistData);
+      }
+    }
+  }
+
+  Future<void> initCallFromWatchList({required BuildContext context, required String? region, required String? cls, required String? year}) async {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
-      maximumZoomLevel: 0.5,        // must be double
+      maximumZoomLevel: 0.5,
+      // must be double
       enableDoubleTapZooming: true,
       enableDirectionalZooming: true,
       enableSelectionZooming: true,
@@ -142,17 +156,12 @@ class PricesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  addToWatchlist({required BuildContext context}) {
+  addToWatchlist({required BuildContext context}) async {
+    sp = await SharedPreferences.getInstance();
     final data = {
       "type": "price",
-      "filterdata": {
-        "region": selectedRegion?.region ?? "",
-        "class": selectedClass ?? "",
-        "date": pRDate,
-        "color": "ffab865a",
-      }
+      "filterdata": {"region": selectedRegion?.region ?? "", "class": selectedClass ?? "", "date": pRDate, "color": "ffab865a", "grphcode": selectedGRPHCode ?? ""}
     };
-
     PostServices()
         .post(
       endpoint: ApiEndpoint.storeWatchlist,
@@ -164,14 +173,80 @@ class PricesProvider extends ChangeNotifier {
         .then(
       (value) {
         if (value != null) {
-          AppWidgets.appSnackBar(
-            context: context,
-            text: "Watchlist Added Successfully",
-            color: AppColors.c2a8741,
-          );
+          if (localWatchList.isEmpty) {
+            ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+              type: "price",
+              date: pRDate,
+              cls: selectedClass,
+              yearAverage: null,
+              finalAverage: null,
+              currentAverage: null,
+              region: selectedRegion?.region,
+              graphData: graphDataList,
+              gRPHCode: selectedGRPHCode,
+            );
+
+            localWatchList.add(modelLocalWatchlist);
+
+            sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+          } else {
+            bool ifModalHasInList = false;
+
+            for (var i = 0; i < localWatchList.length; ++i) {
+              if (localWatchList[i].type == "price" &&
+                  localWatchList[i].cls == selectedClass &&
+                  localWatchList[i].date == pRDate &&
+                  localWatchList[i].gRPHCode == selectedGRPHCode) {
+                ifModalHasInList = true;
+                break;
+              }
+            }
+
+            if (ifModalHasInList) {
+              for (var i = 0; i < localWatchList.length; ++i) {
+                if (localWatchList[i].type == "price" &&
+                    localWatchList[i].cls == selectedClass &&
+                    localWatchList[i].date == pRDate &&
+                    localWatchList[i].gRPHCode == selectedGRPHCode) {
+                  ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+                    type: "price",
+                    date: pRDate,
+                    cls: selectedClass,
+                    yearAverage: null,
+                    finalAverage: null,
+                    currentAverage: null,
+                    region: selectedRegion?.region,
+                    graphData: graphDataList,
+                    gRPHCode: selectedGRPHCode,
+                  );
+                  localWatchList[i] = modelLocalWatchlist;
+                  notifyListeners();
+                  break;
+                }
+              }
+            } else {
+              ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+                type: "price",
+                date: pRDate,
+                cls: selectedClass,
+                yearAverage: null,
+                finalAverage: null,
+                currentAverage: null,
+                region: selectedRegion?.region,
+                graphData: graphDataList,
+                gRPHCode: selectedGRPHCode,
+              );
+              localWatchList.add(modelLocalWatchlist);
+            }
+
+            sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+          }
+
+          AppWidgets.appSnackBar(context: context, text: AppStrings.added, color: AppColors.c2a8741);
         }
       },
     );
+    notifyListeners();
   }
 
   Future<void> loadRegionAndClasses({required BuildContext context}) async {
@@ -182,8 +257,7 @@ class PricesProvider extends ChangeNotifier {
 
     final modelRegion = ModelRegion.fromJson(jsonDecode(value.toString()));
     modelRegion.regions.forEach((key, list) {
-      final RegionAndClasses regionAndClasses =
-          RegionAndClasses(region: key, classes: list);
+      final RegionAndClasses regionAndClasses = RegionAndClasses(region: key, classes: list);
       regionsList.add(regionAndClasses);
     });
     selectedRegion = regionsList[0];
@@ -204,8 +278,7 @@ class PricesProvider extends ChangeNotifier {
         if (value != null) {
           final modelRegion = ModelRegion.fromJson(jsonDecode(value.body));
           modelRegion.regions.forEach((key, list) {
-            final RegionAndClasses regionAndClasses =
-                RegionAndClasses(region: key, classes: list);
+            final RegionAndClasses regionAndClasses = RegionAndClasses(region: key, classes: list);
             regionsList.add(regionAndClasses);
           });
           selectedRegion = regionsList[0];
@@ -245,8 +318,7 @@ class PricesProvider extends ChangeNotifier {
     ).toString());
   }
 
-  setSelectedPrDate(
-      {required String date, required BuildContext context}) async {
+  setSelectedPrDate({required String date, required BuildContext context}) async {
     pRDate = date;
     await getGraphCodesByClassAndRegion(context: context).then(
       (value) async {
@@ -330,8 +402,7 @@ class PricesProvider extends ChangeNotifier {
           var data = jsonDecode(value.body);
 
           for (var i = 0; i < data.length; ++i) {
-            GraphDataModal gl = GraphDataModal(
-                cASHMT: data[i]["CASHMT"], pRDATE: data[i]["PRDATE"]);
+            GraphDataModal gl = GraphDataModal(cASHMT: data[i]["CASHMT"], pRDATE: data[i]["PRDATE"]);
             graphDataList.add(gl);
           }
         }
@@ -356,8 +427,7 @@ class PricesProvider extends ChangeNotifier {
         .then(
       (value) {
         if (value != null) {
-          allPriceDataModal =
-              AllPriceDataModal.fromJson(json.decode(value.body));
+          allPriceDataModal = AllPriceDataModal.fromJson(json.decode(value.body));
           notifyListeners();
         }
       },

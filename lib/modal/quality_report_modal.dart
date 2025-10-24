@@ -55,16 +55,16 @@ class Data {
 class YearAverage {
   String? yearsRange;
   String? yearAverageClass;
-  num? testWtlbbu;
-  num? testWtkghl;
-  num? moisture;
-  num? prot12Mb;
-  num? dryBasisProt;
-  num? dhv;
-  num? hvac;
-  num? fallingNum;
-  num? totalRecords;
-  num? year;
+  String? testWtlbbu;
+  String? testWtkghl;
+  String? moisture;
+  String? prot12Mb;
+  String? dryBasisProt;
+  String? dhv;
+  String? hvac;
+  String? fallingNum;
+  String? totalRecords;
+  String? year;
 
   YearAverage({
     this.yearsRange,
@@ -82,24 +82,24 @@ class YearAverage {
   });
 
   factory YearAverage.fromJson(Map<String, dynamic> json) => YearAverage(
-        yearsRange: json["years_range"],
-        yearAverageClass: json["class"],
-        testWtlbbu: json["testWtlbbu"].toDouble(),
-        testWtkghl: json["testWtkghl"].toDouble(),
-        moisture: json["Moisture%"].toDouble(),
-        prot12Mb: json["Prot12%mb"].toDouble(),
-        dryBasisProt: json["DryBasisProt%"].toDouble(),
-        dhv: json["DHV"],
-        hvac: json["HVAC"],
-        fallingNum: json["FallingNum"].toDouble(),
-        totalRecords: json["total_records"],
-        year: json["year"],
+        yearsRange: json["years_range"].toString(),
+        yearAverageClass: json["class"].toString(),
+        testWtlbbu: json["testWtlbbu"].toString(),
+        testWtkghl: json["testWtkghl"].toString(),
+        moisture: json["Moisture%"].toString(),
+        prot12Mb: json["Prot12%mb"].toString(),
+        dryBasisProt: json["DryBasisProt%"].toString(),
+        dhv: json["DHV"].toString(),
+        hvac: json["HVAC"].toString(),
+        fallingNum: json["FallingNum"].toString(),
+        totalRecords: json["total_records"].toString(),
+        year: json["year"].toString(),
       );
 
   Map<String, dynamic> toJson() => {
         "years_range": yearsRange,
         "class": yearAverageClass,
-        "testWtlbbu": testWtlbbu,
+        "testWtlbbu": testWtlbbu.toString(),
         "testWtkghl": testWtkghl,
         "Moisture%": moisture,
         "Prot12%mb": prot12Mb,

@@ -92,7 +92,7 @@ class GetApiServices {
         onPressed: () {},
       );
       return null;
-    } on SocketException catch (e) {
+    } on SocketException {
       ExceptionDialogs.networkDialog(
         context: context,
         message: "No Internet connection.",
@@ -180,18 +180,18 @@ class GetApiServices {
             color: Colors.redAccent);
         return null;
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       if (loader) {
         Navigator.pop(context);
         // show dialog
       }
       return null;
-    } on HttpException catch (e) {
+    } on HttpException {
       if (loader) {
         Navigator.pop(context);
       }
       return null;
-    } on SocketException catch (e) {
+    } on SocketException {
       if (loader) {
         Navigator.pop(context);
       }
@@ -209,13 +209,13 @@ class GetApiServices {
         },
       );
       return null;
-    } on FormatException catch (e) {
+    } on FormatException {
       if (loader) {
         Navigator.pop(context);
         // show dialog
       }
       return null;
-    } on Exception catch (e) {
+    } on Exception {
       if (loader) {
         Navigator.pop(context);
         // show dialog
@@ -284,18 +284,18 @@ class GetApiServices {
             color: Colors.redAccent);
         return null;
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       if (loader) {
         Navigator.pop(context);
         // show dialog
       }
       return null;
-    } on HttpException catch (e) {
+    } on HttpException {
       if (loader) {
         Navigator.pop(context);
       }
       return null;
-    } on SocketException catch (e) {
+    } on SocketException {
       if (loader) {
         Navigator.pop(context);
       }
@@ -309,13 +309,13 @@ class GetApiServices {
         },
       );
       return null;
-    } on FormatException catch (e) {
+    } on FormatException {
       if (loader) {
         Navigator.pop(context);
         // show dialog
       }
       return null;
-    } on Exception catch (e) {
+    } on Exception {
       if (loader) {
         Navigator.pop(context);
         // show dialog

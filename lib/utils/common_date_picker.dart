@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/pref_keys.dart';
@@ -27,20 +25,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
   int initialDayIndex = 0;
 
   List<int> days = [];
-  List<String> months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-  ];
+  List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   Future<void> loadYear({required BuildContext context}) async {
     sp = await SharedPreferences.getInstance();
@@ -60,8 +45,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
 
     final sortedYears = List<int>.from(parsed)..sort((a, b) => b.compareTo(a));
     final currentYear = DateTime.now().year;
-    final chosenYear =
-        sortedYears.contains(currentYear) ? currentYear : sortedYears.first;
+    final chosenYear = sortedYears.contains(currentYear) ? currentYear : sortedYears.first;
 
     yearsList = sortedYears;
 
@@ -86,8 +70,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
 
     initialMonthIndex = DateTime.now().month - 1;
     selectedMonth = months[DateTime.now().month - 1];
-    getDaysInMonth(
-        month: getCurrentMonthName(), year: int.parse(selectedYear ?? ""));
+    getDaysInMonth(month: getCurrentMonthName(), year: int.parse(selectedYear ?? ""));
 
     for (var i = 0; i < days.length; ++i) {
       if (DateTime.now().day == days[i]) {
@@ -100,20 +83,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
   }
 
   String getCurrentMonthName() {
-    final monthNames = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
+    final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     int monthIndex = DateTime.now().month;
     return monthNames[monthIndex - 1];
@@ -206,17 +176,14 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                           children: [
                             Text(
                               AppStrings.year,
-                              style:
-                                  Theme.of(perentContext).textTheme.bodyMedium,
+                              style: Theme.of(perentContext).textTheme.bodyMedium,
                             ),
                             Expanded(
                               child: CupertinoPicker(
                                   itemExtent: 32,
-                                  scrollController: FixedExtentScrollController(
-                                      initialItem: initialYearIndex),
+                                  scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
                                   onSelectedItemChanged: (index) {
-                                    setState(() => selectedYear =
-                                        yearsList[index].toString());
+                                    setState(() => selectedYear = yearsList[index].toString());
                                   },
                                   children: List.generate(
                                     yearsList.length,
@@ -226,9 +193,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           data.toString() ?? "",
-                                          style: Theme.of(perentContext)
-                                              .textTheme
-                                              .labelLarge,
+                                          style: Theme.of(perentContext).textTheme.labelLarge,
                                         ),
                                       );
                                     },
@@ -242,22 +207,16 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                           children: [
                             Text(
                               AppStrings.month,
-                              style:
-                                  Theme.of(perentContext).textTheme.bodyMedium,
+                              style: Theme.of(perentContext).textTheme.bodyMedium,
                             ),
                             Expanded(
                               child: CupertinoPicker(
                                   itemExtent: 30,
-                                  scrollController: FixedExtentScrollController(
-                                      initialItem: initialMonthIndex),
+                                  scrollController: FixedExtentScrollController(initialItem: initialMonthIndex),
                                   onSelectedItemChanged: (index) {
-                                    getDaysInMonth(
-                                        month: months[index],
-                                        year:
-                                            int.parse(selectedYear.toString()));
+                                    getDaysInMonth(month: months[index], year: int.parse(selectedYear.toString()));
 
-                                    setState(
-                                        () => selectedMonth = months[index]);
+                                    setState(() => selectedMonth = months[index]);
                                   },
                                   children: List.generate(
                                     months.length,
@@ -267,9 +226,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           data.toString() ?? "",
-                                          style: Theme.of(perentContext)
-                                              .textTheme
-                                              .labelLarge,
+                                          style: Theme.of(perentContext).textTheme.labelLarge,
                                         ),
                                       );
                                     },
@@ -283,17 +240,14 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                           children: [
                             Text(
                               AppStrings.day,
-                              style:
-                                  Theme.of(perentContext).textTheme.bodyMedium,
+                              style: Theme.of(perentContext).textTheme.bodyMedium,
                             ),
                             Expanded(
                               child: CupertinoPicker(
                                   itemExtent: 32,
-                                  scrollController: FixedExtentScrollController(
-                                      initialItem: initialDayIndex),
+                                  scrollController: FixedExtentScrollController(initialItem: initialDayIndex),
                                   onSelectedItemChanged: (index) {
-                                    setState(() =>
-                                        selectedDay = days[index].toString());
+                                    setState(() => selectedDay = days[index].toString());
                                   },
                                   children: List.generate(
                                     days.length,
@@ -303,9 +257,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           data.toString(),
-                                          style: Theme.of(perentContext)
-                                              .textTheme
-                                              .labelLarge,
+                                          style: Theme.of(perentContext).textTheme.labelLarge,
                                         ),
                                       );
                                     },
@@ -322,10 +274,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(
-                        perentContext,
-                        createDate(int.parse(selectedYear.toString()),
-                            selectedMonth ?? "", int.parse(selectedDay ?? "")));
+                    Navigator.pop(perentContext, createDate(int.parse(selectedYear.toString()), selectedMonth ?? "", int.parse(selectedDay ?? "")));
                   },
                   child: AppButtons().filledButton(
                     true,

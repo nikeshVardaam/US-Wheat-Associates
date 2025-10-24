@@ -76,7 +76,7 @@ class AppStrings {
   static const select = "Select";
   static const wheatData = "WHEAT DATA";
   static const currentAverage = "Current Avg";
-  static const finalAverage = "Final Avg";
+  static const finalAverage = "Avg";
   static const fiveYearAverage = "5-Year Avg";
   static const lbBu = "TW (lb/bu)";
   static const kgHl = "TW (kg/hl)";
@@ -93,6 +93,7 @@ class AppStrings {
   static const lastPrDate = "LAST PR DATE:";
   static const fwdPrice = "FWD PRICE";
   static const account = "ACCOUNT";
+  static const added = "Added";
   static const pages = "PAGES";
   static const classs = "Class";
   static const testWtkghl = "TW kg/hl";
@@ -114,6 +115,7 @@ class AppStrings {
   static const newFeed = "News Feed";
   static const changePassword = "Change Password ";
   static const noDataFound = "No data found";
+  static const refresh = "Refresh";
   static const wheatAssociates = "U.S. Wheat Associates";
   static const error500 = "We are working on server, Please try again later.";
   static const error503 =
@@ -148,4 +150,5 @@ class AppStrings {
 
   static const syncNewData = "Sync New Data";
   static const dataNotAvailable = "Data Not Available";
+  static const localWatchlist= "LocalWatchlist";
 }
