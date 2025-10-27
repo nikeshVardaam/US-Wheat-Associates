@@ -27,6 +27,8 @@ class WatchlistProvider extends ChangeNotifier {
 
   String? grphcode;
 
+
+
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   final Map<String, bool> _chartLoadingMap = {};
 
@@ -145,7 +147,8 @@ class WatchlistProvider extends ChangeNotifier {
     _chartLoadingMap[itemId] = isLoading;
   }
 
-  Future<ModelLocalWatchlistData?> getDataFromLocalList({required String date, required String cls, required String type}) async {
+  Future<ModelLocalWatchlistData?> getDataFromLocalList(
+      {required String date, required String cls, required String type}) async {
     List<ModelLocalWatchlistData> localList = [];
     sp = await SharedPreferences.getInstance();
 
@@ -165,7 +168,8 @@ class WatchlistProvider extends ChangeNotifier {
     return modelLocalWatchlistData;
   }
 
-  Future<ModelLocalWatchlistData?> getGraphDataFromLocalList({required String date, required String cls, required String gRPHCode, required String region}) async {
+  Future<ModelLocalWatchlistData?> getGraphDataFromLocalList(
+      {required String date, required String cls, required String gRPHCode, required String region}) async {
     List<ModelLocalWatchlistData> localList = [];
     sp = await SharedPreferences.getInstance();
 
@@ -178,14 +182,18 @@ class WatchlistProvider extends ChangeNotifier {
     }
     ModelLocalWatchlistData? modelLocalWatchlistData;
     for (var i = 0; i < localList.length; ++i) {
-      if (localList[i].type == "price" && localList[i].date == date && localList[i].cls == cls && localList[i].gRPHCode == gRPHCode && localList[i].region == region) {
+      if (localList[i].type == "price" &&
+          localList[i].date == date &&
+          localList[i].cls == cls &&
+          localList[i].gRPHCode == gRPHCode &&
+          localList[i].region == region) {
         modelLocalWatchlistData = localList[i];
       }
     }
     return modelLocalWatchlistData;
   }
 
-  deleteFromPrefData({required String date, required String cls, required String type}) async {
+  deleteFromPrefData({required String date, required String cls, required String type, required String region}) async {
     bool hasData = false;
 
     if (localWatchList.isNotEmpty) {
@@ -193,11 +201,23 @@ class WatchlistProvider extends ChangeNotifier {
         if (localWatchList[i].type == "quality" && localWatchList[i].date == date && localWatchList[i].cls == cls) {
           hasData = true;
           break;
+        } else if (localWatchList[i].type == "price" &&
+            localWatchList[i].date == date &&
+            localWatchList[i].cls == cls &&
+            localWatchList[i].region == region) {
+          hasData = true;
+          break;
         }
       }
       if (hasData) {
         for (var i = 0; i < localWatchList.length; ++i) {
-          if (localWatchList[i].cls == cls && localWatchList[i].date == date) {
+          if (localWatchList[i].type == "quality" && localWatchList[i].cls == cls && localWatchList[i].date == date) {
+            localWatchList.removeAt(i);
+            notifyListeners();
+            break;
+          } else if (localWatchList[i].type == "price" &&
+              localWatchList[i].cls == cls &&
+              localWatchList[i].date == date) {
             localWatchList.removeAt(i);
             notifyListeners();
             break;
@@ -228,7 +248,11 @@ class WatchlistProvider extends ChangeNotifier {
       if (watchlist.isNotEmpty) {
         for (var i = 0; i < watchlist.length; ++i) {
           if (watchlist[i].type.toLowerCase() == "quality") {
-            await getDataFromLocalList(date: watchlist[i].filterdata.date ?? "", cls: watchlist[i].filterdata.classs ?? "", type: "quality").then(
+            await getDataFromLocalList(
+                    date: watchlist[i].filterdata.date ?? "",
+                    cls: watchlist[i].filterdata.classs ?? "",
+                    type: "quality")
+                .then(
               (value) {
                 QualityWatchListModel q = QualityWatchListModel(
                   id: watchlist[i].id,
@@ -266,13 +290,13 @@ class WatchlistProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteWatchList({
-    required BuildContext context,
-    required String id,
-    required String date,
-    required String cls,
-    required String type,
-  }) async {
+  void deleteWatchList(
+      {required BuildContext context,
+      required String id,
+      required String date,
+      required String cls,
+      required String type,
+      required String region}) async {
     await DeleteService()
         .deleteWithId(
       endpoint: ApiEndpoint.removeWatchlist,
@@ -284,12 +308,15 @@ class WatchlistProvider extends ChangeNotifier {
         notifyListeners();
         if (value != null) {
           getWatchList(context: context);
-          if (type == "quality") {
-            deleteFromPrefData(date: date, cls: cls, type: type);
-          } else {}
+          deleteFromPrefData(date: date, cls: cls, type: type, region: region);
+
+          // if (type == "quality") {
+          //   deleteFromPrefData(date: date, cls: cls, type: type,region: "");
+          // }
         }
       },
     );
+    notifyListeners();
   }
 
   upDateQualityData({required BuildContext context, required String cls, required String date}) async {
@@ -318,20 +345,25 @@ class WatchlistProvider extends ChangeNotifier {
 
           WheatData? current = data['current'] != null ? WheatData.fromJson(data['current']) : null;
           WheatData? yearAverage = data['year_average'] != null ? WheatData.fromJson(data['year_average']) : null;
-          WheatData? fiveYearAverage = data['five_year_average'] != null ? WheatData.fromJson(data['five_year_average']) : null;
+          WheatData? fiveYearAverage =
+              data['five_year_average'] != null ? WheatData.fromJson(data['five_year_average']) : null;
 
           bool hasData = false;
 
           if (localWatchList.isNotEmpty) {
             for (var i = 0; i < localWatchList.length; ++i) {
-              if (localWatchList[i].type == "quality" && localWatchList[i].date == date && localWatchList[i].cls == cls) {
+              if (localWatchList[i].type == "quality" &&
+                  localWatchList[i].date == date &&
+                  localWatchList[i].cls == cls) {
                 hasData = true;
                 break;
               }
             }
             if (hasData) {
               for (var i = 0; i < localWatchList.length; ++i) {
-                if (localWatchList[i].type == "quality" && localWatchList[i].cls == date && localWatchList[i].date == cls) {
+                if (localWatchList[i].type == "quality" &&
+                    localWatchList[i].cls == date &&
+                    localWatchList[i].date == cls) {
                   ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
                     type: "quality",
                     date: date,
@@ -541,7 +573,9 @@ class WatchlistProvider extends ChangeNotifier {
               }
             }).toList();
 
-            final avgSales = monthEntries.isNotEmpty ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length : 0.0;
+            final avgSales = monthEntries.isNotEmpty
+                ? monthEntries.map((e) => e.cASHMT ?? 0).reduce((a, b) => a + b) / monthEntries.length
+                : 0.0;
 
             return SalesData(month: month, sales: avgSales);
           }).toList();

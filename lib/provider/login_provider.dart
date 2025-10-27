@@ -15,8 +15,8 @@ class LoginProvider extends ChangeNotifier {
   SharedPreferences? sp;
   bool passwordIsVisible = false;
   bool rememberMe = false;
-  TextEditingController emailController = TextEditingController(text: "shrey@gmail.com");
-  TextEditingController passwordController = TextEditingController(text: "shrey@123");
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   void cleanData() {
     emailController.clear();
@@ -89,7 +89,6 @@ class LoginProvider extends ChangeNotifier {
             sp = await SharedPreferences.getInstance();
             await sp?.setString(PrefKeys.token, loginModel.token ?? "");
             await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
-
 
             await SyncData().syncData(context: context).then((value) {
               Navigator.pushReplacementNamed(context, AppRoutes.dashboard);

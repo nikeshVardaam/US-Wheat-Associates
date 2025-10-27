@@ -27,7 +27,7 @@ class SyncData {
           .get(
         endpoint: ApiEndpoint.getRegionsAndClasses,
         context: context,
-        loader: true,
+        loader: false,
       )
           .then(
         (response) async {

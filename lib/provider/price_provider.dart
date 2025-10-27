@@ -27,7 +27,7 @@ class PricesProvider extends ChangeNotifier {
   ZoomPanBehavior? zoomPanBehavior;
   AllPriceDataModal? allPriceDataModal;
   SharedPreferences? sp;
-
+  bool alreadyHasInWatchlist = false;
   List<ModelLocalWatchlistData> localPriceWatchList = [];
 
   setSelectedRegion({required RegionAndClasses rg, required BuildContext context}) async {
@@ -38,7 +38,9 @@ class PricesProvider extends ChangeNotifier {
           await getGraphData(context: context).then(
             (value) async {
               await getAllPriceData(context: context).then(
-                (value) {},
+                (value) {
+                  checkLocalWatchlist();
+                },
               );
             },
           );
@@ -57,7 +59,9 @@ class PricesProvider extends ChangeNotifier {
           await getGraphData(context: context).then(
             (value) async {
               await getAllPriceData(context: context).then(
-                (value) {},
+                (value) {
+                  checkLocalWatchlist();
+                },
               );
             },
           );
@@ -77,15 +81,15 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
-  getPrefData() async {
+  Future<void> getPrefData() async {
+    graphDataList.clear();
     localWatchList.clear();
-
     notifyListeners();
 
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.watchList);
     if (data != null) {
-      List<dynamic> list = jsonDecode(data ?? "");
+      List<dynamic> list = jsonDecode(data);
 
       for (var i = 0; i < list.length; ++i) {
         ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
@@ -98,12 +102,8 @@ class PricesProvider extends ChangeNotifier {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
-      maximumZoomLevel: 0.5,
-      // must be double
-      enableDoubleTapZooming: true,
-      enableDirectionalZooming: true,
-      enableSelectionZooming: true,
-      zoomMode: ZoomMode.xy,
+      maximumZoomLevel: 100,
+      zoomMode: ZoomMode.x,
     );
 
     for (var i = 0; i < regionsList.length; ++i) {
@@ -111,7 +111,6 @@ class PricesProvider extends ChangeNotifier {
         selectedRegion = regionsList[i];
       }
     }
-
     selectedClass = cls;
     pRDate = year;
 
@@ -120,13 +119,14 @@ class PricesProvider extends ChangeNotifier {
         await getGraphData(context: context).then(
           (value) async {
             await getAllPriceData(context: context).then(
-              (value) {},
+              (value) {
+                checkLocalWatchlist();
+              },
             );
           },
         );
       },
     );
-
     notifyListeners();
   }
 
@@ -136,7 +136,6 @@ class PricesProvider extends ChangeNotifier {
       enablePinching: true,
       zoomMode: ZoomMode.x,
     );
-
     getCurrentDate();
     await loadRegionAndClasses(context: context).then(
       (value) async {
@@ -145,7 +144,9 @@ class PricesProvider extends ChangeNotifier {
             await getGraphData(context: context).then(
               (value) async {
                 await getAllPriceData(context: context).then(
-                  (value) {},
+                  (value) {
+                    checkLocalWatchlist();
+                  },
                 );
               },
             );
@@ -153,6 +154,33 @@ class PricesProvider extends ChangeNotifier {
         );
       },
     );
+    notifyListeners();
+  }
+
+  Future<void> checkLocalWatchlist() async {
+    alreadyHasInWatchlist = false;
+    List<ModelLocalWatchlistData> localList = [];
+
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+    if (data != null) {
+      List<dynamic> list = jsonDecode(data);
+
+      for (var i = 0; i < list.length; ++i) {
+        ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
+        localList.add(modelLocalWatchlistData);
+      }
+    }
+    for (var i = 0; i < localList.length; ++i) {
+      if (localWatchList[i].type == "price" &&
+          localWatchList[i].cls == selectedClass &&
+          localWatchList[i].date == pRDate &&
+          localWatchList[i].region == selectedRegion?.region &&
+          localWatchList[i].gRPHCode == selectedGRPHCode) {
+        alreadyHasInWatchlist = true;
+        break;
+      }
+    }
     notifyListeners();
   }
 
@@ -325,7 +353,9 @@ class PricesProvider extends ChangeNotifier {
         await getGraphData(context: context).then(
           (value) async {
             await getAllPriceData(context: context).then(
-              (value) {},
+              (value) {
+                checkLocalWatchlist();
+              },
             );
           },
         );
@@ -376,6 +406,7 @@ class PricesProvider extends ChangeNotifier {
     } on FormatException catch (e) {
       return;
     }
+    notifyListeners();
   }
 
   Future<void> getGraphData({
@@ -408,6 +439,7 @@ class PricesProvider extends ChangeNotifier {
         }
       },
     );
+    notifyListeners();
   }
 
   Future<void> getAllPriceData({

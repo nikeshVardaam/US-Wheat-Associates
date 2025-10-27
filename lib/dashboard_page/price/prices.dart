@@ -12,6 +12,7 @@ import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/common_date_picker.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
 import '../../modal/graph_modal.dart';
+import '../../utils/app_widgets.dart';
 
 class Prices extends StatefulWidget {
   final String? region;
@@ -67,15 +68,25 @@ class _PricesState extends State<Prices> {
                           ),
                         ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          pp.addToWatchlist(context: context);
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Icon(Icons.star_border_rounded,color: Colors.white,),
-                        ),
-                      )
+                      pp.alreadyHasInWatchlist
+                          ? Container()
+                          : GestureDetector(
+                              onTap: () {
+                                if (pp.graphDataList.isEmpty) {
+                                  AppWidgets.appSnackBar(context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
+                                } else {
+                                  pp.addToWatchlist(context: context);
+                                }
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Icon(
+                                  size: 30,
+                                  Icons.star_border_rounded,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
                     ],
                   ),
                 ),

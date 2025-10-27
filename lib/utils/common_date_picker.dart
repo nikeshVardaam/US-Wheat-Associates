@@ -6,7 +6,7 @@ import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/pref_keys.dart';
 
 class DatePickerSheet extends StatefulWidget {
-  DatePickerSheet({
+  const DatePickerSheet({
     super.key,
   });
 
@@ -274,7 +274,10 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(perentContext, createDate(int.parse(selectedYear.toString()), selectedMonth ?? "", int.parse(selectedDay ?? "")));
+                    Navigator.pop(
+                        perentContext,
+                        createDate(
+                            int.parse(selectedYear.toString()), selectedMonth ?? "", int.parse(selectedDay ?? "")));
                   },
                   child: AppButtons().filledButton(
                     true,
