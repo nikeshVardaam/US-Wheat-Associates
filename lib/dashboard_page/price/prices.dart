@@ -31,11 +31,7 @@ class _PricesState extends State<Prices> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<PricesProvider>(context, listen: false).getPrefData();
-      Provider.of<PricesProvider>(context, listen: false).checkLocalWatchlist();
-
-      if ((widget.region?.isNotEmpty ?? false) &&
-          (widget.cls?.isNotEmpty ?? false) &&
-          (widget.year?.isNotEmpty ?? false)) {
+      if ((widget.region?.isNotEmpty ?? false) && (widget.cls?.isNotEmpty ?? false) && (widget.year?.isNotEmpty ?? false)) {
         Provider.of<PricesProvider>(context, listen: false).initCallFromWatchList(
           context: context,
           region: widget.region,
@@ -68,10 +64,7 @@ class _PricesState extends State<Prices> {
                         children: [
                           Text(
                             AppStrings.pricess,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
@@ -80,8 +73,7 @@ class _PricesState extends State<Prices> {
                           : GestureDetector(
                               onTap: () {
                                 if (pp.graphDataList.isEmpty) {
-                                  AppWidgets.appSnackBar(
-                                      context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
+                                  AppWidgets.appSnackBar(context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
                                 } else {
                                   pp.addToWatchlist(context: context);
                                 }
@@ -113,11 +105,7 @@ class _PricesState extends State<Prices> {
                       ).then(
                         (value) {
                           if (value != null) {
-                            pp.checkLocalWatchlist().then(
-                              (v) {
-                                pp.setSelectedRegion(rg: value, context: context);
-                              },
-                            );
+                            pp.setSelectedRegion(rg: value, context: context);
                           }
                         },
                       );
@@ -144,11 +132,7 @@ class _PricesState extends State<Prices> {
                                   ).then(
                                     (value) {
                                       if (value != null) {
-                                        pp.checkLocalWatchlist().then(
-                                          (v) {
-                                            pp.setSelectedRegion(rg: value, context: context);
-                                          },
-                                        );
+                                        pp.setSelectedRegion(rg: value, context: context);
                                       }
                                     },
                                   );
@@ -200,11 +184,7 @@ class _PricesState extends State<Prices> {
                         },
                       ).then((value) {
                         if (value != null) {
-                          pp.checkLocalWatchlist().then(
-                            (v) {
-                              pp.setSelectedClass(cls: value, context: context);
-                            },
-                          );
+                          pp.setSelectedClass(cls: value, context: context);
                         }
                       });
                     },
@@ -226,11 +206,7 @@ class _PricesState extends State<Prices> {
                                     },
                                   ).then((value) {
                                     if (value != null) {
-                                      pp.checkLocalWatchlist().then(
-                                        (v) {
-                                          pp.setSelectedClass(cls: value, context: context);
-                                        },
-                                      );
+                                      pp.setSelectedClass(cls: value, context: context);
                                     }
                                   });
                                 },
@@ -285,11 +261,7 @@ class _PricesState extends State<Prices> {
                       ).then(
                         (value) {
                           if (value != null) {
-                            pp.checkLocalWatchlist().then(
-                              (v) {
-                                pp.setSelectedPrDate(date: Miscellaneous.ymd(value.toString()), context: context);
-                              },
-                            );
+                            pp.setSelectedPrDate(date: Miscellaneous.ymd(value.toString()), context: context);
                           }
                         },
                       );
@@ -311,12 +283,7 @@ class _PricesState extends State<Prices> {
                               ).then(
                                 (value) {
                                   if (value != null) {
-                                    pp.checkLocalWatchlist().then(
-                                      (v) {
-                                        pp.setSelectedPrDate(
-                                            date: Miscellaneous.ymd(value.toString()), context: context);
-                                      },
-                                    );
+                                    pp.setSelectedPrDate(date: Miscellaneous.ymd(value.toString()), context: context);
                                   }
                                 },
                               );

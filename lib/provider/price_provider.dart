@@ -37,7 +37,11 @@ class PricesProvider extends ChangeNotifier {
         (value) async {
           await getGraphData(context: context).then(
             (value) async {
-              await getAllPriceData(context: context);
+              await getAllPriceData(context: context).then(
+                (value) {
+                  checkLocalWatchlist();
+                },
+              );
             },
           );
         },
@@ -54,7 +58,11 @@ class PricesProvider extends ChangeNotifier {
         (value) async {
           await getGraphData(context: context).then(
             (value) async {
-              await getAllPriceData(context: context);
+              await getAllPriceData(context: context).then(
+                (value) {
+                  checkLocalWatchlist();
+                },
+              );
             },
           );
         },
@@ -74,8 +82,8 @@ class PricesProvider extends ChangeNotifier {
   }
 
   Future<void> getPrefData() async {
+    graphDataList.clear();
     localWatchList.clear();
-
     notifyListeners();
 
     sp = await SharedPreferences.getInstance();
@@ -90,8 +98,7 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> initCallFromWatchList(
-      {required BuildContext context, required String? region, required String? cls, required String? year}) async {
+  Future<void> initCallFromWatchList({required BuildContext context, required String? region, required String? cls, required String? year}) async {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
@@ -111,7 +118,11 @@ class PricesProvider extends ChangeNotifier {
       (value) async {
         await getGraphData(context: context).then(
           (value) async {
-            await getAllPriceData(context: context);
+            await getAllPriceData(context: context).then(
+              (value) {
+                checkLocalWatchlist();
+              },
+            );
           },
         );
       },
@@ -132,7 +143,11 @@ class PricesProvider extends ChangeNotifier {
           (value) async {
             await getGraphData(context: context).then(
               (value) async {
-                await getAllPriceData(context: context);
+                await getAllPriceData(context: context).then(
+                  (value) {
+                    checkLocalWatchlist();
+                  },
+                );
               },
             );
           },
@@ -173,13 +188,7 @@ class PricesProvider extends ChangeNotifier {
     sp = await SharedPreferences.getInstance();
     final data = {
       "type": "price",
-      "filterdata": {
-        "region": selectedRegion?.region ?? "",
-        "class": selectedClass ?? "",
-        "date": pRDate,
-        "color": "ffab865a",
-        "grphcode": selectedGRPHCode ?? ""
-      }
+      "filterdata": {"region": selectedRegion?.region ?? "", "class": selectedClass ?? "", "date": pRDate, "color": "ffab865a", "grphcode": selectedGRPHCode ?? ""}
     };
     PostServices()
         .post(
@@ -344,7 +353,9 @@ class PricesProvider extends ChangeNotifier {
         await getGraphData(context: context).then(
           (value) async {
             await getAllPriceData(context: context).then(
-              (value) {},
+              (value) {
+                checkLocalWatchlist();
+              },
             );
           },
         );
