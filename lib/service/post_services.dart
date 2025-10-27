@@ -25,6 +25,7 @@ class PostServices {
     sp = await SharedPreferences.getInstance();
     if (loader) {
       showDialog(
+        barrierLabel: "bLabel",
         barrierDismissible: false,
         context: context,
         builder: (context) => AppWidgets.loading(),
@@ -50,9 +51,7 @@ class PostServices {
         Navigator.pop(context);
       }
 
-      if (response.statusCode == 200 ||
-          response.statusCode == 201 ||
-          response.statusCode == 409) {
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 409) {
         return response;
       } else if (response.statusCode == 401) {
         ExceptionDialogs.networkDialog(
@@ -95,8 +94,7 @@ class PostServices {
         Navigator.pop(context);
         ExceptionDialogs.networkDialog(
           context: context,
-          message:
-              "Request timed out. Please check your internet and try again.",
+          message: "Request timed out. Please check your internet and try again.",
           onPressed: () {},
         );
       }
