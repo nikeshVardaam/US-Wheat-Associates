@@ -109,12 +109,12 @@ class _WatchlistState extends State<Watchlist> {
                                               GestureDetector(
                                                   onTap: () {
                                                     wp.deleteWatchList(
-                                                      context: context,
-                                                      id: data.id ?? "",
-                                                      date: data.filterData?.date ?? "",
-                                                      cls: data.filterData?.classs ?? "",
-                                                      type: "quality",
-                                                    );
+                                                        context: context,
+                                                        id: data.id ?? "",
+                                                        date: data.filterData?.date ?? "",
+                                                        cls: data.filterData?.classs ?? "",
+                                                        type: "quality",
+                                                        region: "");
                                                   },
                                                   child: SvgPicture.asset(
                                                     AppAssets.fillStar,
@@ -124,7 +124,9 @@ class _WatchlistState extends State<Watchlist> {
                                             ],
                                           ),
                                         ),
-                                        (data.yearAverage == null && data.fiveYearAverage == null && data.current == null)
+                                        (data.yearAverage == null &&
+                                                data.fiveYearAverage == null &&
+                                                data.current == null)
                                             ? SizedBox(
                                                 width: double.infinity,
                                                 child: Column(
@@ -133,7 +135,10 @@ class _WatchlistState extends State<Watchlist> {
                                                   children: [
                                                     IconButton(
                                                       onPressed: () {
-                                                        wp.upDateQualityData(context: context, cls: data.filterData?.classs ?? "", date: data.filterData?.date ?? "");
+                                                        wp.upDateQualityData(
+                                                            context: context,
+                                                            cls: data.filterData?.classs ?? "",
+                                                            date: data.filterData?.date ?? "");
                                                       },
                                                       icon: const Icon(Icons.refresh),
                                                     ),
@@ -156,7 +161,10 @@ class _WatchlistState extends State<Watchlist> {
                                                       children: [
                                                         Text(
                                                           "${AppStrings.currentAverage} :",
-                                                          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
+                                                          style: Theme.of(context)
+                                                              .textTheme
+                                                              .labelSmall
+                                                              ?.copyWith(color: c),
                                                         ),
                                                         const SizedBox(height: 8),
                                                         SingleChildScrollView(
@@ -169,14 +177,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.testWtbbu,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
-                                                                    data.current?.testWtlbbu != null ? double.parse(data.current!.testWtlbbu.toString()).toStringAsFixed(2) : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    data.current?.testWtlbbu != null
+                                                                        ? double.parse(
+                                                                                data.current!.testWtlbbu.toString())
+                                                                            .toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -189,14 +205,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.testWtkghl,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
-                                                                    data.current?.testWtkghl != null ? double.parse(data.current!.testWtkghl.toString()).toStringAsFixed(2) : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    data.current?.testWtkghl != null
+                                                                        ? double.parse(
+                                                                                data.current!.testWtkghl.toString())
+                                                                            .toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -209,14 +233,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.moist,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
-                                                                    data.current?.moisture != null ? double.parse(data.current!.moisture.toString()).toStringAsFixed(2) : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    data.current?.moisture != null
+                                                                        ? double.parse(
+                                                                                data.current!.moisture.toString())
+                                                                            .toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -229,14 +261,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.prot12,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
-                                                                    data.current?.prot12Mb != null ? double.parse(data.current!.prot12Mb.toString()).toStringAsFixed(2) : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    data.current?.prot12Mb != null
+                                                                        ? double.parse(
+                                                                                data.current!.prot12Mb.toString())
+                                                                            .toStringAsFixed(2)
+                                                                        : "--",
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -248,16 +288,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.proDb,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.current?.dryBasisProt != null
-                                                                        ? double.parse(data.current!.dryBasisProt.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(
+                                                                                data.current!.dryBasisProt.toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -276,7 +322,10 @@ class _WatchlistState extends State<Watchlist> {
                                                       children: [
                                                         Text(
                                                           "${AppStrings.fiveYearAverage} :",
-                                                          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
+                                                          style: Theme.of(context)
+                                                              .textTheme
+                                                              .labelSmall
+                                                              ?.copyWith(color: c),
                                                         ),
                                                         const SizedBox(height: 8),
                                                         SingleChildScrollView(
@@ -289,16 +338,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.testWtbbu,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.yearAverage?.testWtlbbu != null
-                                                                        ? double.parse(data.yearAverage!.testWtlbbu.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(
+                                                                                data.yearAverage!.testWtlbbu.toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -311,16 +366,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.testWtkghl,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.yearAverage?.testWtkghl != null
-                                                                        ? double.parse(data.yearAverage!.testWtkghl.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(
+                                                                                data.yearAverage!.testWtkghl.toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -333,16 +394,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.moist,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.yearAverage?.moisture != null
-                                                                        ? double.parse(data.yearAverage!.moisture.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(
+                                                                                data.yearAverage!.moisture.toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -355,16 +422,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.prot12,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.yearAverage?.prot12Mb != null
-                                                                        ? double.parse(data.yearAverage!.prot12Mb.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(
+                                                                                data.yearAverage!.prot12Mb.toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -376,16 +449,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.proDb,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.yearAverage?.dryBasisProt != null
-                                                                        ? double.parse(data.yearAverage!.dryBasisProt.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(data.yearAverage!.dryBasisProt
+                                                                                .toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -404,7 +483,10 @@ class _WatchlistState extends State<Watchlist> {
                                                       children: [
                                                         Text(
                                                           "${AppStrings.finalAverage} :",
-                                                          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: c),
+                                                          style: Theme.of(context)
+                                                              .textTheme
+                                                              .labelSmall
+                                                              ?.copyWith(color: c),
                                                         ),
                                                         const SizedBox(height: 8),
                                                         SingleChildScrollView(
@@ -417,16 +499,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.testWtbbu,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.fiveYearAverage?.testWtlbbu != null
-                                                                        ? double.parse(data.fiveYearAverage!.testWtlbbu.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(data.fiveYearAverage!.testWtlbbu
+                                                                                .toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -439,16 +527,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.testWtkghl,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.fiveYearAverage?.testWtkghl != null
-                                                                        ? double.parse(data.fiveYearAverage!.testWtkghl.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(data.fiveYearAverage!.testWtkghl
+                                                                                .toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -461,16 +555,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.moist,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.fiveYearAverage?.moisture != null
-                                                                        ? double.parse(data.fiveYearAverage!.moisture.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(data.fiveYearAverage!.moisture
+                                                                                .toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -483,16 +583,22 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.prot12,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.fiveYearAverage?.prot12Mb != null
-                                                                        ? double.parse(data.fiveYearAverage!.prot12Mb.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(data.fiveYearAverage!.prot12Mb
+                                                                                .toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -504,16 +610,23 @@ class _WatchlistState extends State<Watchlist> {
                                                                 children: [
                                                                   Text(
                                                                     AppStrings.proDb,
-                                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                          color: AppColors.c737373,
-                                                                        ),
+                                                                    style:
+                                                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                              color: AppColors.c737373,
+                                                                            ),
                                                                   ),
                                                                   const SizedBox(height: 4),
                                                                   Text(
                                                                     data.fiveYearAverage?.dryBasisProt != null
-                                                                        ? double.parse(data.fiveYearAverage!.dryBasisProt.toString()).toStringAsFixed(2)
+                                                                        ? double.parse(data
+                                                                                .fiveYearAverage!.dryBasisProt
+                                                                                .toString())
+                                                                            .toStringAsFixed(2)
                                                                         : "--",
-                                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .labelLarge
+                                                                        ?.copyWith(
                                                                           color: c,
                                                                         ),
                                                                   )
@@ -547,7 +660,10 @@ class _WatchlistState extends State<Watchlist> {
                               GestureDetector(
                                 onTap: () {
                                   wp.navigateToPriceReport(
-                                      context: context, region: data.filterData?.region ?? "", classs: data.filterData?.classs ?? "", date: data.filterData?.date ?? "");
+                                      context: context,
+                                      region: data.filterData?.region ?? "",
+                                      classs: data.filterData?.classs ?? "",
+                                      date: data.filterData?.date ?? "");
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -566,68 +682,71 @@ class _WatchlistState extends State<Watchlist> {
                                         child: Row(
                                           children: [
                                             Expanded(
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    AppStrings.wheatAssociates,
-                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                          color: AppColors.cFFFFFF,
-                                                        ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                                    child: Container(
-                                                      height: 12,
-                                                      width: 2,
-                                                      color: AppColors.cFFFFFF,
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      AppStrings.wheatAssociates,
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                            color: AppColors.cFFFFFF,
+                                                          ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    data.filterData?.region ?? "",
-                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                          color: AppColors.cFFFFFF,
-                                                        ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                                    child: Container(
-                                                      height: 12,
-                                                      width: 2,
-                                                      color: AppColors.cFFFFFF,
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                      child: Container(
+                                                        height: 12,
+                                                        width: 2,
+                                                        color: AppColors.cFFFFFF,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    data.filterData?.classs ?? "",
-                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                          color: AppColors.cFFFFFF,
-                                                        ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                                    child: Container(
-                                                      height: 12,
-                                                      width: 2,
-                                                      color: AppColors.cFFFFFF,
+                                                    Text(
+                                                      data.filterData?.region ?? "",
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                            color: AppColors.cFFFFFF,
+                                                          ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    data.filterData?.date ?? "",
-                                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                          color: AppColors.cFFFFFF,
-                                                        ),
-                                                  ),
-                                                ],
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                      child: Container(
+                                                        height: 12,
+                                                        width: 2,
+                                                        color: AppColors.cFFFFFF,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      data.filterData?.classs ?? "",
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                            color: AppColors.cFFFFFF,
+                                                          ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                      child: Container(
+                                                        height: 12,
+                                                        width: 2,
+                                                        color: AppColors.cFFFFFF,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      data.filterData?.date ?? "",
+                                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                            color: AppColors.cFFFFFF,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             GestureDetector(
                                               onTap: () {
                                                 wp.deleteWatchList(
-                                                  context: context,
-                                                  id: data.id ?? "",
-                                                  date: data.filterData?.date ?? "",
-                                                  cls: data.filterData?.classs ?? "",
-                                                  type: "price",
-                                                );
+                                                    context: context,
+                                                    id: data.id ?? "",
+                                                    date: data.filterData?.date ?? "",
+                                                    cls: data.filterData?.classs ?? "",
+                                                    type: "price",
+                                                    region: data.filterData?.region ?? "");
                                               },
                                               child: SvgPicture.asset(
                                                 AppAssets.fillStar,
@@ -671,16 +790,18 @@ class _WatchlistState extends State<Watchlist> {
                                                               children: [
                                                                 IconButton(
                                                                   onPressed: () {
-                                                                    wp.upDateGraphData(filterData: data.filterData, context: context);
+                                                                    wp.upDateGraphData(
+                                                                        filterData: data.filterData, context: context);
                                                                   },
                                                                   icon: const Icon(Icons.refresh),
                                                                 ),
                                                                 Text(
                                                                   AppStrings.refresh,
-                                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                                        color: AppColors.c464646,
-                                                                        fontWeight: FontWeight.w500,
-                                                                      ),
+                                                                  style:
+                                                                      Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                                            color: AppColors.c464646,
+                                                                            fontWeight: FontWeight.w500,
+                                                                          ),
                                                                 ),
                                                               ],
                                                             )
@@ -690,7 +811,8 @@ class _WatchlistState extends State<Watchlist> {
                                                                 margin: EdgeInsets.zero,
                                                                 plotAreaBorderWidth: 0,
                                                                 backgroundColor: AppColors.cAB865A.withOpacity(0.0),
-                                                                plotAreaBackgroundColor: AppColors.cAB865A.withOpacity(0.0),
+                                                                plotAreaBackgroundColor:
+                                                                    AppColors.cAB865A.withOpacity(0.0),
                                                                 primaryXAxis: DateTimeAxis(
                                                                   dateFormat: DateFormat('MM/dd'),
                                                                   intervalType: DateTimeIntervalType.hours,
@@ -705,12 +827,15 @@ class _WatchlistState extends State<Watchlist> {
                                                                 series: <CartesianSeries>[
                                                                   LineSeries<GraphDataModal, DateTime>(
                                                                     dataSource: data.graphData,
-                                                                    xValueMapper: (GraphDataModal data, _) => DateTime.parse(data.pRDATE.toString()),
-                                                                    yValueMapper: (GraphDataModal data, _) => data.cASHMT,
+                                                                    xValueMapper: (GraphDataModal data, _) =>
+                                                                        DateTime.parse(data.pRDATE.toString()),
+                                                                    yValueMapper: (GraphDataModal data, _) =>
+                                                                        data.cASHMT,
                                                                     color: AppColors.c464646,
                                                                     width: 1,
                                                                     name: 'CASHMT',
-                                                                    markerSettings: const MarkerSettings(isVisible: false),
+                                                                    markerSettings:
+                                                                        const MarkerSettings(isVisible: false),
                                                                   ),
                                                                 ],
                                                               ),

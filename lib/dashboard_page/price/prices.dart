@@ -12,6 +12,7 @@ import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/common_date_picker.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
 import '../../modal/graph_modal.dart';
+import '../../utils/app_widgets.dart';
 
 class Prices extends StatefulWidget {
   final String? region;
@@ -30,7 +31,11 @@ class _PricesState extends State<Prices> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<PricesProvider>(context, listen: false).getPrefData();
-      if ((widget.region?.isNotEmpty ?? false) && (widget.cls?.isNotEmpty ?? false) && (widget.year?.isNotEmpty ?? false)) {
+      Provider.of<PricesProvider>(context, listen: false).checkLocalWatchlist();
+
+      if ((widget.region?.isNotEmpty ?? false) &&
+          (widget.cls?.isNotEmpty ?? false) &&
+          (widget.year?.isNotEmpty ?? false)) {
         Provider.of<PricesProvider>(context, listen: false).initCallFromWatchList(
           context: context,
           region: widget.region,
@@ -63,19 +68,33 @@ class _PricesState extends State<Prices> {
                         children: [
                           Text(
                             AppStrings.pricess,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          pp.addToWatchlist(context: context);
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Icon(Icons.star_border_rounded,color: Colors.white,),
-                        ),
-                      )
+                      pp.alreadyHasInWatchlist
+                          ? Container()
+                          : GestureDetector(
+                              onTap: () {
+                                if (pp.graphDataList.isEmpty) {
+                                  AppWidgets.appSnackBar(
+                                      context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
+                                } else {
+                                  pp.addToWatchlist(context: context);
+                                }
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Icon(
+                                  size: 30,
+                                  Icons.star_border_rounded,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
                     ],
                   ),
                 ),
@@ -94,7 +113,11 @@ class _PricesState extends State<Prices> {
                       ).then(
                         (value) {
                           if (value != null) {
-                            pp.setSelectedRegion(rg: value, context: context);
+                            pp.checkLocalWatchlist().then(
+                              (v) {
+                                pp.setSelectedRegion(rg: value, context: context);
+                              },
+                            );
                           }
                         },
                       );
@@ -121,7 +144,11 @@ class _PricesState extends State<Prices> {
                                   ).then(
                                     (value) {
                                       if (value != null) {
-                                        pp.setSelectedRegion(rg: value, context: context);
+                                        pp.checkLocalWatchlist().then(
+                                          (v) {
+                                            pp.setSelectedRegion(rg: value, context: context);
+                                          },
+                                        );
                                       }
                                     },
                                   );
@@ -173,7 +200,11 @@ class _PricesState extends State<Prices> {
                         },
                       ).then((value) {
                         if (value != null) {
-                          pp.setSelectedClass(cls: value, context: context);
+                          pp.checkLocalWatchlist().then(
+                            (v) {
+                              pp.setSelectedClass(cls: value, context: context);
+                            },
+                          );
                         }
                       });
                     },
@@ -195,7 +226,11 @@ class _PricesState extends State<Prices> {
                                     },
                                   ).then((value) {
                                     if (value != null) {
-                                      pp.setSelectedClass(cls: value, context: context);
+                                      pp.checkLocalWatchlist().then(
+                                        (v) {
+                                          pp.setSelectedClass(cls: value, context: context);
+                                        },
+                                      );
                                     }
                                   });
                                 },
@@ -250,7 +285,11 @@ class _PricesState extends State<Prices> {
                       ).then(
                         (value) {
                           if (value != null) {
-                            pp.setSelectedPrDate(date: Miscellaneous.ymd(value.toString()), context: context);
+                            pp.checkLocalWatchlist().then(
+                              (v) {
+                                pp.setSelectedPrDate(date: Miscellaneous.ymd(value.toString()), context: context);
+                              },
+                            );
                           }
                         },
                       );
@@ -272,7 +311,12 @@ class _PricesState extends State<Prices> {
                               ).then(
                                 (value) {
                                   if (value != null) {
-                                    pp.setSelectedPrDate(date: Miscellaneous.ymd(value.toString()), context: context);
+                                    pp.checkLocalWatchlist().then(
+                                      (v) {
+                                        pp.setSelectedPrDate(
+                                            date: Miscellaneous.ymd(value.toString()), context: context);
+                                      },
+                                    );
                                   }
                                 },
                               );
