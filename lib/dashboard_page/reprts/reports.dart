@@ -24,6 +24,9 @@ class _ReportsState extends State<Reports> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ReportsProvider prov = Provider.of<ReportsProvider>(context, listen: false);
+      prov.selectedReportOption = null;
+      prov.selectedCategory = null;
+      prov.selectedYear = null;
       prov.getReportsOptions(context: context);
       prov.getReports(context: context);
       prov.loadYear(context: context);
@@ -135,98 +138,6 @@ class _ReportsState extends State<Reports> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return SizedBox(
-                              height: MediaQuery.of(context).size.height / 3,
-                              child: YearSelector(
-                                yearList: rp.yearList,
-                              ),
-                            );
-                          },
-                        ).then(
-                          (value) {
-                            if (value != null) {
-                              rp.setSelectedYear(y: value, context: context);
-                            }
-                          },
-                        );
-                      },
-                      child: Container(
-                        color: Colors.transparent,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width / 3.6,
-                              color: AppColors.c95795d.withOpacity(0.1),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) {
-                                        return SizedBox(
-                                          height: MediaQuery.of(context).size.height / 3,
-                                          child: YearSelector(
-                                            yearList: rp.yearList,
-                                          ),
-                                        );
-                                      },
-                                    ).then(
-                                      (value) {
-                                        if (value != null) {
-                                          rp.setSelectedYear(y: value, context: context);
-                                        }
-                                      },
-                                    );
-                                  },
-                                  onTapDown: (TapDownDetails details) {},
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          AppStrings.year.toUpperCase(),
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                fontWeight: FontWeight.w700,
-                                                color: AppColors.cab865a,
-                                              ),
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.keyboard_arrow_down,
-                                        color: AppColors.cab865a,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Text(
-                                (rp.selectedYear?.toString().isNotEmpty == true)
-                                    ? rp.selectedYear.toString()
-                                    : "Select Year",
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.c353d4a.withOpacity(0.7),
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      thickness: 0.5,
-                      height: 1,
-                      color: AppColors.cB6B6B6,
-                    ),
-                    GestureDetector(
-                      onTap: () {
                         if (rp.selectedReportOption != null) {
                           showModalBottomSheet(
                             context: context,
@@ -320,80 +231,184 @@ class _ReportsState extends State<Reports> {
                       height: 1,
                       color: AppColors.cB6B6B6,
                     ),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return SizedBox(
+                              height: MediaQuery.of(context).size.height / 3,
+                              child: YearSelector(
+                                yearList: rp.yearList,
+                              ),
+                            );
+                          },
+                        ).then(
+                          (value) {
+                            if (value != null) {
+                              rp.setSelectedYear(y: value, context: context);
+                            }
+                          },
+                        );
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width / 3.6,
+                              color: AppColors.c95795d.withOpacity(0.1),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return SizedBox(
+                                          height: MediaQuery.of(context).size.height / 3,
+                                          child: YearSelector(
+                                            yearList: rp.yearList,
+                                          ),
+                                        );
+                                      },
+                                    ).then(
+                                      (value) {
+                                        if (value != null) {
+                                          rp.setSelectedYear(y: value, context: context);
+                                        }
+                                      },
+                                    );
+                                  },
+                                  onTapDown: (TapDownDetails details) {},
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          AppStrings.year.toUpperCase(),
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.cab865a,
+                                              ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: AppColors.cab865a,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                (rp.selectedYear?.toString().isNotEmpty == true)
+                                    ? rp.selectedYear.toString()
+                                    : "Select Year",
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.c353d4a.withOpacity(0.7),
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                      color: AppColors.cB6B6B6,
+                    ),
                   ],
                 ),
               ),
               const SizedBox(
                 height: 10,
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Column(
-                    children: List.generate(
-                      rp.reports.length,
-                      (index) {
-                        var report = rp.reports[index];
-                        return GestureDetector(
-                          onTap: () {
-                            final arg = ReportDetailArg(
-                              title: report["title"] ?? "",
-                              pdfUrl: report["url"] ?? "",
-                            );
+              rp.reports.isNotEmpty
+                  ? Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Column(
+                          children: List.generate(
+                            rp.reports.length,
+                            (index) {
+                              var report = rp.reports[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  final arg = ReportDetailArg(
+                                    title: report["title"] ?? "",
+                                    pdfUrl: report["url"] ?? "",
+                                  );
 
-                            Navigator.pushNamed(
-                              context,
-                              AppRoutes.reportDetailPage,
-                              arguments: arg,
-                            );
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            decoration: AppBoxDecoration.greyBorder(context),
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              children: [
-                                Expanded(
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.reportDetailPage,
+                                    arguments: arg,
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 12),
+                                  decoration: AppBoxDecoration.greyBorder(context),
+                                  padding: const EdgeInsets.all(12.0),
                                   child: Row(
                                     children: [
-                                      Image.asset(AppAssets.pdf, scale: 35),
-                                      const SizedBox(width: 8),
                                       Expanded(
-                                        child: Text(
-                                          report["title"],
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 3,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelSmall
-                                              ?.copyWith(color: AppColors.c000000),
+                                        child: Row(
+                                          children: [
+                                            Image.asset(AppAssets.pdf, scale: 35),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                report["title"],
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 3,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall
+                                                    ?.copyWith(color: AppColors.c000000),
+                                              ),
+                                            ),
+                                          ],
                                         ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            AppStrings.view,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(color: AppColors.cB6B6B6),
+                                          ),
+                                          Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            size: 12,
+                                            color: AppColors.cB6B6B6,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      AppStrings.view,
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cB6B6B6),
-                                    ),
-                                    Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      size: 12,
-                                      color: AppColors.cB6B6B6,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                      ),
+                    )
+                  : const Expanded(
+                      child: Center(
+                        child: Text(
+                          AppStrings.noReports,
+                          style: TextStyle(fontSize: 20, color: Colors.grey),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Container(
@@ -418,7 +433,7 @@ class _ReportsState extends State<Reports> {
                                     decorationColor: AppColors.c0A64A4),
                               ))
                           : Container(),
-                      (rp.pageNumber<rp.totalPages)
+                      (rp.pageNumber < rp.totalPages)
                           ? GestureDetector(
                               onTap: () {
                                 rp.nextPage(context: context);
