@@ -23,10 +23,9 @@ class _ReportsState extends State<Reports> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ReportsProvider prov =
-          Provider.of<ReportsProvider>(context, listen: false);
-      prov.getReports(context: context);
+      ReportsProvider prov = Provider.of<ReportsProvider>(context, listen: false);
       prov.getReportsOptions(context: context);
+      prov.getReports(context: context);
       prov.loadYear(context: context);
     });
   }
@@ -71,18 +70,14 @@ class _ReportsState extends State<Reports> {
                               width: MediaQuery.of(context).size.width / 3.6,
                               color: AppColors.c95795d.withOpacity(0.1),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 8),
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                                 child: GestureDetector(
                                   onTap: () {
                                     showModalBottomSheet(
                                       context: context,
                                       builder: (context) {
                                         return SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              3,
+                                          height: MediaQuery.of(context).size.height / 3,
                                           child: ReportsSelector(
                                             reportList: rp.reportsOptions,
                                           ),
@@ -97,16 +92,12 @@ class _ReportsState extends State<Reports> {
                                     );
                                   },
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Flexible(
                                         child: Text(
                                           AppStrings.reports.toUpperCase(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                 fontWeight: FontWeight.w700,
                                                 color: AppColors.cab865a,
                                               ),
@@ -122,17 +113,12 @@ class _ReportsState extends State<Reports> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
                                 rp.selectedReportOption != null
-                                    ? rp.selectedReportOption["report_type"][0]
-                                        ["name"]
+                                    ? rp.selectedReportOption["report_type"][0]["name"]
                                     : "Select Report Type",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.c353d4a.withOpacity(0.7),
                                     ),
@@ -175,18 +161,14 @@ class _ReportsState extends State<Reports> {
                               width: MediaQuery.of(context).size.width / 3.6,
                               color: AppColors.c95795d.withOpacity(0.1),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 8),
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                                 child: GestureDetector(
                                   onTap: () {
                                     showModalBottomSheet(
                                       context: context,
                                       builder: (context) {
                                         return SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              3,
+                                          height: MediaQuery.of(context).size.height / 3,
                                           child: YearSelector(
                                             yearList: rp.yearList,
                                           ),
@@ -195,24 +177,19 @@ class _ReportsState extends State<Reports> {
                                     ).then(
                                       (value) {
                                         if (value != null) {
-                                          rp.setSelectedYear(
-                                              y: value, context: context);
+                                          rp.setSelectedYear(y: value, context: context);
                                         }
                                       },
                                     );
                                   },
                                   onTapDown: (TapDownDetails details) {},
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Flexible(
                                         child: Text(
                                           AppStrings.year.toUpperCase(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                 fontWeight: FontWeight.w700,
                                                 color: AppColors.cab865a,
                                               ),
@@ -228,16 +205,12 @@ class _ReportsState extends State<Reports> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
                                 (rp.selectedYear?.toString().isNotEmpty == true)
                                     ? rp.selectedYear.toString()
                                     : "Select Year",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.c353d4a.withOpacity(0.7),
                                     ),
@@ -261,16 +234,14 @@ class _ReportsState extends State<Reports> {
                               return SizedBox(
                                 height: MediaQuery.of(context).size.height / 3,
                                 child: CategorySelector(
-                                  categoryList:
-                                      rp.selectedReportOption["terms"] ?? [],
+                                  categoryList: rp.selectedReportOption["terms"] ?? [],
                                 ),
                               );
                             },
                           ).then(
                             (value) {
                               if (value != null) {
-                                rp.setSelectedCategory(
-                                    c: value, context: context);
+                                rp.setSelectedCategory(c: value, context: context);
                               }
                             },
                           );
@@ -284,8 +255,7 @@ class _ReportsState extends State<Reports> {
                               width: MediaQuery.of(context).size.width / 3.6,
                               color: AppColors.c95795d.withOpacity(0.1),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 8),
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                                 child: GestureDetector(
                                   onTap: () {
                                     if (rp.selectedReportOption != null) {
@@ -293,39 +263,28 @@ class _ReportsState extends State<Reports> {
                                         context: context,
                                         builder: (context) {
                                           return SizedBox(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                3,
+                                            height: MediaQuery.of(context).size.height / 3,
                                             child: CategorySelector(
-                                              categoryList:
-                                                  rp.selectedReportOption[
-                                                          "terms"] ??
-                                                      [],
+                                              categoryList: rp.selectedReportOption["terms"] ?? [],
                                             ),
                                           );
                                         },
                                       ).then(
                                         (value) {
                                           if (value != null) {
-                                            rp.setSelectedCategory(
-                                                c: value, context: context);
+                                            rp.setSelectedCategory(c: value, context: context);
                                           }
                                         },
                                       );
                                     }
                                   },
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Flexible(
                                         child: Text(
                                           AppStrings.category.toUpperCase(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                 fontWeight: FontWeight.w700,
                                                 color: AppColors.cab865a,
                                               ),
@@ -343,16 +302,10 @@ class _ReportsState extends State<Reports> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
-                                rp.selectedCategory != null
-                                    ? rp.selectedCategory["name"]
-                                    : "Select Category Type",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.copyWith(
+                                rp.selectedCategory != null ? rp.selectedCategory["name"] : "Select Category Type",
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.c353d4a.withOpacity(0.7),
                                     ),
@@ -413,8 +366,7 @@ class _ReportsState extends State<Reports> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelSmall
-                                              ?.copyWith(
-                                                  color: AppColors.c000000),
+                                              ?.copyWith(color: AppColors.c000000),
                                         ),
                                       ),
                                     ],
@@ -424,10 +376,7 @@ class _ReportsState extends State<Reports> {
                                   children: [
                                     Text(
                                       AppStrings.view,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(color: AppColors.cB6B6B6),
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cB6B6B6),
                                     ),
                                     Icon(
                                       Icons.arrow_forward_ios_rounded,
@@ -446,47 +395,44 @@ class _ReportsState extends State<Reports> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 10, bottom: 10),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Container(
                   color: Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
-                          onTap: () {
-                            if (rp.pageNumber > 0) {
-                              rp.previousPage(context: context);
-                            }
-                          },
-                          child: Text(
-                            AppStrings.back,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
+                      (rp.pageNumber > 1)
+                          ? GestureDetector(
+                              onTap: () {
+                                if (rp.pageNumber > 0) {
+                                  rp.previousPage(context: context);
+                                }
+                              },
+                              child: Text(
+                                AppStrings.back,
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.c0A64A4,
                                     decoration: TextDecoration.underline,
                                     decorationColor: AppColors.c0A64A4),
-                          )),
-                      GestureDetector(
-                          onTap: () {
-                            rp.nextPage(context: context);
-                          },
-                          child: Text(
-                            AppStrings.next,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
+                              ))
+                          : Container(),
+                      (rp.pageNumber<rp.totalPages)
+                          ? GestureDetector(
+                              onTap: () {
+                                rp.nextPage(context: context);
+                              },
+                              child: Text(
+                                AppStrings.next,
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.c0A64A4,
                                     decoration: TextDecoration.underline,
                                     decorationColor: AppColors.c0A64A4),
-                          ))
+                              ))
+                          : Container()
                     ],
                   ),
                 ),
