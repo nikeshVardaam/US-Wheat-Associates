@@ -71,7 +71,7 @@ class SyncData {
         }
       }
       sp.setStringList(PrefKeys.yearList, yearList);
-      List<String>? tempList = sp.getStringList(PrefKeys.yearList);
+
     } finally {
       Navigator.pop(context);
     }

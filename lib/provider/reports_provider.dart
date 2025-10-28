@@ -16,7 +16,7 @@ class ReportsProvider extends ChangeNotifier {
   String reportTypeNameParam = "";
   String termParam = "";
   int perPage = 100;
-  int page = 20;
+  num totalPages = 0;
 
   var selectedReportOption;
   var selectedCategory;
@@ -78,9 +78,7 @@ class ReportsProvider extends ChangeNotifier {
   }
 
   Future<void> getYearList({required BuildContext context}) async {
-    GetApiServices()
-        .get(endpoint: ApiEndpoint.getYears, context: context, loader: true)
-        .then(
+    GetApiServices().get(endpoint: ApiEndpoint.getYears, context: context, loader: true).then(
       (value) {
         if (value != null) {
           yearList.clear();
@@ -102,13 +100,11 @@ class ReportsProvider extends ChangeNotifier {
     String url =
         "https://uswheat.org/wp-json/uswheat/v1/get-reports?report_type_name=$reportTypeNameParam&term=$termParam&per_page=$perPage&page=$pageNumber&year=$selectedYear";
 
-    await GetApiServices()
-        .getWithDynamicUrl(url: url, loader: true, context: context)
-        .then(
+    await GetApiServices().getWithDynamicUrl(url: url, loader: true, context: context).then(
       (value) {
         if (value != null) {
           var data = jsonDecode(value.body);
-
+          totalPages = data?[0]["total_pages"];
           for (var i = 0; i < data.length; ++i) {
             reports = data[i]['reports'];
           }
@@ -121,10 +117,7 @@ class ReportsProvider extends ChangeNotifier {
   Future<void> getReports({required BuildContext context}) async {
     reports.clear();
     await GetApiServices()
-        .getWithDynamicUrl(
-            url: "https://uswheat.org/wp-json/uswheat/v1/get-reports",
-            loader: true,
-            context: context)
+        .getWithDynamicUrl(url: "https://uswheat.org/wp-json/uswheat/v1/get-reports", loader: true, context: context)
         .then(
       (value) {
         if (value != null) {
