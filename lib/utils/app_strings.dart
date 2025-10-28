@@ -59,6 +59,9 @@ class AppStrings {
   static const bushels = "BUSHELS: (bu)";
   static const equals = "equals....";
   static const noData = "No data ....";
+  static const noReports = "No Reports";
+
+
   static const metricTons = "METRIC TONS: (MT)";
   static const calculationBu = "Calculation:\n1 bu = 0.0272 MT";
   static const bu = "1 bu = 0.0272 MT";

@@ -95,6 +95,7 @@ class ReportsProvider extends ChangeNotifier {
   }
 
   Future<void> getFilterReport({required BuildContext context}) async {
+    reports.clear();
     reportTypeNameParam = selectedReportOption["report_type"][0]['slug'];
     termParam = selectedCategory['slug'];
     String url =
@@ -104,9 +105,16 @@ class ReportsProvider extends ChangeNotifier {
       (value) {
         if (value != null) {
           var data = jsonDecode(value.body);
-          totalPages = data?[0]["total_pages"];
-          for (var i = 0; i < data.length; ++i) {
-            reports = data[i]['reports'];
+
+          if (data is List && data.isNotEmpty) {
+            totalPages = data[0]["total_pages"];
+
+            for (var i = 0; i < data.length; ++i) {
+              reports = data[i]['reports'];
+            }
+          } else {
+            totalPages = 0;
+            reports.clear();
           }
         }
       },
@@ -122,7 +130,6 @@ class ReportsProvider extends ChangeNotifier {
       (value) {
         if (value != null) {
           var data = jsonDecode(value.body);
-
           for (var i = 0; i < data.length; ++i) {
             if (data[i]["report_type_label"] == "News Releases") {
               reports = data[i]["reports"];
@@ -147,7 +154,6 @@ class ReportsProvider extends ChangeNotifier {
           var data = jsonDecode(value.body);
           reportsOptions.addAll(data);
         }
-
         notifyListeners();
       },
     );

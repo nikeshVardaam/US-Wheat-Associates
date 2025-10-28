@@ -365,7 +365,7 @@ class _PricesState extends State<Prices> {
                           child: Center(
                             child: Text(
                               AppStrings.noDataAvailable,
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 20),
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 20,color: Colors.grey),
                             ),
                           ),
                         ),
