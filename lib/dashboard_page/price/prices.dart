@@ -26,17 +26,27 @@ class Prices extends StatefulWidget {
 }
 
 class _PricesState extends State<Prices> {
+  String? defaultDate;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<PricesProvider>(context, listen: false).getPrefData();
-      if ((widget.region?.isNotEmpty ?? false) && (widget.cls?.isNotEmpty ?? false) && (widget.year?.isNotEmpty ?? false)) {
-        Provider.of<PricesProvider>(context, listen: false).initCallFromWatchList(
+      if ((widget.region?.isNotEmpty ?? false) &&
+          (widget.cls?.isNotEmpty ?? false) &&
+          (widget.year?.isNotEmpty ?? false)) {
+        Provider.of<PricesProvider>(context, listen: false)
+            .initCallFromWatchList(
           context: context,
           region: widget.region,
           cls: widget.cls,
           year: widget.year,
+        )
+            .then(
+          (value) {
+            defaultDate = Provider.of<PricesProvider>(context, listen: false).pRDate;
+          },
         );
       } else {
         Provider.of<PricesProvider>(context, listen: false).initCall(context: context);
@@ -64,7 +74,10 @@ class _PricesState extends State<Prices> {
                         children: [
                           Text(
                             AppStrings.pricess,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
@@ -73,19 +86,23 @@ class _PricesState extends State<Prices> {
                           : GestureDetector(
                               onTap: () {
                                 if (pp.graphDataList.isEmpty) {
-                                  AppWidgets.appSnackBar(context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
+                                  AppWidgets.appSnackBar(
+                                      context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
                                 } else {
                                   pp.addToWatchlist(context: context);
+                                  pp.checkLocalWatchlist();
                                 }
                               },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                child: Icon(
-                                  size: 30,
-                                  Icons.star_border_rounded,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              child: pp.alreadyHasInWatchlist
+                                  ? Container()
+                                  : const Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(
+                                        size: 30,
+                                        Icons.star_border,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                             )
                     ],
                   ),
@@ -250,12 +267,15 @@ class _PricesState extends State<Prices> {
                   ),
                   GestureDetector(
                     onTap: () {
+                      defaultDate = pp.pRDate;
                       showModalBottomSheet(
                         context: context,
                         builder: (context) {
                           return SizedBox(
                             height: MediaQuery.of(context).size.height / 3,
-                            child: DatePickerSheet(),
+                            child: DatePickerSheet(
+                              date: defaultDate,
+                            ),
                           );
                         },
                       ).then(
@@ -272,12 +292,13 @@ class _PricesState extends State<Prices> {
                         children: [
                           GestureDetector(
                             onTap: () {
+                              defaultDate = pp.pRDate;
                               showModalBottomSheet(
                                 context: context,
                                 builder: (context) {
                                   return SizedBox(
                                     height: MediaQuery.of(context).size.height / 3,
-                                    child: DatePickerSheet(),
+                                    child: DatePickerSheet(date: defaultDate),
                                   );
                                 },
                               ).then(
@@ -365,7 +386,7 @@ class _PricesState extends State<Prices> {
                           child: Center(
                             child: Text(
                               AppStrings.noDataAvailable,
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 20,color: Colors.grey),
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 20, color: Colors.grey),
                             ),
                           ),
                         ),
@@ -458,7 +479,7 @@ class _PricesState extends State<Prices> {
                             child: Row(
                               children: [
                                 Text(
-                                  AppStrings.weekChange,
+                                  AppStrings.lastWeek,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.cab865a,
@@ -536,51 +557,6 @@ class _PricesState extends State<Prices> {
                             child: Row(
                               children: [
                                 Text(
-                                  AppStrings.oneYearAgo,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.cab865a,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            "\$/MT",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                ),
-                          ),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            pp.allPriceDataModal?.yearly?.cASHMT?.toStringAsFixed(2) ?? "--",
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.c353d4a.withOpacity(0.7),
-                                ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 0.5,
-                    height: 1,
-                    color: AppColors.cB6B6B6,
-                  ),
-                  Container(
-                    color: AppColors.c95795d.withOpacity(0.1),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text(
                                   AppStrings.lastPrDate,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         fontWeight: FontWeight.w700,
@@ -596,33 +572,6 @@ class _PricesState extends State<Prices> {
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),
                                 ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 0.5,
-                    height: 1,
-                    color: AppColors.cB6B6B6,
-                  ),
-                  Container(
-                    color: AppColors.c95795d.withOpacity(0.1),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                AppStrings.fwdPrice,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.cab865a,
-                                    ),
-                              ),
-                            ],
                           ),
                         ],
                       ),

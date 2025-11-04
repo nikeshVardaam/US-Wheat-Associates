@@ -356,6 +356,7 @@ class _ReportsState extends State<Reports> {
                                   decoration: AppBoxDecoration.greyBorder(context),
                                   padding: const EdgeInsets.all(12.0),
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Row(
@@ -376,6 +377,7 @@ class _ReportsState extends State<Reports> {
                                           ],
                                         ),
                                       ),
+                                      const SizedBox(width: 10),
                                       Row(
                                         children: [
                                           Text(

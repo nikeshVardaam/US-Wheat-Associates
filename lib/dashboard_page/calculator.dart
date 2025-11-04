@@ -21,7 +21,10 @@ class Calculator extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 AppStrings.protein,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge
+                    ?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -79,7 +82,10 @@ class Calculator extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 AppStrings.distanceArea,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge
+                    ?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -193,7 +199,10 @@ class Calculator extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 AppStrings.weight,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge
+                    ?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -307,7 +316,10 @@ class Calculator extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 AppStrings.yield,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge
+                    ?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -340,7 +352,10 @@ class Calculator extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 AppStrings.temperature,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge
+                    ?.copyWith(color: AppColors.c000000, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
             ),

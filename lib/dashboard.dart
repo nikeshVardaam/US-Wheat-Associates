@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:uswheat/auth/SyncData.dart';
 import 'package:uswheat/dashboard_page/watch_list/watchList.dart';
 import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
@@ -54,6 +55,23 @@ class _DashboardState extends State<Dashboard> {
               AppAssets.darkLogo,
               scale: 5,
             ),
+            actions: [
+              Consumer<DashboardProvider>(
+                builder: (context, dp, chilc) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 5.0),
+                    child: IconButton(
+                      iconSize: 24,
+                      icon: const Icon(Icons.sync),
+                      color: AppColors.cFFFFFF,
+                      onPressed: () {
+                        SyncData().syncData(context: context);
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           drawer: SizedBox(
             width: MediaQuery.of(perentContext).size.width / 1.8,
@@ -80,9 +98,7 @@ class _DashboardState extends State<Dashboard> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelLarge
-                                        ?.copyWith(
-                                            color: AppColors.cFFFFFF,
-                                            fontWeight: FontWeight.w500),
+                                        ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
                                   ),
                                   const SizedBox(
                                     height: 16,
@@ -96,27 +112,19 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                       Expanded(
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
+                                          padding: const EdgeInsets.symmetric(horizontal: 16),
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 dp.user?.name ?? "",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelLarge
-                                                    ?.copyWith(
+                                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                                       color: AppColors.cFFFFFF,
                                                     ),
                                               ),
                                               Text(
                                                 dp.user?.email ?? "",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelSmall
-                                                    ?.copyWith(
+                                                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                                       color: AppColors.cFFFFFF,
                                                     ),
                                                 maxLines: 1,
@@ -132,8 +140,7 @@ class _DashboardState extends State<Dashboard> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                               child: Divider(
                                 color: AppColors.cAB865A,
                               ),
@@ -145,9 +152,7 @@ class _DashboardState extends State<Dashboard> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelLarge
-                                    ?.copyWith(
-                                        color: AppColors.cFFFFFF,
-                                        fontWeight: FontWeight.w500),
+                                    ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
                               ),
                             ),
                             ListTile(
@@ -156,27 +161,18 @@ class _DashboardState extends State<Dashboard> {
                                 AppAssets.star,
                                 height: 18,
                                 colorFilter: ColorFilter.mode(
-                                  dp.currentIndex == 2
-                                      ? AppColors.cFFc166
-                                      : AppColors.cFFFFFF,
+                                  dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                   BlendMode.srcIn,
                                 ),
                               ),
                               title: Text(
                                 AppStrings.watchlist,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: dp.currentIndex == 2
-                                          ? AppColors.cFFc166
-                                          : AppColors.cFFFFFF,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
-                                dp.setChangeActivity(
-                                    activity: const Watchlist(),
-                                    pageName: AppStrings.watchlist);
+                                dp.setChangeActivity(activity: const Watchlist(), pageName: AppStrings.watchlist);
                                 Navigator.pop(context);
                               },
                             ),
@@ -186,21 +182,14 @@ class _DashboardState extends State<Dashboard> {
                                 AppAssets.percentage,
                                 height: 18,
                                 colorFilter: ColorFilter.mode(
-                                  dp.currentIndex == 0
-                                      ? AppColors.cFFc166
-                                      : AppColors.cFFFFFF,
+                                  dp.currentIndex == 0 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                   BlendMode.srcIn,
                                 ),
                               ),
                               title: Text(
                                 AppStrings.price,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: dp.currentIndex == 0
-                                          ? AppColors.cFFc166
-                                          : AppColors.cFFFFFF,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: dp.currentIndex == 0 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
@@ -220,27 +209,18 @@ class _DashboardState extends State<Dashboard> {
                                 AppAssets.done,
                                 height: 18,
                                 colorFilter: ColorFilter.mode(
-                                  dp.currentIndex == 1
-                                      ? AppColors.cFFc166
-                                      : AppColors.cFFFFFF,
+                                  dp.currentIndex == 1 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                   BlendMode.srcIn,
                                 ),
                               ),
                               title: Text(
                                 AppStrings.quality,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: dp.currentIndex == 1
-                                          ? AppColors.cFFc166
-                                          : AppColors.cFFFFFF,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: dp.currentIndex == 1 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
-                                dp.setChangeActivity(
-                                    activity: const Quality(),
-                                    pageName: AppStrings.quality);
+                                dp.setChangeActivity(activity: const Quality(), pageName: AppStrings.quality);
                                 Navigator.pop(context);
                               },
                             ),
@@ -250,27 +230,18 @@ class _DashboardState extends State<Dashboard> {
                                 AppAssets.chartPie,
                                 height: 20,
                                 colorFilter: ColorFilter.mode(
-                                  dp.currentIndex == 3
-                                      ? AppColors.cFFc166
-                                      : AppColors.cFFFFFF,
+                                  dp.currentIndex == 3 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                   BlendMode.srcIn,
                                 ),
                               ),
                               title: Text(
                                 AppStrings.reports,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: dp.currentIndex == 3
-                                          ? AppColors.cFFc166
-                                          : AppColors.cFFFFFF,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: dp.currentIndex == 3 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
-                                dp.setChangeActivity(
-                                    activity: const Reports(),
-                                    pageName: AppStrings.reports);
+                                dp.setChangeActivity(activity: const Reports(), pageName: AppStrings.reports);
                                 Navigator.pop(context);
                               },
                             ),
@@ -280,27 +251,18 @@ class _DashboardState extends State<Dashboard> {
                                 AppAssets.equal,
                                 height: 20,
                                 colorFilter: ColorFilter.mode(
-                                  dp.currentIndex == 4
-                                      ? AppColors.cFFc166
-                                      : AppColors.cFFFFFF,
+                                  dp.currentIndex == 4 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                   BlendMode.srcIn,
                                 ),
                               ),
                               title: Text(
                                 AppStrings.calculator,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: dp.currentIndex == 4
-                                          ? AppColors.cFFc166
-                                          : AppColors.cFFFFFF,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: dp.currentIndex == 4 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                                     ),
                               ),
                               onTap: () {
-                                dp.setChangeActivity(
-                                    activity: const Calculator(),
-                                    pageName: AppStrings.calculator);
+                                dp.setChangeActivity(activity: const Calculator(), pageName: AppStrings.calculator);
                                 Navigator.pop(context);
                               },
                             ),
@@ -320,10 +282,7 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                                 title: Text(
                                   AppStrings.newFeed,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         color: AppColors.cFFFFFF,
                                       ),
                                 ),
@@ -332,9 +291,7 @@ class _DashboardState extends State<Dashboard> {
                             GestureDetector(
                               onTap: () {
                                 Navigator.pop(perentContext);
-                                dp.syncData(perentContext).then((value) async {
-
-                                });
+                                dp.syncData(perentContext).then((value) async {});
                               },
                               child: ListTile(
                                 dense: true,
@@ -345,10 +302,7 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                                 title: Text(
                                   AppStrings.syncNewData,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         color: AppColors.cFFFFFF,
                                       ),
                                 ),
@@ -376,10 +330,7 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                                 title: Text(
                                   AppStrings.logout,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         color: Colors.red,
                                       ),
                                 ),
@@ -401,8 +352,7 @@ class _DashboardState extends State<Dashboard> {
                                 context: context,
                                 builder: (context) {
                                   return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4)),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                     child: const AppDeleteDialog(),
                                   );
                                 },
@@ -420,10 +370,7 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                                 Text(
                                   AppStrings.deleteUser,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                         color: AppColors.cFFFFFF,
                                       ),
                                 ),
@@ -464,9 +411,7 @@ class _DashboardState extends State<Dashboard> {
                       AppAssets.percentage,
                       height: 20,
                       colorFilter: ColorFilter.mode(
-                        dp.currentIndex == 0
-                            ? AppColors.cFFc166
-                            : AppColors.cFFFFFF,
+                        dp.currentIndex == 0 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -477,9 +422,7 @@ class _DashboardState extends State<Dashboard> {
                       AppAssets.done,
                       height: 20,
                       colorFilter: ColorFilter.mode(
-                        dp.currentIndex == 1
-                            ? AppColors.cFFc166
-                            : AppColors.cFFFFFF,
+                        dp.currentIndex == 1 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -490,9 +433,7 @@ class _DashboardState extends State<Dashboard> {
                       AppAssets.star,
                       height: 20,
                       colorFilter: ColorFilter.mode(
-                        dp.currentIndex == 2
-                            ? AppColors.cFFc166
-                            : AppColors.cFFFFFF,
+                        dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -503,9 +444,7 @@ class _DashboardState extends State<Dashboard> {
                       AppAssets.chartPie,
                       height: 23,
                       colorFilter: ColorFilter.mode(
-                        dp.currentIndex == 3
-                            ? AppColors.cFFc166
-                            : AppColors.cFFFFFF,
+                        dp.currentIndex == 3 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -516,9 +455,7 @@ class _DashboardState extends State<Dashboard> {
                       AppAssets.equal,
                       height: 23,
                       colorFilter: ColorFilter.mode(
-                        dp.currentIndex == 4
-                            ? AppColors.cFFc166
-                            : AppColors.cFFFFFF,
+                        dp.currentIndex == 4 ? AppColors.cFFc166 : AppColors.cFFFFFF,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -532,34 +469,3 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
-// GestureDetector(
-//   onTap: (){
-//     showDialog(
-//       context: context,
-//       builder: (context) {
-//         return ChangePassword(
-//           onTap: () {
-//             dp.logOut(context);
-//           },
-//         );
-//       },
-//     );
-//   },
-//   child: ListTile(
-//     dense: true,
-//     leading: SvgPicture.asset(
-//       AppAssets.passwordChange,
-//       height: 18,
-//       colorFilter: ColorFilter.mode(
-//         dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-//         BlendMode.srcIn,
-//       ),
-//     ),
-//     title: Text(
-//       AppStrings.changePassword,
-//       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-//         color: dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-//       ),
-//     ),
-//   ),
-// ),

@@ -22,8 +22,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
   WebViewController? _webController;
   bool isLoading = true;
 
-  bool get _isPdf =>
-      widget.reportDetailArg.pdfUrl.toLowerCase().endsWith('.pdf');
+  bool get _isPdf => widget.reportDetailArg.pdfUrl.toLowerCase().endsWith('.pdf');
 
   String get _url => widget.reportDetailArg.pdfUrl;
 
@@ -38,9 +37,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
 
     if (!_isPdf) {
       String url = _url;
-      if (url.endsWith('.docx') ||
-          url.endsWith('.odf') ||
-          url.endsWith('.pptx')) {
+      if (url.endsWith('.docx') || url.endsWith('.odf') || url.endsWith('.pptx')) {
         url = "https://docs.google.com/viewer?url=$url&embedded=true";
       }
 
@@ -52,8 +49,7 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
             onPageFinished: (_) => setState(() => isLoading = false),
             onWebResourceError: (_) {
               setState(() => isLoading = false);
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Failed to load document")));
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to load document")));
             },
           ),
         )
@@ -72,7 +68,8 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
   Widget build(BuildContext perentContext) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.reportDetailArg.title),
+        titleSpacing: 0.0,
+        title: Text(widget.reportDetailArg.title, style: const TextStyle(fontSize: 18)),
       ),
       body: Stack(
         children: [
@@ -80,38 +77,31 @@ class _ReportDetailPageState extends State<ReportDetailPage> {
             color: Colors.white,
             child: _url.isEmpty
                 ? Center(
-              child: Text(
-                AppStrings.noData,
-                style: Theme.of(perentContext)
-                    .textTheme
-                    .labelLarge
-                    ?.copyWith(fontWeight: FontWeight.w600),
-              ),
-            )
+                    child: Text(
+                      AppStrings.noData,
+                      style: Theme.of(perentContext).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  )
                 : _isPdf
-                ? SfPdfViewer.network(
-              _url,
-              controller: _pdfController,
-              onDocumentLoaded: (details) =>
-                  setState(() => isLoading = false),
-              onDocumentLoadFailed: (details) {
-                setState(() => isLoading = false);
-                ScaffoldMessenger.of(perentContext).showSnackBar(
-                    const SnackBar(
-                        content: Text("Failed to load PDF")));
-              },
-            )
-                : _webController != null
-                ? WebViewWidget(controller: _webController!)
-                : Center(
-              child: Text(
-                AppStrings.noData,
-                style: Theme.of(perentContext)
-                    .textTheme
-                    .labelLarge
-                    ?.copyWith(fontWeight: FontWeight.w600),
-              ),
-            ),
+                    ? SfPdfViewer.network(
+                        _url,
+                        controller: _pdfController,
+                        onDocumentLoaded: (details) => setState(() => isLoading = false),
+                        onDocumentLoadFailed: (details) {
+                          setState(() => isLoading = false);
+                          ScaffoldMessenger.of(perentContext)
+                              .showSnackBar(const SnackBar(content: Text("Failed to load PDF")));
+                        },
+                      )
+                    : _webController != null
+                        ? WebViewWidget(controller: _webController!)
+                        : Center(
+                            child: Text(
+                              AppStrings.noData,
+                              style:
+                                  Theme.of(perentContext).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                          ),
           ),
           if (isLoading)
             Container(

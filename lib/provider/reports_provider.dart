@@ -142,6 +142,7 @@ class ReportsProvider extends ChangeNotifier {
   }
 
   Future<void> getReportsOptions({required BuildContext context}) async {
+    reportsOptions.clear();
     await GetApiServices()
         .getWithDynamicUrl(
       url: "https://uswheat.org/wp-json/uswheat/v1/get-report-options",
