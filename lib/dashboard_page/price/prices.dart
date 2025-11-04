@@ -415,8 +415,10 @@ class _PricesState extends State<Prices> {
                             ),
                           ),
                           Text(
-                            pp.allPriceDataModal?.nearby!.cASHBU != null
-                                ? double.parse((pp.allPriceDataModal?.nearby!.cASHBU).toString()).toStringAsFixed(2)
+                            (pp.allPriceDataModal?.nearby?.cASHBU != null)
+                                ? double.tryParse(pp.allPriceDataModal!.nearby!.cASHBU.toString())
+                                        ?.toStringAsFixed(2) ??
+                                    "--"
                                 : "--",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w900,
