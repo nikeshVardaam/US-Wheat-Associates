@@ -98,8 +98,7 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> initCallFromWatchList(
-      {required BuildContext context, required String? region, required String? cls, required String? year}) async {
+  Future<void> initCallFromWatchList({required BuildContext context, required String? region, required String? cls, required String? year}) async {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
@@ -189,15 +188,9 @@ class PricesProvider extends ChangeNotifier {
     sp = await SharedPreferences.getInstance();
     final data = {
       "type": "price",
-      "filterdata": {
-        "region": selectedRegion?.region ?? "",
-        "class": selectedClass ?? "",
-        "date": pRDate,
-        "color": "ffab865a",
-        "grphcode": selectedGRPHCode ?? ""
-      }
+      "filterdata": {"region": selectedRegion?.region ?? "", "class": selectedClass ?? "", "date": pRDate, "color": "ffab865a", "grphcode": selectedGRPHCode ?? ""}
     };
-    PostServices()
+    await PostServices()
         .post(
       endpoint: ApiEndpoint.storeWatchlist,
       requestData: data,
@@ -278,9 +271,11 @@ class PricesProvider extends ChangeNotifier {
           }
 
           AppWidgets.appSnackBar(context: context, text: AppStrings.added, color: AppColors.c2a8741);
+          checkLocalWatchlist();
         }
       },
     );
+
     notifyListeners();
   }
 
