@@ -52,9 +52,9 @@ class ShortMetricTonPage extends StatelessWidget {
                           context,
                           controller: cp.shortTonController,
                           onChanged: (val) => cp.convertShortToMetricTon(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -88,8 +88,9 @@ class ShortMetricTonPage extends StatelessWidget {
                           context,
                           controller: cp.metric_TonController,
                           readOnly: true,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

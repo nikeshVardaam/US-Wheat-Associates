@@ -57,9 +57,9 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                           context,
                           controller: cp.metricTonInputController,
                           onChanged: (val) => cp.convertFromMetricTon(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -92,10 +92,10 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                         child: AppTextField.textField(
                           context,
                           controller: cp.kgOutputController,
-                          keyboardType: TextInputType.number,
                           onChanged: (val) => cp.convertFromKg(val),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -122,10 +122,10 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                         child: AppTextField.textField(
                           context,
                           controller: cp.poundOutputController,
-                          keyboardType: TextInputType.number,
                           onChanged: (val) => cp.convertFromPound(val),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

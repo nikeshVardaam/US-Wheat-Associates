@@ -61,9 +61,9 @@ class BushelsMetricTons extends StatelessWidget {
                         controller: cp.bushelController,
                         onChanged: (val) => cp.convertBushelToMT(val),
                         readOnly: false,
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),
@@ -100,9 +100,9 @@ class BushelsMetricTons extends StatelessWidget {
                         context,
                         controller: cp.metricTonController,
                         onChanged: (val) => cp.convertMTToBushel(val),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),

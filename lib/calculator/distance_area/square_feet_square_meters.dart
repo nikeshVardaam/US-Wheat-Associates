@@ -62,9 +62,9 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                         context,
                         controller: cp.sqFeetController,
                         onChanged: (val) => cp.convertFromSqFeet(val),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),
@@ -108,9 +108,9 @@ class SquareFeetToSquareMeter extends StatelessWidget {
                         context,
                         controller: cp.sqMeterController,
                         onChanged: (val) => cp.convertFromSqMeter(val),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),
