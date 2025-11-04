@@ -43,7 +43,14 @@ class WheatPageProvider extends ChangeNotifier {
   }
 
   Future<void> getDefaultDate({required BuildContext context}) async {
-    await PostServices().post(endpoint: ApiEndpoint.lastDate, context: context, loader: true, requestData: {"class": selectedClass}, isBottomSheet: false).then(
+    await PostServices()
+        .post(
+            endpoint: ApiEndpoint.lastDate,
+            context: context,
+            loader: true,
+            requestData: {"class": selectedClass},
+            isBottomSheet: false)
+        .then(
       (value) {
         if (value != null) {
           var response = jsonDecode(value.body);
@@ -93,14 +100,18 @@ class WheatPageProvider extends ChangeNotifier {
     bool hasData = false;
     if (localWatchList.isNotEmpty) {
       for (var i = 0; i < localWatchList.length; ++i) {
-        if (localWatchList[i].type == "quality" && localWatchList[i].date == selectedDate && localWatchList[i].cls == selectedClass) {
+        if (localWatchList[i].type == "quality" &&
+            localWatchList[i].date == selectedDate &&
+            localWatchList[i].cls == selectedClass) {
           hasData = true;
           break;
         }
       }
       if (hasData) {
         for (var i = 0; i < localWatchList.length; ++i) {
-          if (localWatchList[i].type == "quality" && localWatchList[i].cls == selectedClass && localWatchList[i].date == selectedDate) {
+          if (localWatchList[i].type == "quality" &&
+              localWatchList[i].cls == selectedClass &&
+              localWatchList[i].date == selectedDate) {
             ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
               type: "quality",
               date: selectedDate,
@@ -226,7 +237,6 @@ class WheatPageProvider extends ChangeNotifier {
     )
         .then((value) async {
       if (value != null) {
-
         if (localWatchList.isEmpty) {
           ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
             type: "quality",
@@ -247,7 +257,9 @@ class WheatPageProvider extends ChangeNotifier {
           bool ifModalHasInList = false;
 
           for (var i = 0; i < localWatchList.length; ++i) {
-            if (localWatchList[i].type == "quality" && localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
+            if (localWatchList[i].type == "quality" &&
+                localWatchList[i].cls == wheatClass &&
+                localWatchList[i].date == selectedDate) {
               ifModalHasInList = true;
               break;
             }
@@ -255,7 +267,9 @@ class WheatPageProvider extends ChangeNotifier {
 
           if (ifModalHasInList) {
             for (var i = 0; i < localWatchList.length; ++i) {
-              if (localWatchList[i].type == "quality" && localWatchList[i].cls == wheatClass && localWatchList[i].date == selectedDate) {
+              if (localWatchList[i].type == "quality" &&
+                  localWatchList[i].cls == wheatClass &&
+                  localWatchList[i].date == selectedDate) {
                 ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
                   type: "quality",
                   date: selectedDate,

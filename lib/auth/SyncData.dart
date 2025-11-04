@@ -11,8 +11,11 @@ class SyncData {
   late final SharedPreferences sp;
 
   Future<void> syncData({required BuildContext context}) async {
-    await getRegionAndClass(context: context);
-    await getYear(context: context);
+    await getRegionAndClass(context: context).then(
+      (value) async {
+        await getYear(context: context);
+      },
+    );
   }
 
   Future<void> getRegionAndClass({required BuildContext context}) async {
@@ -62,7 +65,7 @@ class SyncData {
       List<String> yearList = [];
       sp = await SharedPreferences.getInstance();
 
-      final response = await GetApiServices().get(endpoint: ApiEndpoint.getYears, context: context, loader: true);
+      final response = await GetApiServices().get(endpoint: ApiEndpoint.getYears, context: context, loader: false);
 
       if (response != null) {
         final data = jsonDecode(response.body);
@@ -71,7 +74,6 @@ class SyncData {
         }
       }
       sp.setStringList(PrefKeys.yearList, yearList);
-
     } finally {
       Navigator.pop(context);
     }

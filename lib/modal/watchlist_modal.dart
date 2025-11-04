@@ -269,7 +269,13 @@ class FilterData {
   final String? color;
   final String? graphCode;
 
-  FilterData({required this.region, required this.classs, required this.date, required this.year, required this.color, required this.graphCode});
+  FilterData(
+      {required this.region,
+      required this.classs,
+      required this.date,
+      required this.year,
+      required this.color,
+      required this.graphCode});
 
   factory FilterData.fromJson(Map<String, dynamic> json) {
     return FilterData(

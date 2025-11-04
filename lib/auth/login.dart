@@ -83,16 +83,10 @@ class _LoginState extends State<Login> {
                           controller: lp.passwordController,
                           context,
                           keyboardType: TextInputType.text,
-
                           obscureText: !lp.passwordIsVisible,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge
-                              ?.copyWith(color: AppColors.c000000),
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           cursorColor: AppColors.c000000,
                           decoration: InputDecoration(
-
-
                             filled: true,
                             suffixIcon: lp.passwordIsVisible
                                 ? GestureDetector(
@@ -127,13 +121,11 @@ class _LoginState extends State<Login> {
                               borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
                             ),
                             focusedBorder: OutlineInputBorder(
-
                               borderRadius: BorderRadius.circular(6),
                               borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -171,7 +163,10 @@ class _LoginState extends State<Login> {
                         },
                         child: Text(
                           AppStrings.signUp,
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c45413b, fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(color: AppColors.c45413b, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],

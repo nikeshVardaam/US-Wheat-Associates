@@ -9,7 +9,6 @@ class AppWidgets {
     String title,
     Color color,
   ) {
-    // return Consumer<BaseActivityProvider>(builder: (context, bap, child) {
     final initials = title.isNotEmpty ? Miscellaneous.getInitials(title) : Miscellaneous.getInitials("");
 
     return CircleAvatar(

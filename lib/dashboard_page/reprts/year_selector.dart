@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../utils/app_strings.dart';
 
 class YearSelector extends StatefulWidget {
@@ -13,7 +12,27 @@ class YearSelector extends StatefulWidget {
 }
 
 class _YearSelectorState extends State<YearSelector> {
-  int selectedIndex = 0;
+  late int selectedIndex;
+  late FixedExtentScrollController scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final currentYear = DateTime.now().year;
+    selectedIndex = widget.yearList.indexOf(currentYear);
+    if (selectedIndex == -1) selectedIndex = 0;
+
+    scrollController = FixedExtentScrollController(initialItem: selectedIndex);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.animateToItem(
+        selectedIndex,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext perentContext) {
@@ -38,7 +57,8 @@ class _YearSelectorState extends State<YearSelector> {
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    Navigator.pop(perentContext, widget.yearList[selectedIndex]);
+                    Navigator.pop(
+                        perentContext, widget.yearList[selectedIndex]);
                   },
                   child: const Text(
                     AppStrings.done,
@@ -54,23 +74,20 @@ class _YearSelectorState extends State<YearSelector> {
           ),
           Expanded(
             child: CupertinoPicker(
-                backgroundColor: bgColor,
-                itemExtent: 32,
-                scrollController:
-                    FixedExtentScrollController(initialItem: selectedIndex),
-                onSelectedItemChanged: (index) {
-                  setState(() => selectedIndex = index);
-                },
-                children: List.generate(
-                  widget.yearList.length,
-                  (index) {
-                    final text = widget.yearList[index].toString() ?? '';
-                    return Text(
-                      text,
-                      style: Theme.of(perentContext).textTheme.labelLarge,
-                    );
-                  },
-                )),
+              backgroundColor: bgColor,
+              itemExtent: 32,
+              scrollController: scrollController,
+              onSelectedItemChanged: (index) {
+                setState(() => selectedIndex = index);
+              },
+              children: List.generate(
+                widget.yearList.length,
+                    (index) => Text(
+                  widget.yearList[index].toString(),
+                  style: Theme.of(perentContext).textTheme.labelLarge,
+                ),
+              ),
+            ),
           ),
         ],
       ),

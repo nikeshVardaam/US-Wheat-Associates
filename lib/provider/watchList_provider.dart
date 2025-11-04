@@ -27,8 +27,6 @@ class WatchlistProvider extends ChangeNotifier {
 
   String? grphcode;
 
-
-
   final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   final Map<String, bool> _chartLoadingMap = {};
 

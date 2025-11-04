@@ -91,7 +91,7 @@ class AppStrings {
   static const softWhite = "SOFT WHITE";
   static const northernDurum = "NORTHERN DURUM";
   static const nearby = "NEARBYS:";
-  static const weekChange = "WEEK CHANGE:";
+  static const lastWeek = "LAST WEEK:";
   static const oneYearAgo = "ONE YEAR AGO:";
   static const lastPrDate = "LAST PR DATE:";
   static const fwdPrice = "FWD PRICE";

@@ -98,7 +98,8 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> initCallFromWatchList({required BuildContext context, required String? region, required String? cls, required String? year}) async {
+  Future<void> initCallFromWatchList(
+      {required BuildContext context, required String? region, required String? cls, required String? year}) async {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
@@ -184,11 +185,17 @@ class PricesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  addToWatchlist({required BuildContext context}) async {
+  Future<void> addToWatchlist({required BuildContext context}) async {
     sp = await SharedPreferences.getInstance();
     final data = {
       "type": "price",
-      "filterdata": {"region": selectedRegion?.region ?? "", "class": selectedClass ?? "", "date": pRDate, "color": "ffab865a", "grphcode": selectedGRPHCode ?? ""}
+      "filterdata": {
+        "region": selectedRegion?.region ?? "",
+        "class": selectedClass ?? "",
+        "date": pRDate,
+        "color": "ffab865a",
+        "grphcode": selectedGRPHCode ?? ""
+      }
     };
     PostServices()
         .post(
@@ -403,7 +410,7 @@ class PricesProvider extends ChangeNotifier {
           return;
         }
       }
-    } on FormatException catch (e) {
+    } on FormatException {
       return;
     }
     notifyListeners();
@@ -460,6 +467,7 @@ class PricesProvider extends ChangeNotifier {
       (value) {
         if (value != null) {
           allPriceDataModal = AllPriceDataModal.fromJson(json.decode(value.body));
+
           notifyListeners();
         }
       },

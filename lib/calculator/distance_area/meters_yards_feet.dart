@@ -93,6 +93,7 @@ class MetersYardsFeet extends StatelessWidget {
                       Expanded(
                         child: AppTextField.textField(
                           context,
+                          keyboardType: TextInputType.number,
                           controller: cp.yardController,
                           onChanged: (val) => cp.convertFromYard(val),
                           inputFormatters: [
@@ -123,6 +124,7 @@ class MetersYardsFeet extends StatelessWidget {
                     children: [
                       Expanded(
                         child: AppTextField.textField(
+                          keyboardType: TextInputType.number,
                           context,
                           controller: cp.feetController,
                           onChanged: (val) => cp.convertFromFeet(val),
