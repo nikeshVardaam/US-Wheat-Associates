@@ -48,9 +48,9 @@ class TemperatureConverterPage extends StatelessWidget {
                           context,
                           controller: cp.fahrenheitController,
                           onChanged: (val) => cp.convertFromFahrenheit(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -83,9 +83,9 @@ class TemperatureConverterPage extends StatelessWidget {
                           context,
                           controller: cp.celsiusFromFahrenheitController,
                           onChanged: (val) => cp.convertFromCelsius(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

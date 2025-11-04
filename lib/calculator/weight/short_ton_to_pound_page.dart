@@ -52,9 +52,9 @@ class ShortTonToPoundPage extends StatelessWidget {
                           context,
                           controller: cp.shortTonToPoundController,
                           onChanged: (val) => cp.convertShortTonToPound(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -88,8 +88,9 @@ class ShortTonToPoundPage extends StatelessWidget {
                           context,
                           controller: cp.poundResultController,
                           readOnly: true,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

@@ -57,9 +57,9 @@ class _MetricTonsCwtState extends State<MetricTonsCwt> {
                           context,
                           controller: cp.metricController, // ✅ correct one
                           onChanged: (val) => cp.convertMetricTonToCwt(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -90,9 +90,9 @@ class _MetricTonsCwtState extends State<MetricTonsCwt> {
                           context,
                           controller: cp.cwtInputController,
                           onChanged: (val) => cp.convertCwtToMetricTon(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

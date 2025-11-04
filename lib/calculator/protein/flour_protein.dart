@@ -55,9 +55,9 @@ class _FlourProteinState extends State<FlourProtein> {
                         context,
                         controller: cp.flourMbController,
                         onChanged: (val) => cp.convertFlourMbToDb(val),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),
@@ -88,9 +88,9 @@ class _FlourProteinState extends State<FlourProtein> {
                         context,
                         controller: cp.flourDbController,
                         onChanged: (val) => cp.convertFlourDbToMb(val),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),

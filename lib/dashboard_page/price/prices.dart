@@ -415,7 +415,9 @@ class _PricesState extends State<Prices> {
                             ),
                           ),
                           Text(
-                            pp.allPriceDataModal?.nearby?.cASHBU.toString().substring(0, 3) ?? "--",
+                            pp.allPriceDataModal?.nearby!.cASHBU != null
+                                ? double.parse((pp.allPriceDataModal?.nearby!.cASHBU).toString()).toStringAsFixed(2)
+                                : "--",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),

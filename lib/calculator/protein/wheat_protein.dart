@@ -56,11 +56,9 @@ class _WheatProteinState extends State<WheatProtein> {
                           context,
                           controller: cp.mbController,
                           onChanged: (val) => cp.convertMbToDb(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d*\.?\d*$'),
-                            ),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -88,9 +86,9 @@ class _WheatProteinState extends State<WheatProtein> {
                           context,
                           controller: cp.dbController,
                           onChanged: (val) => cp.convertDbToMb(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

@@ -56,9 +56,9 @@ class _BuAcreMtHectareState extends State<BuAcreMtHectare> {
                           context,
                           controller: cp.buAcreController,
                           onChanged: (val) => cp.convertBuAcreToMtHectare(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -89,9 +89,9 @@ class _BuAcreMtHectareState extends State<BuAcreMtHectare> {
                           context,
                           controller: cp.mtHectareController,
                           onChanged: (val) => cp.convertMtHectareToBuAcre(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
