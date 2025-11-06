@@ -7,7 +7,6 @@ import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 
-
 class Quality extends StatefulWidget {
   const Quality({super.key});
 
@@ -17,7 +16,7 @@ class Quality extends StatefulWidget {
 
 class _QualityState extends State<Quality> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Column(
       children: [
         Container(
@@ -51,7 +50,7 @@ class _QualityState extends State<Quality> {
                       ),
                       Text(
                         AppStrings.qua,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                        style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
                       ),
                     ],
                   ),
@@ -92,7 +91,7 @@ class _QualityState extends State<Quality> {
                               const SizedBox(width: 8),
                               Text(
                                 "",
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(
                                       color: AppColors.c464646,
                                     ),
                               ),
@@ -121,6 +120,7 @@ class _QualityState extends State<Quality> {
                       onTap: () {
                         dp.setChangeActivity(
                           activity: WheatPages(
+                            fromWatchList: false,
                             date: "",
                             title: AppStrings.hardRedWinter,
                             appBarColor: AppColors.c2a8741,
@@ -167,6 +167,7 @@ class _QualityState extends State<Quality> {
                       onTap: () {
                         dp.setChangeActivity(
                           activity: WheatPages(
+                            fromWatchList: false,
                             date: "",
                             title: AppStrings.softRedWinter,
                             appBarColor: AppColors.c603c16,
@@ -211,6 +212,7 @@ class _QualityState extends State<Quality> {
                     onTap: () {
                       dp.setChangeActivity(
                         activity: WheatPages(
+                          fromWatchList: false,
                           date: "",
                           title: AppStrings.softWhite,
                           appBarColor: AppColors.c007aa6,
@@ -256,6 +258,7 @@ class _QualityState extends State<Quality> {
                       onTap: () {
                         dp.setChangeActivity(
                           activity: WheatPages(
+                            fromWatchList: false,
                             date: "",
                             title: AppStrings.hardRedSpring,
                             appBarColor: AppColors.cb86a29,
@@ -300,6 +303,7 @@ class _QualityState extends State<Quality> {
                     onTap: () {
                       dp.setChangeActivity(
                         activity: WheatPages(
+                          fromWatchList: false,
                           date: "",
                           title: AppStrings.northernDurum,
                           appBarColor: AppColors.cb01c32,

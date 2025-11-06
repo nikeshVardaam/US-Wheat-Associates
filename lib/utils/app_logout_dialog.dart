@@ -12,31 +12,31 @@ class AppLogoutDialogs extends StatefulWidget {
 }
 class _AppLogoutDialogsState extends State<AppLogoutDialogs> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return CupertinoAlertDialog(
       title: Text(
         AppStrings.logout,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500),
+        style: Theme.of(perentContext).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500),
       ),
       content: Text(
         AppStrings.areYouSureYouWantToLogout,
-        style: Theme.of(context).textTheme.labelSmall,
+        style: Theme.of(perentContext).textTheme.labelSmall,
       ),
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(perentContext);
           },
           child: Text(
             AppStrings.cancel,
-            style: Theme.of(context).textTheme.labelSmall,
+            style: Theme.of(perentContext).textTheme.labelSmall,
           ),
         ),
         TextButton(
           onPressed: widget.onTap,
           child: Text(
             AppStrings.logout,
-            style: Theme.of(context).textTheme.labelSmall,
+            style: Theme.of(perentContext).textTheme.labelSmall,
           ),
         ),
       ],

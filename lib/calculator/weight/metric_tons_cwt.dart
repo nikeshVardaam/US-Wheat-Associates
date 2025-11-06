@@ -17,13 +17,13 @@ class MetricTonsCwt extends StatefulWidget {
 
 class _MetricTonsCwtState extends State<MetricTonsCwt> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
           "Metric Ton = Hundred Weight (CWT)",
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+          style: Theme.of(perentContext).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -32,7 +32,7 @@ class _MetricTonsCwtState extends State<MetricTonsCwt> {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
               "Convert Metric Tons to Hundred Weight (CWT) and vice versa.",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+              style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
         ),
@@ -57,9 +57,9 @@ class _MetricTonsCwtState extends State<MetricTonsCwt> {
                           context,
                           controller: cp.metricController, // ✅ correct one
                           onChanged: (val) => cp.convertMetricTonToCwt(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -90,9 +90,9 @@ class _MetricTonsCwtState extends State<MetricTonsCwt> {
                           context,
                           controller: cp.cwtInputController,
                           onChanged: (val) => cp.convertCwtToMetricTon(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

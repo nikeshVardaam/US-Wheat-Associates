@@ -59,9 +59,9 @@ class AcresHectares extends StatelessWidget {
                           context,
                           controller: cp.acreController,
                           onChanged: (val) => cp.convertFromAcre(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -99,9 +99,9 @@ class AcresHectares extends StatelessWidget {
                           context,
                           controller: cp.hectareController,
                           onChanged: (val) => cp.convertFromHectare(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -117,39 +117,6 @@ class AcresHectares extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // Mu
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  //   child: Text("MU",
-                  //       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  //             color: AppColors.c000000,
-                  //           )),
-                  // ),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: AppTextField.textField(
-                  //         context,
-                  //         controller: cp.muController,
-                  //         onChanged: (val) => cp.convertFromMu(val),
-                  //         keyboardType: TextInputType.number,
-                  //         inputFormatters: [
-                  //           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     IconButton(
-                  //       icon: Icon(
-                  //         Icons.copy,
-                  //         color: AppColors.c656e79,
-                  //         size: 18,
-                  //       ),
-                  //       onPressed: () {
-                  //         Clipboard.setData(ClipboardData(text: cp.muController.text));
-                  //       },
-                  //     ),
-                  //   ],
-                  // ),
                   const SizedBox(height: 20),
                   Container(
                     padding: const EdgeInsets.all(12),

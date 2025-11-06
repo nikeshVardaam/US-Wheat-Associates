@@ -17,13 +17,13 @@ class FlourProtein extends StatefulWidget {
 
 class _FlourProteinState extends State<FlourProtein> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
           "Flour Protein = Dry Basis",
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+          style: Theme.of(perentContext).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -32,7 +32,7 @@ class _FlourProteinState extends State<FlourProtein> {
             padding: const EdgeInsets.only(left: 12, bottom: 8.0),
             child: Text(
               "Convert protein level from a 14% moisture basis to dry basis and vice versa",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+              style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
         ),
@@ -55,9 +55,9 @@ class _FlourProteinState extends State<FlourProtein> {
                         context,
                         controller: cp.flourMbController,
                         onChanged: (val) => cp.convertFlourMbToDb(val),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),
@@ -88,9 +88,9 @@ class _FlourProteinState extends State<FlourProtein> {
                         context,
                         controller: cp.flourDbController,
                         onChanged: (val) => cp.convertFlourDbToMb(val),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),

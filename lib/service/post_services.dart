@@ -25,6 +25,7 @@ class PostServices {
     sp = await SharedPreferences.getInstance();
     if (loader) {
       showDialog(
+        barrierLabel: "bLabel",
         barrierDismissible: false,
         context: context,
         builder: (context) => AppWidgets.loading(),
@@ -34,10 +35,6 @@ class PostServices {
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
 
-    print(url);
-
-    print("Request data$requestData");
-    print("Token $bearerToken");
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -47,18 +44,14 @@ class PostServices {
           'Authorization': bearerToken,
           'Accept': 'application/json',
         },
-      ).timeout(const Duration(seconds: 5));
+      );
       var jsonData = json.decode(response.body);
+
       if (loader) {
         Navigator.pop(context);
       }
 
-      print(response.statusCode);
-      print(jsonData);
-
-      if (response.statusCode == 200 ||
-          response.statusCode == 201 ||
-          response.statusCode == 409) {
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 409) {
         return response;
       } else if (response.statusCode == 401) {
         ExceptionDialogs.networkDialog(
@@ -96,13 +89,12 @@ class PostServices {
         );
         return null;
       }
-    } on TimeoutException catch (e) {
+    } on TimeoutException {
       if (context.mounted && loader) {
         Navigator.pop(context);
         ExceptionDialogs.networkDialog(
           context: context,
-          message:
-              "Request timed out. Please check your internet and try again.",
+          message: "Request timed out. Please check your internet and try again.",
           onPressed: () {},
         );
       }
@@ -117,7 +109,7 @@ class PostServices {
         );
       }
       return null;
-    } on SocketException catch (e) {
+    } on SocketException {
       if (context.mounted && loader) {
         Navigator.pop(context);
         ExceptionDialogs.networkDialog(

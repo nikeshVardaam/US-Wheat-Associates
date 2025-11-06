@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:uswheat/dashboard_page/watchList.dart';
+import 'package:uswheat/auth/SyncData.dart';
+import 'package:uswheat/dashboard_page/watch_list/watchList.dart';
 import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/provider/dashboard_provider.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
+import 'package:uswheat/utils/app_delete_dialog.dart';
 import 'package:uswheat/utils/app_logout_dialog.dart' show AppLogoutDialogs;
 import 'package:uswheat/utils/app_routes.dart';
 import 'package:uswheat/utils/app_strings.dart';
@@ -33,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return SafeArea(
       top: false,
       right: false,
@@ -53,9 +55,32 @@ class _DashboardState extends State<Dashboard> {
               AppAssets.darkLogo,
               scale: 5,
             ),
+            actions: [
+              Consumer<DashboardProvider>(
+                builder: (context, dp, child) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 15.0),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: AppColors.c5a554f, borderRadius: const BorderRadius.all(Radius.circular(50))),
+                      child: IconButton(
+                        iconSize: 24,
+                        icon: const Icon(Icons.sync),
+                        color: AppColors.cFFFFFF,
+                        onPressed: () {
+                          SyncData().syncData(context: context);
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           drawer: SizedBox(
-            width: MediaQuery.of(context).size.width / 1.8,
+            width: MediaQuery.of(perentContext).size.width / 1.8,
             child: Drawer(
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
@@ -76,7 +101,10 @@ class _DashboardState extends State<Dashboard> {
                                 children: [
                                   Text(
                                     AppStrings.account,
-                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge
+                                        ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
                                   ),
                                   const SizedBox(
                                     height: 16,
@@ -127,19 +155,25 @@ class _DashboardState extends State<Dashboard> {
                               padding: const EdgeInsets.only(left: 16),
                               child: Text(
                                 AppStrings.pages,
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w500),
                               ),
                             ),
                             ListTile(
                               dense: true,
-                              leading: SvgPicture.asset(
-                                AppAssets.star,
-                                height: 18,
-                                colorFilter: ColorFilter.mode(
-                                  dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
+
+                              leading: Icon(Icons.star_border_outlined,
+                                  size: 22, color: dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF),
+                              // leading: SvgPicture.asset(
+                              //   AppAssets.star,
+                              //   height: 18,
+                              //   colorFilter: ColorFilter.mode(
+                              //     dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                              //     BlendMode.srcIn,
+                              //   ),
+                              // ),
                               title: Text(
                                 AppStrings.watchlist,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -171,8 +205,8 @@ class _DashboardState extends State<Dashboard> {
                                 dp.setChangeActivity(
                                     activity: const Prices(
                                       region: '',
-                                      classs: '',
-                                      year: '',
+                                      cls: '',
+                                      date: '',
                                     ),
                                     pageName: AppStrings.price);
                                 Navigator.pop(context);
@@ -265,6 +299,26 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             GestureDetector(
                               onTap: () {
+                                Navigator.pop(perentContext);
+                                dp.syncData(perentContext).then((value) async {});
+                              },
+                              child: ListTile(
+                                dense: true,
+                                leading: Image.asset(
+                                  AppAssets.sync,
+                                  height: 16,
+                                  color: AppColors.cFFFFFF,
+                                ),
+                                title: Text(
+                                  AppStrings.syncNewData,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: AppColors.cFFFFFF,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
@@ -293,49 +347,49 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ],
                         ),
-                        // const Spacer(),
-                        // Divider(
-                        //   color: AppColors.cAB865A,
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(
-                        //     horizontal: 16,
-                        //   ),
-                        //   child: GestureDetector(
-                        //     onTap: () {
-                        //       showDialog(
-                        //         context: context,
-                        //         builder: (context) {
-                        //           return Dialog(
-                        //             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                        //             child: const AppDeleteDialog(),
-                        //           );
-                        //         },
-                        //       );
-                        //     },
-                        //     child: Row(
-                        //       children: [
-                        //         SvgPicture.asset(
-                        //           AppAssets.delete,
-                        //           height: 14,
-                        //           color: AppColors.cFFFFFF,
-                        //         ),
-                        //         const SizedBox(
-                        //           width: 16,
-                        //         ),
-                        //         Text(
-                        //           AppStrings.deleteUser,
-                        //           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        //                 color: AppColors.cFFFFFF,
-                        //               ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
-                        // Divider(
-                        //   color: AppColors.cAB865A,
-                        // ),
+                        const Spacer(),
+                        Divider(
+                          color: AppColors.cAB865A,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                    child: const AppDeleteDialog(),
+                                  );
+                                },
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  AppAssets.delete,
+                                  height: 14,
+                                  color: AppColors.cFFFFFF,
+                                ),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                Text(
+                                  AppStrings.deleteUser,
+                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                        color: AppColors.cFFFFFF,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Divider(
+                          color: AppColors.cAB865A,
+                        ),
                       ],
                     ),
                   );
@@ -383,16 +437,21 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   BottomNavigationBarItem(
-                    label: AppStrings.watchlist,
-                    icon: SvgPicture.asset(
-                      AppAssets.star,
-                      height: 20,
-                      colorFilter: ColorFilter.mode(
-                        dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-                        BlendMode.srcIn,
+                      label: AppStrings.watchlist,
+                      icon: Icon(
+                        Icons.star_border_outlined,
+                        size: 23,
+                        color: dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                      )
+                      // icon: SvgPicture.asset(
+                      //   AppAssets.star,
+                      //   height: 20,
+                      //   colorFilter: ColorFilter.mode(
+                      //     dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                      //     BlendMode.srcIn,
+                      //   ),
+                      // ),
                       ),
-                    ),
-                  ),
                   BottomNavigationBarItem(
                     label: AppStrings.reports,
                     icon: SvgPicture.asset(
@@ -424,34 +483,3 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
-// GestureDetector(
-//   onTap: (){
-//     showDialog(
-//       context: context,
-//       builder: (context) {
-//         return ChangePassword(
-//           onTap: () {
-//             dp.logOut(context);
-//           },
-//         );
-//       },
-//     );
-//   },
-//   child: ListTile(
-//     dense: true,
-//     leading: SvgPicture.asset(
-//       AppAssets.passwordChange,
-//       height: 18,
-//       colorFilter: ColorFilter.mode(
-//         dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-//         BlendMode.srcIn,
-//       ),
-//     ),
-//     title: Text(
-//       AppStrings.changePassword,
-//       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-//         color: dp.currentIndex == 5 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-//       ),
-//     ),
-//   ),
-// ),

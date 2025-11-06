@@ -1,8 +1,10 @@
 class ApiEndpoint {
   //baseurl
   static const baseUrl = "https://usw.ascreative.agency/api/";
+
   //login
   static const login = "login";
+
   //signup
   static const signUp = "signup";
   static const prices = "prices";
@@ -15,6 +17,9 @@ class ApiEndpoint {
   static const getWatchlist = "getWatchlist";
   static const removeWatchlist = "removeWatchlist";
   static const qualityReport = "quality-report";
-  static const deleteAccount= "deleteAccount";
+  static const deleteAccount = "deleteAccount";
   static const changePassword = "changePassword ";
+  static const lastDate = "quality-report/last-date";
+  static const latestAvailablePriceData = "price-data/latest-available-price-data";
+  static const availableDates = "price-data/available-dates";
 }

@@ -44,7 +44,6 @@ class MetersYardsFeet extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Meters Input
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text("METERS (m)", style: Theme.of(context).textTheme.bodySmall),
@@ -58,7 +57,7 @@ class MetersYardsFeet extends StatelessWidget {
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           onChanged: (val) => cp.convertFromMeter(val),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -83,7 +82,6 @@ class MetersYardsFeet extends StatelessWidget {
                             fontStyle: FontStyle.italic,
                           )),
 
-                  // Yards Output
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text("YARDS (yd)", style: Theme.of(context).textTheme.bodySmall),
@@ -95,8 +93,9 @@ class MetersYardsFeet extends StatelessWidget {
                           context,
                           controller: cp.yardController,
                           onChanged: (val) => cp.convertFromYard(val),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -126,8 +125,9 @@ class MetersYardsFeet extends StatelessWidget {
                           context,
                           controller: cp.feetController,
                           onChanged: (val) => cp.convertFromFeet(val),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -146,7 +146,6 @@ class MetersYardsFeet extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // Calculation Box
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(

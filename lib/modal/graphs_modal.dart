@@ -10,9 +10,9 @@ class GraphModal {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['CASHMT'] = this.cASHMT;
-    data['PRDATE'] = this.pRDATE;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['CASHMT'] = cASHMT;
+    data['PRDATE'] = pRDATE;
     return data;
   }
 }

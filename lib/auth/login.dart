@@ -17,7 +17,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -83,16 +83,10 @@ class _LoginState extends State<Login> {
                           controller: lp.passwordController,
                           context,
                           keyboardType: TextInputType.text,
-
                           obscureText: !lp.passwordIsVisible,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge
-                              ?.copyWith(color: AppColors.c000000),
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           cursorColor: AppColors.c000000,
                           decoration: InputDecoration(
-
-
                             filled: true,
                             suffixIcon: lp.passwordIsVisible
                                 ? GestureDetector(
@@ -127,27 +121,11 @@ class _LoginState extends State<Login> {
                               borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
                             ),
                             focusedBorder: OutlineInputBorder(
-
                               borderRadius: BorderRadius.circular(6),
                               borderSide: BorderSide(color: AppColors.cDFDEDE, width: 1),
                             ),
                           ),
                         ),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        // GestureDetector(
-                        //   onTap: () {},
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.end,
-                        //     children: [
-                        //       Text(
-                        //         AppStrings.forgotPassword,
-                        //         style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.c666666),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -162,6 +140,16 @@ class _LoginState extends State<Login> {
                       },
                       child: AppButtons().filledButton(true, AppStrings.signIn, context),
                     ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      lp.forgetPassword();
+                    },
+                    child: Text('Forget Password?',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(decoration: TextDecoration.underline, color: AppColors.c666666)),
                   ),
                   const SizedBox(
                     height: 16,
@@ -185,7 +173,10 @@ class _LoginState extends State<Login> {
                         },
                         child: Text(
                           AppStrings.signUp,
-                          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c45413b, fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(color: AppColors.c45413b, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],

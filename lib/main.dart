@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => DashboardProvider()),

@@ -26,4 +26,21 @@ class RegionAndClasses {
   List<String>? classes;
 
   RegionAndClasses({required this.region, required this.classes});
+
+  factory RegionAndClasses.fromJson(Map<String, dynamic> json) {
+    return RegionAndClasses(
+      region: json['region'] as String?,
+      classes: (json['classes'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'region': region,
+      'classes': classes,
+    };
+  }
+
 }

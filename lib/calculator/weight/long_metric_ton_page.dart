@@ -52,9 +52,9 @@ class LongMetricTonPage extends StatelessWidget {
                           context,
                           controller: cp.longTonController,
                           onChanged: (val) => cp.convertLongToMetricTon(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -88,8 +88,9 @@ class LongMetricTonPage extends StatelessWidget {
                           context,
                           controller: cp.longToMetricController,
                           readOnly: true,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

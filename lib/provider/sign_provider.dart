@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uswheat/auth/SyncData.dart';
 import 'package:uswheat/service/post_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import '../modal/login_modal.dart';
@@ -83,11 +84,13 @@ class SignUpProvider extends ChangeNotifier {
             sp = await SharedPreferences.getInstance();
             await sp?.setString(PrefKeys.token, loginModel.token ?? "");
             await sp?.setString(PrefKeys.user, jsonEncode(loginModel.user ?? ""));
-            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+            SyncData().syncData(context: context).then(
+              (value) {
+                Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+              },
+            );
           } else {
-            String errorMsg = response["errors"]?["email"]?.first
-                ?? response["message"]
-                ?? "Something went wrong";
+            String errorMsg = response["errors"]?["email"]?.first ?? response["message"] ?? "Something went wrong";
 
             AppWidgets.appSnackBar(
               context: context,
@@ -97,13 +100,12 @@ class SignUpProvider extends ChangeNotifier {
           }
         } else {
           AppWidgets.appSnackBar(
-            context:context,
+            context: context,
             text: "Something went wrong",
             color: Colors.redAccent,
           );
         }
       });
-
     }
   }
 }

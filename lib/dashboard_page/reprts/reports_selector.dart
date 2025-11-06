@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 
 import '../../../../utils/app_strings.dart';
 
-class ClassSelector extends StatefulWidget {
-  final List<String> classList;
+class ReportsSelector extends StatefulWidget {
+  final List<dynamic> reportList;
 
-  const ClassSelector({super.key, required this.classList});
+  const ReportsSelector({super.key, required this.reportList});
 
   @override
-  State<ClassSelector> createState() => _ClassSelectorState();
+  State<ReportsSelector> createState() => _ReportsSelectorState();
 }
 
-class _ClassSelectorState extends State<ClassSelector> {
+class _ReportsSelectorState extends State<ReportsSelector> {
   int selectedIndex = 0;
 
   @override
-  Widget build(BuildContext perentContext) {
-    final bgColor = CupertinoColors.systemGrey6.resolveFrom(perentContext);
+  Widget build(BuildContext parentContext) {
+    final bgColor = CupertinoColors.systemGrey6.resolveFrom(parentContext);
     return Container(
-      height: 250,
+      height: MediaQuery.of(parentContext).size.height / 5,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
@@ -32,15 +32,13 @@ class _ClassSelectorState extends State<ClassSelector> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${AppStrings.select} ${AppStrings.classs}",
-                  style: Theme.of(perentContext).textTheme.labelLarge,
+                  "${AppStrings.select} ${AppStrings.reports}",
+                  style: Theme.of(parentContext).textTheme.labelLarge,
                 ),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-
-
-                    Navigator.pop(perentContext, widget.classList[selectedIndex]);
+                    Navigator.pop(parentContext, widget.reportList[selectedIndex]);
                   },
                   child: const Text(
                     AppStrings.done,
@@ -58,17 +56,18 @@ class _ClassSelectorState extends State<ClassSelector> {
             child: CupertinoPicker(
                 backgroundColor: bgColor,
                 itemExtent: 32,
-                scrollController:
-                    FixedExtentScrollController(initialItem: selectedIndex),
+                scrollController: FixedExtentScrollController(initialItem: selectedIndex),
                 onSelectedItemChanged: (index) {
                   setState(() => selectedIndex = index);
                 },
                 children: List.generate(
-                  widget.classList.length,
+                  widget.reportList.length,
                   (index) {
+                    var data = widget.reportList[index];
+
                     return Text(
-                      widget.classList[index] ?? "",
-                      style: Theme.of(perentContext).textTheme.labelLarge,
+                      data["report_type"][0]["name"],
+                      style: Theme.of(parentContext).textTheme.labelLarge,
                     );
                   },
                 )),

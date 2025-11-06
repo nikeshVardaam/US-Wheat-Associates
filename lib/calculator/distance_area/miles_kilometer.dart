@@ -64,9 +64,9 @@ class MilesKilometer extends StatelessWidget {
                         controller: cp.milesController,
                         onChanged: (val) => cp.convertFromMiles(val),
                         readOnly: false,
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),
@@ -113,9 +113,9 @@ class MilesKilometer extends StatelessWidget {
                         context,
                         controller: cp.kilometerController,
                         onChanged: (val) => cp.convertFromKilometers(val),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                         ],
                       ),
                     ),

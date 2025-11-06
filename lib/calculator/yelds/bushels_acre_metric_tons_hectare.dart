@@ -16,13 +16,13 @@ class BuAcreMtHectare extends StatefulWidget {
 
 class _BuAcreMtHectareState extends State<BuAcreMtHectare> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
           "Bushels/Acre  =  Metric Tons/Hectare",
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+          style: Theme.of(perentContext).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -31,7 +31,7 @@ class _BuAcreMtHectareState extends State<BuAcreMtHectare> {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
               "Convert Bushels per Acre to Metric Tons per Hectare.",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+              style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
         ),
@@ -56,9 +56,9 @@ class _BuAcreMtHectareState extends State<BuAcreMtHectare> {
                           context,
                           controller: cp.buAcreController,
                           onChanged: (val) => cp.convertBuAcreToMtHectare(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -89,9 +89,9 @@ class _BuAcreMtHectareState extends State<BuAcreMtHectare> {
                           context,
                           controller: cp.mtHectareController,
                           onChanged: (val) => cp.convertMtHectareToBuAcre(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

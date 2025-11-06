@@ -16,13 +16,13 @@ class MetricTonToKgPoundPage extends StatefulWidget {
 
 class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
           "Metric Ton = Kg = Pounds",
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+          style: Theme.of(perentContext).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -31,7 +31,7 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
               "Convert Metric Tons to Kilograms and Pounds.",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+              style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
         ),
@@ -57,9 +57,9 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                           context,
                           controller: cp.metricTonInputController,
                           onChanged: (val) => cp.convertFromMetricTon(val),
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -92,10 +92,10 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                         child: AppTextField.textField(
                           context,
                           controller: cp.kgOutputController,
-                          keyboardType: TextInputType.number,
                           onChanged: (val) => cp.convertFromKg(val),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -122,10 +122,10 @@ class _MetricTonToKgPoundPageState extends State<MetricTonToKgPoundPage> {
                         child: AppTextField.textField(
                           context,
                           controller: cp.poundOutputController,
-                          keyboardType: TextInputType.number,
                           onChanged: (val) => cp.convertFromPound(val),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                           ],
                         ),
                       ),

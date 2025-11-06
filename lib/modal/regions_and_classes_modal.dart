@@ -12,10 +12,10 @@ class RegionsAndClassesModal {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Gulf'] = this.gulf;
-    data['Great Lakes'] = this.greatLakes;
-    data['Pacific Northwest'] = this.pacificNorthwest;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Gulf'] = gulf;
+    data['Great Lakes'] = greatLakes;
+    data['Pacific Northwest'] = pacificNorthwest;
     return data;
   }
 }

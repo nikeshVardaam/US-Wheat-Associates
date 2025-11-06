@@ -5,8 +5,7 @@ class AllPriceDataModal {
   List<Forward>? forward;
   String? prdate;
 
-  AllPriceDataModal(
-      {this.nearby, this.weekly, this.yearly, this.forward, this.prdate});
+  AllPriceDataModal({this.nearby, this.weekly, this.yearly, this.forward, this.prdate});
 
   AllPriceDataModal.fromJson(Map<String, dynamic> json) {
     if (json['nearby'] is Map<String, dynamic>) {
@@ -28,9 +27,7 @@ class AllPriceDataModal {
     }
 
     if (json['forward'] != null && json['forward'] is List) {
-      forward = (json['forward'] as List)
-          .map((v) => Forward.fromJson(v))
-          .toList();
+      forward = (json['forward'] as List).map((v) => Forward.fromJson(v)).toList();
     } else {
       forward = [];
     }
@@ -38,22 +35,21 @@ class AllPriceDataModal {
     prdate = json['prdate'];
   }
 
-
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.nearby != null) {
-      data['nearby'] = this.nearby!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (nearby != null) {
+      data['nearby'] = nearby!.toJson();
     }
-    if (this.weekly != null) {
-      data['weekly'] = this.weekly!.toJson();
+    if (weekly != null) {
+      data['weekly'] = weekly!.toJson();
     }
-    if (this.yearly != null) {
-      data['yearly'] = this.yearly!.toJson();
+    if (yearly != null) {
+      data['yearly'] = yearly!.toJson();
     }
-    if (this.forward != null) {
-      data['forward'] = this.forward!.map((v) => v.toJson()).toList();
+    if (forward != null) {
+      data['forward'] = forward!.map((v) => v.toJson()).toList();
     }
-    data['prdate'] = this.prdate;
+    data['prdate'] = prdate;
     return data;
   }
 }
@@ -70,9 +66,9 @@ class Nearby {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['CASHMT'] = this.cASHMT;
-    data['CASHBU'] = this.cASHBU;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['CASHMT'] = cASHMT;
+    data['CASHBU'] = cASHBU;
     return data;
   }
 }
@@ -86,13 +82,12 @@ class Yearly {
   Yearly.fromJson(Map<String, dynamic> json) {
     cASHMT = json['CASHMT'];
     cASHBU = json['CASHBU'];
-
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['CASHMT'] = this.cASHMT;
-    data['CASHBU'] = this.cASHBU;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['CASHMT'] = cASHMT;
+    data['CASHBU'] = cASHBU;
 
     return data;
   }
@@ -112,10 +107,10 @@ class Forward {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['CASHMT'] = this.cASHMT;
-    data['CASHBU'] = this.cASHBU;
-    data['NRBYOFFSET'] = this.nRBYOFFSET;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['CASHMT'] = cASHMT;
+    data['CASHBU'] = cASHBU;
+    data['NRBYOFFSET'] = nRBYOFFSET;
     return data;
   }
 }

@@ -1,6 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:uswheat/modal/sales_modal.dart';
 
+import 'graph_modal.dart';
+
 class WatchlistModel {
   final bool success;
   final List<WatchlistItem> data;
@@ -15,7 +17,6 @@ class WatchlistModel {
   }
 }
 
-
 class Data {
   Current? current;
   YearAverage? yearAverage;
@@ -24,21 +25,21 @@ class Data {
   Data({this.current, this.yearAverage, this.fiveYearAverage});
 
   Data.fromJson(Map<String, dynamic> json) {
-    current = json['current'] != null ? new Current.fromJson(json['current']) : null;
-    yearAverage = json['year_average'] != null ? new YearAverage.fromJson(json['year_average']) : null;
-    fiveYearAverage = json['five_year_average'] != null ? new FiveYearAverage.fromJson(json['five_year_average']) : null;
+    current = json['current'] != null ? Current.fromJson(json['current']) : null;
+    yearAverage = json['year_average'] != null ? YearAverage.fromJson(json['year_average']) : null;
+    fiveYearAverage = json['five_year_average'] != null ? FiveYearAverage.fromJson(json['five_year_average']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.current != null) {
-      data['current'] = this.current!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (current != null) {
+      data['current'] = current!.toJson();
     }
-    if (this.yearAverage != null) {
-      data['year_average'] = this.yearAverage!.toJson();
+    if (yearAverage != null) {
+      data['year_average'] = yearAverage!.toJson();
     }
-    if (this.fiveYearAverage != null) {
-      data['five_year_average'] = this.fiveYearAverage!.toJson();
+    if (fiveYearAverage != null) {
+      data['five_year_average'] = fiveYearAverage!.toJson();
     }
     return data;
   }
@@ -72,7 +73,8 @@ class Current {
   factory Current.fromJson(Map<String, dynamic> json) {
     return Current(
       date: json['Date'] ?? '',
-      className: json['class'] ?? '', // map JSON key 'class' to variable 'className'
+      className: json['class'] ?? '',
+      // map JSON key 'class' to variable 'className'
       testWtlbbu: json['testWtlbbu']?.toString(),
       testWtkghl: json['testWtkghl']?.toString(),
       moisture: json['Moisture%']?.toString(),
@@ -99,8 +101,6 @@ class Current {
     };
   }
 }
-
-
 
 class YearAverage {
   int? year;
@@ -218,7 +218,6 @@ class FiveYearAverage {
   }
 }
 
-
 class WatchlistItem {
   final String id;
   final String userId;
@@ -228,17 +227,20 @@ class WatchlistItem {
   final String updatedAt;
   List<SalesData> chartData;
   WheatData? wheatData;
+  final String graphCode;
+  List<GraphDataModal> graphDataList = [];
 
-  WatchlistItem({
-    required this.id,
-    required this.userId,
-    required this.type,
-    required this.filterdata,
-    required this.createdAt,
-    required this.updatedAt,
-    this.chartData = const [],
-    this.wheatData,
-  });
+  WatchlistItem(
+      {required this.id,
+      required this.userId,
+      required this.type,
+      required this.filterdata,
+      required this.createdAt,
+      required this.updatedAt,
+      this.chartData = const [],
+      this.wheatData,
+      required this.graphCode,
+      required this.graphDataList});
 
   factory WatchlistItem.fromJson(Map<String, dynamic> json) {
     WheatData? wheat;
@@ -247,31 +249,33 @@ class WatchlistItem {
     }
 
     return WatchlistItem(
-      id: json['id'] ?? '',
-      userId: json['user_id'] ?? '',
-      type: json['type'] ?? '',
-      filterdata: FilterData.fromJson(json['filterdata'] ?? {}),
-      createdAt: json['created_at'] ?? '',
-      updatedAt: json['updated_at'] ?? '',
-      wheatData: wheat,
-    );
+        id: json['id'] ?? '',
+        userId: json['user_id'] ?? '',
+        type: json['type'] ?? '',
+        filterdata: FilterData.fromJson(json['filterdata'] ?? {}),
+        createdAt: json['created_at'] ?? '',
+        updatedAt: json['updated_at'] ?? '',
+        wheatData: wheat,
+        graphCode: json['grphcode'] ?? '',
+        graphDataList: []);
   }
 }
 
 class FilterData {
-  final String region;
-  final String classs;
-  final String date;
-  final String year;
-  final String color;
+  final String? region;
+  final String? classs;
+  final String? date;
+  final String? year;
+  final String? color;
+  final String? graphCode;
 
-  FilterData({
-    required this.region,
-    required this.classs,
-    required this.date,
-    required this.year,
-    required this.color,
-  });
+  FilterData(
+      {required this.region,
+      required this.classs,
+      required this.date,
+      required this.year,
+      required this.color,
+      required this.graphCode});
 
   factory FilterData.fromJson(Map<String, dynamic> json) {
     return FilterData(
@@ -280,17 +284,8 @@ class FilterData {
       date: json['date'] ?? '',
       year: json['year'] ?? '',
       color: json['color'] ?? '',
+      graphCode: json['grphcode'] ?? '',
     );
-  }
-
-  String get formattedDate {
-    try {
-      if (date.isEmpty) return '';
-      final dt = DateTime.parse(date);
-      return DateFormat('dd-MMM-yyyy').format(dt).toUpperCase();
-    } catch (_) {
-      return date;
-    }
   }
 }
 
@@ -326,5 +321,18 @@ class WheatData {
       hvac: json['HVAC']?.toString(),
       fallingNumber: json['FallingNumber']?.toString(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'testWtlbbu': testWtlbbu,
+      'testWtkghl': testWtkghl,
+      'Moisture%': moisture,
+      'Prot12%mb': prot12Mb,
+      'DryBasisProt%': dryBasisProt,
+      'DHV': dhv,
+      'HVAC': hvac,
+      'FallingNumber': fallingNumber,
+    };
   }
 }

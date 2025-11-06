@@ -1,206 +1,492 @@
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/material.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:uswheat/utils/app_buttons.dart';
+// import 'package:uswheat/utils/app_strings.dart';
+// import 'package:uswheat/utils/pref_keys.dart';
+//
+// class DatePickerSheet extends StatefulWidget {
+//   final String? date;
+//
+//   const DatePickerSheet({super.key, required this.date});
+//
+//   @override
+//   State<DatePickerSheet> createState() => _DatePickerSheetState();
+// }
+//
+// class _DatePickerSheetState extends State<DatePickerSheet> {
+//   String? selectedYear;
+//   String? selectedMonth;
+//   String? selectedDay;
+//
+//   List<int> yearsList = [];
+//   List<int> days = [];
+//   List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+//
+//   int initialYearIndex = 0;
+//   int initialMonthIndex = 0;
+//   int initialDayIndex = 0;
+//
+//   late FixedExtentScrollController yearController;
+//   late FixedExtentScrollController monthController;
+//   late FixedExtentScrollController dayController;
+//
+//   bool isLoading = true;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       loadData();
+//     });
+//   }
+//
+//   Future<void> loadData() async {
+//     final sp = await SharedPreferences.getInstance();
+//     final stored = sp.getStringList(PrefKeys.yearList) ?? const <String>[];
+//
+//     final parsed = <int>[];
+//     for (final s in stored) {
+//       final v = int.tryParse(s);
+//       if (v != null) parsed.add(v);
+//     }
+//
+//     if (parsed.isEmpty) {
+//       parsed.add(DateTime.now().year);
+//     }
+//
+//     final sortedYears = List<int>.from(parsed)..sort((a, b) => b.compareTo(a));
+//     yearsList = sortedYears;
+//
+//     _initDate();
+//     yearController = FixedExtentScrollController(initialItem: initialYearIndex);
+//     monthController = FixedExtentScrollController(initialItem: initialMonthIndex);
+//     dayController = FixedExtentScrollController(initialItem: initialDayIndex);
+//
+//     setState(() {
+//       isLoading = false;
+//     });
+//   }
+//
+//   void _initDate() {
+//     DateTime selectedDate;
+//     if (widget.date != null && widget.date!.isNotEmpty) {
+//       try {
+//         selectedDate = DateTime.parse(widget.date!);
+//       } catch (_) {
+//         selectedDate = DateTime.now();
+//       }
+//     } else {
+//       selectedDate = DateTime.now();
+//     }
+//
+//     for (var i = 0; i < yearsList.length; ++i) {
+//       if (yearsList[i] == selectedDate.year) {
+//         selectedYear = yearsList[i].toString();
+//         initialYearIndex = i;
+//         break;
+//       }
+//     }
+//
+//     initialMonthIndex = selectedDate.month - 1;
+//     selectedMonth = months[initialMonthIndex];
+//
+//     getDaysInMonth(month: selectedMonth!, year: selectedDate.year);
+//
+//     for (var i = 0; i < days.length; ++i) {
+//       if (days[i] == selectedDate.day) {
+//         initialDayIndex = i;
+//         selectedDay = days[i].toString();
+//         break;
+//       }
+//     }
+//   }
+//
+//   void getDaysInMonth({required String month, required int year}) {
+//     days.clear();
+//     final monthMap = {
+//       'Jan': 1,
+//       'Feb': 2,
+//       'Mar': 3,
+//       'Apr': 4,
+//       'May': 5,
+//       'Jun': 6,
+//       'Jul': 7,
+//       'Aug': 8,
+//       'Sep': 9,
+//       'Oct': 10,
+//       'Nov': 11,
+//       'Dec': 12,
+//     };
+//
+//     final monthNumber = monthMap[month] ?? 1;
+//     final daysInMonth = DateTime(year, monthNumber + 1, 0).day;
+//
+//     for (var i = 1; i <= daysInMonth; i++) {
+//       days.add(i);
+//     }
+//   }
+//
+//   DateTime createDate(int year, String month, int day) {
+//     final monthMap = {
+//       'Jan': 1,
+//       'Feb': 2,
+//       'Mar': 3,
+//       'Apr': 4,
+//       'May': 5,
+//       'Jun': 6,
+//       'Jul': 7,
+//       'Aug': 8,
+//       'Sep': 9,
+//       'Oct': 10,
+//       'Nov': 11,
+//       'Dec': 12,
+//     };
+//     final monthNumber = monthMap[month]!;
+//     return DateTime(year, monthNumber, day);
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     if (isLoading) {
+//       return const Center(child: CupertinoActivityIndicator());
+//     }
+//
+//     return SafeArea(
+//       bottom: false,
+//       child: Scaffold(
+//         body: SizedBox(
+//           height: MediaQuery.of(context).size.height / 3,
+//           child: Padding(
+//             padding: const EdgeInsets.all(16),
+//             child: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 Row(
+//                   children: [
+//                     Text(
+//                       "${AppStrings.select} ${AppStrings.date}",
+//                       style: Theme.of(context).textTheme.bodyLarge,
+//                     ),
+//                     const Spacer(),
+//                     GestureDetector(
+//                       onTap: () => Navigator.pop(context),
+//                       child: const Icon(Icons.clear),
+//                     ),
+//                   ],
+//                 ),
+//                 const SizedBox(height: 16),
+//                 Expanded(
+//                   child: Row(
+//                     children: [
+//                       Expanded(
+//                         child: Column(
+//                           children: [
+//                             Text(AppStrings.year, style: Theme.of(context).textTheme.bodyMedium),
+//                             Expanded(
+//                               child: CupertinoPicker(
+//                                 itemExtent: 32,
+//                                 scrollController: yearController,
+//                                 onSelectedItemChanged: (index) {
+//                                   setState(() {
+//                                     selectedYear = yearsList[index].toString();
+//                                   });
+//                                 },
+//                                 children: List.generate(
+//                                   yearsList.length,
+//                                   (index) => Center(
+//                                     child: Text(
+//                                       yearsList[index].toString(),
+//                                       style: Theme.of(context).textTheme.labelLarge,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                       Expanded(
+//                         child: Column(
+//                           children: [
+//                             Text(AppStrings.month, style: Theme.of(context).textTheme.bodyMedium),
+//                             Expanded(
+//                               child: CupertinoPicker(
+//                                 itemExtent: 30,
+//                                 scrollController: monthController,
+//                                 onSelectedItemChanged: (index) {
+//                                   selectedMonth = months[index];
+//                                   getDaysInMonth(
+//                                     month: selectedMonth!,
+//                                     year: int.parse(selectedYear ?? yearsList.first.toString()),
+//                                   );
+//                                   setState(() {});
+//                                 },
+//                                 children: List.generate(
+//                                   months.length,
+//                                   (index) => Center(
+//                                     child: Text(
+//                                       months[index],
+//                                       style: Theme.of(context).textTheme.labelLarge,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                       Expanded(
+//                         child: Column(
+//                           children: [
+//                             Text(AppStrings.day, style: Theme.of(context).textTheme.bodyMedium),
+//                             Expanded(
+//                               child: CupertinoPicker(
+//                                 itemExtent: 32,
+//                                 scrollController: dayController,
+//                                 onSelectedItemChanged: (index) {
+//                                   setState(() {
+//                                     selectedDay = days[index].toString();
+//                                   });
+//                                 },
+//                                 children: List.generate(
+//                                   days.length,
+//                                   (index) => Center(
+//                                     child: Text(
+//                                       days[index].toString(),
+//                                       style: Theme.of(context).textTheme.labelLarge,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//                 const SizedBox(height: 16),
+//                 GestureDetector(
+//                   onTap: () {
+//                     Navigator.pop(
+//                       context,
+//                       createDate(
+//                         int.parse(selectedYear ?? yearsList.first.toString()),
+//                         selectedMonth ?? months.first,
+//                         int.parse(selectedDay ?? days.first.toString()),
+//                       ),
+//                     );
+//                   },
+//                   child: AppButtons().filledButton(true, AppStrings.confirm, context),
+//                 ),
+//                 const SizedBox(height: 16),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
+//
+//
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/utils/app_buttons.dart';
-import 'package:uswheat/utils/app_strings.dart';
+import 'app_strings.dart';
+import 'pref_keys.dart';
 
-class DatePicker extends StatefulWidget {
-  BuildContext context;
-  List<int> uniqueYears;
-  List<String> fixedMonths; // length 12 expected
-  int? initialYear;
-  int? initialMonth;
-  int? initialDay;
+class CustomDatePickerr extends StatefulWidget {
+  final String? date;
 
-  DatePicker({
-    super.key,
-    required this.context,
-    required this.uniqueYears,
-    required this.fixedMonths,
-    required this.initialYear,
-    required this.initialMonth,
-    required this.initialDay,
-  });
+  const CustomDatePickerr({super.key, this.date});
 
   @override
-  State<DatePicker> createState() => _DatePickerState();
+  State<CustomDatePickerr> createState() => _CustomDatePickerrState();
 }
 
-class _DatePickerState extends State<DatePicker> {
+class _CustomDatePickerrState extends State<CustomDatePickerr> {
+  List<DateTime> availableDates = [];
 
+  late int selectedYear;
+  late int selectedMonth;
+  late int selectedDay;
+
+  late FixedExtentScrollController yearController;
+  late FixedExtentScrollController monthController;
+  late FixedExtentScrollController dayController;
 
   @override
   void initState() {
-
     super.initState();
+    _loadAvailableDates();
   }
 
+  Future<void> _loadAvailableDates() async {
+    final sp = await SharedPreferences.getInstance();
+    final storedList = sp.getStringList(PrefKeys.availableDateList) ?? [];
 
+    availableDates = storedList.map((e) => DateTime.tryParse(e)).whereType<DateTime>().toList()
+      ..sort((a, b) => a.compareTo(b));
 
+    if (availableDates.isEmpty) {
+      availableDates = [DateTime.now()];
+    }
+
+    DateTime initialDate = availableDates.first;
+    if (widget.date != null && widget.date!.trim().isNotEmpty) {
+      try {
+        final parsed = DateTime.parse(widget.date!.trim());
+        if (availableDates.contains(parsed)) {
+          initialDate = parsed;
+        }
+      } catch (_) {}
+
+    }
+
+    selectedYear = initialDate.year;
+    selectedMonth = initialDate.month;
+    selectedDay = initialDate.day;
+
+    setState(() {
+      yearController = FixedExtentScrollController(initialItem: yearsList.indexOf(selectedYear));
+      monthController = FixedExtentScrollController(initialItem: monthsList(selectedYear).indexOf(selectedMonth));
+      dayController =
+          FixedExtentScrollController(initialItem: daysList(selectedYear, selectedMonth).indexOf(selectedDay));
+    });
+  }
+
+  List<int> get yearsList {
+    return availableDates.map((d) => d.year).toSet().toList()..sort();
+  }
+
+  List<int> monthsList(int year) {
+    return availableDates.where((d) => d.year == year).map((d) => d.month).toSet().toList()..sort();
+  }
+
+  List<int> daysList(int year, int month) {
+    return availableDates.where((d) => d.year == year && d.month == month).map((d) => d.day).toList()..sort();
+  }
+
+  String getMonthAbbr(int month) {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return months[month - 1];
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [],
+    if (availableDates.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final years = yearsList;
+    final months = monthsList(selectedYear);
+    final days = daysList(selectedYear, selectedMonth);
+
+    return Container(
+      height: 350,
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(
+                  "${AppStrings.select} ${AppStrings.date}",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: const Icon(Icons.clear),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: CupertinoPicker(
+                      itemExtent: 36,
+                      scrollController: yearController,
+                      onSelectedItemChanged: (index) {
+                        setState(() {
+                          selectedYear = years[index];
+                          final validMonths = monthsList(selectedYear);
+                          if (!validMonths.contains(selectedMonth)) {
+                            selectedMonth = validMonths.first;
+                          }
+                          final validDays = daysList(selectedYear, selectedMonth);
+                          if (!validDays.contains(selectedDay)) {
+                            selectedDay = validDays.first;
+                          }
+                        });
+                      },
+                      children:
+                          years.map((y) => Center(child: Text('$y', style: const TextStyle(fontSize: 18)))).toList(),
+                    ),
+                  ),
+                  Expanded(
+                    child: CupertinoPicker(
+                      itemExtent: 36,
+                      scrollController: monthController,
+                      onSelectedItemChanged: (index) {
+                        setState(() {
+                          selectedMonth = months[index];
+                          final validDays = daysList(selectedYear, selectedMonth);
+                          if (!validDays.contains(selectedDay)) {
+                            selectedDay = validDays.first;
+                          }
+                        });
+                      },
+                      children: months
+                          .map((m) => Center(child: Text(getMonthAbbr(m), style: const TextStyle(fontSize: 18))))
+                          .toList(),
+                    ),
+                  ),
+                  Expanded(
+                    child: CupertinoPicker(
+                      itemExtent: 36,
+                      scrollController: dayController,
+                      onSelectedItemChanged: (index) {
+                        setState(() {
+                          selectedDay = days[index];
+                        });
+                      },
+                      children: days
+                          .map((d) =>
+                              Center(child: Text(d.toString().padLeft(2, '0'), style: const TextStyle(fontSize: 18))))
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: GestureDetector(
+                onTap: () {
+                  final selected = DateTime(selectedYear, selectedMonth, selectedDay);
+                  if (availableDates.contains(selected)) {
+                    Navigator.pop(context, selected);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Selected date not available")),
+                    );
+                  }
+                },
+                child: AppButtons().filledButton(true, "Confirm", context),
+              ),
+            ),
+          ],
+        ),
       ),
     );
-  }
-}
-
-class CommonDatePicker {
-  /// Opens a 3-column Cupertino picker (year, month, day).
-  /// Returns the selected DateTime or null if cancelled.
-  static Future<DateTime?> open({
-    required BuildContext context,
-    required List<int> uniqueYears,
-    required List<String> fixedMonths, // length 12 expected
-    int? initialYear,
-    int? initialMonth,
-    int? initialDay,
-    Color backgroundColor = Colors.white,
-  }) async {
-    // Safety defaults
-    if (uniqueYears.isEmpty) uniqueYears = [DateTime.now().year];
-    if (fixedMonths.length < 12) {
-      fixedMonths = const ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    }
-
-    int selectedYear = initialYear ?? DateTime.now().year;
-    // if selectedYear not present in list, fallback to closest (or first)
-    if (!uniqueYears.contains(selectedYear)) {
-      selectedYear = uniqueYears.contains(DateTime.now().year) ? DateTime.now().year : uniqueYears.first;
-    }
-
-    int selectedMonth = (initialMonth != null && initialMonth >= 1 && initialMonth <= 12) ? initialMonth : DateTime.now().month;
-
-    int daysInMonth = DateTime(selectedYear, selectedMonth + 1, 0).day;
-    int selectedDay = (initialDay != null && initialDay >= 1 && initialDay <= daysInMonth) ? initialDay : (DateTime.now().day <= daysInMonth ? DateTime.now().day : daysInMonth);
-
-    List<int> dayList = List.generate(daysInMonth, (i) => i + 1);
-
-    final int yearIndex = uniqueYears.indexOf(selectedYear).clamp(0, uniqueYears.length - 1);
-    final int monthIndex = (selectedMonth - 1).clamp(0, 11);
-    final int dayIndex = (selectedDay - 1).clamp(0, dayList.length - 1);
-
-    final yearController = FixedExtentScrollController(initialItem: yearIndex);
-    final monthController = FixedExtentScrollController(initialItem: monthIndex);
-    final dayController = FixedExtentScrollController(initialItem: dayIndex);
-
-    DateTime? result;
-
-    try {
-      result = await showCupertinoModalPopup<DateTime?>(
-        context: context,
-        builder: (_) => SafeArea(
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                height: MediaQuery.of(context).size.height / 2.5,
-                color: backgroundColor,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 4,
-                      child: Row(
-                        children: [
-                          // Year picker
-                          Expanded(
-                            child: CupertinoPicker(
-                              scrollController: yearController,
-                              itemExtent: 40,
-                              onSelectedItemChanged: (index) {
-                                setState(() {
-                                  selectedYear = uniqueYears[index];
-                                  final maxDays = DateTime(selectedYear, selectedMonth + 1, 0).day;
-                                  if (selectedDay > maxDays) {
-                                    selectedDay = maxDays;
-                                    // update dayController to the new (safe) index
-                                    dayController.jumpToItem(selectedDay - 1);
-                                  }
-                                  dayList = List.generate(maxDays, (i) => i + 1);
-                                });
-                              },
-                              children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
-                            ),
-                          ),
-
-                          // Month picker
-                          Expanded(
-                            child: CupertinoPicker(
-                              scrollController: monthController,
-                              itemExtent: 40,
-                              onSelectedItemChanged: (index) {
-                                setState(() {
-                                  selectedMonth = index + 1;
-                                  final maxDays = DateTime(selectedYear, selectedMonth + 1, 0).day;
-                                  if (selectedDay > maxDays) {
-                                    selectedDay = maxDays;
-                                    dayController.jumpToItem(selectedDay - 1);
-                                  }
-                                  dayList = List.generate(maxDays, (i) => i + 1);
-                                });
-                              },
-                              children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
-                            ),
-                          ),
-
-                          // Day picker
-                          Expanded(
-                            child: CupertinoPicker(
-                              scrollController: dayController,
-                              itemExtent: 40,
-                              onSelectedItemChanged: (index) {
-                                setState(() {
-                                  // make sure index is valid against current dayList
-                                  if (index >= 0 && index < dayList.length) {
-                                    selectedDay = dayList[index];
-                                  }
-                                });
-                              },
-                              children: dayList.map((d) => Center(child: Text(d.toString()))).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Buttons
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context, null);
-                                },
-                                child: AppButtons().filledButton(true, AppStrings.cancel, context)),
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                final picked = DateTime(selectedYear, selectedMonth, selectedDay);
-                                Navigator.pop(context, picked);
-                              },
-                              child: AppButtons().filledButton(true, AppStrings.confirm, context))
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      );
-    } finally {
-      // always dispose controllers after popup closes
-      yearController.dispose();
-      monthController.dispose();
-      dayController.dispose();
-    }
-
-    return result;
   }
 }

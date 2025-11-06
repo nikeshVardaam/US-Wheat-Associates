@@ -1,5 +1,5 @@
 class AppRoutes {
-  static const splashScreen = '/SplashScreen';
+    static const splashScreen = '/SplashScreen';
   static const login = '/login';
   static const dashboard = '/dashboard';
   static const estimateHardRedWinter = '/estimateHardRedWinter';
@@ -22,4 +22,5 @@ class AppRoutes {
   static const reportDetailPage = '/reportDetailPage';
   static const wheatPage = '/wheatPage';
   static const newsFeed = '/newsFeed';
+  static const syncData='/syncData';
 }

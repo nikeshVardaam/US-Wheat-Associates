@@ -6,17 +6,23 @@ class AppStrings {
   static const noWatchlistAdded = "No Watchlist Added";
   static const uSWheatNewsFeed = "US Wheat News Feed";
   static const yesDeleteMyAccount = "Yes, delete my account";
-  static const onceYouDeleteYourAccountThereIsNoWayBackMakeSureYouWantToDoThis = "Once you delete your account, there is no getting it back. Make sure you want to do this.";
+  static const onceYouDeleteYourAccountThereIsNoWayBackMakeSureYouWantToDoThis =
+      "Once you delete your account, there is no getting it back. Make sure you want to do this.";
   static const accountDeletion = "Account Deletion";
   static const taxonomy = "Taxonomy";
   static const year = "Year";
+  static const noDataAvailable = "No Data Available";
+  static const month = "Month";
+  static const day = "Day";
+  static const next = "Next";
+  static const back = "Back";
   static const ye = "YEAR";
   static const category = "Category";
   static const newPassword = "New Password";
   static const passwordChangedSuccessfully = "Password changed successfully";
-  static const newPasswordHint = "Your new password must be different from previous used passwords";
+  static const newPasswordHint =
+      "Your new password must be different from previous used passwords";
   static const bothPasswordsMustMatch = "Both passwords must match";
-  static const cat = "CATEGORY";
   static const logout = "Logout";
   static const signInToYourAccount = "Sign in to your account";
   static const createNewPassword = "Create New Password";
@@ -48,10 +54,14 @@ class AppStrings {
   static const favoritePrices = "FAVORITE PRICE";
   static const addToWatchlist = "ADD TO WATCHLIST";
   static const bushelsMetricTons = "Bushels = Metric Tons";
-  static const inputAndConvertValues = "Input And Convert Values Between Bushels And Metric Tons.";
+  static const inputAndConvertValues =
+      "Input And Convert Values Between Bushels And Metric Tons.";
   static const bushels = "BUSHELS: (bu)";
   static const equals = "equals....";
   static const noData = "No data ....";
+  static const noReports = "No Reports";
+
+
   static const metricTons = "METRIC TONS: (MT)";
   static const calculationBu = "Calculation:\n1 bu = 0.0272 MT";
   static const bu = "1 bu = 0.0272 MT";
@@ -62,7 +72,6 @@ class AppStrings {
   static const quality = "Quality";
   static const qua = "QUALITY";
   static const reports = "Reports";
-  static const rep = "REPORTS";
   static const reportsTypes = "Reports Types";
   static const read = "Read";
   static const view = "View";
@@ -70,8 +79,8 @@ class AppStrings {
   static const select = "Select";
   static const wheatData = "WHEAT DATA";
   static const currentAverage = "Current Avg";
-  static const finalAverage = "Final Avg";
-  static const yearAverage = "5-Year Avg";
+  static const finalAverage = "Avg";
+  static const fiveYearAverage = "5-Year Avg";
   static const lbBu = "TW (lb/bu)";
   static const kgHl = "TW (kg/hl)";
   static const distanceArea = "DISTANCE & AREA";
@@ -82,11 +91,12 @@ class AppStrings {
   static const softWhite = "SOFT WHITE";
   static const northernDurum = "NORTHERN DURUM";
   static const nearby = "NEARBYS:";
-  static const weekChange = "WEEK CHANGE:";
+  static const lastWeek = "LAST WEEK:";
   static const oneYearAgo = "ONE YEAR AGO:";
   static const lastPrDate = "LAST PR DATE:";
   static const fwdPrice = "FWD PRICE";
   static const account = "ACCOUNT";
+  static const added = "Added";
   static const pages = "PAGES";
   static const classs = "Class";
   static const testWtkghl = "TW kg/hl";
@@ -97,23 +107,27 @@ class AppStrings {
   static const proteinMb = "Protein 12% mb";
   static const dryBasisProt = "DryBasisProt";
   static const proteinDryBasis = "Protein dry basis";
-  static const proDb= "Pro-db";
-  static const date = "DATE";
-  static const data = "Wheat Data";
+  static const proDb = "Pro-db";
+  static const date = "Date";
+  static const data = "Data";
   static const news = "News";
   static const settings = "SETTINGS";
   static const search = "Search";
   static const gulfOfMexico = "Gulf of Mexico";
   static const calculator = "Calculator";
   static const newFeed = "News Feed";
-  static const changePassword  = "Change Password ";
+  static const changePassword = "Change Password ";
   static const noDataFound = "No data found";
+  static const refresh = "Refresh";
   static const wheatAssociates = "U.S. Wheat Associates";
   static const error500 = "We are working on server, Please try again later.";
-  static const error503 = "Server is under maintenance, Please try again later.";
+  static const error503 =
+      "Server is under maintenance, Please try again later.";
   static const subscriberConsent = "Subscriber consent";
-  static const iConsentToReceivingEmail = "I consent to receiving email communications. ";
-  static const iConsentToHavingMySubscriber = "I consent to having my subscriber engagement tracked and analyzed.";
+  static const iConsentToReceivingEmail =
+      "I consent to receiving email communications. ";
+  static const iConsentToHavingMySubscriber =
+      "I consent to having my subscriber engagement tracked and analyzed.";
   static const milesKilometer = "MILES = KILOMETERS";
   static const squareFeetSquareMeters = "SQUARE FEET = SQUARE METERS";
   static const metersYardsFeet = "METERS = YARDS = FEET";
@@ -130,12 +144,14 @@ class AppStrings {
   static const temperature = "TEMPERATURE";
   static const removedFromWatchlist = "Removed from watchlist";
   static const failedToRemove = "Failed to remove";
-  static const fahrenheitCelsius =  "FAHRENHEIT = CELSIUS";
-  static const alreadyAddedToWatchlist =  "This date is already in your watchlist.";
-  static const watchlistAddedSuccessfully =  "Watchlist Added Successfully";
-  static const pleaseSelectDateBeforeAddingToWatchlist =  "Please select a date before adding to watchlist";
+  static const fahrenheitCelsius = "FAHRENHEIT = CELSIUS";
+  static const alreadyAddedToWatchlist =
+      "This date is already in your watchlist.";
+  static const watchlistAddedSuccessfully = "Watchlist Added Successfully";
+  static const pleaseSelectDateBeforeAddingToWatchlist =
+      "Please select a date before adding to watchlist";
 
-
-
-
+  static const syncNewData = "Sync New Data";
+  static const dataNotAvailable = "Data Not Available";
+  static const localWatchlist= "LocalWatchlist";
 }

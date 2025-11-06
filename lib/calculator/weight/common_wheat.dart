@@ -15,13 +15,13 @@ class CommonWheat extends StatefulWidget {
 
 class _CommonWheatState extends State<CommonWheat> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext perentContext) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.c45413b,
         title: Text(
           "Test Weight",
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
+          style: Theme.of(perentContext).textTheme.labelLarge?.copyWith(color: AppColors.cFFFFFF),
         ),
         leading: const BackButton(color: Colors.white),
         bottom: PreferredSize(
@@ -30,7 +30,7 @@ class _CommonWheatState extends State<CommonWheat> {
             padding: const EdgeInsets.only(left: 12, bottom: 8.0),
             child: Text(
               "Convert wheat test weight between lb/bu and kg/hl",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
+              style: Theme.of(perentContext).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF),
             ),
           ),
         ),
@@ -52,9 +52,9 @@ class _CommonWheatState extends State<CommonWheat> {
                       controller: cp.commonLbController,
                       label: "lb/bu",
                       onChanged: (val) => cp.convertCommonLbToKg(val),
-                      keyboardType: TextInputType.number,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                       ],
                     ),
                   ),
@@ -71,9 +71,9 @@ class _CommonWheatState extends State<CommonWheat> {
                       controller: cp.commonKgController,
                       label: "kg/hl",
                       onChanged: (val) => cp.convertCommonKgToLb(val),
-                      keyboardType: TextInputType.number,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                       ],
                     ),
                   ),
@@ -127,9 +127,9 @@ class _CommonWheatState extends State<CommonWheat> {
                       controller: cp.durumLbController,
                       label: "lb/bu",
                       onChanged: (val) => cp.convertDurumLbToKg(val),
-                      keyboardType: TextInputType.number,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                       ],
                     ),
                   ),
@@ -146,9 +146,9 @@ class _CommonWheatState extends State<CommonWheat> {
                       controller: cp.durumKgController,
                       label: "kg/hl",
                       onChanged: (val) => cp.convertDurumKgToLb(val),
-                      keyboardType: TextInputType.number,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                       ],
                     ),
                   ),

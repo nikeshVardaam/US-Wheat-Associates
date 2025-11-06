@@ -30,8 +30,7 @@ class GetApiServices {
     }
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
-    // print("Bearer Token: $bearerToken");
-    // print(url);
+
     try {
       final response = await http.get(
         Uri.parse(url),
@@ -40,7 +39,112 @@ class GetApiServices {
           'Authorization': bearerToken,
           'Accept': 'application/json',
         },
-      ).timeout(const Duration(seconds: 5));
+      );
+
+      var data = json.decode(response.body);
+      if (loader) {
+        Navigator.pop(context);
+      }
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response;
+      } else if (response.statusCode == 401) {
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: data["message"] ?? "",
+          onPressed: () {},
+        );
+        return null;
+      } else if (response.statusCode == 404) {
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: data["message"] ?? "",
+          onPressed: () {},
+        );
+        return null;
+      } else if (response.statusCode == 500) {
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: AppStrings.error500,
+          onPressed: () {},
+        );
+        return null;
+      } else if (response.statusCode == 503) {
+        ExceptionDialogs.networkDialog(
+          context: context,
+          message: AppStrings.error503,
+          onPressed: () {},
+        );
+        return null;
+      }
+    } on TimeoutException catch (e) {
+      Navigator.pop(context);
+      ExceptionDialogs.networkDialog(
+        context: context,
+        message: e.message ?? "",
+        onPressed: () {},
+      );
+      return null;
+    } on HttpException catch (e) {
+      Navigator.pop(context);
+      ExceptionDialogs.networkDialog(
+        context: context,
+        message: e.message,
+        onPressed: () {},
+      );
+      return null;
+    } on SocketException {
+      ExceptionDialogs.networkDialog(
+        context: context,
+        message: "No Internet connection.",
+        onPressed: () {},
+      );
+      return null;
+    } on FormatException catch (e) {
+      Navigator.pop(context);
+      ExceptionDialogs.networkDialog(
+        context: context,
+        message: e.message,
+        onPressed: () {},
+      );
+      return null;
+    } on Exception catch (e) {
+      Navigator.pop(context);
+      ExceptionDialogs.networkDialog(
+        context: context,
+        message: e.toString(),
+        onPressed: () {},
+      );
+      return null;
+    }
+    return null;
+  }
+
+  Future<http.Response?> getWithDynamicUrl({
+    required String url,
+    required bool loader,
+    required BuildContext context,
+  }) async {
+    sp = await SharedPreferences.getInstance();
+
+    if (loader) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AppWidgets.loading(),
+      );
+    }
+
+    String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': bearerToken,
+          'Accept': 'application/json',
+        },
+      );
 
       var data = json.decode(response.body);
       if (loader) {
@@ -93,7 +197,7 @@ class GetApiServices {
         onPressed: () {},
       );
       return null;
-    } on SocketException catch (e) {
+    } on SocketException {
       ExceptionDialogs.networkDialog(
         context: context,
         message: "No Internet connection.",

@@ -1,28 +1,26 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uswheat/modal/model_local_watchList.dart';
 import 'package:uswheat/service/post_services.dart';
-import 'package:uswheat/utils/app_buttons.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_strings.dart';
-import '../../modal/watch_list_state.dart';
+import 'package:uswheat/utils/pref_keys.dart';
 import '../../modal/watchlist_modal.dart';
-import '../../service/get_api_services.dart';
 import '../../utils/app_widgets.dart';
 
 class WheatPageProvider extends ChangeNotifier {
-  List<num> uniqueYears = [];
-  String? selectedYears;
-  int selectedMonth = DateTime.now().month;
-  int selectedDay = DateTime.now().day;
-  String? finalDate;
-  String? prdate;
+  List<int>? uniqueYears = [];
+  bool alreadyHasInWatchlist = false;
+  String? selectedDate;
   WheatData? current;
+  SharedPreferences? sp;
+  String? selectedClass;
+  List<ModelLocalWatchlistData> localWatchList = [];
   WheatData? yearAverage;
   WheatData? fiveYearAverage;
-  final List<String> fixedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   bool isLoading = false;
-  bool _isPickerOpen = false;
 
   void clearData() {
     current = null;
@@ -30,87 +28,145 @@ class WheatPageProvider extends ChangeNotifier {
     fiveYearAverage = null;
   }
 
-  Future<void> getYears({required BuildContext context, required bool loader}) async {
-    final response = await GetApiServices().get(
-      endpoint: ApiEndpoint.getYears,
-      context: context,
-      loader: loader,
-    );
-
-    if (response != null) {
-      uniqueYears = List<num>.from(json.decode(response.body));
-      uniqueYears.sort((a, b) => b.compareTo(a));
-      selectedYears = uniqueYears.contains(DateTime.now().year) ? DateTime.now().year.toString() : uniqueYears.first.toString();
-      //updateFinalDate(prDate: "", context: context, wClass: wheatClass);
-      notifyListeners();
-    }
+  void updatedDate({required String date, required BuildContext context}) {
+    selectedDate = date;
+    getQualityReport(context: context);
+    checkLocalWatchlist();
+    notifyListeners();
   }
 
-  bool isInWatchlist(String wheatClass, String? date) {
-    if (date == null) return false;
-    String key = "$wheatClass|$date";
-    return WatchlistState.watchlistKeys.contains(key);
+  initFromWatchlist({required BuildContext context}) {
+    getQualityReport(context: context).then((value) {
+      updateLocalWatchlist(context: context);
+    });
+    checkLocalWatchlist();
   }
 
-  void getQualityReport({required BuildContext context, required String wheatClass, required String date}) async {
-    var data = {
-      "class": wheatClass,
-      "date": date ?? "",
-    };
-
-    final response = await PostServices().post(
-      endpoint: ApiEndpoint.qualityReport,
-      requestData: data,
-      context: context,
-      isBottomSheet: false,
-      loader: true,
-    );
-
-    if (response != null) {
-      // debugPrint(response.body,wrapWidth: 1024);
-      final decoded = json.decode(response.body);
-
-      if (decoded['data'] != null) {
-        final data = decoded['data'];
-
-        current = data['current'] != null ? WheatData.fromJson(data['current']) : null;
-        yearAverage = data['year_average'] != null ? WheatData.fromJson(data['year_average']) : null;
-        fiveYearAverage = data['five_year_average'] != null ? WheatData.fromJson(data['five_year_average']) : null;
-
-        notifyListeners();
-      }
-
-    }
-  }
-
-  void addWatchList({required BuildContext context, required String wheatClass, required String color}) {
-    if (prdate == null || prdate!.isEmpty) {
-      AppWidgets.appSnackBar(
-        context: context,
-        text: AppStrings.pleaseSelectDateBeforeAddingToWatchlist,
-        color: AppColors.cd63a3a,
-      );
-      return;
-    }
-
-    String key = "$wheatClass|$prdate";
-
-    if (WatchlistState.watchlistKeys.contains(key)) {
-      return;
-    }
-
-    var data = {
-      "type": "quality",
-      "filterdata": {
-        "class": wheatClass,
-        "date": prdate,
-        "color": color,
-      }
-    };
-
-    PostServices()
+  Future<void> getDefaultDate({required BuildContext context}) async {
+    await PostServices()
         .post(
-      endpoint: ApiEndpoint.storeWatchlist,
+            endpoint: ApiEndpoint.lastDate,
+            context: context,
+            loader: true,
+            requestData: {"class": selectedClass},
+            isBottomSheet: false)
+        .then(
+      (value) {
+        if (value != null) {
+          var response = jsonDecode(value.body);
+          var data = response["data"];
+          selectedDate = data["last_available_date"].toString();
+          selectedClass = data["class"];
+        }
+      },
+    );
+
+    await getQualityReport(context: context).then(
+      (value) {
+        checkLocalWatchlist();
+        notifyListeners();
+      },
+    );
+  }
+
+  void checkLocalWatchlist() async {
+    alreadyHasInWatchlist = false;
+
+    List<ModelLocalWatchlistData> localList = [];
+
+    notifyListeners();
+
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+    if (data != null) {
+      List<dynamic> list = jsonDecode(data ?? "");
+
+      for (var i = 0; i < list.length; ++i) {
+        ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
+        localList.add(modelLocalWatchlistData);
+      }
+    }
+
+    for (var i = 0; i < localList.length; ++i) {
+      if (localList[i].type == "quality" && localList[i].date == selectedDate && localList[i].cls == selectedClass) {
+        alreadyHasInWatchlist = true;
+        break;
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateLocalWatchlist({required BuildContext context}) async {
+    bool hasData = false;
+    if (localWatchList.isNotEmpty) {
+      for (var i = 0; i < localWatchList.length; ++i) {
+        if (localWatchList[i].type == "quality" &&
+            localWatchList[i].date == selectedDate &&
+            localWatchList[i].cls == selectedClass) {
+          hasData = true;
+          break;
+        }
+      }
+      if (hasData) {
+        for (var i = 0; i < localWatchList.length; ++i) {
+          if (localWatchList[i].type == "quality" &&
+              localWatchList[i].cls == selectedClass &&
+              localWatchList[i].date == selectedDate) {
+            ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+              type: "quality",
+              date: selectedDate,
+              cls: selectedClass,
+              yearAverage: yearAverage,
+              finalAverage: fiveYearAverage,
+              currentAverage: current,
+              region: null,
+              graphData: [],
+              gRPHCode: '',
+            );
+            localWatchList[i] = modelLocalWatchlist;
+            notifyListeners();
+            break;
+          }
+        }
+      } else {
+        ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+          type: "quality",
+          date: selectedDate,
+          cls: selectedClass,
+          yearAverage: yearAverage,
+          finalAverage: fiveYearAverage,
+          currentAverage: current,
+          region: null,
+          graphData: [],
+          gRPHCode: '',
+        );
+        localWatchList.add(modelLocalWatchlist);
+      }
+    } else {
+      ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+        type: "quality",
+        date: selectedDate,
+        cls: selectedClass,
+        yearAverage: yearAverage,
+        finalAverage: fiveYearAverage,
+        currentAverage: current,
+        region: null,
+        graphData: [],
+        gRPHCode: '',
+      );
+      localWatchList.add(modelLocalWatchlist);
+    }
+    sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+  }
+
+  Future<void> getQualityReport({required BuildContext context}) async {
+    var data = {
+      "class": selectedClass,
+      "date": selectedDate,
+    };
+    await PostServices()
+        .post(
+      endpoint: ApiEndpoint.qualityReport,
       requestData: data,
       context: context,
       isBottomSheet: false,
@@ -118,132 +174,140 @@ class WheatPageProvider extends ChangeNotifier {
     )
         .then((value) {
       if (value != null) {
-        WatchlistState.watchlistKeys.add(key);
-        AppWidgets.appSnackBar(
-          context: context,
-          text: AppStrings.watchlistAddedSuccessfully,
-          color: AppColors.c2a8741,
-        );
-        notifyListeners();
+        final decoded = json.decode(value.body);
+
+        if (decoded['data'] != null) {
+          final data = decoded['data'];
+
+          current = data['current'] != null ? WheatData.fromJson(data['current']) : null;
+          yearAverage = data['year_average'] != null ? WheatData.fromJson(data['year_average']) : null;
+          fiveYearAverage = data['five_year_average'] != null ? WheatData.fromJson(data['five_year_average']) : null;
+
+          notifyListeners();
+        }
       }
     });
   }
 
-  void updateFinalDate({required String prDate, required BuildContext context, required String wClass}) {
-    clearData();
-    if (prDate.isNotEmpty) {
-      finalDate = prDate;
-      prDate = prDate;
-      getQualityReport(context: context, wheatClass: wClass, date: prDate);
-    } else {
-      if (selectedYears != null) {
-        final year = int.parse(selectedYears!);
-        int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
-        if (selectedDay > daysInMonth) selectedDay = daysInMonth;
-        finalDate = "$year-${selectedMonth.toString().padLeft(2, "0")}-${selectedDay.toString().padLeft(2, "0")}";
-        prdate = finalDate;
+  getPrefData({required String cls, required String date}) async {
+    selectedClass = cls;
+    selectedDate = date;
+    localWatchList.clear();
 
-        getQualityReport(context: context, wheatClass: wClass, date: finalDate ?? "");
-      } else {
-        finalDate = "";
-        prdate = "";
+    notifyListeners();
+
+    sp = await SharedPreferences.getInstance();
+    var data = sp?.getString(PrefKeys.watchList);
+    if (data != null) {
+      List<dynamic> list = jsonDecode(data ?? "");
+
+      for (var i = 0; i < list.length; ++i) {
+        ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
+        localWatchList.add(modelLocalWatchlistData);
       }
-      notifyListeners();
     }
   }
 
-  void showYearPicker(BuildContext context, {required String wheatClass}) {
-    if (_isPickerOpen) return;
-    _isPickerOpen = true;
-
-    if (uniqueYears.isEmpty) {
-      getYears(context: context, loader: false).then((_) {
-        Future.delayed(const Duration(milliseconds: 100), () {
-          _openPicker(context, wheatClass);
-        });
-      });
-    } else {
-      Future.delayed(const Duration(milliseconds: 100), () {
-        _openPicker(context, wheatClass);
-      });
+  Future<void> addWatchList({required BuildContext context, required String wheatClass, required String color}) async {
+    if (selectedDate == null || selectedDate!.isEmpty) {
+      AppWidgets.appSnackBar(
+        context: context,
+        color: AppColors.cd63a3a,
+        text: AppStrings.pleaseSelectDateBeforeAddingToWatchlist,
+      );
+      return;
     }
-  }
 
-  void _openPicker(BuildContext context, String wheatClass) {
-    _isPickerOpen = true;
-    int initialYearIndex = uniqueYears.indexOf(int.tryParse(selectedYears ?? '') ?? uniqueYears.first);
+    var data = {
+      "type": "quality",
+      "filterdata": {
+        "class": wheatClass,
+        "date": selectedDate,
+        "color": color,
+      }
+    };
 
-    int year = int.tryParse(selectedYears ?? '') ?? DateTime.now().year;
-    int daysInMonth = DateTime(year, selectedMonth + 1, 0).day;
-
-    showCupertinoModalPopup(
+    await PostServices()
+        .post(
+      endpoint: ApiEndpoint.storeWatchlist,
+      requestData: data,
       context: context,
-      builder: (_) => SafeArea(
-        child: Container(
-            height: MediaQuery.of(context).size.height / 2.5,
-            color: AppColors.cFFFFFF,
-            child: Column(
-              children: [
-                // Pickers
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: CupertinoPicker(
-                          scrollController: FixedExtentScrollController(initialItem: initialYearIndex),
-                          itemExtent: 40,
-                          onSelectedItemChanged: (index) {
-                            selectedYears = uniqueYears[index].toString();
-                          },
-                          children: uniqueYears.map((y) => Center(child: Text(y.toString()))).toList(),
-                        ),
-                      ),
-                      Expanded(
-                        child: CupertinoPicker(
-                          scrollController: FixedExtentScrollController(initialItem: selectedMonth - 1),
-                          itemExtent: 40,
-                          onSelectedItemChanged: (index) {
-                            selectedMonth = index + 1;
-                          },
-                          children: fixedMonths.map((m) => Center(child: Text(m))).toList(),
-                        ),
-                      ),
-                      Expanded(
-                        child: CupertinoPicker(
-                          scrollController: FixedExtentScrollController(initialItem: selectedDay - 1),
-                          itemExtent: 40,
-                          onSelectedItemChanged: (index) {
-                            selectedDay = index + 1;
-                          },
-                          children: List.generate(daysInMonth, (i) => Center(child: Text((i + 1).toString()))),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Buttons
-                Padding(
-                  padding: const EdgeInsets.only(right: 8, left: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(onTap: () => Navigator.pop(context), child: AppButtons().filledButton(true, AppStrings.cancel, context)),
-                      GestureDetector(
-                          onTap: () {
-                            updateFinalDate(prDate: "", context: context, wClass: wheatClass);
-                            getQualityReport(context: context, wheatClass: wheatClass, date: prdate ?? "");
-                            Navigator.pop(context);
-                          },
-                          child: AppButtons().filledButton(true, AppStrings.confirm, context)),
-                    ],
-                  ),
-                ),
-              ],
-            )),
-      ),
-    ).whenComplete(() {
-      _isPickerOpen = false;
+      isBottomSheet: false,
+      loader: true,
+    )
+        .then((value) async {
+      if (value != null) {
+        if (localWatchList.isEmpty) {
+          ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+            type: "quality",
+            date: selectedDate,
+            cls: wheatClass,
+            yearAverage: yearAverage,
+            finalAverage: fiveYearAverage,
+            currentAverage: current,
+            region: null,
+            graphData: [],
+            gRPHCode: '',
+          );
+
+          localWatchList.add(modelLocalWatchlist);
+
+          sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+        } else {
+          bool ifModalHasInList = false;
+
+          for (var i = 0; i < localWatchList.length; ++i) {
+            if (localWatchList[i].type == "quality" &&
+                localWatchList[i].cls == wheatClass &&
+                localWatchList[i].date == selectedDate) {
+              ifModalHasInList = true;
+              break;
+            }
+          }
+
+          if (ifModalHasInList) {
+            for (var i = 0; i < localWatchList.length; ++i) {
+              if (localWatchList[i].type == "quality" &&
+                  localWatchList[i].cls == wheatClass &&
+                  localWatchList[i].date == selectedDate) {
+                ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+                  type: "quality",
+                  date: selectedDate,
+                  cls: wheatClass,
+                  yearAverage: yearAverage,
+                  finalAverage: fiveYearAverage,
+                  currentAverage: current,
+                  region: null,
+                  graphData: [],
+                  gRPHCode: '',
+                );
+                localWatchList[i] = modelLocalWatchlist;
+                notifyListeners();
+                break;
+              }
+            }
+          } else {
+            ModelLocalWatchlistData modelLocalWatchlist = ModelLocalWatchlistData(
+              type: "quality",
+              date: selectedDate,
+              cls: wheatClass,
+              yearAverage: yearAverage,
+              finalAverage: fiveYearAverage,
+              currentAverage: current,
+              region: null,
+              graphData: [],
+              gRPHCode: '',
+            );
+            localWatchList.add(modelLocalWatchlist);
+          }
+
+          sp?.setString(PrefKeys.watchList, jsonEncode(localWatchList));
+        }
+
+        AppWidgets.appSnackBar(context: context, text: AppStrings.added, color: AppColors.c2a8741);
+      }
     });
+    checkLocalWatchlist();
+    notifyListeners();
   }
 }

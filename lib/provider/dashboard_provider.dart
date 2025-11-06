@@ -7,7 +7,7 @@ import 'package:uswheat/dashboard_page/calculator.dart';
 import 'package:uswheat/dashboard_page/price/prices.dart';
 import 'package:uswheat/dashboard_page/quality/quality.dart';
 import 'package:uswheat/dashboard_page/reprts/reports.dart';
-import 'package:uswheat/dashboard_page/watchList.dart';
+import 'package:uswheat/dashboard_page/watch_list/watchList.dart';
 import 'package:uswheat/modal/login_modal.dart';
 import 'package:uswheat/service/delete_service.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
@@ -16,6 +16,7 @@ import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import 'package:uswheat/utils/pref_keys.dart';
 
+import '../auth/SyncData.dart';
 import '../utils/app_routes.dart';
 import 'login_provider.dart';
 
@@ -24,13 +25,17 @@ class DashboardProvider extends ChangeNotifier {
   TextEditingController deleteController = TextEditingController();
   Widget selectActivity = const Prices(
     region: '',
-    classs: '',
-    year: '',
+    cls: '',
+    date: '',
   );
   String selectMenu = AppStrings.pricess;
   int currentIndex = 0;
   SharedPreferences? sp;
   User? user;
+
+  Future<void> syncData(BuildContext context) async {
+    await SyncData().syncData(context: context);
+  }
 
   confirmDelete({required BuildContext context}) {
     final text = deleteController.text.trim();
@@ -111,8 +116,8 @@ class DashboardProvider extends ChangeNotifier {
         setChangeActivity(
             activity: const Prices(
               region: '',
-              classs: '',
-              year: '',
+              cls: '',
+              date: '',
             ),
             pageName: AppStrings.price,
             isBottomTab: true);
