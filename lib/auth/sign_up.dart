@@ -216,7 +216,7 @@ class _SignUpState extends State<SignUp> {
                     width: double.infinity,
                     child: GestureDetector(
                       onTap: () {
-                        sup.createAccount(context: context, );
+                        sup.createAccount(context: context);
                       },
                       child: AppButtons().filledButton(true, AppStrings.signUp, context),
                     ),

@@ -16,10 +16,10 @@ class _ReportsSelectorState extends State<ReportsSelector> {
   int selectedIndex = 0;
 
   @override
-  Widget build(BuildContext perentContext) {
-    final bgColor = CupertinoColors.systemGrey6.resolveFrom(perentContext);
+  Widget build(BuildContext parentContext) {
+    final bgColor = CupertinoColors.systemGrey6.resolveFrom(parentContext);
     return Container(
-      height: MediaQuery.of(perentContext).size.height / 5,
+      height: MediaQuery.of(parentContext).size.height / 5,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
@@ -33,12 +33,12 @@ class _ReportsSelectorState extends State<ReportsSelector> {
               children: [
                 Text(
                   "${AppStrings.select} ${AppStrings.reports}",
-                  style: Theme.of(perentContext).textTheme.labelLarge,
+                  style: Theme.of(parentContext).textTheme.labelLarge,
                 ),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    Navigator.pop(perentContext, widget.reportList[selectedIndex]);
+                    Navigator.pop(parentContext, widget.reportList[selectedIndex]);
                   },
                   child: const Text(
                     AppStrings.done,
@@ -67,7 +67,7 @@ class _ReportsSelectorState extends State<ReportsSelector> {
 
                     return Text(
                       data["report_type"][0]["name"],
-                      style: Theme.of(perentContext).textTheme.labelLarge,
+                      style: Theme.of(parentContext).textTheme.labelLarge,
                     );
                   },
                 )),

@@ -27,9 +27,11 @@ class _ReportsState extends State<Reports> {
       prov.selectedReportOption = null;
       prov.selectedCategory = null;
       prov.selectedYear = null;
-      prov.getReportsOptions(context: context);
-      prov.getReports(context: context);
-      prov.loadYear(context: context);
+      prov.getReportsOptions(context: context).then(
+        (value) {
+          prov.getReports(context: context);
+        },
+      );
     });
   }
 
@@ -238,9 +240,7 @@ class _ReportsState extends State<Reports> {
                           builder: (context) {
                             return SizedBox(
                               height: MediaQuery.of(context).size.height / 3,
-                              child: YearSelector(
-                                yearList: rp.yearList,
-                              ),
+                              child: const YearSelector(),
                             );
                           },
                         ).then(
@@ -267,9 +267,7 @@ class _ReportsState extends State<Reports> {
                                       builder: (context) {
                                         return SizedBox(
                                           height: MediaQuery.of(context).size.height / 3,
-                                          child: YearSelector(
-                                            yearList: rp.yearList,
-                                          ),
+                                          child: const YearSelector(),
                                         );
                                       },
                                     ).then(
@@ -411,15 +409,15 @@ class _ReportsState extends State<Reports> {
                         ),
                       ),
                     ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                child: Container(
-                  color: Colors.transparent,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      (rp.pageNumber > 1)
-                          ? GestureDetector(
+              Container(
+                color: Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    (rp.pageNumber > 1)
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            child: GestureDetector(
                               onTap: () {
                                 if (rp.pageNumber > 0) {
                                   rp.previousPage(context: context);
@@ -428,30 +426,37 @@ class _ReportsState extends State<Reports> {
                               child: Text(
                                 AppStrings.back,
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.c0A64A4,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: AppColors.c0A64A4),
-                              ))
-                          : Container(),
-                      (rp.pageNumber < rp.totalPages)
-                          ? GestureDetector(
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.c0A64A4,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: AppColors.c0A64A4,
+                                    ),
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    (rp.pageNumber < rp.totalPages)
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            child: GestureDetector(
                               onTap: () {
                                 rp.nextPage(context: context);
                               },
                               child: Text(
                                 AppStrings.next,
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.c0A64A4,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: AppColors.c0A64A4),
-                              ))
-                          : Container()
-                    ],
-                  ),
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.c0A64A4,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: AppColors.c0A64A4,
+                                    ),
+                              ),
+                            ),
+                          )
+                        : Container(),
+                  ],
                 ),
               )
             ],

@@ -34,6 +34,7 @@ class PostServices {
 
     String url = "${ApiEndpoint.baseUrl}$endpoint";
     String bearerToken = 'Bearer ${sp?.getString(PrefKeys.token)}';
+    print(bearerToken);
 
     try {
       final response = await http.post(

@@ -141,6 +141,16 @@ class _LoginState extends State<Login> {
                       child: AppButtons().filledButton(true, AppStrings.signIn, context),
                     ),
                   ),
+                  TextButton(
+                    onPressed: () {
+                      lp.forgetPassword();
+                    },
+                    child: Text('Forget Password?',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(decoration: TextDecoration.underline, color: AppColors.c666666)),
+                  ),
                   const SizedBox(
                     height: 16,
                   ),

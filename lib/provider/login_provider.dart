@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/auth/SyncData.dart';
 import 'package:uswheat/modal/login_modal.dart';
@@ -17,6 +18,8 @@ class LoginProvider extends ChangeNotifier {
   bool rememberMe = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  final Uri _url = Uri.parse('https://usw.ascreative.agency/admin/password-reset/request');
 
   void cleanData() {
     emailController.clear();
@@ -64,6 +67,12 @@ class LoginProvider extends ChangeNotifier {
       return false;
     }
     return true;
+  }
+
+  forgetPassword() async {
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $_url');
+    }
   }
 
   logIn({required BuildContext context}) async {

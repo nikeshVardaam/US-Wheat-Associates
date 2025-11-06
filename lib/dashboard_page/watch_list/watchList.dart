@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:uswheat/modal/graph_modal.dart';
-import 'package:uswheat/utils/app_assets.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import '../../provider/watchList_provider.dart';
@@ -438,7 +436,7 @@ class _WatchlistState extends State<Watchlist> {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.center,

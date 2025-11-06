@@ -208,7 +208,7 @@ class WheatPageProvider extends ChangeNotifier {
     }
   }
 
-  void addWatchList({required BuildContext context, required String wheatClass, required String color}) {
+  Future<void> addWatchList({required BuildContext context, required String wheatClass, required String color}) async {
     if (selectedDate == null || selectedDate!.isEmpty) {
       AppWidgets.appSnackBar(
         context: context,
@@ -227,7 +227,7 @@ class WheatPageProvider extends ChangeNotifier {
       }
     };
 
-    PostServices()
+    await PostServices()
         .post(
       endpoint: ApiEndpoint.storeWatchlist,
       requestData: data,
@@ -306,6 +306,11 @@ class WheatPageProvider extends ChangeNotifier {
 
         AppWidgets.appSnackBar(context: context, text: AppStrings.added, color: AppColors.c2a8741);
       }
-    });
+    }
+
+
+    );
+    checkLocalWatchlist();
+    notifyListeners();
   }
 }

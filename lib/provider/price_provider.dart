@@ -51,6 +51,27 @@ class PricesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///default date to set
+  Future<void> getDefaultDate({required BuildContext context}) async {
+    await PostServices()
+        .post(
+            endpoint: ApiEndpoint.lastDate,
+            context: context,
+            loader: true,
+            requestData: {"class": selectedClass},
+            isBottomSheet: false)
+        .then(
+      (value) {
+        if (value != null) {
+          var response = jsonDecode(value.body);
+
+          var data = response["data"];
+          pRDate = data[''];
+        }
+      },
+    );
+  }
+
   setSelectedClass({required String cls, required BuildContext context}) async {
     selectedClass = cls;
     if (selectedClass != null && pRDate != null) {
@@ -68,6 +89,7 @@ class PricesProvider extends ChangeNotifier {
         },
       );
     }
+
     notifyListeners();
   }
 
@@ -98,7 +120,8 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> initCallFromWatchList({required BuildContext context, required String? region, required String? cls, required String? year}) async {
+  Future<void> initCallFromWatchList(
+      {required BuildContext context, required String? region, required String? cls, required String? year}) async {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
@@ -136,10 +159,28 @@ class PricesProvider extends ChangeNotifier {
       enablePinching: true,
       zoomMode: ZoomMode.x,
     );
-    getCurrentDate();
+    // getCurrentDate();
+    // await loadRegionAndClasses(context: context).then(
+    //   (value) async {
+    //     await getGraphCodesByClassAndRegion(context: context).then(
+    //       (value) async {
+    //         await getGraphData(context: context).then(
+    //           (value) async {
+    //             await getAllPriceData(context: context).then(
+    //               (value) {
+    //                 checkLocalWatchlist();
+    //               },
+    //             );
+    //           },
+    //         );
+    //       },
+    //     );
+    //   },
+    // );
+
     await loadRegionAndClasses(context: context).then(
       (value) async {
-        await getGraphCodesByClassAndRegion(context: context).then(
+        await getLatestAvailablePriceData(context: context).then(
           (value) async {
             await getGraphData(context: context).then(
               (value) async {
@@ -154,6 +195,7 @@ class PricesProvider extends ChangeNotifier {
         );
       },
     );
+
     notifyListeners();
   }
 
@@ -188,7 +230,13 @@ class PricesProvider extends ChangeNotifier {
     sp = await SharedPreferences.getInstance();
     final data = {
       "type": "price",
-      "filterdata": {"region": selectedRegion?.region ?? "", "class": selectedClass ?? "", "date": pRDate, "color": "ffab865a", "grphcode": selectedGRPHCode ?? ""}
+      "filterdata": {
+        "region": selectedRegion?.region ?? "",
+        "class": selectedClass ?? "",
+        "date": pRDate,
+        "color": "ffab865a",
+        "grphcode": selectedGRPHCode ?? ""
+      }
     };
     await PostServices()
         .post(
@@ -321,11 +369,9 @@ class PricesProvider extends ChangeNotifier {
   getCurrentDate() async {
     List<int> yearsList = [];
 
-    sp = await SharedPreferences.getInstance();
-    final stored = sp?.getStringList(PrefKeys.yearList) ?? const <String>[];
-
-    for (var i = 0; i < stored.length; ++i) {
-      yearsList.add(int.parse(stored[i]));
+    int currentYear = DateTime.now().year;
+    for (int year = 2024; year <= currentYear; year++) {
+      yearsList.add(year);
     }
 
     yearsList.sort((a, b) => b.compareTo(a));
@@ -363,6 +409,7 @@ class PricesProvider extends ChangeNotifier {
         );
       },
     );
+
     notifyListeners();
   }
 
@@ -411,15 +458,38 @@ class PricesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getGraphData({
+  Future<void> getLatestAvailablePriceData({
     required BuildContext context,
   }) async {
+    print("enter");
+    await PostServices().post(
+      endpoint: ApiEndpoint.latestAvailablePriceData,
+      context: context,
+      isBottomSheet: false,
+      loader: true,
+      requestData: {},
+    ).then(
+      (response) {
+        if (response != null) {
+          var value = jsonDecode(response.body);
+          var data = value["data"];
+
+          selectedGRPHCode = data["grphcode"];
+          pRDate = data["last_available_prdate"];
+        }
+      },
+    );
+  }
+
+  Future<void> getGraphData({required BuildContext context}) async {
+    graphDataList.clear();
     if ((selectedGRPHCode ?? "").isEmpty || (pRDate ?? "").isEmpty) return;
 
     final data = {
       "grphcode": selectedGRPHCode ?? "",
       "prdate": pRDate ?? "",
     };
+    print(data);
     await PostServices()
         .post(
       endpoint: ApiEndpoint.getGraphData,
@@ -433,20 +503,18 @@ class PricesProvider extends ChangeNotifier {
         if (value != null) {
           graphDataList.clear();
           var data = jsonDecode(value.body);
-
           for (var i = 0; i < data.length; ++i) {
             GraphDataModal gl = GraphDataModal(cASHMT: data[i]["CASHMT"], pRDATE: data[i]["PRDATE"]);
             graphDataList.add(gl);
           }
+          notifyListeners();
         }
       },
     );
     notifyListeners();
   }
 
-  Future<void> getAllPriceData({
-    required BuildContext context,
-  }) async {
+  Future<void> getAllPriceData({required BuildContext context}) async {
     await PostServices()
         .post(
       endpoint: ApiEndpoint.getAllPriceData,

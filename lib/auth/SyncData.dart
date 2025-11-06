@@ -11,11 +11,7 @@ class SyncData {
   late final SharedPreferences sp;
 
   Future<void> syncData({required BuildContext context}) async {
-    await getRegionAndClass(context: context).then(
-      (value) async {
-        await getYear(context: context);
-      },
-    );
+    await getRegionAndClass(context: context);
   }
 
   Future<void> getRegionAndClass({required BuildContext context}) async {

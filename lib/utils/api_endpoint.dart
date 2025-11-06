@@ -20,4 +20,5 @@ class ApiEndpoint {
   static const deleteAccount = "deleteAccount";
   static const changePassword = "changePassword ";
   static const lastDate = "quality-report/last-date";
+  static const latestAvailablePriceData = "price-data/latest-available-price-data";
 }

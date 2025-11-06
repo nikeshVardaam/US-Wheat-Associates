@@ -57,16 +57,22 @@ class _DashboardState extends State<Dashboard> {
             ),
             actions: [
               Consumer<DashboardProvider>(
-                builder: (context, dp, chilc) {
+                builder: (context, dp, child) {
                   return Padding(
-                    padding: const EdgeInsets.only(right: 5.0),
-                    child: IconButton(
-                      iconSize: 24,
-                      icon: const Icon(Icons.sync),
-                      color: AppColors.cFFFFFF,
-                      onPressed: () {
-                        SyncData().syncData(context: context);
-                      },
+                    padding: const EdgeInsets.only(right: 15.0),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: AppColors.c5a554f, borderRadius: const BorderRadius.all(Radius.circular(50))),
+                      child: IconButton(
+                        iconSize: 24,
+                        icon: const Icon(Icons.sync),
+                        color: AppColors.cFFFFFF,
+                        onPressed: () {
+                          SyncData().syncData(context: context);
+                        },
+                      ),
                     ),
                   );
                 },

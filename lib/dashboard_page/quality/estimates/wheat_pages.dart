@@ -8,6 +8,7 @@ import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 import '../../../utils/app_box_decoration.dart';
 import '../../../utils/common_date_picker.dart';
+import '../../../utils/date_picker.dart';
 import '../../../utils/miscellaneous.dart';
 
 class WheatPages extends StatefulWidget {
@@ -116,7 +117,7 @@ class _WheatPagesState extends State<WheatPages> {
                             child: const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               child: Icon(
-                                Icons.star_border_rounded,
+                                Icons.star_border,
                                 color: Colors.white,
                               ),
                             ),
@@ -143,7 +144,7 @@ class _WheatPagesState extends State<WheatPages> {
                                 builder: (context) {
                                   return SizedBox(
                                     height: MediaQuery.of(context).size.height / 3,
-                                    child: DatePickerSheet(date: defaultDate),
+                                    child: CustomDatePicker(date: defaultDate),
                                   );
                                 },
                               ).then(
@@ -346,34 +347,40 @@ class _WheatPagesState extends State<WheatPages> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(12),
-                                        child: Text(wpp.current?.dhv ?? "--",
-                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                fontWeight: FontWeight.w700,
-                                                color: AppColors.c353d4a.withOpacity(0.7))),
+                                      Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12),
+                                          child: Text(wpp.current?.dhv ?? "--",
+                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                  fontWeight: FontWeight.w700,
+                                                  color: AppColors.c353d4a.withOpacity(0.7))),
+                                        ),
                                       ),
                                     ],
                                   )
                                 : (widget.selectedClass == "Durum")
                                     ? TableRow(
                                         children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(12),
-                                            child: Text(
-                                              'HVAC',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d),
+                                          Center(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(12),
+                                              child: Text(
+                                                'HVAC',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(fontWeight: FontWeight.w900, color: AppColors.c95795d),
+                                              ),
                                             ),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(12),
-                                            child: Text(wpp.current?.hvac ?? "--",
-                                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                    fontWeight: FontWeight.w700,
-                                                    color: AppColors.c353d4a.withOpacity(0.7))),
+                                          Center(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(12),
+                                              child: Text(wpp.current?.hvac ?? "--",
+                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                      fontWeight: FontWeight.w700,
+                                                      color: AppColors.c353d4a.withOpacity(0.7))),
+                                            ),
                                           ),
                                         ],
                                       )
