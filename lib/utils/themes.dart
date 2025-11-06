@@ -9,6 +9,11 @@ class ThemeClass {
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeClass.lightPrimaryColor,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: Colors.blue,
+      selectionColor: Colors.blue[200],
+      selectionHandleColor: Colors.blue,
+    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.cFFFFFF,
@@ -32,8 +37,6 @@ class ThemeClass {
         color: AppColors.c666666,
       ),
     ),
-    textSelectionTheme:
-        TextSelectionThemeData(selectionHandleColor: AppColors.c000000),
     textTheme: TextTheme(
       labelLarge: const TextStyle().copyWith(
         fontWeight: FontWeight.w400,

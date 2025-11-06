@@ -51,10 +51,12 @@ class _LoginState extends State<Login> {
                         const SizedBox(height: 4),
                         AppTextField.textField(
                           controller: lp.emailController,
+
                           context,
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.c000000),
                           cursorColor: AppColors.c000000,
                           decoration: InputDecoration(
+
                             filled: true,
                             fillColor: AppColors.cFFFFFF,
                             contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),

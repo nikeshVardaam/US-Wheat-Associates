@@ -74,6 +74,11 @@ class AppTextField {
       String? label}) {
     return TextFormField(
       key: key,
+      contextMenuBuilder: (context, editableTextState) {
+        return AdaptiveTextSelectionToolbar.editableText(
+          editableTextState: editableTextState,
+        );
+      },
       controller: controller,
       focusNode: focusNode,
       undoController: undoHistoryController,

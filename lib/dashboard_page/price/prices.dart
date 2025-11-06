@@ -34,9 +34,7 @@ class _PricesState extends State<Prices> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<PricesProvider>(context, listen: false).getPrefData();
-      if ((widget.region?.isNotEmpty ?? false) &&
-          (widget.cls?.isNotEmpty ?? false) &&
-          (widget.date?.isNotEmpty ?? false)) {
+      if ((widget.region?.isNotEmpty ?? false) && (widget.cls?.isNotEmpty ?? false) && (widget.date?.isNotEmpty ?? false)) {
         Provider.of<PricesProvider>(context, listen: false)
             .initCallFromWatchList(
           context: context,
@@ -75,10 +73,7 @@ class _PricesState extends State<Prices> {
                         children: [
                           Text(
                             AppStrings.pricess,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
@@ -87,8 +82,7 @@ class _PricesState extends State<Prices> {
                           : GestureDetector(
                               onTap: () async {
                                 if (pp.graphDataList.isEmpty) {
-                                  AppWidgets.appSnackBar(
-                                      context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
+                                  AppWidgets.appSnackBar(context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
                                 } else {
                                   await pp.addToWatchlist(context: context);
                                 }
@@ -414,11 +408,7 @@ class _PricesState extends State<Prices> {
                             ),
                           ),
                           Text(
-                            (pp.allPriceDataModal?.nearby?.cASHBU != null)
-                                ? double.tryParse(pp.allPriceDataModal!.nearby!.cASHBU.toString())
-                                        ?.toStringAsFixed(2) ??
-                                    "--"
-                                : "--",
+                            (pp.allPriceDataModal?.nearby?.cASHBU != null) ? double.tryParse(pp.allPriceDataModal!.nearby!.cASHBU.toString())?.toStringAsFixed(2) ?? "--" : "--",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),
@@ -455,7 +445,7 @@ class _PricesState extends State<Prices> {
                                 width: 4,
                               ),
                               Text(
-                                pp.allPriceDataModal?.nearby?.cASHMT.toString().substring(0, 6) ?? "",
+                                pp.allPriceDataModal?.nearby?.cASHMT?.toStringAsFixed(2) ?? "--",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.c353d4a.withOpacity(0.7),
@@ -494,7 +484,7 @@ class _PricesState extends State<Prices> {
                           Row(
                             children: [
                               Text(
-                                pp.allPriceDataModal?.weekly?.cASHBU.toString().substring(0, 3) ?? "--",
+                                pp.allPriceDataModal?.weekly?.cASHBU?.toStringAsFixed(2) ?? "--",
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.cd63a3a,
