@@ -2,24 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:uswheat/dashboard_page/price/class_selector.dart';
 import 'package:uswheat/dashboard_page/price/region_selector.dart';
 import 'package:uswheat/provider/price_provider.dart';
-import 'package:uswheat/utils/app_box_decoration.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
 import 'package:uswheat/utils/common_date_picker.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
 import '../../modal/graph_modal.dart';
 import '../../utils/app_widgets.dart';
+import '../../utils/pref_keys.dart';
 
 class Prices extends StatefulWidget {
   final String? region;
   final String? cls;
-  final String? year;
+  final String? date;
 
-  const Prices({super.key, required this.region, required this.cls, required this.year});
+  const Prices({super.key, required this.region, required this.cls, required this.date});
 
   @override
   State<Prices> createState() => _PricesState();
@@ -33,13 +34,15 @@ class _PricesState extends State<Prices> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Provider.of<PricesProvider>(context, listen: false).getPrefData();
-      if ((widget.region?.isNotEmpty ?? false) && (widget.cls?.isNotEmpty ?? false) && (widget.year?.isNotEmpty ?? false)) {
+      if ((widget.region?.isNotEmpty ?? false) &&
+          (widget.cls?.isNotEmpty ?? false) &&
+          (widget.date?.isNotEmpty ?? false)) {
         Provider.of<PricesProvider>(context, listen: false)
             .initCallFromWatchList(
           context: context,
           region: widget.region,
           cls: widget.cls,
-          year: widget.year,
+          date: widget.date,
         )
             .then(
           (value) {
@@ -72,7 +75,10 @@ class _PricesState extends State<Prices> {
                         children: [
                           Text(
                             AppStrings.pricess,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(color: AppColors.cFFFFFF, fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
@@ -81,7 +87,8 @@ class _PricesState extends State<Prices> {
                           : GestureDetector(
                               onTap: () async {
                                 if (pp.graphDataList.isEmpty) {
-                                  AppWidgets.appSnackBar(context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
+                                  AppWidgets.appSnackBar(
+                                      context: context, text: AppStrings.dataNotAvailable, color: AppColors.cb01c32);
                                 } else {
                                   await pp.addToWatchlist(context: context);
                                 }
@@ -91,7 +98,6 @@ class _PricesState extends State<Prices> {
                                   : const Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 8),
                                       child: Icon(
-                                        size: 30,
                                         Icons.star_border,
                                         color: Colors.white,
                                       ),
@@ -124,7 +130,6 @@ class _PricesState extends State<Prices> {
                       color: Colors.transparent,
                       child: Row(
                         children: [
-                          // selecting the region
                           Container(
                             width: MediaQuery.of(context).size.width / 3.6,
                             color: AppColors.c95795d.withOpacity(0.1),
@@ -266,9 +271,7 @@ class _PricesState extends State<Prices> {
                         builder: (context) {
                           return SizedBox(
                             height: MediaQuery.of(context).size.height / 3,
-                            child: DatePickerSheet(
-                              date: defaultDate,
-                            ),
+                            child: CustomDatePickerr(date: defaultDate),
                           );
                         },
                       ).then(
@@ -291,7 +294,7 @@ class _PricesState extends State<Prices> {
                                 builder: (context) {
                                   return SizedBox(
                                     height: MediaQuery.of(context).size.height / 3,
-                                    child: DatePickerSheet(date: defaultDate),
+                                    child: CustomDatePickerr(date: defaultDate),
                                   );
                                 },
                               ).then(
@@ -350,32 +353,35 @@ class _PricesState extends State<Prices> {
                     color: AppColors.cB6B6B6,
                   ),
                   pp.graphDataList.isNotEmpty
-                      ? SfCartesianChart(
-                          tooltipBehavior: TooltipBehavior(enable: true),
-                          zoomPanBehavior: pp.zoomPanBehavior,
-                          enableAxisAnimation: true,
-                          primaryXAxis: DateTimeAxis(
-                            dateFormat: DateFormat('MMM-dd'),
-                            intervalType: DateTimeIntervalType.hours,
-                            majorGridLines: const MajorGridLines(width: 0),
-                          ),
-                          primaryYAxis: const NumericAxis(
-                            majorGridLines: MajorGridLines(dashArray: [5, 5]),
-                          ),
-                          series: [
-                            LineSeries<GraphDataModal, DateTime>(
-                              dataSource: pp.graphDataList,
-                              xValueMapper: (GraphDataModal data, _) => DateTime.parse(data.pRDATE.toString()),
-                              yValueMapper: (GraphDataModal data, _) => data.cASHMT,
-                              color: AppColors.c464646,
-                              width: 1,
-                              name: 'CASHMT',
-                              markerSettings: const MarkerSettings(isVisible: false),
+                      ? SizedBox(
+                          height: 300,
+                          child: SfCartesianChart(
+                            tooltipBehavior: TooltipBehavior(enable: true),
+                            zoomPanBehavior: pp.zoomPanBehavior,
+                            enableAxisAnimation: true,
+                            primaryXAxis: DateTimeAxis(
+                              dateFormat: DateFormat('MMM-dd'),
+                              intervalType: DateTimeIntervalType.hours,
+                              majorGridLines: const MajorGridLines(width: 0),
                             ),
-                          ],
+                            primaryYAxis: const NumericAxis(
+                              majorGridLines: MajorGridLines(dashArray: [5, 5]),
+                            ),
+                            series: [
+                              LineSeries<GraphDataModal, DateTime>(
+                                dataSource: pp.graphDataList,
+                                xValueMapper: (GraphDataModal data, _) => DateTime.parse(data.pRDATE.toString()),
+                                yValueMapper: (GraphDataModal data, _) => data.cASHMT,
+                                color: AppColors.c464646,
+                                width: 1,
+                                name: 'CASHMT',
+                                markerSettings: const MarkerSettings(isVisible: false),
+                              ),
+                            ],
+                          ),
                         )
                       : SizedBox(
-                          height: 200,
+                          height: 300,
                           child: Center(
                             child: Text(
                               AppStrings.noDataAvailable,
@@ -408,7 +414,11 @@ class _PricesState extends State<Prices> {
                             ),
                           ),
                           Text(
-                            (pp.allPriceDataModal?.nearby?.cASHBU != null) ? double.tryParse(pp.allPriceDataModal!.nearby!.cASHBU.toString())?.toStringAsFixed(2) ?? "--" : "--",
+                            (pp.allPriceDataModal?.nearby?.cASHBU != null)
+                                ? double.tryParse(pp.allPriceDataModal!.nearby!.cASHBU.toString())
+                                        ?.toStringAsFixed(2) ??
+                                    "--"
+                                : "--",
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.c353d4a.withOpacity(0.7),

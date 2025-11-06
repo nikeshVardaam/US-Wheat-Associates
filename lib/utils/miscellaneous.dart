@@ -21,7 +21,6 @@ class Miscellaneous {
     if (date.isEmpty) {
       return "";
     } else {
-      // Possible formats API might return
       List<String> formats = [
         'yyyy-MM-dd HH:mm:ss',
         'yyyy-MM-dd HH:mm',
@@ -67,6 +66,7 @@ class Miscellaneous {
       return DateFormat('MM-dd-yyyy').format(dateTime);
     }
   }
+
   static String yyyy(String date) {
     if (date.isEmpty) {
       return "";
@@ -117,7 +117,6 @@ class Miscellaneous {
       return DateFormat('yyyy').format(dateTime);
     }
   }
-
 
   static String ymd(String date) {
     if (date.isEmpty) {

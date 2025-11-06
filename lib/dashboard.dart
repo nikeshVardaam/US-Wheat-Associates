@@ -57,16 +57,22 @@ class _DashboardState extends State<Dashboard> {
             ),
             actions: [
               Consumer<DashboardProvider>(
-                builder: (context, dp, chilc) {
+                builder: (context, dp, child) {
                   return Padding(
-                    padding: const EdgeInsets.only(right: 5.0),
-                    child: IconButton(
-                      iconSize: 24,
-                      icon: const Icon(Icons.sync),
-                      color: AppColors.cFFFFFF,
-                      onPressed: () {
-                        SyncData().syncData(context: context);
-                      },
+                    padding: const EdgeInsets.only(right: 15.0),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: AppColors.c5a554f, borderRadius: const BorderRadius.all(Radius.circular(50))),
+                      child: IconButton(
+                        iconSize: 24,
+                        icon: const Icon(Icons.sync),
+                        color: AppColors.cFFFFFF,
+                        onPressed: () {
+                          SyncData().syncData(context: context);
+                        },
+                      ),
                     ),
                   );
                 },
@@ -157,14 +163,17 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             ListTile(
                               dense: true,
-                              leading: SvgPicture.asset(
-                                AppAssets.star,
-                                height: 18,
-                                colorFilter: ColorFilter.mode(
-                                  dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
+
+                              leading: Icon(Icons.star_border_outlined,
+                                  size: 22, color: dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF),
+                              // leading: SvgPicture.asset(
+                              //   AppAssets.star,
+                              //   height: 18,
+                              //   colorFilter: ColorFilter.mode(
+                              //     dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                              //     BlendMode.srcIn,
+                              //   ),
+                              // ),
                               title: Text(
                                 AppStrings.watchlist,
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -197,7 +206,7 @@ class _DashboardState extends State<Dashboard> {
                                     activity: const Prices(
                                       region: '',
                                       cls: '',
-                                      year: '',
+                                      date: '',
                                     ),
                                     pageName: AppStrings.price);
                                 Navigator.pop(context);
@@ -428,16 +437,21 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   BottomNavigationBarItem(
-                    label: AppStrings.watchlist,
-                    icon: SvgPicture.asset(
-                      AppAssets.star,
-                      height: 20,
-                      colorFilter: ColorFilter.mode(
-                        dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
-                        BlendMode.srcIn,
+                      label: AppStrings.watchlist,
+                      icon: Icon(
+                        Icons.star_border_outlined,
+                        size: 23,
+                        color: dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                      )
+                      // icon: SvgPicture.asset(
+                      //   AppAssets.star,
+                      //   height: 20,
+                      //   colorFilter: ColorFilter.mode(
+                      //     dp.currentIndex == 2 ? AppColors.cFFc166 : AppColors.cFFFFFF,
+                      //     BlendMode.srcIn,
+                      //   ),
+                      // ),
                       ),
-                    ),
-                  ),
                   BottomNavigationBarItem(
                     label: AppStrings.reports,
                     icon: SvgPicture.asset(

@@ -3,13 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uswheat/service/get_api_services.dart';
-import 'package:uswheat/utils/api_endpoint.dart';
-import 'package:uswheat/utils/pref_keys.dart';
 
 class ReportsProvider extends ChangeNotifier {
   List<dynamic> reportsOptions = [];
   List<dynamic> reports = [];
-  List<int> yearList = [];
 
   SharedPreferences? sp;
   int pageNumber = 1;
@@ -54,44 +51,6 @@ class ReportsProvider extends ChangeNotifier {
       getFilterReport(context: context);
       notifyListeners();
     }
-  }
-
-  Future<void> loadYear({required BuildContext context}) async {
-    sp = await SharedPreferences.getInstance();
-
-    final stored = sp?.getStringList(PrefKeys.yearList) ?? const <String>[];
-
-    final parsed = <int>[];
-    for (final s in stored) {
-      final v = int.tryParse(s);
-      if (v != null) parsed.add(v);
-    }
-
-    if (parsed.isEmpty) {
-      parsed.add(DateTime.now().year);
-    }
-
-    final sorted = List<int>.from(parsed)..sort((a, b) => b.compareTo(a));
-
-    yearList = sorted;
-    notifyListeners();
-  }
-
-  Future<void> getYearList({required BuildContext context}) async {
-    GetApiServices().get(endpoint: ApiEndpoint.getYears, context: context, loader: true).then(
-      (value) {
-        if (value != null) {
-          yearList.clear();
-          var data = jsonDecode(value.body);
-
-          for (var i = 0; i < data.length; ++i) {
-            yearList.add(data[i]);
-          }
-          yearList.sort((a, b) => b.compareTo(a));
-        }
-      },
-    );
-    notifyListeners();
   }
 
   Future<void> getFilterReport({required BuildContext context}) async {
@@ -146,7 +105,7 @@ class ReportsProvider extends ChangeNotifier {
     await GetApiServices()
         .getWithDynamicUrl(
       url: "https://uswheat.org/wp-json/uswheat/v1/get-report-options",
-      loader: false,
+      loader: true,
       context: context,
     )
         .then(

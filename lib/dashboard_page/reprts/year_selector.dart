@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../../utils/app_strings.dart';
 
 class YearSelector extends StatefulWidget {
-  final List<int> yearList;
-
-  const YearSelector({super.key, required this.yearList});
+  const YearSelector({super.key});
 
   @override
   State<YearSelector> createState() => _YearSelectorState();
 }
 
 class _YearSelectorState extends State<YearSelector> {
+  late List<int> yearList;
   late int selectedIndex;
   late FixedExtentScrollController scrollController;
 
@@ -20,7 +19,12 @@ class _YearSelectorState extends State<YearSelector> {
     super.initState();
 
     final currentYear = DateTime.now().year;
-    selectedIndex = widget.yearList.indexOf(currentYear);
+
+    yearList = [
+      for (int year = 2024; year <= currentYear; year++) year,
+    ];
+
+    selectedIndex = yearList.indexOf(currentYear);
     if (selectedIndex == -1) selectedIndex = 0;
 
     scrollController = FixedExtentScrollController(initialItem: selectedIndex);
@@ -37,6 +41,7 @@ class _YearSelectorState extends State<YearSelector> {
   @override
   Widget build(BuildContext perentContext) {
     final bgColor = CupertinoColors.systemGrey6.resolveFrom(perentContext);
+
     return Container(
       height: MediaQuery.of(perentContext).size.height / 5,
       decoration: BoxDecoration(
@@ -57,8 +62,8 @@ class _YearSelectorState extends State<YearSelector> {
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    Navigator.pop(
-                        perentContext, widget.yearList[selectedIndex]);
+                    // ✅ Keep old behavior — return selected year
+                    Navigator.pop(perentContext, yearList[selectedIndex]);
                   },
                   child: const Text(
                     AppStrings.done,
@@ -81,9 +86,9 @@ class _YearSelectorState extends State<YearSelector> {
                 setState(() => selectedIndex = index);
               },
               children: List.generate(
-                widget.yearList.length,
-                    (index) => Text(
-                  widget.yearList[index].toString(),
+                yearList.length,
+                (index) => Text(
+                  yearList[index].toString(),
                   style: Theme.of(perentContext).textTheme.labelLarge,
                 ),
               ),

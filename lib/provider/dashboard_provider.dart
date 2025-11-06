@@ -26,7 +26,7 @@ class DashboardProvider extends ChangeNotifier {
   Widget selectActivity = const Prices(
     region: '',
     cls: '',
-    year: '',
+    date: '',
   );
   String selectMenu = AppStrings.pricess;
   int currentIndex = 0;
@@ -117,7 +117,7 @@ class DashboardProvider extends ChangeNotifier {
             activity: const Prices(
               region: '',
               cls: '',
-              year: '',
+              date: '',
             ),
             pageName: AppStrings.price,
             isBottomTab: true);

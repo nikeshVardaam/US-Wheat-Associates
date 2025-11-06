@@ -33,13 +33,13 @@ class WatchlistProvider extends ChangeNotifier {
   final Map<String, List<SalesData>> _localChartCache = {};
 
   Future<void> getPrefData() async {
-    localWatchList.clear();
+    print("enter in pref data");
 
+    localWatchList.clear();
     sp = await SharedPreferences.getInstance();
     var data = sp?.getString(PrefKeys.watchList);
     if (data != null) {
       List<dynamic> list = jsonDecode(data);
-
       for (var i = 0; i < list.length; ++i) {
         ModelLocalWatchlistData modelLocalWatchlistData = ModelLocalWatchlistData.fromJson(list[i]);
         localWatchList.add(modelLocalWatchlistData);
@@ -58,7 +58,7 @@ class WatchlistProvider extends ChangeNotifier {
       activity: Prices(
         cls: classs,
         region: region,
-        year: date,
+        date: date,
       ),
       pageName: AppStrings.price,
     );
