@@ -40,7 +40,6 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
       } catch (e) {
         initialDate = now;
       }
-
     }
 
     if (initialDate.isAfter(now)) {

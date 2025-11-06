@@ -51,27 +51,6 @@ class PricesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///default date to set
-  Future<void> getDefaultDate({required BuildContext context}) async {
-    await PostServices()
-        .post(
-            endpoint: ApiEndpoint.lastDate,
-            context: context,
-            loader: true,
-            requestData: {"class": selectedClass},
-            isBottomSheet: false)
-        .then(
-      (value) {
-        if (value != null) {
-          var response = jsonDecode(value.body);
-
-          var data = response["data"];
-          pRDate = data[''];
-        }
-      },
-    );
-  }
-
   setSelectedClass({required String cls, required BuildContext context}) async {
     selectedClass = cls;
     if (selectedClass != null && pRDate != null) {
@@ -120,8 +99,12 @@ class PricesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> initCallFromWatchList(
-      {required BuildContext context, required String? region, required String? cls, required String? year}) async {
+  Future<void> initCallFromWatchList({
+    required BuildContext context,
+    required String? region,
+    required String? cls,
+    required String? date,
+  }) async {
     zoomPanBehavior = ZoomPanBehavior(
       enablePanning: true,
       enablePinching: true,
@@ -135,7 +118,7 @@ class PricesProvider extends ChangeNotifier {
       }
     }
     selectedClass = cls;
-    pRDate = year;
+    pRDate = date;
 
     await getGraphCodesByClassAndRegion(context: context).then(
       (value) async {
@@ -159,34 +142,19 @@ class PricesProvider extends ChangeNotifier {
       enablePinching: true,
       zoomMode: ZoomMode.x,
     );
-    // getCurrentDate();
-    // await loadRegionAndClasses(context: context).then(
-    //   (value) async {
-    //     await getGraphCodesByClassAndRegion(context: context).then(
-    //       (value) async {
-    //         await getGraphData(context: context).then(
-    //           (value) async {
-    //             await getAllPriceData(context: context).then(
-    //               (value) {
-    //                 checkLocalWatchlist();
-    //               },
-    //             );
-    //           },
-    //         );
-    //       },
-    //     );
-    //   },
-    // );
-
-    await loadRegionAndClasses(context: context).then(
+    getLastUpdatedDate().then(
       (value) async {
-        await getLatestAvailablePriceData(context: context).then(
+        await loadRegionAndClasses(context: context).then(
           (value) async {
-            await getGraphData(context: context).then(
+            await getGraphCodesByClassAndRegion(context: context).then(
               (value) async {
-                await getAllPriceData(context: context).then(
-                  (value) {
-                    checkLocalWatchlist();
+                await getGraphData(context: context).then(
+                  (value) async {
+                    await getAllPriceData(context: context).then(
+                      (value) {
+                        checkLocalWatchlist();
+                      },
+                    );
                   },
                 );
               },
@@ -197,6 +165,13 @@ class PricesProvider extends ChangeNotifier {
     );
 
     notifyListeners();
+  }
+
+  Future<void> getLastUpdatedDate() async {
+    final sp = await SharedPreferences.getInstance();
+    final storedList = sp.getStringList(PrefKeys.availableDateList) ?? [];
+
+    pRDate = storedList.last;
   }
 
   Future<void> checkLocalWatchlist() async {
@@ -461,7 +436,6 @@ class PricesProvider extends ChangeNotifier {
   Future<void> getLatestAvailablePriceData({
     required BuildContext context,
   }) async {
-    print("enter");
     await PostServices().post(
       endpoint: ApiEndpoint.latestAvailablePriceData,
       context: context,
@@ -479,6 +453,7 @@ class PricesProvider extends ChangeNotifier {
         }
       },
     );
+    notifyListeners();
   }
 
   Future<void> getGraphData({required BuildContext context}) async {
@@ -489,7 +464,7 @@ class PricesProvider extends ChangeNotifier {
       "grphcode": selectedGRPHCode ?? "",
       "prdate": pRDate ?? "",
     };
-    print(data);
+
     await PostServices()
         .post(
       endpoint: ApiEndpoint.getGraphData,
@@ -499,12 +474,15 @@ class PricesProvider extends ChangeNotifier {
       loader: true,
     )
         .then(
-      (value) {
+          (value) {
         if (value != null) {
           graphDataList.clear();
           var data = jsonDecode(value.body);
           for (var i = 0; i < data.length; ++i) {
-            GraphDataModal gl = GraphDataModal(cASHMT: data[i]["CASHMT"], pRDATE: data[i]["PRDATE"]);
+            GraphDataModal gl = GraphDataModal(
+              cASHMT: data[i]["CASHMT"],
+              pRDATE: data[i]["PRDATE"],
+            );
             graphDataList.add(gl);
           }
           notifyListeners();
@@ -513,6 +491,7 @@ class PricesProvider extends ChangeNotifier {
     );
     notifyListeners();
   }
+
 
   Future<void> getAllPriceData({required BuildContext context}) async {
     await PostServices()

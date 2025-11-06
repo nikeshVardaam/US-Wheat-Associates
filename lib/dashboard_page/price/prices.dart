@@ -2,23 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:uswheat/dashboard_page/price/class_selector.dart';
 import 'package:uswheat/dashboard_page/price/region_selector.dart';
 import 'package:uswheat/provider/price_provider.dart';
 import 'package:uswheat/utils/app_colors.dart';
 import 'package:uswheat/utils/app_strings.dart';
-import 'package:uswheat/utils/date_picker.dart';
+import 'package:uswheat/utils/common_date_picker.dart';
 import 'package:uswheat/utils/miscellaneous.dart';
 import '../../modal/graph_modal.dart';
 import '../../utils/app_widgets.dart';
+import '../../utils/pref_keys.dart';
 
 class Prices extends StatefulWidget {
   final String? region;
   final String? cls;
-  final String? year;
+  final String? date;
 
-  const Prices({super.key, required this.region, required this.cls, required this.year});
+  const Prices({super.key, required this.region, required this.cls, required this.date});
 
   @override
   State<Prices> createState() => _PricesState();
@@ -34,13 +36,13 @@ class _PricesState extends State<Prices> {
       Provider.of<PricesProvider>(context, listen: false).getPrefData();
       if ((widget.region?.isNotEmpty ?? false) &&
           (widget.cls?.isNotEmpty ?? false) &&
-          (widget.year?.isNotEmpty ?? false)) {
+          (widget.date?.isNotEmpty ?? false)) {
         Provider.of<PricesProvider>(context, listen: false)
             .initCallFromWatchList(
           context: context,
           region: widget.region,
           cls: widget.cls,
-          year: widget.year,
+          date: widget.date,
         )
             .then(
           (value) {
@@ -269,7 +271,7 @@ class _PricesState extends State<Prices> {
                         builder: (context) {
                           return SizedBox(
                             height: MediaQuery.of(context).size.height / 3,
-                            child: CustomDatePicker(date: defaultDate),
+                            child: CustomDatePickerr(date: defaultDate),
                           );
                         },
                       ).then(
@@ -292,7 +294,7 @@ class _PricesState extends State<Prices> {
                                 builder: (context) {
                                   return SizedBox(
                                     height: MediaQuery.of(context).size.height / 3,
-                                    child: CustomDatePicker(date: defaultDate),
+                                    child: CustomDatePickerr(date: defaultDate),
                                   );
                                 },
                               ).then(

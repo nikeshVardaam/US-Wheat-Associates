@@ -21,7 +21,6 @@ class _WatchlistState extends State<Watchlist> {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
         await Provider.of<WatchlistProvider>(context, listen: false).getPrefData();
-
         Provider.of<WatchlistProvider>(context, listen: false).getWatchList(context: context);
       },
     );

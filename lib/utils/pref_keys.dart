@@ -5,4 +5,5 @@ class PrefKeys {
   static const user = "user";
   static const yearList = "YearList";
   static const watchList = "watchList";
+  static const availableDateList = "availableDateList";
 }

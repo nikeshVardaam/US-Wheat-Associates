@@ -5,13 +5,50 @@ import 'package:uswheat/service/get_api_services.dart';
 import 'package:uswheat/utils/api_endpoint.dart';
 import 'package:uswheat/utils/app_widgets.dart';
 
+import '../service/post_services.dart';
 import '../utils/pref_keys.dart';
 
 class SyncData {
   late final SharedPreferences sp;
 
   Future<void> syncData({required BuildContext context}) async {
-    await getRegionAndClass(context: context);
+    await getRegionAndClass(context: context).then(
+      (value) async {
+         await getAvailableDates(context: context);
+      },
+    );
+  }
+
+  Future<void> getAvailableDates({required BuildContext context}) async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AppWidgets.loading(),
+    );
+
+    try {
+      List<String> availableDates = [];
+      sp = await SharedPreferences.getInstance();
+
+      final response = await PostServices().post(
+        endpoint: ApiEndpoint.availableDates,
+        requestData: {},
+        context: context,
+        isBottomSheet: false,
+        loader: false,
+      );
+
+      if (response != null) {
+        final data = jsonDecode(response.body);
+        final dates = data["data"];
+        for (int i = 0; i < dates.length; i++) {
+          availableDates.add(dates[i].toString());
+        }
+      }
+      sp.setStringList(PrefKeys.availableDateList, availableDates);
+    } finally {
+      Navigator.pop(context);
+    }
   }
 
   Future<void> getRegionAndClass({required BuildContext context}) async {
@@ -29,7 +66,7 @@ class SyncData {
         loader: false,
       )
           .then(
-        (response) async {
+            (response) async {
           if (response != null) {
             Map<String, dynamic> decoded;
             try {
@@ -49,7 +86,6 @@ class SyncData {
       }
     }
   }
-
   Future<void> getYear({required BuildContext context}) async {
     showDialog(
       barrierDismissible: false,

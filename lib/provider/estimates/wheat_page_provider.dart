@@ -306,10 +306,7 @@ class WheatPageProvider extends ChangeNotifier {
 
         AppWidgets.appSnackBar(context: context, text: AppStrings.added, color: AppColors.c2a8741);
       }
-    }
-
-
-    );
+    });
     checkLocalWatchlist();
     notifyListeners();
   }
